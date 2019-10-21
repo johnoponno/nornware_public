@@ -15,7 +15,7 @@ This public codebase stems from nornware's internal codebase, and is intended mo
 
   * Use ALT+TAB at any time to switch between windowed and fullscreen mode.
 
-# dx9
+# dx9 (C++ static library)
 The dx9 library is a mashup of the minimal stuff required to get a program window up with DirectX9.0c, support for basic sound (DirectX3) via .wave files with some ogg/vorbis streaming support tacked on.
 
 There are no examples of 3d rendering here, but rather all the graphics stuff is centered around doing rendering "in software" (using the CPU, softdraw lib) in order to be able to "touch the pixels"; DirectX9.0c and similar 3d apis generally don't let you touch the framebuffer directly, and the primitives are triangles (and textures) rather than pixels. It certainly isn't "free" to update the texture each tick (bus traffic from CPU to GPU), but it's a good trade-off to allow for old-school pixel-art games (where the pixels are CRISP!) in a modern world.
@@ -32,12 +32,12 @@ The big point is that you can create more programs based on this "engine" if you
 
 Oh yeah, you can configure your app_i subclass to run in either fixed tick mode (which I almost always do, at 60Hz) or as fast as your computer will run. If you aren't running fixed tick you can use the timing variables passed to frame_move() and frame_render().
 
-# softdraw
+# softdraw (C++ static library)
 As mentioned, softdraw was created out of a desire to do old-style "blitting" (BLock Image Transfer). The basic primitive is bitmap_t, with functions for drawing to and from them, color keying, various blend modes, etc. All of this is of course far inferior performance-wise as compared to what a GPU can do nowadays, but the whole point of making games with software is for them to be relatively low resolution and "chunky". Also note that all 3d apis (DX / OpenGL / Vulkan) generally specify screen coordinates as floating point values, so it's generally more tricky to get things to line up nicely (especially when building worlds from tiles) when programming triangles on the GPU than doing things the way software does.
 
 There is some flexibility in how the "canvas" (as I usually call the framebuffer) is actually shown on the screen; see how tpmn calculates the size and position of the final quad in app_t::frame_render() as well as the options available in dx9::softdraw_adapter_t. That's really the only contact between the whole game and DirectX; except for app_t the whole game is basically platform independent (the softdraw library is as well).
 
-# tpmn
+# tpmn (C++ win32 application)
 This was a project I did with some students when I was working as a high school teacher, originally done in Flash / AS3 and also originally very object oriented. I recently did a port to C/C++, and because I knew I would be touching basically every line of code in the port from AS3 to C++ I thought it would be fun to see what my current coding style would do to the project.
 
 First of all some architectural philosophy; Model-View-Controller. It's an idea that has been thrown around a lot, and there are many interpretations of it (I actually met Trygve Reenskaug who coined the term in the 1970s at one point, but he wouldn't tell me if my interpretation of MVC aligned with his original ideas!). My version is like this:
