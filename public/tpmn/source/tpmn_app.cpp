@@ -242,7 +242,7 @@ bool tpmn_app_init(tpmn_app_t& app)
 	for (uint32_t i = 0; i < TPMN_MAX_TILE; ++i)
 		app._controller.current_tiles[i] = i;
 
-	if (!bitmap_init(TPMN_CANVAS_WIDTH, TPMN_CANVAS_HEIGHT, 0, app._controller.canvas))
+	if (!sd_bitmap_init(TPMN_CANVAS_WIDTH, TPMN_CANVAS_HEIGHT, 0, app._controller.canvas))
 		return false;
 
 	return true;

@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "bitmap.h"
+#include "sd_bitmap.h"
 
 namespace softdraw
 {
@@ -41,7 +41,7 @@ namespace softdraw
 		explicit fontv_t(const int32_t aCharSpacing = 1);
 
 		//members
-		bitmap_t rep;
+		sd_bitmap_t rep;
 		fontv_character_t characters[fontv_numchars];
 		int32_t height;
 		int32_t char_spacing;
@@ -50,8 +50,8 @@ namespace softdraw
 
 	bool fontv_load_24(fontv_t& font, const char* aFileName, const bool aBlackChromaFlag = true);
 
-	void fontv_print(const fontv_t& f, const int32_t aX, const int32_t aY, const char* aText, bitmap_t& aCanvas);
-	void fontv_print(const fontv_t& FONT, const fontv_blit_mode_t aMode, const int32_t aDstX, const int32_t aDstY, const char* message, bitmap_t& aDst);
-	void fontv_print_color_not_black(const fontv_t& FONT, const uint16_t aColor, const int32_t aDstX, const int32_t aDstY, const char* message, bitmap_t& aDst);
+	void fontv_print(const fontv_t& f, const int32_t aX, const int32_t aY, const char* aText, sd_bitmap_t& aCanvas);
+	void fontv_print(const fontv_t& FONT, const fontv_blit_mode_t aMode, const int32_t aDstX, const int32_t aDstY, const char* message, sd_bitmap_t& aDst);
+	void fontv_print_color_not_black(const fontv_t& FONT, const uint16_t aColor, const int32_t aDstX, const int32_t aDstY, const char* message, sd_bitmap_t& aDst);
 	int32_t fontv_string_width(const fontv_t& f, const char* aString);
 }

@@ -1,3 +1,11 @@
+# changelog
+[4:30 PM 4/19/2023] upgrade solution to Microsoft Visual Studio Community 2019 Version 16.11.24
+
+# todo
+[ ] replace namespaces with prefixes
+[ ] dx9 -> win32
+[ ] re-implement editor
+
 # background
 This public codebase stems from nornware's internal codebase, and is intended mostly as an example of what Johannes 'johno' Norneby thinks is a decent coding style ca late 2019; the most contentious point is probably the shunning of / minimal use of Object Oriented Programming. It's also a small example of a 2d platform game rendered in software, transferred to a texture, and finally rendered as a single quad using DirectX9.0c.
 

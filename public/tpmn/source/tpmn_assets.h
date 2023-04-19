@@ -1,10 +1,13 @@
 #pragma once
 
-#include "../../softdraw/Bitmap.h"
+#include "../../softdraw/sd_bitmap.h"
 #include "../../softdraw/fontv.h"
 #include "../../dx9/sound_engine.h"
 #include "../../dx9/sound_container.h"
 #include "tpmn_model.h"
+
+#define TPMN_TITLE_COLOR 0xffff
+#define TPMN_TEXT_COLOR 0xc7bf
 
 enum
 {
@@ -41,30 +44,30 @@ struct tpmn_assets_t
 {
 	explicit tpmn_assets_t();
 
-	softdraw::bitmap_t backgrounds[7];
+	sd_bitmap_t backgrounds[7];
 
-	softdraw::bitmap_t portal;
-	softdraw::bitmap_t server;
-	softdraw::bitmap_t arcs;
-	softdraw::bitmap_t spikygreen;
-	softdraw::bitmap_t blueblob;
-	softdraw::bitmap_t brownblob;
-	softdraw::bitmap_t penguin;
-	softdraw::bitmap_t plant;
-	softdraw::bitmap_t scorpion;
-	softdraw::bitmap_t firedude;
-	softdraw::bitmap_t bat;
-	softdraw::bitmap_t gui_server_fixed;
-	softdraw::bitmap_t gui_server_broken;
-	softdraw::bitmap_t idle;
+	sd_bitmap_t portal;
+	sd_bitmap_t server;
+	sd_bitmap_t arcs;
+	sd_bitmap_t spikygreen;
+	sd_bitmap_t blueblob;
+	sd_bitmap_t brownblob;
+	sd_bitmap_t penguin;
+	sd_bitmap_t plant;
+	sd_bitmap_t scorpion;
+	sd_bitmap_t firedude;
+	sd_bitmap_t bat;
+	sd_bitmap_t gui_server_fixed;
+	sd_bitmap_t gui_server_broken;
+	sd_bitmap_t idle;
 
-	softdraw::bitmap_t tiles;
-	softdraw::bitmap_t hero;
-	softdraw::bitmap_t whip;
+	sd_bitmap_t tiles;
+	sd_bitmap_t hero;
+	sd_bitmap_t whip;
 
-	softdraw::bitmap_t dust_far;
-	softdraw::bitmap_t dust_near;
-	softdraw::bitmap_t flake;
+	sd_bitmap_t dust_far;
+	sd_bitmap_t dust_near;
+	sd_bitmap_t flake;
 
 	softdraw::fontv_t font;
 
@@ -78,6 +81,3 @@ bool tpmn_assets_init(tpmn_assets_t& assets);
 void tpmn_assets_reload(tpmn_assets_t& assets);
 void tpmn_assets_cleanup(tpmn_assets_t& assets);
 void tpmn_sound_play(const tpmn_assets_t& assets, const uint32_t id);
-
-extern const uint16_t TPMN_TITLE_COLOR;
-extern const uint16_t TPMN_TEXT_COLOR;

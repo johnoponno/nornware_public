@@ -2,10 +2,7 @@
 
 #include "d3d_resource.h"
 
-namespace softdraw
-{
-	struct bitmap_t;
-}
+struct sd_bitmap_t;
 
 namespace dx9
 {
@@ -33,5 +30,5 @@ namespace dx9
 		::IDirect3DTexture9* texture;
 	};
 
-	void softdraw_adapter_present_2d(const softdraw::bitmap_t& aCanvas, const int32_t aX, const int32_t aY, const int32_t aWidth, const int32_t aHeight, const uint32_t aColor, const ff_mode_t aMode, const bool aFilter, softdraw_adapter_t& a);
+	void softdraw_adapter_present_2d(const sd_bitmap_t& aCanvas, const int32_t aX, const int32_t aY, const int32_t aWidth, const int32_t aHeight, const uint32_t aColor, const ff_mode_t aMode, const bool aFilter, softdraw_adapter_t& a);
 }

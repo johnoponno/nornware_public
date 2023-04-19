@@ -65,7 +65,7 @@
 #define ASSET_KEY "key.wav"
 #define ASSET_SLIDER "slider.wav"
 
-#define BITMAP(a, b) if(!bitmap_load_24(a, b)) return false;
+#define BITMAP(a, b) if(!sd_bitmap_load_24(a, b)) return false;
 #define SOUND(asset, id) if (!container_add_sound(assets.engine, asset, id, 1, assets.container)) return false;
 
 tpmn_assets_t::tpmn_assets_t()
@@ -161,13 +161,13 @@ bool tpmn_assets_init(tpmn_assets_t& assets)
 
 void tpmn_assets_reload(tpmn_assets_t& assets)
 {
-	bitmap_load_24(ASSET_TILES, assets.tiles);
-	bitmap_load_24(ASSET_BG00, assets.backgrounds[0]);
-	bitmap_load_24(ASSET_BG01, assets.backgrounds[1]);
-	bitmap_load_24(ASSET_BG03, assets.backgrounds[3]);
-	bitmap_load_24(ASSET_BG04, assets.backgrounds[4]);
-	bitmap_load_24(ASSET_BG05, assets.backgrounds[5]);
-	bitmap_load_24(ASSET_DUST_NEAR, assets.dust_near);
+	sd_bitmap_load_24(ASSET_TILES, assets.tiles);
+	sd_bitmap_load_24(ASSET_BG00, assets.backgrounds[0]);
+	sd_bitmap_load_24(ASSET_BG01, assets.backgrounds[1]);
+	sd_bitmap_load_24(ASSET_BG03, assets.backgrounds[3]);
+	sd_bitmap_load_24(ASSET_BG04, assets.backgrounds[4]);
+	sd_bitmap_load_24(ASSET_BG05, assets.backgrounds[5]);
+	sd_bitmap_load_24(ASSET_DUST_NEAR, assets.dust_near);
 }
 
 void tpmn_assets_cleanup(tpmn_assets_t& assets)
@@ -180,6 +180,3 @@ void tpmn_sound_play(const tpmn_assets_t& assets, const uint32_t id)
 {
 	sound::container_play(id, 1.f, 0.f, 1.f, nullptr, assets.container);
 }
-
-const uint16_t TPMN_TITLE_COLOR = 0xffff;
-const uint16_t TPMN_TEXT_COLOR = 0xc7bf;

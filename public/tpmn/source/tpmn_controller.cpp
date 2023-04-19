@@ -89,7 +89,9 @@ namespace tpmn
 		return y;
 	}
 
-	static void __draw_portals(const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, softdraw::bitmap_t& canvas)
+	static void __draw_portals(
+		const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy,
+		sd_bitmap_t& canvas)
 	{
 		for (const tpmn_portal_t* p = model.level.portals; p < model.level.portals + model.level.num_portals; ++p)
 		{
@@ -103,7 +105,7 @@ namespace tpmn
 			else
 				frame = 0;
 
-			bitmap_blit_key_clip(assets.portal, canvas, nullptr, x, y, TPMN_TILE_ASPECT, assets.portal.height, frame * assets.portal.width / 2, 0);
+			sd_bitmap_blit_key_clip(assets.portal, canvas, nullptr, x, y, TPMN_TILE_ASPECT, assets.portal.height, frame * assets.portal.width / 2, 0);
 
 			//if not accessible, draw number
 			if (model.hero.fixed_servers.count < p->server_count)
@@ -118,7 +120,9 @@ namespace tpmn
 		}
 	}
 
-	static void __draw_servers(const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, softdraw::bitmap_t& canvas)
+	static void __draw_servers(
+		const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy,
+		sd_bitmap_t& canvas)
 	{
 		//calc starting grid
 		const int32_t gx = vx / TPMN_TILE_ASPECT;
@@ -151,7 +155,7 @@ namespace tpmn
 						oy = int32_t(tpmn_random_unit() * 2) - 1;
 					}
 
-					bitmap_blit(
+					sd_bitmap_blit(
 						assets.server,
 						canvas,
 						x * TPMN_TILE_ASPECT - sx + ox,
@@ -159,14 +163,15 @@ namespace tpmn
 						TPMN_TILE_ASPECT,
 						assets.server.height,
 						frame * TPMN_TILE_ASPECT,
-						0);
+						0
+					);
 
 					//arcs
 					if (!fixed)
 					{
 						frame = int32_t(tpmn_model_now(model) * 16) % 4;
 
-						bitmap_blit_add(
+						sd_bitmap_blit_add(
 							assets.arcs,
 							canvas,
 							x * TPMN_TILE_ASPECT - sx - 4,
@@ -174,38 +179,43 @@ namespace tpmn
 							32,
 							32,
 							0,
-							32 * frame);
+							32 * frame
+						);
 					}
 				}
 			}
 		}
 	}
 
-	static void __draw_tile(const bool half, const tpmn_assets_t& assets, const int32_t x, const int32_t y, const uint32_t tile, softdraw::bitmap_t& canvas)
+	static void __draw_tile(
+		const bool half, const tpmn_assets_t& assets, const int32_t x, const int32_t y, const uint32_t tile,
+		sd_bitmap_t& canvas)
 	{
 		const int32_t TILES_ON_SOURCE_X = assets.tiles.width / TPMN_TILE_ASPECT;
 
 		if (half)
 		{
-			bitmap_blit_half_key_clip(
+			sd_bitmap_blit_half_key_clip(
 				assets.tiles,
 				canvas,
 				nullptr,
 				x, y,
 				TPMN_TILE_ASPECT, TPMN_TILE_ASPECT,
 				(tile % TILES_ON_SOURCE_X) * TPMN_TILE_ASPECT,
-				tile / TILES_ON_SOURCE_X * TPMN_TILE_ASPECT);
+				tile / TILES_ON_SOURCE_X * TPMN_TILE_ASPECT
+			);
 		}
 		else
 		{
-			bitmap_blit_key_clip(
+			sd_bitmap_blit_key_clip(
 				assets.tiles,
 				canvas,
 				nullptr,
 				x, y,
 				TPMN_TILE_ASPECT, TPMN_TILE_ASPECT,
 				(tile % TILES_ON_SOURCE_X) * TPMN_TILE_ASPECT,
-				tile / TILES_ON_SOURCE_X * TPMN_TILE_ASPECT);
+				tile / TILES_ON_SOURCE_X * TPMN_TILE_ASPECT
+			);
 		}
 	}
 
@@ -224,7 +234,9 @@ namespace tpmn
 		return PLANT_S_PASSIVE;
 	}
 
-	static void __draw_scorpion(const tpmn_model_t& model, const tpmn_enemy_t& plant, const tpmn_assets_t& assets, const int32_t x, const int32_t y, softdraw::bitmap_t& canvas)
+	static void __draw_scorpion(
+		const tpmn_model_t& model, const tpmn_enemy_t& plant, const tpmn_assets_t& assets, const int32_t x, const int32_t y,
+		sd_bitmap_t& canvas)
 	{
 		int32_t frame;
 		switch (__plant_state(model.hero, plant))
@@ -261,14 +273,15 @@ namespace tpmn
 			srcX = 0;
 		}
 
-		bitmap_blit_key_clip(
+		sd_bitmap_blit_key_clip(
 			assets.scorpion,
 			canvas,
 			nullptr,
 			x + xOffs, y - 14,
 			assets.scorpion.width / 2, assets.scorpion.height / 6,
 			srcX,
-			frame * assets.scorpion.height / 6);
+			frame * assets.scorpion.height / 6
+		);
 	}
 
 	static const char* __text(const uint32_t id, const uint32_t line)
@@ -366,7 +379,9 @@ namespace tpmn
 		return count;
 	}
 
-	static void __draw_dust_pass(const bool add, const float now, const float speed_x, const float speed_y, const softdraw::bitmap_t& bitmap, softdraw::bitmap_t& canvas)
+	static void __draw_dust_pass(
+		const bool add, const float now, const float speed_x, const float speed_y, const sd_bitmap_t& bitmap,
+		sd_bitmap_t& canvas)
 	{
 		if (dx9::key_is_down('P'))
 			return;
@@ -375,26 +390,30 @@ namespace tpmn
 		const int32_t Y = int32_t(now * speed_y) % bitmap.height;
 		if (add)
 		{
-			bitmap_blit_add_key_clip(bitmap, canvas, nullptr, -X, -Y);
-			bitmap_blit_add_key_clip(bitmap, canvas, nullptr, bitmap.width - X, -Y);
-			bitmap_blit_add_key_clip(bitmap, canvas, nullptr, -X, bitmap.height - Y);
-			bitmap_blit_add_key_clip(bitmap, canvas, nullptr, bitmap.width - X, bitmap.height - Y);
+			sd_bitmap_blit_add_key_clip(bitmap, canvas, nullptr, -X, -Y);
+			sd_bitmap_blit_add_key_clip(bitmap, canvas, nullptr, bitmap.width - X, -Y);
+			sd_bitmap_blit_add_key_clip(bitmap, canvas, nullptr, -X, bitmap.height - Y);
+			sd_bitmap_blit_add_key_clip(bitmap, canvas, nullptr, bitmap.width - X, bitmap.height - Y);
 		}
 		else
 		{
-			bitmap_blit_half_key_clip(bitmap, canvas, nullptr, -X, -Y);
-			bitmap_blit_half_key_clip(bitmap, canvas, nullptr, bitmap.width - X, -Y);
-			bitmap_blit_half_key_clip(bitmap, canvas, nullptr, -X, bitmap.height - Y);
-			bitmap_blit_half_key_clip(bitmap, canvas, nullptr, bitmap.width - X, bitmap.height - Y);
+			sd_bitmap_blit_half_key_clip(bitmap, canvas, nullptr, -X, -Y);
+			sd_bitmap_blit_half_key_clip(bitmap, canvas, nullptr, bitmap.width - X, -Y);
+			sd_bitmap_blit_half_key_clip(bitmap, canvas, nullptr, -X, bitmap.height - Y);
+			sd_bitmap_blit_half_key_clip(bitmap, canvas, nullptr, bitmap.width - X, bitmap.height - Y);
 		}
 	}
 
-	static void __text(const tpmn_assets_t& assets, const int dst_y, const char* string, const uint16_t color, softdraw::bitmap_t& canvas)
+	static void __text(
+		const tpmn_assets_t& assets, const int dst_y, const char* string, const uint16_t color,
+		sd_bitmap_t& canvas)
 	{
 		fontv_print_color_not_black(assets.font, color, (canvas.width - fontv_string_width(assets.font, string)) / 2, dst_y, string, canvas);
 	}
 
-	static void __draw_foreground(const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, tpmn_controller_t& controller, softdraw::bitmap_t& canvas)
+	static void __draw_foreground(
+		const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, tpmn_controller_t& controller,
+		sd_bitmap_t& canvas)
 	{
 		const int32_t SX = tpmn_screen_x((float)vx);
 		const int32_t SY = tpmn_screen_y((float)vy);
@@ -468,16 +487,16 @@ namespace tpmn
 		switch (index)
 		{
 		default:
-			bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
+			sd_bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
 			break;
 
 		case 1:
-			bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
+			sd_bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
 			__draw_dust_pass(false, now, 100, 20, assets.dust_far, controller.canvas);
 			break;
 
 		case 3:
-			bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
+			sd_bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
 			for (tpmn_snowflake_t* f = controller.flakes; f < controller.flakes + _countof(controller.flakes); ++f)
 			{
 				f->x += f->sx * TPMN_SECONDS_PER_TICK;
@@ -497,12 +516,12 @@ namespace tpmn
 					f->y = -FLAKE_FRAME_ASPECT;
 				}
 
-				bitmap_blit_half_key_clip(assets.flake, controller.canvas, nullptr, (int32_t)f->x, (int32_t)f->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (f->t % 3) * FLAKE_FRAME_ASPECT, f->t / 3 * FLAKE_FRAME_ASPECT);
+				sd_bitmap_blit_half_key_clip(assets.flake, controller.canvas, nullptr, (int32_t)f->x, (int32_t)f->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (f->t % 3) * FLAKE_FRAME_ASPECT, f->t / 3 * FLAKE_FRAME_ASPECT);
 			}
 			break;
 
 		case 5:
-			bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
+			sd_bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
 #if 0
 			{
 				const int32_t WIDTH = assets.myCloud.width / 3;
@@ -521,7 +540,8 @@ namespace tpmn
 		}
 	}
 
-	static void __draw_hero(const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, softdraw::bitmap_t& canvas)
+	static void __draw_hero(
+		const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, sd_bitmap_t& canvas)
 	{
 		//figure out state / frame
 		int32_t state;
@@ -551,18 +571,19 @@ namespace tpmn
 		}
 
 		//blit
-		bitmap_blit_key_clip(
+		sd_bitmap_blit_key_clip(
 			assets.hero,
 			canvas,
 			nullptr,
 			int32_t(model.hero.x - vx - TPMN_HERO_WIDTH / 2), int32_t(model.hero.y - vy - TPMN_HERO_HEIGHT / 2),
 			TPMN_HERO_WIDTH, TPMN_HERO_HEIGHT,
-			(frame + (model.hero.right_bit ? 1 : 0) * 2) * TPMN_HERO_WIDTH, state * TPMN_HERO_HEIGHT);
+			(frame + (model.hero.right_bit ? 1 : 0) * 2) * TPMN_HERO_WIDTH, state * TPMN_HERO_HEIGHT
+		);
 
 		//whip
 		if (state == HS_WHIP)
 		{
-			bitmap_blit_key_clip(
+			sd_bitmap_blit_key_clip(
 				assets.whip,
 				canvas,
 				nullptr,
@@ -659,7 +680,7 @@ namespace tpmn
 
 			if (SX >= (-d->w / 2) && SY >= (-d->h / 2) && SX < (TPMN_CANVAS_WIDTH + d->w / 2) && SY < (TPMN_CANVAS_HEIGHT + d->h / 2))
 			{
-				bitmap_blit_key_clip(
+				sd_bitmap_blit_key_clip(
 					*d->bm,
 					controller.canvas,
 					nullptr,
@@ -685,7 +706,7 @@ namespace tpmn
 
 	static void __draw_enemies(
 		const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy,
-		softdraw::bitmap_t& canvas)
+		sd_bitmap_t& canvas)
 	{
 		const float now = tpmn_model_now(model);
 		const int32_t spikygreen_num_frames = assets.spikygreen.height / assets.spikygreen.width;
@@ -708,19 +729,21 @@ namespace tpmn
 			case TPMN_LOGIC_INDEX_SPIKYGREEN:
 				if (now > e->spawn_time)
 				{
-					bitmap_blit_key_clip(assets.spikygreen, canvas, nullptr, int32_t(e->x - vx - assets.spikygreen.width / 2), int32_t(e->y - vy - assets.spikygreen.width / 2), assets.spikygreen.width, assets.spikygreen.width, 0,
-						(e->speed > 0 ? spikygreen_num_frames - 1 - spikygreen_frame : spikygreen_frame) * assets.spikygreen.width);
+					sd_bitmap_blit_key_clip(
+						assets.spikygreen, canvas, nullptr, int32_t(e->x - vx - assets.spikygreen.width / 2), int32_t(e->y - vy - assets.spikygreen.width / 2), assets.spikygreen.width, assets.spikygreen.width, 0,
+						(e->speed > 0 ? spikygreen_num_frames - 1 - spikygreen_frame : spikygreen_frame) * assets.spikygreen.width
+					);
 				}
 				break;
 
 			case TPMN_LOGIC_INDEX_BLUEBLOB:
 				if (now > e->spawn_time)
-					bitmap_blit_key_clip(assets.blueblob, canvas, nullptr, int32_t(e->x - vx - TPMN_BLOB_FRAME_ASPECT / 2), int32_t(e->y - vy - TPMN_BLOB_FRAME_ASPECT / 2), TPMN_BLOB_FRAME_ASPECT, TPMN_BLOB_FRAME_ASPECT, (e->speed > 0 ? 1 : 0) * TPMN_BLOB_FRAME_ASPECT, blueblob_frame * TPMN_BLOB_FRAME_ASPECT);
+					sd_bitmap_blit_key_clip(assets.blueblob, canvas, nullptr, int32_t(e->x - vx - TPMN_BLOB_FRAME_ASPECT / 2), int32_t(e->y - vy - TPMN_BLOB_FRAME_ASPECT / 2), TPMN_BLOB_FRAME_ASPECT, TPMN_BLOB_FRAME_ASPECT, (e->speed > 0 ? 1 : 0) * TPMN_BLOB_FRAME_ASPECT, blueblob_frame * TPMN_BLOB_FRAME_ASPECT);
 				break;
 
 			case TPMN_LOGIC_INDEX_BROWNBLOB:
 				if (now > e->spawn_time)
-					bitmap_blit_key_clip(assets.brownblob, canvas, nullptr, int32_t(e->x - vx - TPMN_BLOB_FRAME_ASPECT / 2), int32_t(e->y - vy - TPMN_BLOB_FRAME_ASPECT / 2), TPMN_BLOB_FRAME_ASPECT, TPMN_BLOB_FRAME_ASPECT, (e->speed > 0 ? 1 : 0) * TPMN_BLOB_FRAME_ASPECT, brownblob_frame * TPMN_BLOB_FRAME_ASPECT);
+					sd_bitmap_blit_key_clip(assets.brownblob, canvas, nullptr, int32_t(e->x - vx - TPMN_BLOB_FRAME_ASPECT / 2), int32_t(e->y - vy - TPMN_BLOB_FRAME_ASPECT / 2), TPMN_BLOB_FRAME_ASPECT, TPMN_BLOB_FRAME_ASPECT, (e->speed > 0 ? 1 : 0) * TPMN_BLOB_FRAME_ASPECT, brownblob_frame * TPMN_BLOB_FRAME_ASPECT);
 				break;
 
 			case TPMN_LOGIC_INDEX_PLANT:
@@ -757,7 +780,7 @@ namespace tpmn
 						x_offset = -22;
 						src_x = 0;
 					}
-					bitmap_blit_key_clip(assets.plant, canvas, nullptr, int32_t(e->x - vx) + x_offset, int32_t(e->y - vy) - 20, TPMN_PLANT_FRAME_ASPECT, TPMN_PLANT_FRAME_ASPECT, src_x, frame * TPMN_PLANT_FRAME_ASPECT);
+					sd_bitmap_blit_key_clip(assets.plant, canvas, nullptr, int32_t(e->x - vx) + x_offset, int32_t(e->y - vy) - 20, TPMN_PLANT_FRAME_ASPECT, TPMN_PLANT_FRAME_ASPECT, src_x, frame * TPMN_PLANT_FRAME_ASPECT);
 				}
 				break;
 
@@ -769,15 +792,17 @@ namespace tpmn
 			case TPMN_LOGIC_INDEX_PENGUIN:
 				if (now > e->spawn_time)
 				{
-					bitmap_blit_key_clip(assets.penguin, canvas, nullptr,
+					sd_bitmap_blit_key_clip(
+						assets.penguin, canvas, nullptr,
 						int32_t(e->x - vx - assets.penguin.width / 4), int32_t(e->y - vy + 2),
 						assets.penguin.width / 2, assets.penguin.height / 2,
-						(e->speed > 0 ? 1 : 0) * assets.penguin.width / 2, (::fabsf(e->speed) < SLIDER_PREPARE_SPEED ? 1 : 0) * assets.penguin.height / 2);
+						(e->speed > 0 ? 1 : 0) * assets.penguin.width / 2, (::fabsf(e->speed) < SLIDER_PREPARE_SPEED ? 1 : 0) * assets.penguin.height / 2
+					);
 				}
 				break;
 
 			case TPMN_LOGIC_INDEX_FIREDUDE:
-				bitmap_blit_key_clip(assets.firedude, canvas, nullptr, int32_t(e->x - vx - FIREDUDE_FRAME_ASPECT / 2), int32_t(e->y - vy - FIREDUDE_FRAME_ASPECT / 2), FIREDUDE_FRAME_ASPECT, FIREDUDE_FRAME_ASPECT, (e->vector_x > 0 ? 1 : 0) * FIREDUDE_FRAME_ASPECT, firedude_frame * FIREDUDE_FRAME_ASPECT);
+				sd_bitmap_blit_key_clip(assets.firedude, canvas, nullptr, int32_t(e->x - vx - FIREDUDE_FRAME_ASPECT / 2), int32_t(e->y - vy - FIREDUDE_FRAME_ASPECT / 2), FIREDUDE_FRAME_ASPECT, FIREDUDE_FRAME_ASPECT, (e->vector_x > 0 ? 1 : 0) * FIREDUDE_FRAME_ASPECT, firedude_frame * FIREDUDE_FRAME_ASPECT);
 				break;
 
 			case TPMN_LOGIC_INDEX_BAT:
@@ -791,7 +816,7 @@ namespace tpmn
 				if (e->scared)
 					frame += 3;
 
-				bitmap_blit_key_clip(assets.bat, canvas, nullptr, int32_t(e->x - vx - assets.bat.width / 2), int32_t(e->y - vy - bat_frame_height / 2), assets.bat.width, bat_frame_height, 0, frame * bat_frame_height);
+				sd_bitmap_blit_key_clip(assets.bat, canvas, nullptr, int32_t(e->x - vx - assets.bat.width / 2), int32_t(e->y - vy - bat_frame_height / 2), assets.bat.width, bat_frame_height, 0, frame * bat_frame_height);
 			}
 			break;
 
@@ -822,7 +847,7 @@ namespace tpmn
 		//play menu up?
 		if (c.play_menu)
 		{
-			__text(assets, TPMN_CANVAS_HEIGHT / 3, "ESC = Quit", softdraw::white, c.canvas);
+			__text(assets, TPMN_CANVAS_HEIGHT / 3, "ESC = Quit", sd_white, c.canvas);
 			if (dx9::key_up_flank(VK_ESCAPE))
 			{
 				model.play_bit = 0;
@@ -830,7 +855,7 @@ namespace tpmn
 				c.play_menu = false;
 			}
 
-			__text(assets, TPMN_CANVAS_HEIGHT / 3 * 2, "R = Resume", softdraw::white, c.canvas);
+			__text(assets, TPMN_CANVAS_HEIGHT / 3 * 2, "R = Resume", sd_white, c.canvas);
 			if (dx9::key_up_flank('R'))
 			{
 				c.play_menu = false;
@@ -908,7 +933,7 @@ namespace tpmn
 			//drawGui();
 			{
 				//total servers fixed
-				bitmap_blit_key(assets.gui_server_fixed, c.canvas, 0, 0);
+				sd_bitmap_blit_key(assets.gui_server_fixed, c.canvas, 0, 0);
 				{
 					char str[4];
 					::sprintf_s(str, "%u", model.hero.fixed_servers.count);
@@ -930,13 +955,13 @@ namespace tpmn
 				//servers to fix (in current level)
 				const uint32_t ns = __num_broken_servers(model);
 				for (uint32_t i = 0; i < ns; ++i)
-					bitmap_blit_key(assets.gui_server_broken, c.canvas, TPMN_CANVAS_WIDTH - i * 14 - 20, 0);
+					sd_bitmap_blit_key(assets.gui_server_broken, c.canvas, TPMN_CANVAS_WIDTH - i * 14 - 20, 0);
 			}
 
 			if (c.play_menu)
 			{
-				__text(assets, TPMN_CANVAS_HEIGHT / 3, "ESC = Quit", softdraw::white, c.canvas);
-				__text(assets, TPMN_CANVAS_HEIGHT / 3 * 2, "R = Resume", softdraw::white, c.canvas);
+				__text(assets, TPMN_CANVAS_HEIGHT / 3, "ESC = Quit", sd_white, c.canvas);
+				__text(assets, TPMN_CANVAS_HEIGHT / 3 * 2, "R = Resume", sd_white, c.canvas);
 			}
 		}
 	}
@@ -951,30 +976,30 @@ namespace tpmn
 		__draw_dust_pass(true, model_now(controller._remove_model), 400, 50, assets.dust_near, controller.canvas);
 		return app_event_t::nothing;
 #else
-		bitmap_blit(assets.idle, controller.canvas, 0, 0);
+		sd_bitmap_blit(assets.idle, controller.canvas, 0, 0);
 
 		{
 			int32_t y;
 
 			__text(assets, y = 8, "TP-Man Nightmare", TPMN_TITLE_COLOR, controller.canvas);
-			__text(assets, y += TPMN_TEXT_SPACING, "(c)2012-2019 nornware AB", TPMN_TEXT_COLOR, controller.canvas);
+			__text(assets, y += TPMN_TEXT_SPACING, "(c)2012-2023 nornware AB", TPMN_TEXT_COLOR, controller.canvas);
 			__text(assets, y += TPMN_TEXT_SPACING * 2, "Talent", TPMN_TITLE_COLOR, controller.canvas);
 			__text(assets, y += TPMN_TEXT_SPACING, "Saga Velander", TPMN_TEXT_COLOR, controller.canvas);
 			__text(assets, y += TPMN_TEXT_SPACING, "Michael Awakim Manaz", TPMN_TEXT_COLOR, controller.canvas);
 			__text(assets, y += TPMN_TEXT_SPACING, "Johannes 'johno' Norneby", TPMN_TEXT_COLOR, controller.canvas);
 
-			__text(assets, y += TPMN_TEXT_SPACING * 4, "P = Play", softdraw::green, controller.canvas);
+			__text(assets, y += TPMN_TEXT_SPACING * 4, "P = Play", sd_green, controller.canvas);
 			if (dx9::key_up_flank('P'))
 				return tpmn_app_event_t::START_NEW_GAME;
 
-			__text(assets, y += TPMN_TEXT_SPACING, "ESC = Quit", softdraw::green, controller.canvas);
+			__text(assets, y += TPMN_TEXT_SPACING, "ESC = Quit", sd_green, controller.canvas);
 			if (dx9::key_up_flank(VK_ESCAPE))
 				return tpmn_app_event_t::EXIT_APPLICATION;
 		}
 
 		{
 			const dx9::cursor_position_t cp = dx9::mouse_cursor_position();
-			bitmap_cross(controller.canvas, cp.x, cp.y, 3, 0xffff);
+			sd_bitmap_cross(controller.canvas, cp.x, cp.y, 3, 0xffff);
 		}
 
 		return tpmn_app_event_t::NOTHING;
@@ -1068,7 +1093,7 @@ namespace tpmn
 	}
 
 	void tpmn_controller_death_create(
-		const softdraw::bitmap_t* aBitmap, const float aX, const float aY, const int32_t aWidth, const int32_t aHeight, const int32_t aSrcX, const int32_t aSrcY,
+		const sd_bitmap_t* aBitmap, const float aX, const float aY, const int32_t aWidth, const int32_t aHeight, const int32_t aSrcX, const int32_t aSrcY,
 		tpmn_controller_t& controller)
 	{
 		assert(controller.num_deaths < _countof(controller.deaths));

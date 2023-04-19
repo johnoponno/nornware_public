@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../softdraw/Bitmap.h"
+#include "../../softdraw/sd_bitmap.h"
 #include "tpmn_model.h"
 
 namespace sound
@@ -38,7 +38,7 @@ namespace tpmn
 
 	struct tpmn_death_t
 	{
-		const softdraw::bitmap_t* bm;
+		const sd_bitmap_t* bm;
 		float x;
 		float y;
 		float s;
@@ -60,7 +60,7 @@ namespace tpmn
 		uint32_t num_deaths;
 		float tile_anim_tick;
 		float credits_start_time;
-		softdraw::bitmap_t canvas;
+		sd_bitmap_t canvas;
 	};
 
 	tpmn_app_event_t tpmn_controller_input_output(
@@ -72,6 +72,6 @@ namespace tpmn
 		tpmn_controller_t& controller);
 
 	void tpmn_controller_death_create(
-		const softdraw::bitmap_t* aBitmap, const float aX, const float aY, const int32_t aWidth, const int32_t aHeight, const int32_t aSrcX, const int32_t aSrcY,
+		const sd_bitmap_t* aBitmap, const float aX, const float aY, const int32_t aWidth, const int32_t aHeight, const int32_t aSrcX, const int32_t aSrcY,
 		tpmn_controller_t& controller);
 }

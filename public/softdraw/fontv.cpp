@@ -21,7 +21,7 @@ namespace softdraw
 		space_width = 0;
 	}
 
-	void fontv_print(const fontv_t& FONT, const fontv_blit_mode_t aMode, const int32_t aDstX, const int32_t aDstY, const char* message, bitmap_t& aDst)
+	void fontv_print(const fontv_t& FONT, const fontv_blit_mode_t aMode, const int32_t aDstX, const int32_t aDstY, const char* message, sd_bitmap_t& aDst)
 	{
 		if (!message)
 			return;
@@ -58,19 +58,19 @@ namespace softdraw
 				switch (aMode)
 				{
 				case fontv_blit_mode_t::normal:
-					bitmap_blit_clip(FONT.rep, aDst, nullptr, x, y, FONT.characters[ch].w, FONT.characters[ch].h, FONT.characters[ch].s, FONT.characters[ch].t);
+					sd_bitmap_blit_clip(FONT.rep, aDst, nullptr, x, y, FONT.characters[ch].w, FONT.characters[ch].h, FONT.characters[ch].s, FONT.characters[ch].t);
 					break;
 
 				case fontv_blit_mode_t::key:
-					bitmap_blit_key_clip(FONT.rep, aDst, nullptr, x, y, FONT.characters[ch].w, FONT.characters[ch].h, FONT.characters[ch].s, FONT.characters[ch].t);
+					sd_bitmap_blit_key_clip(FONT.rep, aDst, nullptr, x, y, FONT.characters[ch].w, FONT.characters[ch].h, FONT.characters[ch].s, FONT.characters[ch].t);
 					break;
 
 				case fontv_blit_mode_t::add:
-					bitmap_blit_add_key_clip(FONT.rep, aDst, nullptr, x, y, FONT.characters[ch].w, FONT.characters[ch].h, FONT.characters[ch].s, FONT.characters[ch].t);
+					sd_bitmap_blit_add_key_clip(FONT.rep, aDst, nullptr, x, y, FONT.characters[ch].w, FONT.characters[ch].h, FONT.characters[ch].s, FONT.characters[ch].t);
 					break;
 
 				case fontv_blit_mode_t::sub:
-					bitmap_blit_sub_key_clip(FONT.rep, aDst, nullptr, x, y, FONT.characters[ch].w, FONT.characters[ch].h, FONT.characters[ch].s, FONT.characters[ch].t);
+					sd_bitmap_blit_sub_key_clip(FONT.rep, aDst, nullptr, x, y, FONT.characters[ch].w, FONT.characters[ch].h, FONT.characters[ch].s, FONT.characters[ch].t);
 					break;
 				}
 
@@ -79,7 +79,7 @@ namespace softdraw
 		}
 	}
 
-	void fontv_print_color_not_black(const fontv_t& FONT, const uint16_t aColor, const int32_t aDstX, const int32_t aDstY, const char* message, bitmap_t& aDst)
+	void fontv_print_color_not_black(const fontv_t& FONT, const uint16_t aColor, const int32_t aDstX, const int32_t aDstY, const char* message, sd_bitmap_t& aDst)
 	{
 		if (!message)
 			return;
@@ -113,7 +113,7 @@ namespace softdraw
 			{
 				ch -= fontv_charbegin;
 
-				bitmap_blit_key_color_not_black_clip(FONT.rep, aDst, aColor, nullptr, x, y, FONT.characters[ch].w, FONT.characters[ch].h, FONT.characters[ch].s, FONT.characters[ch].t);
+				sd_bitmap_blit_key_color_not_black_clip(FONT.rep, aDst, aColor, nullptr, x, y, FONT.characters[ch].w, FONT.characters[ch].h, FONT.characters[ch].s, FONT.characters[ch].t);
 
 				x += FONT.characters[ch].w + FONT.char_spacing;
 			}
@@ -152,14 +152,14 @@ namespace softdraw
 		return result;
 	}
 
-	void fontv_print(const fontv_t& f, const int32_t aX, const int32_t aY, const char* aText, bitmap_t& aCanvas)
+	void fontv_print(const fontv_t& f, const int32_t aX, const int32_t aY, const char* aText, sd_bitmap_t& aCanvas)
 	{
 		fontv_print(f, fontv_blit_mode_t::key, aX, aY, aText, aCanvas);
 	}
 
 	bool fontv_load_24(fontv_t& font, const char* aFileName, const bool aBlackKeyFlag)
 	{
-		if (!bitmap_load_24(aFileName, font.rep))
+		if (!sd_bitmap_load_24(aFileName, font.rep))
 			return false;
 
 		if (aBlackKeyFlag)

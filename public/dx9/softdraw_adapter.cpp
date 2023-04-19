@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "softdraw_adapter.h"
 
-#include "../softdraw/bitmap.h"
+#include "../softdraw/sd_bitmap.h"
 #include "state.h"
 
 namespace dx9
@@ -144,7 +144,7 @@ namespace dx9
 		SAFE_RELEASE(sb.state);
 	}
 
-	static void __create_texture(const softdraw::bitmap_t& aCanvas, softdraw_adapter_t& a)
+	static void __create_texture(const sd_bitmap_t& aCanvas, softdraw_adapter_t& a)
 	{
 		SAFE_RELEASE(a.texture);
 
@@ -168,7 +168,7 @@ namespace dx9
 		}
 	}
 
-	static void __copy(const softdraw::bitmap_t& canvas, ::D3DLOCKED_RECT& rect)
+	static void __copy(const sd_bitmap_t& canvas, ::D3DLOCKED_RECT& rect)
 	{
 #if 0
 		const uint32_t PITCH = rect.Pitch / sizeof(uint16_t);
@@ -210,7 +210,7 @@ namespace dx9
 #endif
 	}
 
-	static void __copy_alpha(const softdraw::bitmap_t& canvas, ::D3DLOCKED_RECT& rect)
+	static void __copy_alpha(const sd_bitmap_t& canvas, ::D3DLOCKED_RECT& rect)
 	{
 #if 0
 		const uint32_t PITCH = rect.Pitch / sizeof(uint16_t);
@@ -246,7 +246,7 @@ namespace dx9
 
 			while (x)
 			{
-				if (*SRC != softdraw::that_pink)
+				if (*SRC != sd_that_pink)
 					*dst = 0x8000 | *SRC;	//alpha bit 15
 				else
 					*dst = *SRC;
@@ -258,7 +258,7 @@ namespace dx9
 #endif
 	}
 
-	static void __copy_to_texture(const softdraw::bitmap_t& aCanvas, softdraw_adapter_t& a)
+	static void __copy_to_texture(const sd_bitmap_t& aCanvas, softdraw_adapter_t& a)
 	{
 		::D3DLOCKED_RECT locked_rect;
 
@@ -273,12 +273,12 @@ namespace dx9
 		}
 	}
 
-	static vec2f_t __uv_max(const softdraw::bitmap_t& aCanvas, const softdraw_adapter_t& a)
+	static vec2f_t __uv_max(const sd_bitmap_t& aCanvas, const softdraw_adapter_t& a)
 	{
 		return{ (float)aCanvas.width / (float)a.texture_aspect, (float)aCanvas.height / (float)a.texture_aspect };
 	}
 
-	static ::IDirect3DTexture9* __prepare_texture(const softdraw::bitmap_t& aCanvas, softdraw_adapter_t& a)
+	static ::IDirect3DTexture9* __prepare_texture(const sd_bitmap_t& aCanvas, softdraw_adapter_t& a)
 	{
 		if (!a.texture ||
 			a.texture_aspect < (uint32_t)aCanvas.width ||
@@ -292,7 +292,7 @@ namespace dx9
 		return a.texture;
 	}
 
-	static void __render2(const softdraw::bitmap_t& aCanvas, const vec2f_t& aPosition, const vec2f_t& aSize, const uint32_t aColor, const ff_mode_t aMode, const bool aFilter, softdraw_adapter_t& a)
+	static void __render2(const sd_bitmap_t& aCanvas, const vec2f_t& aPosition, const vec2f_t& aSize, const uint32_t aColor, const ff_mode_t aMode, const bool aFilter, softdraw_adapter_t& a)
 	{
 		const vec2f_t uv_max = __uv_max(aCanvas, a);
 		const uint16_t indices[6] =
@@ -330,12 +330,12 @@ namespace dx9
 		texture = nullptr;
 
 		if (anAlpha)
-			softdraw::set_555();
+			sd_set_555();
 		else
-			softdraw::set_565();
+			sd_set_565();
 	}
 
-	void softdraw_adapter_present_2d(const softdraw::bitmap_t& aCanvas, const int32_t aX, const int32_t aY, const int32_t aWidth, const int32_t aHeight, const uint32_t aColor, const ff_mode_t aMode, const bool aFilter, softdraw_adapter_t& a)
+	void softdraw_adapter_present_2d(const sd_bitmap_t& aCanvas, const int32_t aX, const int32_t aY, const int32_t aWidth, const int32_t aHeight, const uint32_t aColor, const ff_mode_t aMode, const bool aFilter, softdraw_adapter_t& a)
 	{
 		__render2(aCanvas, { (float)aX, (float)aY }, { (float)aWidth - .5f, (float)aHeight - .5f }, aColor, aMode, aFilter, a);
 	}
