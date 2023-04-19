@@ -1,12 +1,12 @@
 #include "stdafx.h"
 
 #include "../../dx9/state.h"
-#include "app.h"
+#include "tpmn_app.h"
 
 //--------------------------------------------------------------------------------------
 // Local variables
 //--------------------------------------------------------------------------------------
-static tpmn::app_t __app;
+static tpmn_app_t __app;
 
 //--------------------------------------------------------------------------------------
 // Entry point to the program. Initializes everything and goes into a message processing 
@@ -33,7 +33,7 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	}
 
 	//window is created here, can do sound setup
-	if (!tpmn::app_init(__app))
+	if (!tpmn_app_init(__app))
 		return -1;
 
 	// Pass control to DXUT for handling the message pump and 
@@ -43,7 +43,7 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 
 	// Perform any application-level cleanup here. Direct3D device resources are released within the
 	// appropriate callback functions and therefore don't require any cleanup code here.
-	tpmn::app_shutdown(__app);
+	tpmn_app_shutdown(__app);
 
 	return dx9::state.m_exit_code;
 }

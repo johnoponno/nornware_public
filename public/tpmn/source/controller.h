@@ -8,10 +8,10 @@ namespace sound
 	struct stream_t;
 }
 
+struct tpmn_assets_t;
+
 namespace tpmn
 {
-	struct assets_t;
-
 	enum
 	{
 		CANVAS_WIDTH = 600,
@@ -79,7 +79,7 @@ namespace tpmn
 		softdraw::bitmap_t canvas;
 	};
 
-	app_event_t controller_input_output(const assets_t& assets, model_t& model, controller_t& controller);
-	void controller_on_load_new_world(const assets_t& assets, controller_t& controller);
+	app_event_t controller_input_output(const tpmn_assets_t& assets, model_t& model, controller_t& controller);
+	void controller_on_load_new_world(const tpmn_assets_t& assets, controller_t& controller);
 	void controller_death_create(const softdraw::bitmap_t* aBitmap, const float aX, const float aY, const int32_t aWidth, const int32_t aHeight, const int32_t aSrcX, const int32_t aSrcY, controller_t& controller);
 }

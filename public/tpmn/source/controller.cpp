@@ -5,7 +5,7 @@
 #include "../../dx9/State.h"
 #include "../../dx9/sound_stream.h"
 #include "../../dx9/input.h"
-#include "assets.h"
+#include "tpmn_assets.h"
 
 namespace tpmn
 {
@@ -89,7 +89,7 @@ namespace tpmn
 		return y;
 	}
 
-	static void __draw_portals(const model_t& model, const assets_t& assets, const int32_t vx, const int32_t vy, softdraw::bitmap_t& canvas)
+	static void __draw_portals(const model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, softdraw::bitmap_t& canvas)
 	{
 		for (const portal_t* p = model.level.portals; p < model.level.portals + model.level.num_portals; ++p)
 		{
@@ -118,7 +118,7 @@ namespace tpmn
 		}
 	}
 
-	static void __draw_servers(const model_t& model, const assets_t& assets, const int32_t vx, const int32_t vy, softdraw::bitmap_t& canvas)
+	static void __draw_servers(const model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, softdraw::bitmap_t& canvas)
 	{
 		//calc starting grid
 		const int32_t gx = vx / TILE_ASPECT;
@@ -181,7 +181,7 @@ namespace tpmn
 		}
 	}
 
-	static void __draw_tile(const bool half, const assets_t& assets, const int32_t x, const int32_t y, const uint32_t tile, softdraw::bitmap_t& canvas)
+	static void __draw_tile(const bool half, const tpmn_assets_t& assets, const int32_t x, const int32_t y, const uint32_t tile, softdraw::bitmap_t& canvas)
 	{
 		const int32_t TILES_ON_SOURCE_X = assets.tiles.width / TILE_ASPECT;
 
@@ -224,7 +224,7 @@ namespace tpmn
 		return PLANT_S_PASSIVE;
 	}
 
-	static void __draw_scorpion(const model_t& model, const enemy_t& plant, const assets_t& assets, const int32_t x, const int32_t y, softdraw::bitmap_t& canvas)
+	static void __draw_scorpion(const model_t& model, const enemy_t& plant, const tpmn_assets_t& assets, const int32_t x, const int32_t y, softdraw::bitmap_t& canvas)
 	{
 		int32_t frame;
 		switch (__plant_state(model.hero, plant))
@@ -389,12 +389,12 @@ namespace tpmn
 		}
 	}
 
-	static void __text(const assets_t& assets, const int dst_y, const char* string, const uint16_t color, softdraw::bitmap_t& canvas)
+	static void __text(const tpmn_assets_t& assets, const int dst_y, const char* string, const uint16_t color, softdraw::bitmap_t& canvas)
 	{
 		fontv_print_color_not_black(assets.font, color, (canvas.width - fontv_string_width(assets.font, string)) / 2, dst_y, string, canvas);
 	}
 
-	static void __draw_foreground(const model_t& model, const assets_t& assets, const int32_t vx, const int32_t vy, controller_t& controller, softdraw::bitmap_t& canvas)
+	static void __draw_foreground(const model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, controller_t& controller, softdraw::bitmap_t& canvas)
 	{
 		const int32_t SX = screen_x((float)vx);
 		const int32_t SY = screen_y((float)vy);
@@ -413,35 +413,35 @@ namespace tpmn
 
 			int32_t y;
 
-			__text(assets, y = CANVAS_HEIGHT + int32_t((model_now(model) - controller.credits_start_time) * -16.), "Congratulations!", TITLE_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "You made it to the end of the game!", TEXT_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "We wanted to put an epic boss fight", TEXT_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "here, but we couldn't quite", TEXT_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "find the time.", TEXT_COLOR, canvas);
+			__text(assets, y = CANVAS_HEIGHT + int32_t((model_now(model) - controller.credits_start_time) * -16.), "Congratulations!", TPMN_TITLE_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "You made it to the end of the game!", TPMN_TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "We wanted to put an epic boss fight", TPMN_TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "here, but we couldn't quite", TPMN_TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "find the time.", TPMN_TEXT_COLOR, canvas);
 
-			__text(assets, y += TEXT_SPACING * 2, "Feel free to explore the game", TEXT_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "world further, or play it again,", TEXT_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "or whatever you like!", TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING * 2, "Feel free to explore the game", TPMN_TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "world further, or play it again,", TPMN_TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "or whatever you like!", TPMN_TEXT_COLOR, canvas);
 
-			__text(assets, y += TEXT_SPACING * 2, "If you're interested in playing", TEXT_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "with the level editor,", TEXT_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "or playing with the code base,", TEXT_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "or have any other questions", TEXT_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "or comments, please contact:", TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING * 2, "If you're interested in playing", TPMN_TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "with the level editor,", TPMN_TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "or playing with the code base,", TPMN_TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "or have any other questions", TPMN_TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "or comments, please contact:", TPMN_TEXT_COLOR, canvas);
 
-			__text(assets, y += TEXT_SPACING, "johannes.norneby@gmail.com", TITLE_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "johannes.norneby@gmail.com", TPMN_TITLE_COLOR, canvas);
 
-			__text(assets, y += TEXT_SPACING * 2, "Thanks for playing!", TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING * 2, "Thanks for playing!", TPMN_TEXT_COLOR, canvas);
 
-			__text(assets, y += TEXT_SPACING * 4, "TP-Man Nightmare", TITLE_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "(c)2012 NTI-Gymnasiet Goteborg", TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING * 4, "TP-Man Nightmare", TPMN_TITLE_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "(c)2012 NTI-Gymnasiet Goteborg", TPMN_TEXT_COLOR, canvas);
 
-			__text(assets, y += TEXT_SPACING * 2, "Art / Design", TITLE_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "Saga Velander", TEXT_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "Michael Awakim Manaz", TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING * 2, "Art / Design", TPMN_TITLE_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "Saga Velander", TPMN_TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "Michael Awakim Manaz", TPMN_TEXT_COLOR, canvas);
 
-			__text(assets, y += TEXT_SPACING * 2, "Code / Music / Sound", TITLE_COLOR, canvas);
-			__text(assets, y += TEXT_SPACING, "Johannes 'johno' Norneby", TEXT_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING * 2, "Code / Music / Sound", TPMN_TITLE_COLOR, canvas);
+			__text(assets, y += TEXT_SPACING, "Johannes 'johno' Norneby", TPMN_TEXT_COLOR, canvas);
 
 			if (y < -32)
 				controller.credits_start_time = model_now(model);
@@ -450,7 +450,7 @@ namespace tpmn
 		}
 	}
 
-	static void __draw_farplane(const model_t& model, const assets_t& assets, const int32_t vx, const int32_t vy, controller_t& controller)
+	static void __draw_farplane(const model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, controller_t& controller)
 	{
 		const float now = model_now(model);
 
@@ -463,21 +463,21 @@ namespace tpmn
 		if (7 == index)
 			index = 2;
 
-		assert(index < _countof(assets.myBackgrounds));
+		assert(index < _countof(assets.backgrounds));
 
 		switch (index)
 		{
 		default:
-			bitmap_blit(assets.myBackgrounds[index], controller.canvas, 0, 0);
+			bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
 			break;
 
 		case 1:
-			bitmap_blit(assets.myBackgrounds[index], controller.canvas, 0, 0);
+			bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
 			__draw_dust_pass(false, now, 100, 20, assets.dust_far, controller.canvas);
 			break;
 
 		case 3:
-			bitmap_blit(assets.myBackgrounds[index], controller.canvas, 0, 0);
+			bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
 			for (snowflake_t* f = controller.flakes; f < controller.flakes + _countof(controller.flakes); ++f)
 			{
 				f->x += f->sx * TIME_PER_TICK;
@@ -502,7 +502,7 @@ namespace tpmn
 			break;
 
 		case 5:
-			bitmap_blit(assets.myBackgrounds[index], controller.canvas, 0, 0);
+			bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
 #if 0
 			{
 				const int32_t WIDTH = assets.myCloud.width / 3;
@@ -521,7 +521,7 @@ namespace tpmn
 		}
 	}
 
-	static void __draw_hero(const model_t& model, const assets_t& assets, const int32_t vx, const int32_t vy, softdraw::bitmap_t& canvas)
+	static void __draw_hero(const model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, softdraw::bitmap_t& canvas)
 	{
 		//figure out state / frame
 		int32_t state;
@@ -575,7 +575,7 @@ namespace tpmn
 		}
 	}
 
-	static void __draw_tiles(const model_t& model, const assets_t& assets, const int32_t vx, const int32_t vy, const bool replace, controller_t& controller)
+	static void __draw_tiles(const model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, const bool replace, controller_t& controller)
 	{
 		//calc starting grid
 		const int32_t gx = vx / TILE_ASPECT;
@@ -679,7 +679,7 @@ namespace tpmn
 		}
 	}
 
-	static void __draw_enemies(const model_t& model, const assets_t& assets, const int32_t vx, const int32_t vy, softdraw::bitmap_t& canvas)
+	static void __draw_enemies(const model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, softdraw::bitmap_t& canvas)
 	{
 		const float now = model_now(model);
 		const int32_t spikygreen_num_frames = assets.spikygreen.height / assets.spikygreen.width;
@@ -809,7 +809,7 @@ namespace tpmn
 		}
 	}
 
-	static void __play_update(const assets_t& assets, model_t& model, controller_t& c)
+	static void __play_update(const tpmn_assets_t& assets, model_t& model, controller_t& c)
 	{
 		//play menu up?
 		if (c.play_menu)
@@ -934,7 +934,7 @@ namespace tpmn
 		}
 	}
 
-	static app_event_t __idle_update(const assets_t& assets, controller_t& controller)
+	static app_event_t __idle_update(const tpmn_assets_t& assets, controller_t& controller)
 	{
 #if 0
 		bitmap_blit(assets.myBackgrounds[1], controller.canvas, 0, 0);
@@ -947,12 +947,12 @@ namespace tpmn
 		{
 			int32_t y;
 
-			__text(assets, y = 8, "TP-Man Nightmare", TITLE_COLOR, controller.canvas);
-			__text(assets, y += TEXT_SPACING, "(c)2012-2019 nornware AB", TEXT_COLOR, controller.canvas);
-			__text(assets, y += TEXT_SPACING * 2, "Talent", TITLE_COLOR, controller.canvas);
-			__text(assets, y += TEXT_SPACING, "Saga Velander", TEXT_COLOR, controller.canvas);
-			__text(assets, y += TEXT_SPACING, "Michael Awakim Manaz", TEXT_COLOR, controller.canvas);
-			__text(assets, y += TEXT_SPACING, "Johannes 'johno' Norneby", TEXT_COLOR, controller.canvas);
+			__text(assets, y = 8, "TP-Man Nightmare", TPMN_TITLE_COLOR, controller.canvas);
+			__text(assets, y += TEXT_SPACING, "(c)2012-2019 nornware AB", TPMN_TEXT_COLOR, controller.canvas);
+			__text(assets, y += TEXT_SPACING * 2, "Talent", TPMN_TITLE_COLOR, controller.canvas);
+			__text(assets, y += TEXT_SPACING, "Saga Velander", TPMN_TEXT_COLOR, controller.canvas);
+			__text(assets, y += TEXT_SPACING, "Michael Awakim Manaz", TPMN_TEXT_COLOR, controller.canvas);
+			__text(assets, y += TEXT_SPACING, "Johannes 'johno' Norneby", TPMN_TEXT_COLOR, controller.canvas);
 
 			__text(assets, y += TEXT_SPACING * 4, "P = Play", softdraw::green, controller.canvas);
 			if (dx9::key_up_flank('P'))
@@ -976,7 +976,7 @@ namespace tpmn
 	//public
 	//public
 	//public
-	app_event_t controller_input_output(const assets_t& assets, model_t& model, controller_t& controller)
+	app_event_t controller_input_output(const tpmn_assets_t& assets, model_t& model, controller_t& controller)
 	{
 		//music
 		if (controller.track != model.level.music_track || !controller.music)
@@ -1038,9 +1038,9 @@ namespace tpmn
 		return result;
 	}
 
-	void controller_on_load_new_world(const assets_t& assets, controller_t& controller)
+	void controller_on_load_new_world(const tpmn_assets_t& assets, controller_t& controller)
 	{
-		sound_play(assets, snd_spawn);
+		tpmn_sound_play(assets, TPMN_SND_SPAWN);
 
 		controller.play_menu = false;
 
