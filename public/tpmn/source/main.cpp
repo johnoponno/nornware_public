@@ -25,7 +25,7 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	// device for the application. Calling each of these functions is optional, but they
 	// allow you to set several options which control the behavior of the framework.
 	dx9::init();
-	dx9::create_window("Twisted Pair Man Nightmare (c) 2011-2019 nornware AB");
+	dx9::create_window("Twisted Pair Man Nightmare (c) 2012-2023 nornware AB");
 	{
 		const ::HRESULT err = dx9::create_device(D3DADAPTER_DEFAULT, true, ::GetSystemMetrics(SM_CXSCREEN) / 2, ::GetSystemMetrics(SM_CYSCREEN) / 2, &__app);
 		if (FAILED(err))

@@ -69,7 +69,7 @@ void tpmn_app_t::frame_move(const double, const float)
 		if (update_result.world_to_load)
 		{
 			if (model_load_world(update_result.world_to_load, false, _model))
-				controller_on_load_new_world(_assets, _controller);
+				tpmn_controller_on_load_new_world(_assets, _controller);
 		}
 		//otherwise potentially "do effects"
 		else
@@ -91,11 +91,11 @@ void tpmn_app_t::frame_move(const double, const float)
 
 			if (tpmn::bit_hero_die & update_result.bits)
 			{
-				controller_death_create(
+				tpmn_controller_death_create(
 					&_assets.hero,
 					_model.hero.x, _model.hero.y,
-					tpmn::HERO_WIDTH, tpmn::HERO_HEIGHT,
-					_model.hero.right_bit ? tpmn::HERO_WIDTH * 2 : 0, 5 * tpmn::HERO_HEIGHT,
+					TPMN_HERO_WIDTH, TPMN_HERO_HEIGHT,
+					_model.hero.right_bit ? TPMN_HERO_WIDTH * 2 : 0, 5 * TPMN_HERO_HEIGHT,
 					_controller
 				);
 				tpmn_sound_play(_assets, TPMN_SND_HERODIE01 + uint32_t(tpmn::random_unit() * 3));
@@ -122,17 +122,17 @@ void tpmn_app_t::frame_move(const double, const float)
 				switch (update_result.roller_type)
 				{
 				case tpmn::LOGIC_INDEX_SPIKYGREEN:
-					controller_death_create(&_assets.spikygreen, update_result.roller_x, update_result.roller_y, _assets.spikygreen.width, _assets.spikygreen.width, 0, 0, _controller);
+					tpmn_controller_death_create(&_assets.spikygreen, update_result.roller_x, update_result.roller_y, _assets.spikygreen.width, _assets.spikygreen.width, 0, 0, _controller);
 					tpmn_sound_play(_assets, TPMN_SND_SPIKYGREEN);
 					break;
 
 				case tpmn::LOGIC_INDEX_BLUEBLOB:
-					controller_death_create(&_assets.blueblob, update_result.roller_x, update_result.roller_y, tpmn::BLOB_FRAME_ASPECT, tpmn::BLOB_FRAME_ASPECT, 0, 0, _controller);
+					tpmn_controller_death_create(&_assets.blueblob, update_result.roller_x, update_result.roller_y, TPMN_BLOB_FRAME_ASPECT, TPMN_BLOB_FRAME_ASPECT, 0, 0, _controller);
 					tpmn_sound_play(_assets, TPMN_SND_BLUEBLOB);
 					break;
 
 				case tpmn::LOGIC_INDEX_BROWNBLOB:
-					controller_death_create(&_assets.brownblob, update_result.roller_x, update_result.roller_y, tpmn::BLOB_FRAME_ASPECT, tpmn::BLOB_FRAME_ASPECT, 0, 0, _controller);
+					tpmn_controller_death_create(&_assets.brownblob, update_result.roller_x, update_result.roller_y, TPMN_BLOB_FRAME_ASPECT, TPMN_BLOB_FRAME_ASPECT, 0, 0, _controller);
 					tpmn_sound_play(_assets, TPMN_SND_BROWNBLOB);
 					break;
 				}
@@ -143,12 +143,12 @@ void tpmn_app_t::frame_move(const double, const float)
 				switch (update_result.plant_type)
 				{
 				case tpmn::LOGIC_INDEX_PLANT:
-					controller_death_create(&_assets.plant, update_result.plant_x, update_result.plant_y, tpmn::PLANT_FRAME_ASPECT, tpmn::PLANT_FRAME_ASPECT, 0, 0, _controller);
+					tpmn_controller_death_create(&_assets.plant, update_result.plant_x, update_result.plant_y, TPMN_PLANT_FRAME_ASPECT, TPMN_PLANT_FRAME_ASPECT, 0, 0, _controller);
 					tpmn_sound_play(_assets, TPMN_SND_PLANT);
 					break;
 
 				case tpmn::LOGIC_INDEX_SCORPION:
-					controller_death_create(&_assets.scorpion, update_result.plant_x, update_result.plant_y, _assets.scorpion.width / 2, _assets.scorpion.height / 6, 0, _assets.scorpion.height / 6 * 4, _controller);
+					tpmn_controller_death_create(&_assets.scorpion, update_result.plant_x, update_result.plant_y, _assets.scorpion.width / 2, _assets.scorpion.height / 6, 0, _assets.scorpion.height / 6 * 4, _controller);
 					tpmn_sound_play(_assets, TPMN_SND_SCORPION);
 					break;
 				}
@@ -156,7 +156,7 @@ void tpmn_app_t::frame_move(const double, const float)
 
 			if (tpmn::bit_slider_die & update_result.bits)
 			{
-				controller_death_create(
+				tpmn_controller_death_create(
 					&_assets.penguin,
 					update_result.slider_x, update_result.slider_y,
 					_assets.penguin.width / 2, _assets.penguin.height / 2,
@@ -171,15 +171,15 @@ void tpmn_app_t::frame_move(const double, const float)
 	}
 
 	//single pass imgui, render to the canvas to be pushed to the gpu in frame_render()
-	switch (controller_input_output(_assets, _model, _controller))
+	switch (tpmn_controller_input_output(_assets, _model, _controller))
 	{
-	case tpmn::app_event_t::exit_application:
+	case tpmn::tpmn_app_event_t::EXIT_APPLICATION:
 		dx9::shutdown(0);
 		break;
 
-	case tpmn::app_event_t::start_new_game:
+	case tpmn::tpmn_app_event_t::START_NEW_GAME:
 		if (model_load_world(ASSET_HUB, true, _model))
-			controller_on_load_new_world(_assets, _controller);
+			tpmn_controller_on_load_new_world(_assets, _controller);
 		break;
 	}
 }
@@ -242,7 +242,7 @@ bool tpmn_app_init(tpmn_app_t& app)
 	for (uint32_t i = 0; i < tpmn::MAX_TILE; ++i)
 		app._controller.current_tiles[i] = i;
 
-	if (!bitmap_init(tpmn::CANVAS_WIDTH, tpmn::CANVAS_HEIGHT, 0, app._controller.canvas))
+	if (!bitmap_init(TPMN_CANVAS_WIDTH, TPMN_CANVAS_HEIGHT, 0, app._controller.canvas))
 		return false;
 
 	return true;

@@ -104,7 +104,7 @@
   <ItemGroup>
     <ClCompile Include="tpmn_app.cpp" />
     <ClCompile Include="tpmn_assets.cpp" />
-    <ClCompile Include="controller.cpp" />
+    <ClCompile Include="tpmn_controller.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -115,7 +115,7 @@
   <ItemGroup>
     <ClInclude Include="tpmn_app.h" />
     <ClInclude Include="tpmn_assets.h" />
-    <ClInclude Include="controller.h" />
+    <ClInclude Include="tpmn_controller.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>

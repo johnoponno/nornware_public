@@ -4,7 +4,7 @@
 #include "../../dx9/softdraw_adapter.h"
 #include "model.h"
 #include "tpmn_assets.h"
-#include "controller.h"
+#include "tpmn_controller.h"
 
 struct tpmn_app_t : public dx9::app_i
 {
@@ -22,7 +22,7 @@ struct tpmn_app_t : public dx9::app_i
 
 	tpmn::model_t _model;
 	tpmn_assets_t _assets;
-	tpmn::controller_t _controller;
+	tpmn::tpmn_controller_t _controller;
 	dx9::softdraw_adapter_t _video;
 };
 
