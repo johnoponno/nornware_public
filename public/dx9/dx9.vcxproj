@@ -87,7 +87,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="app.h" />
+    <ClInclude Include="w32_direct3d9_app.h" />
     <ClInclude Include="codec.h" />
     <ClInclude Include="d3d_resource.h" />
     <ClInclude Include="dxut.h" />

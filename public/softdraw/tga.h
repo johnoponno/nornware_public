@@ -609,6 +609,10 @@ _______________________________________________________________________________|
 
 namespace fs
 {
+	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
+	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
+	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
+	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
 	namespace tga
 	{
 #pragma pack(push, 1)
@@ -645,7 +649,14 @@ namespace fs
 
 		void flip_vertical(image_t& anImage);
 	}
+	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
+	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
+	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
+	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
 
+	//FIXME: bad place for this, used by sound code (dx9 lib)
+	//FIXME: bad place for this, used by sound code (dx9 lib)
+	//FIXME: bad place for this, used by sound code (dx9 lib)
 	//FIXME: bad place for this, used by sound code (dx9 lib)
 	struct blob_t
 	{
@@ -654,5 +665,8 @@ namespace fs
 	};
 
 	blob_t file_contents(const char* file);
+	//FIXME: bad place for this, used by sound code (dx9 lib)
+	//FIXME: bad place for this, used by sound code (dx9 lib)
+	//FIXME: bad place for this, used by sound code (dx9 lib)
 	//FIXME: bad place for this, used by sound code (dx9 lib)
 }

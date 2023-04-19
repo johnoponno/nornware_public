@@ -78,7 +78,7 @@ namespace dx9
 			uint32_t x;
 			uint32_t y;
 		} desktop_resolution;
-		app_i* app;
+		win32_direct3d9_app_i* app;
 	};
 
 	extern vec2f_t get_backbuffer_size();

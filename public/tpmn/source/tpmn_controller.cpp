@@ -1,14 +1,12 @@
 #include "stdafx.h"
 #include "tpmn_controller.h"
 
-#include "../../dx9/app.h"
+#include "../../dx9/w32_direct3d9_app.h"
 #include "../../dx9/State.h"
 #include "../../dx9/sound_stream.h"
 #include "../../dx9/input.h"
 #include "tpmn_assets.h"
 
-namespace tpmn
-{
 #define ASSET_TRACK0 "johno_Jungle_2012.ogg"
 #define ASSET_TRACK1 "johno_Minimal_2012.ogg"
 #define ASSET_TRACK2 "johno_Outspaced_Remix_2012.ogg"
@@ -39,6 +37,8 @@ namespace tpmn
 
 #define TILE_FPS 16.f
 
+namespace tpmn
+{
 	static int32_t __hero_view_position_x(const tpmn_model_t& model)
 	{
 		int32_t x = (int32_t)model.hero.x;

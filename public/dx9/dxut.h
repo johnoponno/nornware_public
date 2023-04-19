@@ -1,21 +1,10 @@
 #pragma once
 
-namespace dx9
-{
-	struct app_i;
+struct win32_direct3d9_app_i;
 
-	struct device_settings_t
-	{
-		::UINT adapter_ordinal;
-		::D3DDEVTYPE device_type;
-		::D3DFORMAT adapter_format;
-		::DWORD behavior_flags;
-		::D3DPRESENT_PARAMETERS present_parameters;
-	};
-
-	//--------------------------------------------------------------------------------------
-	// Error codes
-	//--------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
+// Error codes
+//--------------------------------------------------------------------------------------
 #define DXUTERR_NODIRECT3D              MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0x0901)
 #define DXUTERR_NOCOMPATIBLEDEVICES     MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0x0902)
 #define DXUTERR_MEDIANOTFOUND           MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0x0903)
@@ -26,6 +15,17 @@ namespace dx9
 #define DXUTERR_RESETTINGDEVICEOBJECTS  MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0x0908)
 #define DXUTERR_INCORRECTVERSION        MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0x0909)
 
+namespace dx9
+{
+	
+	struct device_settings_t
+	{
+		::UINT adapter_ordinal;
+		::D3DDEVTYPE device_type;
+		::D3DFORMAT adapter_format;
+		::DWORD behavior_flags;
+		::D3DPRESENT_PARAMETERS present_parameters;
+	};
 
 	//--------------------------------------------------------------------------------------
 	// Initialization
@@ -36,10 +36,10 @@ namespace dx9
 	::HRESULT create_window(const char* aWindowTitle, const ::DWORD aWindowStyle = 0);
 
 	// Choose either DXUTCreateDevice or DXUTSetDevice or DXUTCreateDeviceFromSettings
-	::HRESULT create_device(const uint32_t AdapterOrdinal, const bool bWindowed, const int32_t nSuggestedWidth, const int32_t nSuggestedHeight, app_i* anApp);
+	::HRESULT create_device(const uint32_t AdapterOrdinal, const bool bWindowed, const int32_t nSuggestedWidth, const int32_t nSuggestedHeight, win32_direct3d9_app_i* anApp);
 
 	// Choose either MainLoop or implement your own main loop 
-	::HRESULT main_loop(app_i* anApp);
+	::HRESULT main_loop(win32_direct3d9_app_i* anApp);
 
 	//--------------------------------------------------------------------------------------
 	// Common Tasks 
