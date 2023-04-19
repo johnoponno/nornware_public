@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vorbisfile.h"
+#include "vorbis_file.h"
 #include "sound_stream_source.h"
 
 namespace sound

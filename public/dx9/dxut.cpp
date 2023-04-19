@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "state.h"
-#include "timer.h"
+#include "w32_timer.h"
 #include "d3d_resource.h"
 #include "w32_direct3d9_app.h"
 
@@ -64,10 +64,10 @@ namespace dx9
 		}
 	}
 
-	timer_t& __timer()
+	w32_timer_t& __timer()
 	{
 		// using an accessor function gives control of the construction order
-		static timer_t t;
+		static w32_timer_t t;
 		return t;
 	}
 
@@ -2670,7 +2670,7 @@ namespace dx9
 
 				// QPC may lose consistency when suspending, so reset the timer
 				// upon resume.
-				timer_reset(__timer());
+				w32_timer_reset(__timer());
 				//state.m_last_stats_update_time = 0;
 				return true;
 			}
@@ -2865,7 +2865,7 @@ namespace dx9
 		}
 
 		// reset the timer
-		timer_reset(__timer());
+		w32_timer_reset(__timer());
 
 		state.m_init.created = true;
 
@@ -3222,12 +3222,12 @@ namespace dx9
 		if (state.m_pause_time_count > 0)
 		{
 			// stop the scene from animating
-			timer_stop(__timer());
+			w32_timer_stop(__timer());
 		}
 		else
 		{
 			// Restart the timer
-			timer_start(__timer());
+			w32_timer_start(__timer());
 		}
 
 		//state.m_rendering_paused = state.m_pause_rendering_count > 0;
@@ -3445,7 +3445,7 @@ namespace dx9
 		//fixed update central
 		{
 			// get the app's time, in seconds. Skip rendering if no time elapsed
-			const timer_values_t TIME_VALUES = timer_mutate_and_get_values(__timer());
+			const w32_timer_values_t TIME_VALUES = w32_timer_mutate_and_get_values(__timer());
 
 			if (anApp && anApp->win32_direct3d9_app_is_fixed_tick_rate())
 			{

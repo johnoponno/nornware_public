@@ -88,7 +88,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="w32_direct3d9_app.h" />
-    <ClInclude Include="codec.h" />
+    <ClInclude Include="vorbis_codec.h" />
     <ClInclude Include="d3d_resource.h" />
     <ClInclude Include="dxut.h" />
     <ClInclude Include="dxut_enum.h" />
@@ -109,9 +109,9 @@
     <ClInclude Include="sound_vorbis_file.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="timer.h" />
+    <ClInclude Include="w32_timer.h" />
     <ClInclude Include="traversable.h" />
-    <ClInclude Include="vorbisfile.h" />
+    <ClInclude Include="vorbis_file.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="d3d_resource.cpp" />
@@ -133,7 +133,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="timer.cpp" />
+    <ClCompile Include="w32_timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
