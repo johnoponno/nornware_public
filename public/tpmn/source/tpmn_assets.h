@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../softdraw/sd_bitmap.h"
-#include "../../softdraw/fontv.h"
+#include "../../softdraw/sd_fontv.h"
 #include "../../dx9/sound_engine.h"
 #include "../../dx9/sound_container.h"
 #include "tpmn_model.h"
@@ -69,7 +69,7 @@ struct tpmn_assets_t
 	sd_bitmap_t dust_near;
 	sd_bitmap_t flake;
 
-	softdraw::fontv_t font;
+	sd_fontv_t font;
 
 	uint32_t anim_target[TPMN_MAX_TILE];
 

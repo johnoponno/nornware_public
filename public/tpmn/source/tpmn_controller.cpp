@@ -113,9 +113,9 @@ namespace tpmn
 				char str[4];
 				::sprintf_s(str, "%u", p->server_count);
 				if (p->server_count >= 10)
-					fontv_print(assets.font, x + 1, y + 4, str, canvas);
+					sd_fontv_print(assets.font, x + 1, y + 4, str, canvas);
 				else
-					fontv_print(assets.font, x + 6, y + 4, str, canvas);
+					sd_fontv_print(assets.font, x + 6, y + 4, str, canvas);
 			}
 		}
 	}
@@ -408,7 +408,7 @@ namespace tpmn
 		const tpmn_assets_t& assets, const int dst_y, const char* string, const uint16_t color,
 		sd_bitmap_t& canvas)
 	{
-		fontv_print_color_not_black(assets.font, color, (canvas.width - fontv_string_width(assets.font, string)) / 2, dst_y, string, canvas);
+		sd_fontv_print_color_not_black(assets.font, color, (canvas.width - sd_fontv_string_width(assets.font, string)) / 2, dst_y, string, canvas);
 	}
 
 	static void __draw_foreground(
@@ -938,9 +938,9 @@ namespace tpmn
 					char str[4];
 					::sprintf_s(str, "%u", model.hero.fixed_servers.count);
 					if (model.hero.fixed_servers.count < 10)
-						fontv_print(assets.font, 6, 6, str, c.canvas);
+						sd_fontv_print(assets.font, 6, 6, str, c.canvas);
 					else
-						fontv_print(assets.font, 1, 6, str, c.canvas);
+						sd_fontv_print(assets.font, 1, 6, str, c.canvas);
 				}
 
 				//keys gui

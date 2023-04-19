@@ -120,7 +120,7 @@ bool tpmn_assets_init(tpmn_assets_t& assets)
 	BITMAP(ASSET_DUST_NEAR, assets.dust_near);
 	BITMAP(ASSET_FLAKE, assets.flake);
 
-	if (!fontv_load_24(assets.font, ASSET_FONT, false))
+	if (!sd_fontv_load_24(assets.font, ASSET_FONT, false))
 		return false;
 	assets.font.char_spacing = -1;
 
