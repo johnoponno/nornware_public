@@ -1042,7 +1042,7 @@ namespace tpmn
 		{
 			char str[16];
 			::sprintf_s(str, "%u", dx9::state.app->_frame_drops);
-			__text(assets, CANVAS_HEIGHT - assets.font.height, str, softdraw::red, controller.canvas);
+			__text(assets, TPMN_CANVAS_HEIGHT - assets.font.height, str, softdraw::red, controller.canvas);
 		}
 #endif
 
@@ -1056,14 +1056,6 @@ namespace tpmn
 		tpmn_sound_play(assets, TPMN_SND_SPAWN);
 
 		controller.play_menu = false;
-
-		for (tpmn_cloud_t* c = controller.clouds; c < controller.clouds + _countof(controller.clouds); ++c)
-		{
-			c->x = random_unit() * TPMN_CANVAS_WIDTH;
-			c->y = random_unit() * TPMN_CANVAS_HEIGHT / 2;
-			c->s = random_unit() * -20 - 10;
-			c->t = uint32_t(random_unit() * 6);
-		}
 
 		for (tpmn_snowflake_t* f = controller.flakes; f < controller.flakes + _countof(controller.flakes); ++f)
 		{

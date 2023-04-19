@@ -36,14 +36,6 @@ namespace tpmn
 		uint32_t t;
 	};
 
-	struct tpmn_cloud_t
-	{
-		float x;
-		float y;
-		float s;
-		uint32_t t;
-	};
-
 	struct tpmn_death_t
 	{
 		const softdraw::bitmap_t* bm;
@@ -64,7 +56,6 @@ namespace tpmn
 		sound::stream_t* music;
 		uint32_t current_tiles[MAX_TILE];
 		tpmn_snowflake_t flakes[32];
-		tpmn_cloud_t clouds[8];
 		tpmn_death_t deaths[8];
 		uint32_t num_deaths;
 		float tile_anim_tick;
