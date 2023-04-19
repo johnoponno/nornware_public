@@ -63,33 +63,33 @@ void tpmn_app_t::frame_move(const double, const float)
 
 	{
 		//tick the simulation
-		const tpmn::model_update_t update_result = model_update(_model);
+		const tpmn_events_t update_result = tpmn_model_update(_model);
 
 		//if a level change is queued, do that
 		if (update_result.world_to_load)
 		{
-			if (model_load_world(update_result.world_to_load, false, _model))
+			if (tpmn_model_load_world(update_result.world_to_load, false, _model))
 				tpmn_controller_on_load_new_world(_assets, _controller);
 		}
 		//otherwise potentially "do effects"
 		else
 		{
-			if (tpmn::bit_hero_whip & update_result.bits)
+			if (EVENT_BIT_HERO_WHIP & update_result.bits)
 				tpmn_sound_play(_assets, TPMN_SND_HEROWHIP);
 
-			if (tpmn::bit_hero_jump & update_result.bits)
-				tpmn_sound_play(_assets, TPMN_SND_HEROJUMP01 + uint32_t(tpmn::random_unit() * 5));
+			if (EVENT_BIT_HERO_JUMP & update_result.bits)
+				tpmn_sound_play(_assets, TPMN_SND_HEROJUMP01 + uint32_t(tpmn_random_unit() * 5));
 
-			if (tpmn::bit_hero_landed & update_result.bits)
-				tpmn_sound_play(_assets, TPMN_SND_HEROLAND01 + uint32_t(tpmn::random_unit() * 4));
+			if (EVENT_BIT_HERO_LANDED & update_result.bits)
+				tpmn_sound_play(_assets, TPMN_SND_HEROLAND01 + uint32_t(tpmn_random_unit() * 4));
 
-			if (tpmn::bit_back_to_checkpoint & update_result.bits)
+			if (EVENT_BIT_BACK_TO_CHECKPOINT & update_result.bits)
 				tpmn_sound_play(_assets, TPMN_SND_SPAWN);
 
-			if (tpmn::bit_bat_flee & update_result.bits)
+			if (EVENT_BIT_BAT_FLEE & update_result.bits)
 				tpmn_sound_play(_assets, TPMN_SND_BATFLEE);
 
-			if (tpmn::bit_hero_die & update_result.bits)
+			if (EVENT_BIT_HERO_DIE & update_result.bits)
 			{
 				tpmn_controller_death_create(
 					&_assets.hero,
@@ -98,15 +98,15 @@ void tpmn_app_t::frame_move(const double, const float)
 					_model.hero.right_bit ? TPMN_HERO_WIDTH * 2 : 0, 5 * TPMN_HERO_HEIGHT,
 					_controller
 				);
-				tpmn_sound_play(_assets, TPMN_SND_HERODIE01 + uint32_t(tpmn::random_unit() * 3));
+				tpmn_sound_play(_assets, TPMN_SND_HERODIE01 + uint32_t(tpmn_random_unit() * 3));
 			}
 
-			if (tpmn::bit_fixed_server & update_result.bits)
+			if (EVENT_BIT_FIXED_SERVER & update_result.bits)
 				tpmn_sound_play(_assets, TPMN_SND_FIXSERVER);
 
-			if (tpmn::bit_checkpoint & update_result.bits)
+			if (EVENT_BIT_CHECKPOINT & update_result.bits)
 			{
-				const uint32_t offset = tpmn::world_to_offset(_model.hero.x, _model.hero.y);
+				const uint32_t offset = tpmn_world_to_offset(_model.hero.x, _model.hero.y);
 				if (offset != _controller.last_checkpoint)
 				{
 					tpmn_sound_play(_assets, TPMN_SND_CHECKPOINT);
@@ -114,47 +114,47 @@ void tpmn_app_t::frame_move(const double, const float)
 				}
 			}
 
-			if (tpmn::bit_key & update_result.bits)
+			if (EVENT_BIT_KEY & update_result.bits)
 				tpmn_sound_play(_assets, TPMN_SND_KEY);
 
-			if (tpmn::bit_roller_die & update_result.bits)
+			if (EVENT_BIT_ROLLER_DIE & update_result.bits)
 			{
 				switch (update_result.roller_type)
 				{
-				case tpmn::LOGIC_INDEX_SPIKYGREEN:
+				case TPMN_LOGIC_INDEX_SPIKYGREEN:
 					tpmn_controller_death_create(&_assets.spikygreen, update_result.roller_x, update_result.roller_y, _assets.spikygreen.width, _assets.spikygreen.width, 0, 0, _controller);
 					tpmn_sound_play(_assets, TPMN_SND_SPIKYGREEN);
 					break;
 
-				case tpmn::LOGIC_INDEX_BLUEBLOB:
+				case TPMN_LOGIC_INDEX_BLUEBLOB:
 					tpmn_controller_death_create(&_assets.blueblob, update_result.roller_x, update_result.roller_y, TPMN_BLOB_FRAME_ASPECT, TPMN_BLOB_FRAME_ASPECT, 0, 0, _controller);
 					tpmn_sound_play(_assets, TPMN_SND_BLUEBLOB);
 					break;
 
-				case tpmn::LOGIC_INDEX_BROWNBLOB:
+				case TPMN_LOGIC_INDEX_BROWNBLOB:
 					tpmn_controller_death_create(&_assets.brownblob, update_result.roller_x, update_result.roller_y, TPMN_BLOB_FRAME_ASPECT, TPMN_BLOB_FRAME_ASPECT, 0, 0, _controller);
 					tpmn_sound_play(_assets, TPMN_SND_BROWNBLOB);
 					break;
 				}
 			}
 
-			if (tpmn::bit_plant_die & update_result.bits)
+			if (EVENT_BIT_PLANT_DIE & update_result.bits)
 			{
 				switch (update_result.plant_type)
 				{
-				case tpmn::LOGIC_INDEX_PLANT:
+				case TPMN_LOGIC_INDEX_PLANT:
 					tpmn_controller_death_create(&_assets.plant, update_result.plant_x, update_result.plant_y, TPMN_PLANT_FRAME_ASPECT, TPMN_PLANT_FRAME_ASPECT, 0, 0, _controller);
 					tpmn_sound_play(_assets, TPMN_SND_PLANT);
 					break;
 
-				case tpmn::LOGIC_INDEX_SCORPION:
+				case TPMN_LOGIC_INDEX_SCORPION:
 					tpmn_controller_death_create(&_assets.scorpion, update_result.plant_x, update_result.plant_y, _assets.scorpion.width / 2, _assets.scorpion.height / 6, 0, _assets.scorpion.height / 6 * 4, _controller);
 					tpmn_sound_play(_assets, TPMN_SND_SCORPION);
 					break;
 				}
 			}
 
-			if (tpmn::bit_slider_die & update_result.bits)
+			if (EVENT_BIT_SLIDER_DIE & update_result.bits)
 			{
 				tpmn_controller_death_create(
 					&_assets.penguin,
@@ -165,7 +165,7 @@ void tpmn_app_t::frame_move(const double, const float)
 				tpmn_sound_play(_assets, TPMN_SND_SLIDERDEATH);
 			}
 
-			if (tpmn::bit_slider_impulse & update_result.bits)
+			if (EVENT_BIT_SLIDER_IMPULSE & update_result.bits)
 				tpmn_sound_play(_assets, TPMN_SND_SLIDER);
 		}
 	}
@@ -178,7 +178,7 @@ void tpmn_app_t::frame_move(const double, const float)
 		break;
 
 	case tpmn::tpmn_app_event_t::START_NEW_GAME:
-		if (model_load_world(ASSET_HUB, true, _model))
+		if (tpmn_model_load_world(ASSET_HUB, true, _model))
 			tpmn_controller_on_load_new_world(_assets, _controller);
 		break;
 	}
@@ -233,13 +233,13 @@ tpmn_app_t::tpmn_app_t()
 
 bool tpmn_app_init(tpmn_app_t& app)
 {
-	if (!model_init(app._model))
+	if (!tpmn_model_init(app._model))
 		return false;
 
 	if (!tpmn_assets_init(app._assets))
 		return false;
 
-	for (uint32_t i = 0; i < tpmn::MAX_TILE; ++i)
+	for (uint32_t i = 0; i < TPMN_MAX_TILE; ++i)
 		app._controller.current_tiles[i] = i;
 
 	if (!bitmap_init(TPMN_CANVAS_WIDTH, TPMN_CANVAS_HEIGHT, 0, app._controller.canvas))

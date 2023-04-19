@@ -1,5 +1,5 @@
 # background
-This public codebase stems from nornware's internal codebase, and is intended mostly as an example of what Johannes 'johno' Norneby thinks is a decent coding style ca late 2019; the most contentious point is probably the shunning of / minimal use of Object Oriented Programming. It's also a small example of a 2d platform game rendered in software, transferred to a texture, and finaly rendered as a single quad using DirectX9.0c.
+This public codebase stems from nornware's internal codebase, and is intended mostly as an example of what Johannes 'johno' Norneby thinks is a decent coding style ca late 2019; the most contentious point is probably the shunning of / minimal use of Object Oriented Programming. It's also a small example of a 2d platform game rendered in software, transferred to a texture, and finally rendered as a single quad using DirectX9.0c.
 
 # project overview
 * dx9: minimal Windows /  DirectX9 bootstrapping and software to hardware rendering interface, win32 mouse and keyboard input, and DirectX3 sound.

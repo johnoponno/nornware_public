@@ -2,7 +2,7 @@
 
 #include "../../dx9/app.h"
 #include "../../dx9/softdraw_adapter.h"
-#include "model.h"
+#include "tpmn_model.h"
 #include "tpmn_assets.h"
 #include "tpmn_controller.h"
 
@@ -10,7 +10,7 @@ struct tpmn_app_t : public dx9::app_i
 {
 	//dx9::app_i
 	bool is_fixed_tick_rate() const override { return true; }
-	float seconds_per_fixed_tick() const override { return tpmn::TIME_PER_TICK; }
+	float seconds_per_fixed_tick() const override { return TPMN_SECONDS_PER_TICK; }
 	bool is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const override;
 	bool modify_device_settings(const ::D3DCAPS9& caps, dx9::device_settings_t& device_settings) override;
 	void frame_move(const double now, const float elapsed) override;
@@ -20,7 +20,7 @@ struct tpmn_app_t : public dx9::app_i
 	//specific
 	explicit tpmn_app_t();
 
-	tpmn::model_t _model;
+	tpmn_model_t _model;
 	tpmn_assets_t _assets;
 	tpmn::tpmn_controller_t _controller;
 	dx9::softdraw_adapter_t _video;

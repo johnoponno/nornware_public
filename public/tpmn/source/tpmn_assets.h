@@ -4,7 +4,7 @@
 #include "../../softdraw/fontv.h"
 #include "../../dx9/sound_engine.h"
 #include "../../dx9/sound_container.h"
-#include "model.h"
+#include "tpmn_model.h"
 
 enum
 {
@@ -68,7 +68,7 @@ struct tpmn_assets_t
 
 	softdraw::fontv_t font;
 
-	uint32_t anim_target[tpmn::MAX_TILE];
+	uint32_t anim_target[TPMN_MAX_TILE];
 
 	sound::engine_t engine;
 	sound::container_t container;

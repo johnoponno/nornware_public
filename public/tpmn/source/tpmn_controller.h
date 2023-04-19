@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../softdraw/Bitmap.h"
-#include "model.h"
+#include "tpmn_model.h"
 
 namespace sound
 {
@@ -54,7 +54,7 @@ namespace tpmn
 		uint32_t last_checkpoint;
 		uint32_t track;
 		sound::stream_t* music;
-		uint32_t current_tiles[MAX_TILE];
+		uint32_t current_tiles[TPMN_MAX_TILE];
 		tpmn_snowflake_t flakes[32];
 		tpmn_death_t deaths[8];
 		uint32_t num_deaths;
@@ -65,7 +65,7 @@ namespace tpmn
 
 	tpmn_app_event_t tpmn_controller_input_output(
 		const tpmn_assets_t& assets,
-		model_t& model, tpmn_controller_t& controller);
+		tpmn_model_t& model, tpmn_controller_t& controller);
 
 	void tpmn_controller_on_load_new_world(
 		const tpmn_assets_t& assets,

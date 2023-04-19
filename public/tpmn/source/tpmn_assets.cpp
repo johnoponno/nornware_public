@@ -81,8 +81,8 @@ bool tpmn_assets_init(tpmn_assets_t& assets)
 		if (result)
 		{
 			::memcpy(&assets.anim_target, contents.data, contents.size);
-			for (uint32_t* at = assets.anim_target; at < assets.anim_target + tpmn::MAX_TILE; ++at)
-				*at = tpmn::change_endianness(*at);
+			for (uint32_t* at = assets.anim_target; at < assets.anim_target + TPMN_MAX_TILE; ++at)
+				*at = tpmn_change_endianness(*at);
 		}
 		delete[] contents.data;
 		if (!result)
