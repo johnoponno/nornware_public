@@ -66,7 +66,7 @@
 #define ASSET_SLIDER "slider.wav"
 
 #define BITMAP(a, b) if(!sd_bitmap_load_24(a, b)) return false;
-#define SOUND(asset, id) if (!container_add_sound(assets.engine, asset, id, 1, assets.container)) return false;
+#define SOUND(asset, id) if (!assets.container.add_sound(assets.engine, asset, id, 1)) return false;
 
 tpmn_assets_t::tpmn_assets_t()
 	:container(TPMN_NUM_SOUNDS)
@@ -127,7 +127,7 @@ bool tpmn_assets_init(tpmn_assets_t& assets)
 	if (!engine_init(win32_d3d9_hwnd(), assets.engine))
 		return false;
 
-	if (!container_init(assets.container))
+	if (!assets.container.init())
 		return false;
 
 	SOUND(ASSET_SPAWN, TPMN_SND_SPAWN);
@@ -172,11 +172,11 @@ void tpmn_assets_reload(tpmn_assets_t& assets)
 
 void tpmn_assets_cleanup(tpmn_assets_t& assets)
 {
-	container_cleanup(assets.container);
+	assets.container.cleanup();
 	engine_cleanup(assets.engine);
 }
 
 void tpmn_sound_play(const tpmn_assets_t& assets, const uint32_t id)
 {
-	sound::container_play(id, 1.f, 0.f, 1.f, nullptr, assets.container);
+	assets.container.play(id, 1.f, 0.f, 1.f, nullptr);
 }

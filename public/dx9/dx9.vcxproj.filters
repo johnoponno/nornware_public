@@ -10,7 +10,7 @@
     <ClCompile Include="win32_dsound_channel.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
-    <ClCompile Include="sound_container.cpp">
+    <ClCompile Include="win32_dsound_container.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
     <ClCompile Include="sound_engine.cpp">
@@ -70,7 +70,7 @@
     <ClInclude Include="win32_dsound_channel.h">
       <Filter>dsound</Filter>
     </ClInclude>
-    <ClInclude Include="sound_container.h">
+    <ClInclude Include="win32_dsound_container.h">
       <Filter>dsound</Filter>
     </ClInclude>
     <ClInclude Include="sound_engine.h">
