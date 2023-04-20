@@ -4,6 +4,8 @@
 # todo
 [ ] replace namespaces with prefixes
 [ ] dx9 -> win32
+[ ] fix mouse cursor position to work with canvas scaling
+[ ] implement mouse wheel example in tpmn
 [ ] re-implement editor
 
 # background

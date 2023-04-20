@@ -2,7 +2,7 @@
 #include "tpmn_controller.h"
 
 #include "../../dx9/sound_stream.h"
-#include "../../dx9/input.h"
+#include "../../dx9/win32_input.h"
 #include "tpmn_assets.h"
 
 #define ASSET_TRACK0 "johno_Jungle_2012.ogg"
@@ -381,7 +381,7 @@ namespace tpmn
 		const bool add, const float now, const float speed_x, const float speed_y, const sd_bitmap_t& bitmap,
 		sd_bitmap_t& canvas)
 	{
-		if (dx9::key_is_down('P'))
+		if (win32_key_is_down('P'))
 			return;
 
 		const int32_t X = int32_t(now * speed_x) % bitmap.width;
@@ -846,7 +846,7 @@ namespace tpmn
 		if (c.play_menu)
 		{
 			__text(assets, TPMN_CANVAS_HEIGHT / 3, "ESC = Quit", sd_white, c.canvas);
-			if (dx9::key_up_flank(VK_ESCAPE))
+			if (win32_key_up_flank(VK_ESCAPE))
 			{
 				model.play_bit = 0;
 
@@ -854,7 +854,7 @@ namespace tpmn
 			}
 
 			__text(assets, TPMN_CANVAS_HEIGHT / 3 * 2, "R = Resume", sd_white, c.canvas);
-			if (dx9::key_up_flank('R'))
+			if (win32_key_up_flank('R'))
 			{
 				c.play_menu = false;
 			}
@@ -862,7 +862,7 @@ namespace tpmn
 		//play menu not up
 		else
 		{
-			if (dx9::key_up_flank(VK_ESCAPE))
+			if (win32_key_up_flank(VK_ESCAPE))
 			{
 				c.play_menu = true;
 			}
@@ -873,19 +873,19 @@ namespace tpmn
 				//hero movement
 				if (model.hero.spawn_time < 0.f)
 				{
-					if (dx9::key_down_flank('S'))
+					if (win32_key_down_flank('S'))
 						input |= TPMN_HERO_FLAGS_DOWN;
 
-					if (dx9::key_is_down('A'))
+					if (win32_key_is_down('A'))
 						input |= TPMN_HERO_FLAGS_LEFT;
 
-					if (dx9::key_is_down('D'))
+					if (win32_key_is_down('D'))
 						input |= TPMN_HERO_FLAGS_RIGHT;
 
-					if (dx9::key_is_down('K'))
+					if (win32_key_is_down('K'))
 						input |= TPMN_HERO_FLAGS_JUMP;
 
-					if (dx9::key_down_flank('J'))
+					if (win32_key_down_flank('J'))
 						input |= TPMN_HERO_FLAGS_WHIP;
 				}
 
@@ -987,18 +987,20 @@ namespace tpmn
 			__text(assets, y += TPMN_TEXT_SPACING, "Johannes 'johno' Norneby", TPMN_TEXT_COLOR, controller.canvas);
 
 			__text(assets, y += TPMN_TEXT_SPACING * 4, "P = Play", sd_green, controller.canvas);
-			if (dx9::key_up_flank('P'))
+			if (win32_key_up_flank('P'))
 				return tpmn_app_event_t::START_NEW_GAME;
 
 			__text(assets, y += TPMN_TEXT_SPACING, "ESC = Quit", sd_green, controller.canvas);
-			if (dx9::key_up_flank(VK_ESCAPE))
+			if (win32_key_up_flank(VK_ESCAPE))
 				return tpmn_app_event_t::EXIT_APPLICATION;
 		}
 
+#if 1
 		{
-			const dx9::cursor_position_t cp = dx9::mouse_cursor_position();
-			sd_bitmap_cross(controller.canvas, cp.x, cp.y, 3, 0xffff);
+			const win32_cursor_position_t cp = win32_mouse_cursor_position();
+			sd_bitmap_cross(controller.canvas, cp.x, cp.y, 8, 0xffff);
 		}
+#endif
 
 		return tpmn_app_event_t::NOTHING;
 #endif

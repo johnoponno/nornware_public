@@ -907,8 +907,8 @@ void sd_bitmap_v_line(sd_bitmap_t& bm, const int32_t x1, int32_t y1, int32_t y2,
 
 void sd_bitmap_cross(sd_bitmap_t& bm, const int32_t x, const int32_t y, const int32_t aSize, const uint16_t aColor)
 {
-	sd_bitmap_h_line(bm, x - aSize / 2, x + aSize / 2, y, aColor);
-	sd_bitmap_v_line(bm, x, y - aSize / 2, y + aSize / 2, aColor);
+	sd_bitmap_h_line(bm, x - aSize / 2, x + aSize / 2 + 1, y, aColor);
+	sd_bitmap_v_line(bm, x, y - aSize / 2, y + aSize / 2 + 1, aColor);
 }
 
 bool sd_bitmap_load_24(const char* aFileName, sd_bitmap_t& bm)

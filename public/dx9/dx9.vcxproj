@@ -94,7 +94,7 @@
     <ClInclude Include="win32_dxut_enum.h" />
     <ClInclude Include="win32_dxut_misc.h" />
     <ClInclude Include="win32_d3d9_includes.h" />
-    <ClInclude Include="input.h" />
+    <ClInclude Include="win32_input.h" />
     <ClInclude Include="ogg.h" />
     <ClInclude Include="os_types.h" />
     <ClInclude Include="softdraw_adapter.h" />
@@ -118,7 +118,7 @@
     <ClCompile Include="win32_dxut.cpp" />
     <ClCompile Include="win32_dxut_enum.cpp" />
     <ClCompile Include="win32_dxut_misc.cpp" />
-    <ClCompile Include="input.cpp" />
+    <ClCompile Include="win32_input.cpp" />
     <ClCompile Include="softdraw_adapter.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="sound_channel.cpp" />

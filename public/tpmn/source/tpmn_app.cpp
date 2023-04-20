@@ -2,7 +2,7 @@
 #include "tpmn_app.h"
 
 #include "../../dx9/state.h"
-#include "../../dx9/input.h"
+#include "../../dx9/win32_input.h"
 #include "../../dx9/sound_stream.h"
 
 #define APPDATA_PATH "nornware/tpmn"
@@ -59,7 +59,7 @@ void tpmn_app_t::win32_d3d9_app_frame_move(const double, const float)
 		return;
 
 	//sample input from the os and cache it
-	dx9::input_poll(win32_d3d9_hwnd());
+	win32_input_poll(win32_d3d9_hwnd());
 
 	{
 		//tick the simulation
