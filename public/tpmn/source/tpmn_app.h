@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../dx9/win32_d3d9_app.h"
-#include "../../dx9/softdraw_adapter.h"
+#include "../../dx9/win32_d3d9_softdraw_adapter.h"
 #include "tpmn_model.h"
 #include "tpmn_assets.h"
 #include "tpmn_controller.h"
@@ -23,7 +23,7 @@ struct tpmn_app_t : public win32_d3d9_app_i
 	tpmn_model_t _model;
 	tpmn_assets_t _assets;
 	tpmn::tpmn_controller_t _controller;
-	dx9::softdraw_adapter_t _video;
+	win32_d3d9_softdraw_adapter_t _video;
 };
 
 bool tpmn_app_init(tpmn_app_t& app);

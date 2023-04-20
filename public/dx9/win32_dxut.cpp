@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "state.h"
-#include "w32_timer.h"
+#include "win32_timer.h"
 #include "win32_d3d9_resource.h"
 #include "win32_d3d9_app.h"
 
@@ -62,10 +62,10 @@ static void __revert(win32_d3d9_device_settings_t& settings, match_options_t& op
 	}
 }
 
-w32_timer_t& __timer()
+win32_timer_t& __timer()
 {
 	// using an accessor function gives control of the construction order
-	static w32_timer_t t;
+	static win32_timer_t t;
 	return t;
 }
 
@@ -2668,7 +2668,7 @@ static ::LRESULT CALLBACK __static_wnd_proc(HWND hWnd, UINT uMsg, WPARAM wParam,
 
 			// QPC may lose consistency when suspending, so reset the timer
 			// upon resume.
-			w32_timer_reset(__timer());
+			__timer().reset();
 			//win32_d3d9_state.m_last_stats_update_time = 0;
 			return true;
 		}
@@ -2863,7 +2863,7 @@ typedef IDirect3D9* (WINAPI* LPDIRECT3DCREATE9) (UINT);
 	}
 
 	// reset the timer
-	w32_timer_reset(__timer());
+	__timer().reset();
 
 	win32_d3d9_state.m_init.created = true;
 
@@ -3220,12 +3220,12 @@ void win32_d3d9_pause(const char* /*aFunction*/, const char* /*aContext*/, const
 	if (win32_d3d9_state.m_pause_time_count > 0)
 	{
 		// stop the scene from animating
-		w32_timer_stop(__timer());
+		__timer().stop();
 	}
 	else
 	{
 		// Restart the timer
-		w32_timer_start(__timer());
+		__timer().start();
 	}
 
 	//win32_d3d9_state.m_rendering_paused = win32_d3d9_state.m_pause_rendering_count > 0;
@@ -3443,7 +3443,7 @@ static void __do_idle_time(win32_d3d9_app_i* anApp)
 	//fixed update central
 	{
 		// get the app's time, in seconds. Skip rendering if no time elapsed
-		const w32_timer_values_t TIME_VALUES = w32_timer_mutate_and_get_values(__timer());
+		const win32_timer_values_t TIME_VALUES = __timer().mutate_and_get_values();
 
 		if (anApp && anApp->win32_d3d9_app_is_fixed_tick_rate())
 		{

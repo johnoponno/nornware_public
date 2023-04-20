@@ -97,6 +97,7 @@
 //#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
 //#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
 
+/*
 namespace dx9
 {
 	struct vec3f_t
@@ -112,3 +113,4 @@ namespace dx9
 		float y;
 	};
 }
+*/

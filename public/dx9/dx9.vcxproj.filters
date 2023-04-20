@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="win32_d3d9_resource.cpp" />
+    <ClCompile Include="win32_dxut.cpp" />
+    <ClCompile Include="win32_dxut_enum.cpp" />
+    <ClCompile Include="win32_dxut_misc.cpp" />
+    <ClCompile Include="win32_input.cpp" />
+    <ClCompile Include="win32_d3d9_softdraw_adapter.cpp" />
+    <ClCompile Include="sound.cpp" />
+    <ClCompile Include="sound_channel.cpp" />
+    <ClCompile Include="sound_container.cpp" />
+    <ClCompile Include="sound_engine.cpp" />
+    <ClCompile Include="sound_file_wave.cpp" />
+    <ClCompile Include="sound_stream.cpp" />
+    <ClCompile Include="sound_util.cpp" />
+    <ClCompile Include="sound_vorbis_file.cpp" />
+    <ClCompile Include="state.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="win32_timer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="win32_d3d9_app.h" />
+    <ClInclude Include="win32_d3d9_resource.h" />
+    <ClInclude Include="win32_dxut.h" />
+    <ClInclude Include="win32_dxut_enum.h" />
+    <ClInclude Include="win32_dxut_misc.h" />
+    <ClInclude Include="win32_d3d9_includes.h" />
+    <ClInclude Include="win32_input.h" />
+    <ClInclude Include="win32_d3d9_softdraw_adapter.h" />
+    <ClInclude Include="sound.h" />
+    <ClInclude Include="sound_channel.h" />
+    <ClInclude Include="sound_container.h" />
+    <ClInclude Include="sound_engine.h" />
+    <ClInclude Include="sound_file_wave.h" />
+    <ClInclude Include="sound_stream.h" />
+    <ClInclude Include="sound_stream_source.h" />
+    <ClInclude Include="sound_util.h" />
+    <ClInclude Include="sound_vorbis_file.h" />
+    <ClInclude Include="state.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="win32_timer.h" />
+    <ClInclude Include="traversable.h" />
+    <ClInclude Include="ogg.h">
+      <Filter>ogg/vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="os_types.h">
+      <Filter>ogg/vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="vorbis_codec.h">
+      <Filter>ogg/vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="vorbis_file.h">
+      <Filter>ogg/vorbis</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ogg/vorbis">
+      <UniqueIdentifier>{3c4f2e28-02e8-491c-8811-4deacc99affd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

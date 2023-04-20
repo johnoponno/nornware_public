@@ -97,7 +97,7 @@
     <ClInclude Include="win32_input.h" />
     <ClInclude Include="ogg.h" />
     <ClInclude Include="os_types.h" />
-    <ClInclude Include="softdraw_adapter.h" />
+    <ClInclude Include="win32_d3d9_softdraw_adapter.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="sound_channel.h" />
     <ClInclude Include="sound_container.h" />
@@ -109,7 +109,7 @@
     <ClInclude Include="sound_vorbis_file.h" />
     <ClInclude Include="state.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="w32_timer.h" />
+    <ClInclude Include="win32_timer.h" />
     <ClInclude Include="traversable.h" />
     <ClInclude Include="vorbis_file.h" />
   </ItemGroup>
@@ -119,7 +119,7 @@
     <ClCompile Include="win32_dxut_enum.cpp" />
     <ClCompile Include="win32_dxut_misc.cpp" />
     <ClCompile Include="win32_input.cpp" />
-    <ClCompile Include="softdraw_adapter.cpp" />
+    <ClCompile Include="win32_d3d9_softdraw_adapter.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="sound_channel.cpp" />
     <ClCompile Include="sound_container.cpp" />
@@ -133,7 +133,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="w32_timer.cpp" />
+    <ClCompile Include="win32_timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
