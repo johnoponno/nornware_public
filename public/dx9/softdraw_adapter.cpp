@@ -317,7 +317,7 @@ namespace dx9
 	}
 
 	//dxut::D3DResource
-	void softdraw_adapter_t::on_destroy_device()
+	void softdraw_adapter_t::win32_d3d9_resource_on_destroy_device()
 	{
 		SAFE_RELEASE(texture);
 	}

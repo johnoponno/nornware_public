@@ -89,7 +89,7 @@
   <ItemGroup>
     <ClInclude Include="win32_d3d9_app.h" />
     <ClInclude Include="vorbis_codec.h" />
-    <ClInclude Include="d3d_resource.h" />
+    <ClInclude Include="win32_d3d9_resource.h" />
     <ClInclude Include="dxut.h" />
     <ClInclude Include="dxut_enum.h" />
     <ClInclude Include="dxut_misc.h" />
@@ -114,7 +114,7 @@
     <ClInclude Include="vorbis_file.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="d3d_resource.cpp" />
+    <ClCompile Include="win32_d3d9_resource.cpp" />
     <ClCompile Include="dxut.cpp" />
     <ClCompile Include="dxut_enum.cpp" />
     <ClCompile Include="dxut_misc.cpp" />

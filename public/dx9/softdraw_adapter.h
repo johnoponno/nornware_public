@@ -1,6 +1,6 @@
 #pragma once
 
-#include "d3d_resource.h"
+#include "win32_d3d9_resource.h"
 
 struct sd_bitmap_t;
 
@@ -19,9 +19,9 @@ namespace dx9
 		alpha_test_no_z,
 	};
 
-	struct softdraw_adapter_t : public d3d_resource_t
+	struct softdraw_adapter_t : public win32_d3d9_resource_t
 	{
-		void on_destroy_device() override;
+		void win32_d3d9_resource_on_destroy_device() override;
 
 		explicit softdraw_adapter_t(const uint32_t anAlpha);
 

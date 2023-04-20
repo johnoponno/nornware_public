@@ -2,7 +2,7 @@
 
 #include "state.h"
 #include "w32_timer.h"
-#include "d3d_resource.h"
+#include "win32_d3d9_resource.h"
 #include "win32_d3d9_app.h"
 
 namespace dx9
@@ -317,14 +317,14 @@ namespace dx9
 			// Call the app's device lost callback
 			if (state.m_device_objects.reset == true)
 			{
-				d3d_resource_t::callback_on_lost_device();
+				win32_d3d9_resource_callback_on_lost_device();
 				state.m_device_objects.reset = false;
 			}
 
 			// Call the app's device destroyed callback
 			if (state.m_device_objects.created == true)
 			{
-				d3d_resource_t::callback_on_destroy_device();
+				win32_d3d9_resource_callback_on_destroy_device();
 				state.m_device_objects.created = false;
 			}
 
@@ -1701,7 +1701,7 @@ namespace dx9
 		if (state.m_device_objects.reset == true)
 		{
 			state.m_inside.device_callback = true;
-			d3d_resource_t::callback_on_lost_device();
+			win32_d3d9_resource_callback_on_lost_device();
 			state.m_device_objects.reset = false;
 			state.m_inside.device_callback = false;
 		}
@@ -1726,7 +1726,7 @@ namespace dx9
 		// Call the app's OnDeviceReset callback
 		state.m_inside.device_callback = true;
 		//const D3DSURFACE_DESC* pbackBufferSurfaceDesc = s.getBackBufferSurfaceDesc();
-		hr = d3d_resource_t::callback_on_reset_device();
+		hr = win32_d3d9_resource_callback_on_reset_device();
 		state.m_inside.device_callback = false;
 		if (FAILED(hr))
 		{
@@ -1736,7 +1736,7 @@ namespace dx9
 				hr = DXUTERR_RESETTINGDEVICEOBJECTS;
 
 			state.m_inside.device_callback = true;
-			d3d_resource_t::callback_on_lost_device();
+			win32_d3d9_resource_callback_on_lost_device();
 			state.m_inside.device_callback = false;
 
 			//GetGlobalResourceCache().onLostDevice();       
@@ -1813,7 +1813,7 @@ namespace dx9
 		// Call the app's device created callback if non-nullptr
 		//const D3DSURFACE_DESC* pbackBufferSurfaceDesc = s.getBackBufferSurfaceDesc();
 		state.m_inside.device_callback = true;
-		hr = d3d_resource_t::callback_on_create_device();
+		hr = win32_d3d9_resource_callback_on_create_device();
 		state.m_inside.device_callback = false;
 		if (state.m_d3d_device == nullptr) // Handle shutdown from inside callback
 			return E_FAIL;
@@ -1826,7 +1826,7 @@ namespace dx9
 
 		// Call the app's device reset callback if non-nullptr
 		state.m_inside.device_callback = true;
-		hr = d3d_resource_t::callback_on_reset_device();
+		hr = win32_d3d9_resource_callback_on_reset_device();
 		state.m_inside.device_callback = false;
 		if (state.m_d3d_device == nullptr) // Handle shutdown from inside callback
 			return E_FAIL;
