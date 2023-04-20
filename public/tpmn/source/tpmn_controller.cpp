@@ -1025,12 +1025,12 @@ namespace tpmn
 
 			switch (model.level.music_track)
 			{
-			default:	controller.music = stream_create(assets.engine, ASSET_TRACK0);	break;
-			case 1:		controller.music = stream_create(assets.engine, ASSET_TRACK1);	break;
-			case 2:		controller.music = stream_create(assets.engine, ASSET_TRACK2);	break;
-			case 3:		controller.music = stream_create(assets.engine, ASSET_TRACK3);	break;
-			case 4:		controller.music = stream_create(assets.engine, ASSET_TRACK4);	break;
-			case 5:		controller.music = stream_create(assets.engine, ASSET_TRACK5);	break;
+			default:	controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK0);	break;
+			case 1:		controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK1);	break;
+			case 2:		controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK2);	break;
+			case 3:		controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK3);	break;
+			case 4:		controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK4);	break;
+			case 5:		controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK5);	break;
 			}
 			if (controller.music)
 				stream_play(true, 0.f, 1.f, *controller.music);

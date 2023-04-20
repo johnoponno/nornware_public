@@ -6,9 +6,6 @@ namespace sound
 {
 	struct stream_t;
 	struct engine_t;
-
-	//FIXME: move this?
-	stream_t* stream_create(const engine_t& engine, const char* aFile);
 }
 
 struct win32_dsound_container_t
@@ -39,3 +36,6 @@ private:
 //bool container_stop_channel(const uint32_t anId, const uint32_t aChannel, const container_t& c);
 //bool container_stop_handle(const uint32_t anId, const void* aHandle, const container_t& c);
 //bool container_play_looped(const bool anEnable, const uint32_t anId, const float aVolume, const float aPan, const float aFrequency, const void* aHandle, const container_t& c);
+
+//FIXME: move this?
+sound::stream_t* win32_dsound_stream_create(const sound::engine_t& engine, const char* aFile);

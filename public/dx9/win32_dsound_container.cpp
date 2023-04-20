@@ -160,26 +160,23 @@ void container_stop_all(const container_t& c)
 }
 */
 
-namespace sound
+sound::stream_t* win32_dsound_stream_create(const sound::engine_t& engine, const char* aFile)
 {
-	stream_t* stream_create(const engine_t& engine, const char* aFile)
+	sound::stream_t* stream = nullptr;
+
+	if (engine.directsound)
 	{
-		stream_t* stream = nullptr;
+		sound::stream_source_i* source = nullptr;
 
-		if (engine.directsound)
+		source = sound::vorbis_file_t::create(aFile);
+
+		if (source)
 		{
-			stream_source_i* source = nullptr;
-
-			source = vorbis_file_t::create(aFile);
-
-			if (source)
-			{
-				stream = stream_create(engine, source);
-				if (!stream)
-					delete source;
-			}
+			stream = stream_create(engine, source);
+			if (!stream)
+				delete source;
 		}
-
-		return stream;
 	}
+
+	return stream;
 }

@@ -22,9 +22,6 @@
     <ClCompile Include="sound_stream.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
-    <ClCompile Include="sound_vorbis_file.cpp">
-      <Filter>dsound</Filter>
-    </ClCompile>
     <ClCompile Include="win32_dsound_util.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
@@ -46,6 +43,9 @@
     <ClCompile Include="win32_dxut_misc.cpp">
       <Filter>d3d9</Filter>
     </ClCompile>
+    <ClCompile Include="sound_vorbis_file.cpp">
+      <Filter>dsound</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win32_input.h" />
@@ -53,16 +53,16 @@
     <ClInclude Include="win32_timer.h" />
     <ClInclude Include="traversable.h" />
     <ClInclude Include="ogg.h">
-      <Filter>dsound\ogg/vorbis</Filter>
+      <Filter>ogg/vorbis</Filter>
     </ClInclude>
     <ClInclude Include="os_types.h">
-      <Filter>dsound\ogg/vorbis</Filter>
+      <Filter>ogg/vorbis</Filter>
     </ClInclude>
     <ClInclude Include="vorbis_codec.h">
-      <Filter>dsound\ogg/vorbis</Filter>
+      <Filter>ogg/vorbis</Filter>
     </ClInclude>
     <ClInclude Include="vorbis_file.h">
-      <Filter>dsound\ogg/vorbis</Filter>
+      <Filter>ogg/vorbis</Filter>
     </ClInclude>
     <ClInclude Include="win32_dsound.h">
       <Filter>dsound</Filter>
@@ -80,12 +80,6 @@
       <Filter>dsound</Filter>
     </ClInclude>
     <ClInclude Include="sound_stream.h">
-      <Filter>dsound</Filter>
-    </ClInclude>
-    <ClInclude Include="sound_stream_source.h">
-      <Filter>dsound</Filter>
-    </ClInclude>
-    <ClInclude Include="sound_vorbis_file.h">
       <Filter>dsound</Filter>
     </ClInclude>
     <ClInclude Include="win32_dsound_util.h">
@@ -115,16 +109,22 @@
     <ClInclude Include="win32_dxut_misc.h">
       <Filter>d3d9</Filter>
     </ClInclude>
+    <ClInclude Include="sound_stream_source.h">
+      <Filter>dsound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_vorbis_file.h">
+      <Filter>dsound</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="dsound">
       <UniqueIdentifier>{20bd304e-ef20-49d0-9e0a-01d6244aa31e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="dsound\ogg/vorbis">
-      <UniqueIdentifier>{3c4f2e28-02e8-491c-8811-4deacc99affd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="d3d9">
       <UniqueIdentifier>{8b8b823f-8080-49a3-bff5-52356a9eebbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ogg/vorbis">
+      <UniqueIdentifier>{3c4f2e28-02e8-491c-8811-4deacc99affd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
