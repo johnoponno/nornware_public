@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "win32_dsound.h"
 
-#include "sound_channel.h"
+#include "win32_dsound_channel.h"
 
-static sound::channel_t* __channel(
+static win32_dsound_channel_t* __channel(
 	const void* aHandle,
 	win32_dsound_t& s)
 {
@@ -20,7 +20,7 @@ static sound::channel_t* __channel(
 	//try for one that isn't playing
 	for (uint32_t i = 0; i < s.NUM_CHANNELS; ++i)
 	{
-		if (!buffer_is_playing(s.channels[i].buffer))
+		if (!s.channels[i].is_playing())
 			return s.channels + i;
 	}
 
@@ -29,7 +29,7 @@ static sound::channel_t* __channel(
 	float lv = 2.f;	//1.f is max
 	for (uint32_t i = 0; i < s.NUM_CHANNELS; ++i)
 	{
-		const float V = buffer_volume(s.channels[i].buffer);
+		const float V = s.channels[i].volume();
 		if (V < lv)
 		{
 			lv = V;
@@ -52,7 +52,7 @@ static sound::channel_t* __channel(
 static bool __create_channels(::IDirectSound& aDirectSound, ::IDirectSoundBuffer* aBuffer, win32_dsound_t& s)
 {
 	//create sound channels
-	s.channels = new sound::channel_t[s.NUM_CHANNELS];
+	s.channels = new win32_dsound_channel_t[s.NUM_CHANNELS];
 	if (!s.channels)
 		return false;
 
@@ -74,7 +74,7 @@ static bool __init(
 	win32_dsound_t& s)
 {
 	//load main buffer
-	::IDirectSoundBuffer* main_buffer = sound::load_waveform(aFileName, aDirectSound, s.length);
+	::IDirectSoundBuffer* main_buffer = win32_dsound_load_waveform(aFileName, aDirectSound, s.length);
 	if (main_buffer)
 	{
 		if (__create_channels(aDirectSound, main_buffer, s))
@@ -118,23 +118,23 @@ bool win32_dsound_t::stop_handle(const void* aHandle)
 	bool result = true;
 
 	for (uint32_t i = 0; i < NUM_CHANNELS; ++i)
-		result &= channel_stop(aHandle, channels[i]);
+		result &= channels[i].stop(aHandle);
 
 	return result;
 }
 
 bool win32_dsound_t::stop_channel(const uint32_t aChannel)
 {
-	return aChannel < NUM_CHANNELS&& channel_stop(nullptr, channels[aChannel]);
+	return aChannel < NUM_CHANNELS && channels[aChannel].stop(nullptr);
 }
 
 bool win32_dsound_t::play(const bool aLooped, const float aVolume, const float aPan, const float aFrequency, const void* aHandle)
 {
-	sound::channel_t* c = nullptr;
+	win32_dsound_channel_t* c = nullptr;
 
 	c = __channel(aHandle, *this);
 	if (c)
-		return channel_play(aLooped, aVolume, aPan, aFrequency, aHandle, *c);
+		return c->play(aLooped, aVolume, aPan, aFrequency, aHandle);
 
 	return false;
 }
@@ -151,7 +151,7 @@ bool win32_dsound_t::playing_eh() const
 {
 	for (uint32_t i = 0; i < NUM_CHANNELS; ++i)
 	{
-		if (buffer_is_playing(channels[i].buffer))
+		if (channels[i].is_playing())
 			return true;
 	}
 
@@ -160,7 +160,7 @@ bool win32_dsound_t::playing_eh() const
 
 bool win32_dsound_t::playing_eh(const uint32_t aChannel) const
 {
-	return aChannel < NUM_CHANNELS&& buffer_is_playing(channels[aChannel].buffer);
+	return aChannel < NUM_CHANNELS && channels[aChannel].is_playing();
 }
 
 win32_dsound_t::win32_dsound_t(const uint32_t aNumChannels)

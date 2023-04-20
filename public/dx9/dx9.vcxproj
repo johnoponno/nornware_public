@@ -99,7 +99,7 @@
     <ClInclude Include="os_types.h" />
     <ClInclude Include="win32_d3d9_softdraw_adapter.h" />
     <ClInclude Include="win32_dsound.h" />
-    <ClInclude Include="sound_channel.h" />
+    <ClInclude Include="win32_dsound_channel.h" />
     <ClInclude Include="sound_container.h" />
     <ClInclude Include="sound_engine.h" />
     <ClInclude Include="sound_file_wave.h" />
@@ -121,7 +121,7 @@
     <ClCompile Include="win32_input.cpp" />
     <ClCompile Include="win32_d3d9_softdraw_adapter.cpp" />
     <ClCompile Include="win32_dsound.cpp" />
-    <ClCompile Include="sound_channel.cpp" />
+    <ClCompile Include="win32_dsound_channel.cpp" />
     <ClCompile Include="sound_container.cpp" />
     <ClCompile Include="sound_engine.cpp" />
     <ClCompile Include="sound_file_wave.cpp" />

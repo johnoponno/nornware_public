@@ -5,10 +5,7 @@
 struct IDirectSound;
 struct IDirectSoundBuffer;
 
-namespace sound
-{
-	struct channel_t;
-}
+struct win32_dsound_channel_t;
 
 enum
 {
@@ -32,7 +29,7 @@ struct win32_dsound_t
 	~win32_dsound_t();
 
 	const uint32_t NUM_CHANNELS;
-	sound::channel_t* channels;
+	win32_dsound_channel_t* channels;
 	uint32_t stats[WIN32_DSOUND_NUM_STATS];
 	win32_dsound_length_t length;
 

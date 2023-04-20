@@ -7,7 +7,7 @@
     <ClCompile Include="win32_dsound.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
-    <ClCompile Include="sound_channel.cpp">
+    <ClCompile Include="win32_dsound_channel.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
     <ClCompile Include="sound_container.cpp">
@@ -67,7 +67,7 @@
     <ClInclude Include="win32_dsound.h">
       <Filter>dsound</Filter>
     </ClInclude>
-    <ClInclude Include="sound_channel.h">
+    <ClInclude Include="win32_dsound_channel.h">
       <Filter>dsound</Filter>
     </ClInclude>
     <ClInclude Include="sound_container.h">
