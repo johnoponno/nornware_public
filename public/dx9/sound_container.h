@@ -1,8 +1,9 @@
 #pragma once
 
+struct win32_dsound_t;
+
 namespace sound
 {
-	struct sound_t;
 	struct stream_t;
 	struct engine_t;
 
@@ -14,7 +15,7 @@ namespace sound
 #endif
 
 		const uint32_t num_sounds;
-		sound_t** sounds;
+		win32_dsound_t** sounds;
 
 	private:
 

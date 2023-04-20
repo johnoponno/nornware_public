@@ -98,7 +98,7 @@
     <ClInclude Include="ogg.h" />
     <ClInclude Include="os_types.h" />
     <ClInclude Include="win32_d3d9_softdraw_adapter.h" />
-    <ClInclude Include="sound.h" />
+    <ClInclude Include="win32_dsound.h" />
     <ClInclude Include="sound_channel.h" />
     <ClInclude Include="sound_container.h" />
     <ClInclude Include="sound_engine.h" />
@@ -120,7 +120,7 @@
     <ClCompile Include="win32_dxut_misc.cpp" />
     <ClCompile Include="win32_input.cpp" />
     <ClCompile Include="win32_d3d9_softdraw_adapter.cpp" />
-    <ClCompile Include="sound.cpp" />
+    <ClCompile Include="win32_dsound.cpp" />
     <ClCompile Include="sound_channel.cpp" />
     <ClCompile Include="sound_container.cpp" />
     <ClCompile Include="sound_engine.cpp" />

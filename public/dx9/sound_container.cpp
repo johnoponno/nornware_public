@@ -1,10 +1,7 @@
 #include "stdafx.h"
 #include "sound_container.h"
 
-#include "sound.h"
-//#include "channel.h"
-//#include "stream.h"
-//#include "VorbisRAM.h"
+#include "win32_dsound.h"
 #include "sound_vorbis_file.h"
 #include "sound_engine.h"
 #include "sound_stream.h"
@@ -17,7 +14,7 @@ namespace sound
 		if (!c.num_sounds)
 			return false;
 
-		c.sounds = new sound_t*[c.num_sounds];
+		c.sounds = new win32_dsound_t *[c.num_sounds];
 		if (!c.sounds)
 			return false;
 
@@ -30,7 +27,7 @@ namespace sound
 	bool container_add_sound(const engine_t& engine, const char* aFileName, const uint32_t anId, const uint32_t aNumChannels, const container_t& c)
 	{
 		//only add sound if DirectSound is active
-		if (engine.directsound && anId < c.num_sounds && aNumChannels > 0 && aNumChannels <= sound_t::max_channels)
+		if (engine.directsound && anId < c.num_sounds && aNumChannels > 0)
 		{
 			//clear any existing...
 			if (c.sounds[anId])
@@ -39,7 +36,7 @@ namespace sound
 				c.sounds[anId] = nullptr;
 			}
 
-			c.sounds[anId] = sound_create(aFileName, aNumChannels, *engine.directsound);
+			c.sounds[anId] = win32_dsound_t::create(aFileName, aNumChannels, *engine.directsound);
 			return c.sounds[anId] != nullptr;
 		}
 
@@ -48,17 +45,17 @@ namespace sound
 
 	bool container_play_looped(const bool anEnable, const uint32_t anId, const float aVolume, const float aPan, const float aFrequency, const void* aHandle, const container_t& c)
 	{
-		return anId < c.num_sounds && nullptr != c.sounds[anId] && sound_play_looped(anEnable, aVolume, aPan, aFrequency, aHandle, *c.sounds[anId]);
+		return anId < c.num_sounds && nullptr != c.sounds[anId] && c.sounds[anId]->play_looped(anEnable, aVolume, aPan, aFrequency, aHandle);
 	}
 
 	bool container_stop_handle(const uint32_t anId, const void* aHandle, const container_t& c)
 	{
-		return anId < c.num_sounds && c.sounds[anId] && sound_stop_handle(aHandle, *c.sounds[anId]);
+		return anId < c.num_sounds && c.sounds[anId] && c.sounds[anId]->stop_handle(aHandle);
 	}
 
 	bool container_stop_channel(const uint32_t anId, const uint32_t aChannel, const container_t& c)
 	{
-		return anId < c.num_sounds && c.sounds[anId] && sound_stop_channel(aChannel, *c.sounds[anId]);
+		return anId < c.num_sounds && c.sounds[anId] && c.sounds[anId]->stop_channel(aChannel);
 	}
 
 	bool container_play(const uint32_t anId, const float aVolume, const float aPan, const float aFrequency, const void* aHandle, const container_t& c)
@@ -66,7 +63,7 @@ namespace sound
 		if (anId < c.num_sounds &&
 			c.sounds[anId] &&
 			aVolume > 0.f &&
-			sound_play(false, aVolume, aPan, aFrequency, aHandle, *c.sounds[anId]))
+			c.sounds[anId]->play(false, aVolume, aPan, aFrequency, aHandle))
 		{
 			return true;
 		}
@@ -107,12 +104,12 @@ namespace sound
 
 	bool container_playing_eh(const uint32_t anId, const container_t& c)
 	{
-		return anId < c.num_sounds && c.sounds[anId] && sound_playing_eh(*c.sounds[anId]);
+		return anId < c.num_sounds && c.sounds[anId] && c.sounds[anId]->playing_eh();
 	}
 
 	bool container_playing_eh(const uint32_t anId, const uint32_t aChannel, const container_t& c)
 	{
-		return anId < c.num_sounds && c.sounds[anId] && sound_playing_eh(aChannel, *c.sounds[anId]);
+		return anId < c.num_sounds && c.sounds[anId] && c.sounds[anId]->playing_eh(aChannel);
 	}
 
 	container_t::container_t(const uint32_t aNumSounds)
@@ -176,7 +173,7 @@ namespace sound
 		for (uint32_t i = 0; i < c.num_sounds; ++i)
 		{
 			if (c.sounds[i])
-				sound_stop_handle(nullptr, *c.sounds[i]);
+				c.sounds[i]->stop_handle(nullptr);
 		}
 	}
 }

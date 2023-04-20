@@ -1,62 +1,130 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="win32_d3d9_resource.cpp" />
-    <ClCompile Include="win32_dxut.cpp" />
-    <ClCompile Include="win32_dxut_enum.cpp" />
-    <ClCompile Include="win32_dxut_misc.cpp" />
     <ClCompile Include="win32_input.cpp" />
-    <ClCompile Include="win32_d3d9_softdraw_adapter.cpp" />
-    <ClCompile Include="sound.cpp" />
-    <ClCompile Include="sound_channel.cpp" />
-    <ClCompile Include="sound_container.cpp" />
-    <ClCompile Include="sound_engine.cpp" />
-    <ClCompile Include="sound_file_wave.cpp" />
-    <ClCompile Include="sound_stream.cpp" />
-    <ClCompile Include="win32_dsound_util.cpp" />
-    <ClCompile Include="sound_vorbis_file.cpp" />
-    <ClCompile Include="win32_d3d9_state.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="win32_timer.cpp" />
+    <ClCompile Include="win32_dsound.cpp">
+      <Filter>dsound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound_channel.cpp">
+      <Filter>dsound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound_container.cpp">
+      <Filter>dsound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound_engine.cpp">
+      <Filter>dsound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound_file_wave.cpp">
+      <Filter>dsound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound_stream.cpp">
+      <Filter>dsound</Filter>
+    </ClCompile>
+    <ClCompile Include="sound_vorbis_file.cpp">
+      <Filter>dsound</Filter>
+    </ClCompile>
+    <ClCompile Include="win32_dsound_util.cpp">
+      <Filter>dsound</Filter>
+    </ClCompile>
+    <ClCompile Include="win32_d3d9_resource.cpp">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="win32_d3d9_softdraw_adapter.cpp">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="win32_d3d9_state.cpp">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="win32_dxut.cpp">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="win32_dxut_enum.cpp">
+      <Filter>d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="win32_dxut_misc.cpp">
+      <Filter>d3d9</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="win32_d3d9_app.h" />
-    <ClInclude Include="win32_d3d9_resource.h" />
-    <ClInclude Include="win32_dxut.h" />
-    <ClInclude Include="win32_dxut_enum.h" />
-    <ClInclude Include="win32_dxut_misc.h" />
-    <ClInclude Include="win32_d3d9_includes.h" />
     <ClInclude Include="win32_input.h" />
-    <ClInclude Include="win32_d3d9_softdraw_adapter.h" />
-    <ClInclude Include="sound.h" />
-    <ClInclude Include="sound_channel.h" />
-    <ClInclude Include="sound_container.h" />
-    <ClInclude Include="sound_engine.h" />
-    <ClInclude Include="sound_file_wave.h" />
-    <ClInclude Include="sound_stream.h" />
-    <ClInclude Include="sound_stream_source.h" />
-    <ClInclude Include="win32_dsound_util.h" />
-    <ClInclude Include="sound_vorbis_file.h" />
-    <ClInclude Include="win32_d3d9_state.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="win32_timer.h" />
     <ClInclude Include="traversable.h" />
     <ClInclude Include="ogg.h">
-      <Filter>ogg/vorbis</Filter>
+      <Filter>dsound\ogg/vorbis</Filter>
     </ClInclude>
     <ClInclude Include="os_types.h">
-      <Filter>ogg/vorbis</Filter>
+      <Filter>dsound\ogg/vorbis</Filter>
     </ClInclude>
     <ClInclude Include="vorbis_codec.h">
-      <Filter>ogg/vorbis</Filter>
+      <Filter>dsound\ogg/vorbis</Filter>
     </ClInclude>
     <ClInclude Include="vorbis_file.h">
-      <Filter>ogg/vorbis</Filter>
+      <Filter>dsound\ogg/vorbis</Filter>
+    </ClInclude>
+    <ClInclude Include="win32_dsound.h">
+      <Filter>dsound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_channel.h">
+      <Filter>dsound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_container.h">
+      <Filter>dsound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_engine.h">
+      <Filter>dsound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_file_wave.h">
+      <Filter>dsound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_stream.h">
+      <Filter>dsound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_stream_source.h">
+      <Filter>dsound</Filter>
+    </ClInclude>
+    <ClInclude Include="sound_vorbis_file.h">
+      <Filter>dsound</Filter>
+    </ClInclude>
+    <ClInclude Include="win32_dsound_util.h">
+      <Filter>dsound</Filter>
+    </ClInclude>
+    <ClInclude Include="win32_d3d9_app.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="win32_d3d9_includes.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="win32_d3d9_resource.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="win32_d3d9_softdraw_adapter.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="win32_d3d9_state.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="win32_dxut.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="win32_dxut_enum.h">
+      <Filter>d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="win32_dxut_misc.h">
+      <Filter>d3d9</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="ogg/vorbis">
+    <Filter Include="dsound">
+      <UniqueIdentifier>{20bd304e-ef20-49d0-9e0a-01d6244aa31e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="dsound\ogg/vorbis">
       <UniqueIdentifier>{3c4f2e28-02e8-491c-8811-4deacc99affd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="d3d9">
+      <UniqueIdentifier>{8b8b823f-8080-49a3-bff5-52356a9eebbf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
