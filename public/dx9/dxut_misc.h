@@ -12,8 +12,8 @@ namespace dx9
 	// These macros are very similar to dxerr's but it special cases the HRESULT defined
 	// by DXUT to pop better message boxes. 
 #if defined(DEBUG) || defined(_DEBUG)
-#define DXUT_ERR(str,hr)           trace( __FILE__, (DWORD)__LINE__, hr, str, false )
-#define DXUT_ERR_MSGBOX(str,hr)    trace( __FILE__, (DWORD)__LINE__, hr, str, true )
+#define DXUT_ERR(str,hr)           dx9::trace( __FILE__, (DWORD)__LINE__, hr, str, false )
+#define DXUT_ERR_MSGBOX(str,hr)    dx9::trace( __FILE__, (DWORD)__LINE__, hr, str, true )
 	//#define DXUTTRACE                  DebugString
 #else
 #define DXUT_ERR(str,hr)           (hr)

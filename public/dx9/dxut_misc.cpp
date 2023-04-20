@@ -12,7 +12,7 @@ namespace dx9
 		{
 		case WM_INITDIALOG:
 			// Easier to set text here than in the DLGITEMTEMPLATE
-			::SetWindowTextA(hDlg, state.m_window_title);
+			::SetWindowTextA(hDlg, win32_d3d9_state.m_window_title);
 			::SendMessage(::GetDlgItem(hDlg, 0x100), STM_SETIMAGE, IMAGE_ICON, (LPARAM)::LoadIcon(0, IDI_QUESTION));
 			::SetDlgItemText(hDlg, 0x101, "Switching to the Direct3D reference rasterizer, a software device\nthat implements the entire Direct3D feature set, but runs very slowly.\nDo you wish to continue?");
 			::SetDlgItemText(hDlg, IDYES, "&Yes");
@@ -69,7 +69,7 @@ namespace dx9
 			{ { WS_CHILD | WS_VISIBLE | BS_CHECKBOX,0,7,59,70,16,IDIGNORE },0xFFFF,0x0080,0,0,0 }, // checkbox
 			};
 
-			int32_t nResult = (int32_t) ::DialogBoxIndirect(state.m_hinstance, (DLGTEMPLATE*)&dtp, hwnd(), __display_switching_to_ref_warning_proc);
+			int32_t nResult = (int32_t) ::DialogBoxIndirect(win32_d3d9_state.m_hinstance, (DLGTEMPLATE*)&dtp, win32_d3d9_hwnd(), __display_switching_to_ref_warning_proc);
 
 			if ((nResult & 0x80) == 0x80) // "Don't show again" checkbox was checked
 			{
@@ -84,7 +84,7 @@ namespace dx9
 
 			// User choose not to continue
 			if ((nResult & 0x0F) == IDNO)
-				shutdown(1);
+				win32_d3d9_shutdown(1);
 		}
 	}
 

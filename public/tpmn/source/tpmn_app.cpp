@@ -15,7 +15,7 @@ bool tpmn_app_t::win32_d3d9_app_is_device_acceptable(const ::D3DCAPS9&, const ::
 	return true;
 }
 
-bool tpmn_app_t::win32_d3d9_app_modify_device_settings(const ::D3DCAPS9& caps, dx9::device_settings_t& device_settings)
+bool tpmn_app_t::win32_d3d9_app_modify_device_settings(const ::D3DCAPS9& caps, win32_d3d9_device_settings_t& device_settings)
 {
 	// If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW 
 	// then switch to SWVP.
@@ -55,11 +55,11 @@ bool tpmn_app_t::win32_d3d9_app_modify_device_settings(const ::D3DCAPS9& caps, d
 void tpmn_app_t::win32_d3d9_app_frame_move(const double, const float)
 {
 	//if not foreground, don't run
-	if (!dx9::state.m_active)
+	if (!win32_d3d9_state.m_active)
 		return;
 
 	//sample input from the os and cache it
-	dx9::input_poll(dx9::hwnd());
+	dx9::input_poll(win32_d3d9_hwnd());
 
 	{
 		//tick the simulation
@@ -174,7 +174,7 @@ void tpmn_app_t::win32_d3d9_app_frame_move(const double, const float)
 	switch (tpmn_controller_input_output(_assets, _model, _controller))
 	{
 	case tpmn::tpmn_app_event_t::EXIT_APPLICATION:
-		dx9::shutdown(0);
+		win32_d3d9_shutdown(0);
 		break;
 
 	case tpmn::tpmn_app_event_t::START_NEW_GAME:
@@ -186,25 +186,25 @@ void tpmn_app_t::win32_d3d9_app_frame_move(const double, const float)
 
 bool tpmn_app_t::win32_d3d9_app_frame_render(const double, const float)
 {
-	if (dx9::state.m_active)
+	if (win32_d3d9_state.m_active)
 	{
 		::HRESULT hr;
 
 		// Render the scene
-		if (SUCCEEDED(dx9::state.m_d3d_device->BeginScene()))
+		if (SUCCEEDED(win32_d3d9_state.m_d3d_device->BeginScene()))
 		{
 			// Clear the render target and the zbuffer
-			VERIFY(dx9::state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xff000000, 1.f, 0));
+			VERIFY(win32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xff000000, 1.f, 0));
 
 			{
-				const int32_t render_mul = __min(dx9::state.m_backbuffer_surface_desc.Width / _controller.canvas.width, dx9::state.m_backbuffer_surface_desc.Height / _controller.canvas.height);
+				const int32_t render_mul = __min(win32_d3d9_state.m_backbuffer_surface_desc.Width / _controller.canvas.width, win32_d3d9_state.m_backbuffer_surface_desc.Height / _controller.canvas.height);
 				const int32_t size_x = _controller.canvas.width * render_mul;
 				const int32_t size_y = _controller.canvas.height * render_mul;
 
 				softdraw_adapter_present_2d(
 					_controller.canvas,
-					int32_t((dx9::state.m_backbuffer_surface_desc.Width - size_x) / 2),
-					int32_t((dx9::state.m_backbuffer_surface_desc.Height - size_y) / 2),
+					int32_t((win32_d3d9_state.m_backbuffer_surface_desc.Width - size_x) / 2),
+					int32_t((win32_d3d9_state.m_backbuffer_surface_desc.Height - size_y) / 2),
 					size_x,
 					size_y,
 					UINT32_MAX,
@@ -213,11 +213,11 @@ bool tpmn_app_t::win32_d3d9_app_frame_render(const double, const float)
 					_video);
 			}
 
-			VERIFY(dx9::state.m_d3d_device->EndScene());
+			VERIFY(win32_d3d9_state.m_d3d_device->EndScene());
 		}
 	}
 
-	return dx9::state.m_active;
+	return win32_d3d9_state.m_active;
 }
 
 ::LRESULT tpmn_app_t::win32_d3d9_app_msg_proc(const HWND, const UINT, const WPARAM, const LPARAM, bool*)

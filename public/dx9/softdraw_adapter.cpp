@@ -8,7 +8,7 @@ namespace dx9
 {
 	struct state_block_t
 	{
-		::IDirect3DStateBlock9* state;
+		::IDirect3DStateBlock9* win32_d3d9_state;
 	};
 
 	struct vertex_t
@@ -30,108 +30,108 @@ namespace dx9
 
 	static state_block_t __state_block_begin(const ff_mode_t mode, const ::DWORD cull, const ::DWORD fvf, const bool filter, ::IDirect3DTexture9* texture)
 	{
-		assert(state.m_d3d_device);
+		assert(win32_d3d9_state.m_d3d_device);
 
 		::HRESULT hr;
 		state_block_t result{};
 
-		VERIFY(state.m_d3d_device->CreateStateBlock(D3DSBT_ALL, &result.state));
+		VERIFY(win32_d3d9_state.m_d3d_device->CreateStateBlock(D3DSBT_ALL, &result.win32_d3d9_state));
 
 		//mode
 		switch (mode)
 		{
 		case ff_mode_t::set:
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, TRUE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, TRUE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE));
 			break;
 
 		case ff_mode_t::set_no_z:
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE));
 			break;
 
 		case ff_mode_t::add:
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, TRUE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, TRUE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ONE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE));
 			break;
 
 		case ff_mode_t::sub:
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, TRUE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ZERO));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCCOLOR));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, TRUE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ZERO));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCCOLOR));
 			break;
 
 		case ff_mode_t::alpha_blend:
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, TRUE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, TRUE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA));
 
-			VERIFY(state.m_d3d_device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE));
-			VERIFY(state.m_d3d_device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_MODULATE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE));
 			break;
 
 		case ff_mode_t::alpha_test:
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, TRUE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHAREF, 0x7f));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, TRUE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHAREF, 0x7f));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL));
 			break;
 
 		case ff_mode_t::alpha_test_no_z:
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHAREF, 0x7f));
-			VERIFY(state.m_d3d_device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_LIGHTING, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ZENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHAREF, 0x7f));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATEREQUAL));
 			break;
 		}
 
 		//filter
 		if (filter)
 		{
-			VERIFY(state.m_d3d_device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR));
-			VERIFY(state.m_d3d_device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR));
-			VERIFY(state.m_d3d_device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR));
 		}
 		else
 		{
-			VERIFY(state.m_d3d_device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT));
-			VERIFY(state.m_d3d_device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT));
-			VERIFY(state.m_d3d_device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT));
+			VERIFY(win32_d3d9_state.m_d3d_device->SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE));
 		}
 
 		//cull
-		VERIFY(state.m_d3d_device->SetRenderState(::D3DRS_CULLMODE, cull));
+		VERIFY(win32_d3d9_state.m_d3d_device->SetRenderState(::D3DRS_CULLMODE, cull));
 
 		//vertex format
-		VERIFY(state.m_d3d_device->SetFVF(fvf));
+		VERIFY(win32_d3d9_state.m_d3d_device->SetFVF(fvf));
 
 		//texture
-		VERIFY(state.m_d3d_device->SetTexture(0, texture));
+		VERIFY(win32_d3d9_state.m_d3d_device->SetTexture(0, texture));
 
 		return result;
 	}
@@ -140,8 +140,8 @@ namespace dx9
 	{
 		::HRESULT hr;
 
-		VERIFY(sb.state->Apply());
-		SAFE_RELEASE(sb.state);
+		VERIFY(sb.win32_d3d9_state->Apply());
+		SAFE_RELEASE(sb.win32_d3d9_state);
 	}
 
 	static void __create_texture(const sd_bitmap_t& aCanvas, softdraw_adapter_t& a)
@@ -155,16 +155,16 @@ namespace dx9
 			a.texture_aspect *= 2;
 		}
 
-		assert(state.m_d3d_device);
+		assert(win32_d3d9_state.m_d3d_device);
 
 		::HRESULT hr;
 		if (a.alpha)
 		{
-			VERIFY(state.m_d3d_device->CreateTexture(a.texture_aspect, a.texture_aspect, 1, 0, D3DFMT_A1R5G5B5, D3DPOOL_MANAGED, &a.texture, nullptr));
+			VERIFY(win32_d3d9_state.m_d3d_device->CreateTexture(a.texture_aspect, a.texture_aspect, 1, 0, D3DFMT_A1R5G5B5, D3DPOOL_MANAGED, &a.texture, nullptr));
 		}
 		else
 		{
-			VERIFY(state.m_d3d_device->CreateTexture(a.texture_aspect, a.texture_aspect, 1, 0, D3DFMT_R5G6B5, D3DPOOL_MANAGED, &a.texture, nullptr));
+			VERIFY(win32_d3d9_state.m_d3d_device->CreateTexture(a.texture_aspect, a.texture_aspect, 1, 0, D3DFMT_R5G6B5, D3DPOOL_MANAGED, &a.texture, nullptr));
 		}
 	}
 
@@ -311,7 +311,7 @@ namespace dx9
 		{
 			state_block_t sb = __state_block_begin(aMode, ::D3DCULL_CCW, D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1, aFilter, __prepare_texture(aCanvas, a));
 			::HRESULT hr;
-			VERIFY(state.m_d3d_device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, 4, 2, indices, D3DFMT_INDEX16, vertices, sizeof(vertex_t)));
+			VERIFY(win32_d3d9_state.m_d3d_device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, 4, 2, indices, D3DFMT_INDEX16, vertices, sizeof(vertex_t)));
 			__state_block_end(sb);
 		}
 	}

@@ -1,8 +1,10 @@
 #pragma once
 
+struct win32_d3d9_device_settings_t;
+
 struct win32_d3d9_app_i
 {
-	virtual bool win32_d3d9_app_modify_device_settings(const ::D3DCAPS9& caps, dx9::device_settings_t& device_settings) = 0;
+	virtual bool win32_d3d9_app_modify_device_settings(const ::D3DCAPS9& caps, win32_d3d9_device_settings_t& device_settings) = 0;
 	virtual void win32_d3d9_app_frame_move(const double now, const float elapsed) = 0;
 	virtual bool win32_d3d9_app_frame_render(const double now, const float elapsed) = 0;
 	virtual ::LRESULT win32_d3d9_app_msg_proc(const HWND window, const UINT message, const WPARAM wparam, const LPARAM lparam, bool* no_further_processing) = 0;

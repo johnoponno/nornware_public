@@ -15,37 +15,20 @@ struct win32_d3d9_app_i;
 #define DXUTERR_RESETTINGDEVICEOBJECTS  MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0x0908)
 #define DXUTERR_INCORRECTVERSION        MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0x0909)
 
-namespace dx9
+struct win32_d3d9_device_settings_t
 {
-	
-	struct device_settings_t
-	{
-		::UINT adapter_ordinal;
-		::D3DDEVTYPE device_type;
-		::D3DFORMAT adapter_format;
-		::DWORD behavior_flags;
-		::D3DPRESENT_PARAMETERS present_parameters;
-	};
+	::UINT adapter_ordinal;
+	::D3DDEVTYPE device_type;
+	::D3DFORMAT adapter_format;
+	::DWORD behavior_flags;
+	::D3DPRESENT_PARAMETERS present_parameters;
+};
 
-	//--------------------------------------------------------------------------------------
-	// Initialization
-	//--------------------------------------------------------------------------------------
-	::HRESULT init();
-
-	// Choose either DXUTCreateWindow or DXUTSetWindow.  If using DXUTSetWindow, consider using StaticWndProc
-	::HRESULT create_window(const char* aWindowTitle, const ::DWORD aWindowStyle = 0);
-
-	// Choose either DXUTCreateDevice or DXUTSetDevice or DXUTCreateDeviceFromSettings
-	::HRESULT create_device(const uint32_t AdapterOrdinal, const bool bWindowed, const int32_t nSuggestedWidth, const int32_t nSuggestedHeight, win32_d3d9_app_i* anApp);
-
-	// Choose either MainLoop or implement your own main loop 
-	::HRESULT main_loop(win32_d3d9_app_i* anApp);
-
-	//--------------------------------------------------------------------------------------
-	// Common Tasks 
-	//--------------------------------------------------------------------------------------
-	void set_cursor_settings(const bool bShowCursorWhenFullScreen, const bool bClipCursorWhenFullScreen);
-	::HRESULT toggle_fullscreen(const bool aDoToggle = true);
-	void pause(const char* aFunction, const char* aContext, const bool bPauseTime, const bool bPauseRendering);
-	void shutdown(const int32_t nExitCode = 0);
-}
+::HRESULT win32_d3d9_init();
+void win32_d3d9_pause(const char* aFunction, const char* aContext, const bool bPauseTime, const bool bPauseRendering);
+void win32_d3d9_shutdown(const int32_t nExitCode = 0);
+::HRESULT win32_d3d9_toggle_fullscreen(const bool aDoToggle = true);
+::HRESULT win32_d3d9_create_window(const char* aWindowTitle, const ::DWORD aWindowStyle = 0);
+void win32_d3d9_set_cursor_settings(const bool bShowCursorWhenFullScreen, const bool bClipCursorWhenFullScreen);
+::HRESULT win32_d3d9_create_device(const uint32_t AdapterOrdinal, const bool bWindowed, const int32_t nSuggestedWidth, const int32_t nSuggestedHeight, win32_d3d9_app_i* anApp);
+::HRESULT win32_d3d9_main_loop(win32_d3d9_app_i* anApp);

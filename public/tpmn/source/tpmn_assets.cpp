@@ -124,7 +124,7 @@ bool tpmn_assets_init(tpmn_assets_t& assets)
 		return false;
 	assets.font.char_spacing = -1;
 
-	if (!engine_init(dx9::hwnd(), assets.engine))
+	if (!engine_init(win32_d3d9_hwnd(), assets.engine))
 		return false;
 
 	if (!container_init(assets.container))
