@@ -236,47 +236,47 @@ static void __display_error_message(::HRESULT aResult)
 	bool bFound = true;
 	switch (aResult)
 	{
-	case DXUTERR_NODIRECT3D:
+	case WIN32_DXUTERR_NODIRECT3D:
 		win32_d3d9_state.m_exit_code = 2;
 		::strcpy_s(strBuffer, "Could not initialize Direct3D. You may want to check that the latest version of DirectX is correctly installed on your system.  Also make sure that this program was compiled with header files that match the installed DirectX DLLs.");
 		break;
 
-	case DXUTERR_INCORRECTVERSION:
+	case WIN32_DXUTERR_INCORRECTVERSION:
 		win32_d3d9_state.m_exit_code = 10;
 		::strcpy_s(strBuffer, "Incorrect version of Direct3D and/or D3DX.");
 		break;
 
-	case DXUTERR_MEDIANOTFOUND:
+	case WIN32_DXUTERR_MEDIANOTFOUND:
 		win32_d3d9_state.m_exit_code = 4;
 		::strcpy_s(strBuffer, "Could not find required media. Ensure that the DirectX SDK is correctly installed.");
 		break;
 
-	case DXUTERR_NONZEROREFCOUNT:
+	case WIN32_DXUTERR_NONZEROREFCOUNT:
 		win32_d3d9_state.m_exit_code = 5;
 		::strcpy_s(strBuffer, "The D3D device has a non-zero reference count, meaning some objects were not released.");
 		break;
 
-	case DXUTERR_CREATINGDEVICE:
+	case WIN32_DXUTERR_CREATINGDEVICE:
 		win32_d3d9_state.m_exit_code = 6;
 		::strcpy_s(strBuffer, "Failed creating the Direct3D device.");
 		break;
 
-	case DXUTERR_RESETTINGDEVICE:
+	case WIN32_DXUTERR_RESETTINGDEVICE:
 		win32_d3d9_state.m_exit_code = 7;
 		::strcpy_s(strBuffer, "Failed resetting the Direct3D device.");
 		break;
 
-	case DXUTERR_CREATINGDEVICEOBJECTS:
+	case WIN32_DXUTERR_CREATINGDEVICEOBJECTS:
 		win32_d3d9_state.m_exit_code = 8;
 		::strcpy_s(strBuffer, "Failed creating Direct3D device objects.");
 		break;
 
-	case DXUTERR_RESETTINGDEVICEOBJECTS:
+	case WIN32_DXUTERR_RESETTINGDEVICEOBJECTS:
 		win32_d3d9_state.m_exit_code = 9;
 		::strcpy_s(strBuffer, "Failed resetting Direct3D device objects.");
 		break;
 
-	case DXUTERR_NOCOMPATIBLEDEVICES:
+	case WIN32_DXUTERR_NOCOMPATIBLEDEVICES:
 		win32_d3d9_state.m_exit_code = 3;
 		if (0 != GetSystemMetrics(SM_REMOTESESSION))
 			::strcpy_s(strBuffer, "Direct3D does not work over a remote session.");
@@ -335,8 +335,8 @@ static void __cleanup_3d_environment(const bool aReleaseSettings)
 		{
 			if (win32_d3d9_state.m_d3d_device->Release() > 0)
 			{
-				__display_error_message(DXUTERR_NONZEROREFCOUNT);
-				DXUT_ERR("__cleanup_3d_environment", DXUTERR_NONZEROREFCOUNT);
+				__display_error_message(WIN32_DXUTERR_NONZEROREFCOUNT);
+				DXUT_ERR("__cleanup_3d_environment", WIN32_DXUTERR_NONZEROREFCOUNT);
 			}
 		}
 		win32_d3d9_state.m_d3d_device = nullptr;
@@ -1636,7 +1636,7 @@ static HRESULT __find_valid_device_settings(win32_d3d9_device_settings_t* someSe
 
 	// If no best device combination was found then fail
 	if (BEST_DEVICE_SETTINGS_COMBO == nullptr)
-		return DXUTERR_NOCOMPATIBLEDEVICES;
+		return WIN32_DXUTERR_NOCOMPATIBLEDEVICES;
 
 	// using the best device settings combo found, build valid device settings taking heed of 
 	// the match options and the input device settings
@@ -1713,7 +1713,7 @@ static ::HRESULT __reset_3d_environment()
 		if (hr == D3DERR_DEVICELOST)
 			return D3DERR_DEVICELOST; // reset could legitimately fail if the device is lost
 		else
-			return DXUT_ERR("reset", DXUTERR_RESETTINGDEVICE);
+			return DXUT_ERR("reset", WIN32_DXUTERR_RESETTINGDEVICE);
 	}
 
 	// update back buffer desc before calling app's device callbacks
@@ -1731,8 +1731,8 @@ static ::HRESULT __reset_3d_environment()
 	{
 		// If callback failed, cleanup
 		DXUT_ERR("DeviceResetCallback", hr);
-		if (hr != DXUTERR_MEDIANOTFOUND)
-			hr = DXUTERR_RESETTINGDEVICEOBJECTS;
+		if (hr != WIN32_DXUTERR_MEDIANOTFOUND)
+			hr = WIN32_DXUTERR_RESETTINGDEVICEOBJECTS;
 
 		win32_d3d9_state.m_inside.device_callback = true;
 		win32_d3d9_resource_callback_on_lost_device();
@@ -1778,7 +1778,7 @@ static ::HRESULT __create_3d_environment(::IDirect3DDevice9* aDeviceFromApp)
 		else if (FAILED(hr))
 		{
 			DXUT_ERR("CreateDevice", hr);
-			return DXUTERR_CREATINGDEVICE;
+			return WIN32_DXUTERR_CREATINGDEVICE;
 		}
 	}
 	else
@@ -1819,7 +1819,7 @@ static ::HRESULT __create_3d_environment(::IDirect3DDevice9* aDeviceFromApp)
 	if (FAILED(hr))
 	{
 		DXUT_ERR("DeviceCreated callback", hr);
-		return (hr == DXUTERR_MEDIANOTFOUND) ? DXUTERR_MEDIANOTFOUND : DXUTERR_CREATINGDEVICEOBJECTS;
+		return (hr == WIN32_DXUTERR_MEDIANOTFOUND) ? WIN32_DXUTERR_MEDIANOTFOUND : WIN32_DXUTERR_CREATINGDEVICEOBJECTS;
 	}
 	win32_d3d9_state.m_device_objects.created = true;
 
@@ -1832,7 +1832,7 @@ static ::HRESULT __create_3d_environment(::IDirect3DDevice9* aDeviceFromApp)
 	if (FAILED(hr))
 	{
 		DXUT_ERR("DeviceReset callback", hr);
-		return (hr == DXUTERR_MEDIANOTFOUND) ? DXUTERR_MEDIANOTFOUND : DXUTERR_RESETTINGDEVICEOBJECTS;
+		return (hr == WIN32_DXUTERR_MEDIANOTFOUND) ? WIN32_DXUTERR_MEDIANOTFOUND : WIN32_DXUTERR_RESETTINGDEVICEOBJECTS;
 	}
 	win32_d3d9_state.m_device_objects.reset = true;
 
@@ -1895,7 +1895,7 @@ static ::HRESULT __change_device(win32_d3d9_device_settings_t* pNewDeviceSetting
 		{
 			// The app rejected the device change by returning false, so just use the current device if there is one.
 			if (nullptr == oldDeviceSettings)
-				__display_error_message(DXUTERR_NOCOMPATIBLEDEVICES);
+				__display_error_message(WIN32_DXUTERR_NOCOMPATIBLEDEVICES);
 			SAFE_DELETE(pNewDeviceSettings);
 			return E_ABORT;
 		}
@@ -2026,8 +2026,7 @@ static ::HRESULT __change_device(win32_d3d9_device_settings_t* pNewDeviceSetting
 				// capturing the win32_d3d9_state and resizing the window/etc.
 				win32_d3d9_state.m_device_lost = true;
 			}
-			else if (DXUTERR_RESETTINGDEVICEOBJECTS == hr ||
-				DXUTERR_MEDIANOTFOUND == hr)
+			else if (WIN32_DXUTERR_RESETTINGDEVICEOBJECTS == hr || WIN32_DXUTERR_MEDIANOTFOUND == hr)
 			{
 				// Something bad happened in the app callbacks
 				SAFE_DELETE(oldDeviceSettings);
@@ -2045,7 +2044,7 @@ static ::HRESULT __change_device(win32_d3d9_device_settings_t* pNewDeviceSetting
 					// If that fails, then shutdown
 					SAFE_DELETE(oldDeviceSettings);
 					win32_d3d9_shutdown();
-					return DXUTERR_CREATINGDEVICE;
+					return WIN32_DXUTERR_CREATINGDEVICE;
 				}
 				else
 				{
@@ -2818,8 +2817,8 @@ typedef IDirect3D9* (WINAPI* LPDIRECT3DCREATE9) (UINT);
 	if (!::D3DXCheckVersion(D3D_SDK_VERSION, D3DX_SDK_VERSION))
 	{
 		//FS_ERROR("D3DXCheckVersion() failed");
-		__display_error_message(DXUTERR_INCORRECTVERSION);
-		return DXUT_ERR("D3DXCheckVersion", DXUTERR_INCORRECTVERSION);
+		__display_error_message(WIN32_DXUTERR_INCORRECTVERSION);
+		return DXUT_ERR("D3DXCheckVersion", WIN32_DXUTERR_INCORRECTVERSION);
 	}
 
 	// create a Direct3D object if one has not already been created
@@ -2859,8 +2858,8 @@ typedef IDirect3D9* (WINAPI* LPDIRECT3DCREATE9) (UINT);
 	{
 		// If still nullptr, then something went wrong
 		//FS_ERROR("failed to acquire IDirect3D9 interface");
-		__display_error_message(DXUTERR_NODIRECT3D);
-		return DXUT_ERR("Direct3DCreate9", DXUTERR_NODIRECT3D);
+		__display_error_message(WIN32_DXUTERR_NODIRECT3D);
+		return DXUT_ERR("Direct3DCreate9", WIN32_DXUTERR_NODIRECT3D);
 	}
 
 	// reset the timer
@@ -3315,7 +3314,7 @@ static void __do_frame(::IDirect3DDevice9* device, const float now, const float 
 static void __do_idle_time(win32_d3d9_app_i* anApp)
 {
 	::HRESULT hr;
-	
+
 	if (win32_d3d9_state.m_device_lost || win32_d3d9_is_rendering_paused() || !win32_d3d9_state.m_active)
 	{
 		// Window is minimized or paused so yield CPU time to other processes
@@ -3388,7 +3387,7 @@ static void __do_idle_time(win32_d3d9_app_i* anApp)
 					hr = __find_valid_device_settings(&deviceSettings, &deviceSettings, &matchOptions);
 					if (FAILED(hr)) // the call will fail if no valid devices were found
 					{
-						__display_error_message(DXUTERR_NOCOMPATIBLEDEVICES);
+						__display_error_message(WIN32_DXUTERR_NOCOMPATIBLEDEVICES);
 						win32_d3d9_shutdown();
 					}
 
@@ -3416,7 +3415,7 @@ static void __do_idle_time(win32_d3d9_app_i* anApp)
 					// The device was lost again, so continue waiting until it can be reset.
 					return;
 				}
-				else if (DXUTERR_RESETTINGDEVICEOBJECTS == hr || DXUTERR_MEDIANOTFOUND == hr)
+				else if (WIN32_DXUTERR_RESETTINGDEVICEOBJECTS == hr || WIN32_DXUTERR_MEDIANOTFOUND == hr)
 				{
 					__display_error_message(hr);
 					win32_d3d9_shutdown();

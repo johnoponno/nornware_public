@@ -64,7 +64,7 @@
 
 #include <strsafe.h>
 
-#include "dxut.h"
+#include "win32_dxut.h"
 #include "dxut_misc.h"
 #include "dxut_enum.h"
 
