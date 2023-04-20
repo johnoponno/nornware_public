@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "tpmn_controller.h"
 
-#include "../../dx9/w32_direct3d9_app.h"
-#include "../../dx9/State.h"
 #include "../../dx9/sound_stream.h"
 #include "../../dx9/input.h"
 #include "tpmn_assets.h"

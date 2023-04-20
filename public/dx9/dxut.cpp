@@ -3,7 +3,7 @@
 #include "state.h"
 #include "w32_timer.h"
 #include "d3d_resource.h"
-#include "w32_direct3d9_app.h"
+#include "win32_d3d9_app.h"
 
 namespace dx9
 {
@@ -1891,7 +1891,7 @@ namespace dx9
 			::D3DCAPS9 caps;
 			state.m_d3d->GetDeviceCaps(pNewDeviceSettings->adapter_ordinal, pNewDeviceSettings->device_type, &caps);
 
-			const bool bContinue = state.app->win32_direct3d9_app_modify_device_settings(caps, *pNewDeviceSettings);
+			const bool bContinue = state.app->win32_d3d9_app_modify_device_settings(caps, *pNewDeviceSettings);
 			if (!bContinue)
 			{
 				// The app rejected the device change by returning false, so just use the current device if there is one.
@@ -2424,7 +2424,7 @@ namespace dx9
 		if (state.app)
 		{
 			bool bNoFurtherProcessing = false;
-			LRESULT nResult = state.app->win32_direct3d9_app_msg_proc(hWnd, uMsg, wParam, lParam, &bNoFurtherProcessing);
+			LRESULT nResult = state.app->win32_d3d9_app_msg_proc(hWnd, uMsg, wParam, lParam, &bNoFurtherProcessing);
 			if (bNoFurtherProcessing)
 				return nResult;
 		}
@@ -2439,7 +2439,7 @@ namespace dx9
 				::HRESULT hr;
 
 				if (state.app)
-					state.app->win32_direct3d9_app_frame_render(state.m_time, state.m_elapsed_time);
+					state.app->win32_d3d9_app_frame_render(state.m_time, state.m_elapsed_time);
 
 				hr = state.m_d3d_device->Present(nullptr, nullptr, nullptr, nullptr);
 				if (D3DERR_DEVICELOST == hr)
@@ -2473,7 +2473,7 @@ namespace dx9
 			{
 				if (state.app)
 				{
-					pause(__FUNCTION__, "WM_SIZE == SIZE_MINIMIZED, using app callback", state.app->pause_time_when_minimized(), true);	//optional to pause time, always pause rendering...
+					pause(__FUNCTION__, "WM_SIZE == SIZE_MINIMIZED, using app callback", state.app->win32_d3d9_app_pause_time_when_minimized(), true);	//optional to pause time, always pause rendering...
 				}
 				else
 				{
@@ -2608,7 +2608,7 @@ namespace dx9
 
 												// pause while we're minimized (take care not to pause twice by handling this message twice)
 					if (state.app)
-						pause(__FUNCTION__, "WM_ACTIVATEAPP == FALSE, not windowed, using app callback", state.app->pause_time_when_minimized(), true);
+						pause(__FUNCTION__, "WM_ACTIVATEAPP == FALSE, not windowed, using app callback", state.app->win32_d3d9_app_pause_time_when_minimized(), true);
 					else
 						pause(__FUNCTION__, "WM_ACTIVATEAPP == FALSE, not windowed, no app", true, true);
 
@@ -2990,7 +2990,7 @@ namespace dx9
 	//--------------------------------------------------------------------------------------
 	::HRESULT create_device(
 		UINT anAdapterOrdinal, bool windowed, int32_t aSuggestedWidth, int32_t aSuggestedHeight,
-		win32_direct3d9_app_i* anApp)
+		win32_d3d9_app_i* anApp)
 	{
 		::HRESULT hr;
 
@@ -3241,7 +3241,7 @@ namespace dx9
 		// Animate the scene by calling the app's frame move callback
 		if (state.app)
 		{
-			state.app->win32_direct3d9_app_frame_move(now, elapsed);
+			state.app->win32_d3d9_app_frame_move(now, elapsed);
 			++state.app->_frame_moves;
 			if (nullptr == state.m_d3d_device)// Handle shutdown from inside callback
 				return;
@@ -3255,7 +3255,7 @@ namespace dx9
 			// render the scene by calling the app's render callback
 			if (state.app)
 			{
-				shouldPresent = state.app->win32_direct3d9_app_frame_render(now, elapsed);
+				shouldPresent = state.app->win32_d3d9_app_frame_render(now, elapsed);
 				if (nullptr == state.m_d3d_device)// Handle shutdown from inside callback
 					return;
 			}
@@ -3313,21 +3313,21 @@ namespace dx9
 	//      - Calling the app's framemove and render callback
 	//      - Calling Present()
 	//--------------------------------------------------------------------------------------
-	static void __do_idle_time(win32_direct3d9_app_i* anApp)
+	static void __do_idle_time(win32_d3d9_app_i* anApp)
 	{
 		::HRESULT hr;
 
 		if (state.m_device_lost || is_rendering_paused() || !state.m_active)
 		{
 			// Window is minimized or paused so yield CPU time to other processes
-			if (!anApp || !anApp->win32_direct3d9_app_is_fixed_tick_rate())
+			if (!anApp || !anApp->win32_d3d9_app_is_fixed_tick_rate())
 			{
 				::Sleep(50);	//default 50 msecs
 			}
 			else
 			{
 				//now this is up to the app; in some cases you don't want any sleeping in the background
-				const uint32_t BGSM = anApp->win32_direct3d9_app_fixed_tick_background_sleep_milliseconds();
+				const uint32_t BGSM = anApp->win32_d3d9_app_fixed_tick_background_sleep_milliseconds();
 				if (BGSM)
 					::Sleep(BGSM);
 			}
@@ -3447,11 +3447,11 @@ namespace dx9
 			// get the app's time, in seconds. Skip rendering if no time elapsed
 			const w32_timer_values_t TIME_VALUES = w32_timer_mutate_and_get_values(__timer());
 
-			if (anApp && anApp->win32_direct3d9_app_is_fixed_tick_rate())
+			if (anApp && anApp->win32_d3d9_app_is_fixed_tick_rate())
 			{
 				static float elapsed = 0.f;
 				static double now = 0.f;
-				const float FIXED_ELAPSED = anApp->win32_direct3d9_app_seconds_per_fixed_tick();
+				const float FIXED_ELAPSED = anApp->win32_d3d9_app_seconds_per_fixed_tick();
 
 				//don't want to handle huge time spans, better to wait for it to stabilize
 				if (TIME_VALUES.elapsed < FIXED_ELAPSED)
@@ -3477,7 +3477,7 @@ namespace dx9
 					//otherwise we do "off tick" processing...
 					else
 					{
-						anApp->win32_direct3d9_app_do_off_tick_processing(now);
+						anApp->win32_d3d9_app_do_off_tick_processing(now);
 					}
 				}
 				else
@@ -3492,7 +3492,7 @@ namespace dx9
 
 				//do "off tick" processing also
 				if (anApp)
-					anApp->win32_direct3d9_app_do_off_tick_processing(TIME_VALUES.time);
+					anApp->win32_d3d9_app_do_off_tick_processing(TIME_VALUES.time);
 			}
 		}
 		//fixed update central
@@ -3519,7 +3519,7 @@ namespace dx9
 	// Handles app's message loop and rendering when idle.  If DXUTCreateDevice*() or DXUTSetDevice() 
 	// has not already been called, it will call DXUTCreateWindow() with the default parameters.  
 	//--------------------------------------------------------------------------------------
-	::HRESULT main_loop(win32_direct3d9_app_i* anApp)
+	::HRESULT main_loop(win32_d3d9_app_i* anApp)
 	{
 		// Not allowed to call this from inside the device callbacks or reenter
 		if (state.m_inside.device_callback || state.m_inside.main_loop)

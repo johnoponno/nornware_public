@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "state.h"
-#include "w32_direct3d9_app.h"
+#include "win32_d3d9_app.h"
 
 namespace dx9
 {
@@ -173,7 +173,7 @@ namespace dx9
 					// is acceptable to the app.
 					if (state.app)
 					{
-						if (!state.app->win32_direct3d9_app_is_device_acceptable(pDeviceInfo->caps, adapterFormat, backBufferFormat, FALSE != nWindowed))
+						if (!state.app->win32_d3d9_app_is_device_acceptable(pDeviceInfo->caps, adapterFormat, backBufferFormat, FALSE != nWindowed))
 							continue;
 					}
 

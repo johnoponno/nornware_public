@@ -8,14 +8,14 @@
 #define APPDATA_PATH "nornware/tpmn"
 #define ASSET_HUB "hubb.tpmn"
 
-bool tpmn_app_t::win32_direct3d9_app_is_device_acceptable(const ::D3DCAPS9&, const ::D3DFORMAT, const ::D3DFORMAT, const bool) const
+bool tpmn_app_t::win32_d3d9_app_is_device_acceptable(const ::D3DCAPS9&, const ::D3DFORMAT, const ::D3DFORMAT, const bool) const
 {
 	//don't really need to require fancy stuff here, using FF user primitive...
 
 	return true;
 }
 
-bool tpmn_app_t::win32_direct3d9_app_modify_device_settings(const ::D3DCAPS9& caps, dx9::device_settings_t& device_settings)
+bool tpmn_app_t::win32_d3d9_app_modify_device_settings(const ::D3DCAPS9& caps, dx9::device_settings_t& device_settings)
 {
 	// If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW 
 	// then switch to SWVP.
@@ -52,7 +52,7 @@ bool tpmn_app_t::win32_direct3d9_app_modify_device_settings(const ::D3DCAPS9& ca
 	return true;
 }
 
-void tpmn_app_t::win32_direct3d9_app_frame_move(const double, const float)
+void tpmn_app_t::win32_d3d9_app_frame_move(const double, const float)
 {
 	//if not foreground, don't run
 	if (!dx9::state.m_active)
@@ -184,7 +184,7 @@ void tpmn_app_t::win32_direct3d9_app_frame_move(const double, const float)
 	}
 }
 
-bool tpmn_app_t::win32_direct3d9_app_frame_render(const double, const float)
+bool tpmn_app_t::win32_d3d9_app_frame_render(const double, const float)
 {
 	if (dx9::state.m_active)
 	{
@@ -220,7 +220,7 @@ bool tpmn_app_t::win32_direct3d9_app_frame_render(const double, const float)
 	return dx9::state.m_active;
 }
 
-::LRESULT tpmn_app_t::win32_direct3d9_app_msg_proc(const HWND, const UINT, const WPARAM, const LPARAM, bool*)
+::LRESULT tpmn_app_t::win32_d3d9_app_msg_proc(const HWND, const UINT, const WPARAM, const LPARAM, bool*)
 {
 	return 0;
 }

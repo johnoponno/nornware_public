@@ -87,7 +87,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="w32_direct3d9_app.h" />
+    <ClInclude Include="win32_d3d9_app.h" />
     <ClInclude Include="vorbis_codec.h" />
     <ClInclude Include="d3d_resource.h" />
     <ClInclude Include="dxut.h" />

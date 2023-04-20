@@ -1,6 +1,6 @@
 #pragma once
 
-struct win32_direct3d9_app_i;
+struct win32_d3d9_app_i;
 
 //--------------------------------------------------------------------------------------
 // Error codes
@@ -36,10 +36,10 @@ namespace dx9
 	::HRESULT create_window(const char* aWindowTitle, const ::DWORD aWindowStyle = 0);
 
 	// Choose either DXUTCreateDevice or DXUTSetDevice or DXUTCreateDeviceFromSettings
-	::HRESULT create_device(const uint32_t AdapterOrdinal, const bool bWindowed, const int32_t nSuggestedWidth, const int32_t nSuggestedHeight, win32_direct3d9_app_i* anApp);
+	::HRESULT create_device(const uint32_t AdapterOrdinal, const bool bWindowed, const int32_t nSuggestedWidth, const int32_t nSuggestedHeight, win32_d3d9_app_i* anApp);
 
 	// Choose either MainLoop or implement your own main loop 
-	::HRESULT main_loop(win32_direct3d9_app_i* anApp);
+	::HRESULT main_loop(win32_d3d9_app_i* anApp);
 
 	//--------------------------------------------------------------------------------------
 	// Common Tasks 
