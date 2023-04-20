@@ -198,15 +198,15 @@ namespace sound
 		vorbis_info* info = ::ov_info(&myFile, -1);
 
 		//output format
-		output_format.formatTag = 1;	//pcm
+		output_format.format_tag = 1;	//pcm
 
 		assert(0xffff >= info->channels);
-		output_format.numChannels = (uint16_t)info->channels;
+		output_format.num_channels = (uint16_t)info->channels;
 
-		output_format.samplesPerSecond = info->rate;
+		output_format.samples_per_second = info->rate;
 		output_format.bitsPerSample = 16;
-		output_format.blockAlign = (output_format.numChannels * output_format.bitsPerSample) / 8;
-		output_format.averageBytesPerSecond = output_format.samplesPerSecond * output_format.blockAlign;
+		output_format.blockAlign = (output_format.num_channels * output_format.bitsPerSample) / 8;
+		output_format.average_bytes_per_second = output_format.samples_per_second * output_format.blockAlign;
 		output_format.extraInfoSize = 0;		//should be 0
 
 		//cache total size

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sound_util.h"
+#include "win32_dsound_util.h"
 
 namespace sound
 {
@@ -17,7 +17,7 @@ namespace sound
 		virtual uint32_t bytes_total() const = 0;
 
 		const uint32_t frame_size;
-		wave_format_ex_t output_format;
+		win32_wav_format_ex_t output_format;
 
 	protected:
 

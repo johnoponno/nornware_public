@@ -5,7 +5,55 @@
 
 namespace sound
 {
-	::IDirectSoundBuffer* load_waveform(const char* filename, ::IDirectSound& directsound, length_t& l)
+	static float __directx_to_linear_volume(const long aDirectX)
+	{
+		if (aDirectX <= -10000)
+			return 0.f;
+
+		if (aDirectX >= 0)
+			return 1.f;
+
+		return ::powf(10.0f, (float)aDirectX / 2000.f);
+	}
+
+	static float __directx_to_linear_pan(const long aDirectX)
+	{
+		if (aDirectX <= -10000)
+			return -1.f;
+
+		if (aDirectX >= 10000)
+			return 1.f;
+
+		const float LINEAR(::powf((float)::abs(aDirectX) / 10000.f, 1.f / 3.f));
+		if (aDirectX < 0)
+			return -LINEAR;
+
+		return LINEAR;
+
+	}
+
+	static long __linear_to_directx_pan(const float aLinear)
+	{
+		float p = aLinear;
+
+		if (p < -1.f)
+			p = -1.f;
+		else if (p > 1.f)
+			p = 1.f;
+
+		//exponential
+		p = ::powf(p, 3.f);
+
+		return (long)(p * 10000.f);
+	}
+
+	//public
+	//public
+	//public
+	//public
+	::IDirectSoundBuffer* load_waveform(
+		const char* filename,
+		::IDirectSound& directsound, win32_dsound_length_t& l)
 	{
 		//load a wav file
 		file_wave_t wave;
@@ -13,7 +61,7 @@ namespace sound
 			return nullptr;
 
 		l.in_bytes = wave.size;
-		l.in_seconds = (float)l.in_bytes / (float)wave.header.averageBytesPerSecond;
+		l.in_seconds = (float)l.in_bytes / (float)wave.header.average_bytes_per_second;
 
 		//set up DSBUFFERDESC structure for a secondary buffer
 		::DSBUFFERDESC bd{};
@@ -117,11 +165,13 @@ namespace sound
 
 	bool buffer_init(const char* filename, ::IDirectSound& directsound, buffer_t& b)
 	{
-		length_t l{};
+		win32_dsound_length_t l{};
 		return buffer_init(filename, directsound, b, l);
 	}
 
-	bool buffer_init(const char* filename, ::IDirectSound& directsound, buffer_t& b, length_t& l)
+	bool buffer_init(
+		const char* filename,
+		::IDirectSound& directsound, buffer_t& b, win32_dsound_length_t& l)
 	{
 		b.buffer = load_waveform(filename, directsound, l);
 		return nullptr != b.buffer;
@@ -163,8 +213,8 @@ namespace sound
 			return
 				DS_OK == b.buffer->Stop() &&
 				DS_OK == b.buffer->SetCurrentPosition(0) &&
-				DS_OK == b.buffer->SetVolume(linear_to_direct_x_volume(volume)) &&
-				DS_OK == b.buffer->SetPan(linear_to_direct_x_pan(pan)) &&
+				DS_OK == b.buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume)) &&
+				DS_OK == b.buffer->SetPan(__linear_to_directx_pan(pan)) &&
 				DS_OK == b.buffer->SetFrequency((uint32_t)(44100.f * frequency)) &&
 				DS_OK == b.buffer->Play(0, 0, 0);
 		}
@@ -177,15 +227,15 @@ namespace sound
 		if (buffer_is_playing(b))
 		{
 			return
-				b.buffer->SetVolume(linear_to_direct_x_volume(volume)) == DS_OK &&
-				b.buffer->SetPan(linear_to_direct_x_pan(pan)) == DS_OK &&
+				b.buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume)) == DS_OK &&
+				b.buffer->SetPan(__linear_to_directx_pan(pan)) == DS_OK &&
 				b.buffer->SetFrequency((uint32_t)(44100.f * frequency)) == DS_OK;
 		}
 
 		return
 			b.buffer->SetCurrentPosition(0) == DS_OK &&
-			b.buffer->SetVolume(linear_to_direct_x_volume(volume)) == DS_OK &&
-			b.buffer->SetPan(linear_to_direct_x_pan(pan)) == DS_OK &&
+			b.buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume)) == DS_OK &&
+			b.buffer->SetPan(__linear_to_directx_pan(pan)) == DS_OK &&
 			b.buffer->SetFrequency((uint32_t)(44100.f * frequency)) == DS_OK &&
 			b.buffer->Play(0, 0, DSBPLAY_LOOPING) == DS_OK;
 	}
@@ -206,7 +256,7 @@ namespace sound
 		if (b.buffer)
 			b.buffer->GetVolume(&v);
 
-		return direct_x_to_linear_volume(v);
+		return __directx_to_linear_volume(v);
 	}
 
 	float buffer_pan(const buffer_t& b)
@@ -216,7 +266,7 @@ namespace sound
 		if (b.buffer)
 			b.buffer->GetPan(&p);
 
-		return direct_x_to_linear_pan(p);
+		return __directx_to_linear_pan(p);
 	}
 
 	uint32_t buffer_position(const buffer_t& b)

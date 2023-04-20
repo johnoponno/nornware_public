@@ -152,7 +152,7 @@ namespace sound
 		}
 
 		//set volume
-		if (s.buffer->SetVolume(linear_to_direct_x_volume(aVolume)) != DS_OK)
+		if (s.buffer->SetVolume(win32_dsound_linear_to_directx_volume(aVolume)) != DS_OK)
 			return false;
 
 		//reset buffer
@@ -337,7 +337,7 @@ namespace sound
 			}
 
 			//set volume
-			if (FAILED(s.buffer->SetVolume(linear_to_direct_x_volume(volume))))
+			if (FAILED(s.buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume))))
 				return false;
 		}
 
@@ -431,7 +431,7 @@ namespace sound
 		uint32_t t;
 
 		stream_position_bytes(p, t, s);
-		return p / (float)stereo_wav_format.averageBytesPerSecond;
+		return p / (float)WIN32_DSOUND_STEREO_WAV_FORMAT.average_bytes_per_second;
 	}
 
 	void stream_position_bytes(uint32_t& aPosition, uint32_t& aTotal, const stream_t& s)

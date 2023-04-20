@@ -105,7 +105,7 @@
     <ClInclude Include="sound_file_wave.h" />
     <ClInclude Include="sound_stream.h" />
     <ClInclude Include="sound_stream_source.h" />
-    <ClInclude Include="sound_util.h" />
+    <ClInclude Include="win32_dsound_util.h" />
     <ClInclude Include="sound_vorbis_file.h" />
     <ClInclude Include="win32_d3d9_state.h" />
     <ClInclude Include="stdafx.h" />
@@ -126,7 +126,7 @@
     <ClCompile Include="sound_engine.cpp" />
     <ClCompile Include="sound_file_wave.cpp" />
     <ClCompile Include="sound_stream.cpp" />
-    <ClCompile Include="sound_util.cpp" />
+    <ClCompile Include="win32_dsound_util.cpp" />
     <ClCompile Include="sound_vorbis_file.cpp" />
     <ClCompile Include="win32_d3d9_state.cpp" />
     <ClCompile Include="stdafx.cpp">

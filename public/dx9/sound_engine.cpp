@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "sound_engine.h"
-#include "sound_util.h"
+#include "win32_dsound_util.h"
 
 namespace sound
 {
@@ -48,15 +48,15 @@ namespace sound
 			return false;
 
 		//make sure is our desired format
-		if (wav_format.wFormatTag != stereo_wav_format.formatTag ||
-			wav_format.nChannels != stereo_wav_format.numChannels ||
-			wav_format.nSamplesPerSec != stereo_wav_format.samplesPerSecond ||
-			wav_format.nAvgBytesPerSec != stereo_wav_format.averageBytesPerSecond ||
-			wav_format.nBlockAlign != stereo_wav_format.blockAlign ||
-			wav_format.wBitsPerSample != stereo_wav_format.bitsPerSample ||
-			wav_format.cbSize != stereo_wav_format.extraInfoSize)
+		if (wav_format.wFormatTag != WIN32_DSOUND_STEREO_WAV_FORMAT.format_tag ||
+			wav_format.nChannels != WIN32_DSOUND_STEREO_WAV_FORMAT.num_channels ||
+			wav_format.nSamplesPerSec != WIN32_DSOUND_STEREO_WAV_FORMAT.samples_per_second ||
+			wav_format.nAvgBytesPerSec != WIN32_DSOUND_STEREO_WAV_FORMAT.average_bytes_per_second ||
+			wav_format.nBlockAlign != WIN32_DSOUND_STEREO_WAV_FORMAT.blockAlign ||
+			wav_format.wBitsPerSample != WIN32_DSOUND_STEREO_WAV_FORMAT.bitsPerSample ||
+			wav_format.cbSize != WIN32_DSOUND_STEREO_WAV_FORMAT.extraInfoSize)
 		{
-			err = e.primary_buffer->SetFormat((::LPCWAVEFORMATEX)&stereo_wav_format);
+			err = e.primary_buffer->SetFormat((::LPCWAVEFORMATEX)&WIN32_DSOUND_STEREO_WAV_FORMAT);
 			if (FAILED(err))
 				return false;
 		}

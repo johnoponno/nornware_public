@@ -53,11 +53,11 @@ namespace sound
 				//found the format part
 			case mmioFOURCC('f', 'm', 't', ' '):
 				//something's wrong! Not a WAV
-				if (length < sizeof(wave_format_t))
+				if (length < sizeof(win32_wav_format_t))
 					return false;
 
 				//copy header
-				::memcpy(&fws.header, mem_ptr, sizeof(wave_format_ex_t));
+				::memcpy(&fws.header, mem_ptr, sizeof(win32_wav_format_ex_t));
 
 				//cbSize should always be 0 for PCM sounds,
 				//according to Patrik Larsson at DECAM and the DirectSound debug DLLs

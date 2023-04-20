@@ -2,7 +2,7 @@
 
 static_assert(sizeof(unsigned long) == sizeof(uint32_t), "sizeof(unsigned long) != sizeof(uint32_t)");
 
-#include "sound_util.h"
+#include "win32_dsound_util.h"
 
 namespace sound
 {
@@ -11,7 +11,7 @@ namespace sound
 		explicit file_wave_t();
 		~file_wave_t();
 
-		wave_format_ex_t header;
+		win32_wav_format_ex_t header;
 		uint32_t size;
 		uint8_t* data;
 	};

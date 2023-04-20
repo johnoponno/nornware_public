@@ -1,6 +1,6 @@
 #pragma once
 
-#include "sound_util.h"
+#include "win32_dsound_util.h"
 
 struct IDirectSound;
 struct IDirectSoundBuffer;
@@ -29,7 +29,7 @@ namespace sound
 		const uint32_t num_channels;
 		channel_t* channels;
 		uint32_t stats[num_stats];
-		length_t length;
+		win32_dsound_length_t length;
 	};
 
 	sound_t* sound_create(const char* aFileName, const uint32_t aNumChannels, ::IDirectSound& aDirectSound);

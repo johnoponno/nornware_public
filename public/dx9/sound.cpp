@@ -69,7 +69,9 @@ namespace sound
 		return true;
 	}
 
-	static bool __init(const char* aFileName, ::IDirectSound& aDirectSound, sound_t& s)
+	static bool __init(
+		const char* aFileName, ::IDirectSound& aDirectSound,
+		sound_t& s)
 	{
 		//load main buffer
 		::IDirectSoundBuffer* main_buffer = load_waveform(aFileName, aDirectSound, s.length);
