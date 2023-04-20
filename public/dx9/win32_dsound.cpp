@@ -57,12 +57,12 @@ static bool __create_channels(::IDirectSound& aDirectSound, ::IDirectSoundBuffer
 		return false;
 
 	//store loaded buffer in first channel
-	s.channels[0].buffer.buffer = aBuffer;
+	s.channels[0].buffer = aBuffer;
 
 	//duplicate buffers
 	for (uint32_t i = 1; i < s.NUM_CHANNELS; ++i)
 	{
-		if (DS_OK != aDirectSound.DuplicateSoundBuffer(aBuffer, &s.channels[i].buffer.buffer))
+		if (DS_OK != aDirectSound.DuplicateSoundBuffer(aBuffer, &s.channels[i].buffer))
 			return false;
 	}
 

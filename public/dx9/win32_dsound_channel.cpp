@@ -57,27 +57,31 @@ static bool __buffer_is_playing(::IDirectSoundBuffer* buffer)
 	return (status != DSBSTATUS_BUFFERLOST) && (status & DSBSTATUS_PLAYING) || (status & DSBSTATUS_LOOPING);
 }
 
-static bool __buffer_play_looped(const float volume, const float pan, const float frequency, const win32_dsound_buffer_t& b)
+static bool __buffer_play_looped(
+	const float volume, const float pan, const float frequency,
+	::IDirectSoundBuffer* buffer)
 {
-	if (__buffer_is_playing(b.buffer))
+	if (__buffer_is_playing(buffer))
 	{
 		return
-			b.buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume)) == DS_OK &&
-			b.buffer->SetPan(__linear_to_directx_pan(pan)) == DS_OK &&
-			b.buffer->SetFrequency((uint32_t)(44100.f * frequency)) == DS_OK;
+			buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume)) == DS_OK &&
+			buffer->SetPan(__linear_to_directx_pan(pan)) == DS_OK &&
+			buffer->SetFrequency((uint32_t)(44100.f * frequency)) == DS_OK;
 	}
 
 	return
-		b.buffer->SetCurrentPosition(0) == DS_OK &&
-		b.buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume)) == DS_OK &&
-		b.buffer->SetPan(__linear_to_directx_pan(pan)) == DS_OK &&
-		b.buffer->SetFrequency((uint32_t)(44100.f * frequency)) == DS_OK &&
-		b.buffer->Play(0, 0, DSBPLAY_LOOPING) == DS_OK;
+		buffer->SetCurrentPosition(0) == DS_OK &&
+		buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume)) == DS_OK &&
+		buffer->SetPan(__linear_to_directx_pan(pan)) == DS_OK &&
+		buffer->SetFrequency((uint32_t)(44100.f * frequency)) == DS_OK &&
+		buffer->Play(0, 0, DSBPLAY_LOOPING) == DS_OK;
 }
 
 //only play if the volume is audible
 //DO NOT STOP otherwise; this should avoid choking out playing sounds that ARE audible
-static bool __buffer_play(const float volume, const float pan, const float frequency, const win32_dsound_buffer_t& b)
+static bool __buffer_play(
+	const float volume, const float pan, const float frequency,
+	::IDirectSoundBuffer* buffer)
 {
 	//do we want to check incoming calls?
 	assert(volume > 0.f && volume <= 1.f);
@@ -85,20 +89,15 @@ static bool __buffer_play(const float volume, const float pan, const float frequ
 	if (volume > 0.f)
 	{
 		return
-			DS_OK == b.buffer->Stop() &&
-			DS_OK == b.buffer->SetCurrentPosition(0) &&
-			DS_OK == b.buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume)) &&
-			DS_OK == b.buffer->SetPan(__linear_to_directx_pan(pan)) &&
-			DS_OK == b.buffer->SetFrequency((uint32_t)(44100.f * frequency)) &&
-			DS_OK == b.buffer->Play(0, 0, 0);
+			DS_OK == buffer->Stop() &&
+			DS_OK == buffer->SetCurrentPosition(0) &&
+			DS_OK == buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume)) &&
+			DS_OK == buffer->SetPan(__linear_to_directx_pan(pan)) &&
+			DS_OK == buffer->SetFrequency((uint32_t)(44100.f * frequency)) &&
+			DS_OK == buffer->Play(0, 0, 0);
 	}
 
 	return true;
-}
-
-static bool __buffer_stop(const win32_dsound_buffer_t& b)
-{
-	return DS_OK == b.buffer->Stop();
 }
 
 //public
@@ -217,31 +216,17 @@ static bool __buffer_stop(const win32_dsound_buffer_t& b)
 	return new_buffer;
 }
 
-win32_dsound_buffer_t::win32_dsound_buffer_t()
-	:buffer(nullptr)
-{
-}
-
-win32_dsound_buffer_t::~win32_dsound_buffer_t()
-{
-	if (buffer)
-	{
-		buffer->Release();
-		buffer = nullptr;
-	}
-}
-
 bool win32_dsound_channel_t::is_playing() const
 {
-	return __buffer_is_playing(buffer.buffer);
+	return __buffer_is_playing(buffer);
 }
 
 float win32_dsound_channel_t::volume() const
 {
 	long v = 0;
 
-	assert(buffer.buffer);
-	buffer.buffer->GetVolume(&v);
+	assert(buffer);
+	buffer->GetVolume(&v);
 
 	return __directx_to_linear_volume(v);
 }
@@ -249,8 +234,17 @@ float win32_dsound_channel_t::volume() const
 win32_dsound_channel_t::win32_dsound_channel_t()
 {
 	handle = nullptr;
+	buffer = nullptr;
 }
 
+win32_dsound_channel_t::~win32_dsound_channel_t()
+{
+	if (buffer)
+	{
+		buffer->Release();
+		buffer = nullptr;
+	}
+}
 
 /*
 float buffer_pan(const buffer_t& b)
@@ -306,7 +300,7 @@ bool win32_dsound_channel_t::stop(const void* in_handle)
 	if ((in_handle && handle == in_handle) || !in_handle)
 	{
 		handle = nullptr;
-		return __buffer_stop(buffer);
+		return DS_OK == buffer->Stop();
 	}
 
 	return false;
