@@ -13,7 +13,7 @@ struct win32_d3d9_state_t
 
 	IDirect3D9* m_d3d;                     // the main D3D object
 	IDirect3DDevice9* m_d3d_device;               // the D3D rendering device
-	dx9::enumeration_t* m_d3d_enumeration;          // CD3DEnumeration object
+	win32_d3d9_enumeration_t* m_d3d_enumeration;          // CD3DEnumeration object
 	win32_d3d9_device_settings_t* m_device_settings;   // current device settings
 	D3DSURFACE_DESC m_backbuffer_surface_desc;   // back buffer surface description
 	D3DCAPS9 m_caps;                    // D3D caps for current device

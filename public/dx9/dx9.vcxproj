@@ -91,7 +91,7 @@
     <ClInclude Include="vorbis_codec.h" />
     <ClInclude Include="win32_d3d9_resource.h" />
     <ClInclude Include="win32_dxut.h" />
-    <ClInclude Include="dxut_enum.h" />
+    <ClInclude Include="win32_dxut_enum.h" />
     <ClInclude Include="dxut_misc.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="input.h" />
@@ -116,7 +116,7 @@
   <ItemGroup>
     <ClCompile Include="win32_d3d9_resource.cpp" />
     <ClCompile Include="win32_dxut.cpp" />
-    <ClCompile Include="dxut_enum.cpp" />
+    <ClCompile Include="win32_dxut_enum.cpp" />
     <ClCompile Include="dxut_misc.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="softdraw_adapter.cpp" />

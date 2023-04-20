@@ -75,7 +75,7 @@ typedef DECLSPEC_IMPORT UINT(WINAPI* LPTIMEBEGINPERIOD)(UINT uPeriod);
 //--------------------------------------------------------------------------------------
 // Internal helper function to find the closest allowed display mode to the optimal 
 //--------------------------------------------------------------------------------------
-static ::HRESULT __find_valid_resolution(const dx9::enum_device_settings_combo_t* aBestDeviceSettingsCombo, const D3DDISPLAYMODE aDisplayModeIn, D3DDISPLAYMODE* aBestDisplayMode)
+static ::HRESULT __find_valid_resolution(const win32_d3d9_enum_device_settings_combo_t* aBestDeviceSettingsCombo, const D3DDISPLAYMODE aDisplayModeIn, D3DDISPLAYMODE* aBestDisplayMode)
 {
 	::D3DDISPLAYMODE bestDisplayMode;
 	::ZeroMemory(&bestDisplayMode, sizeof(::D3DDISPLAYMODE));
@@ -131,12 +131,12 @@ static ::HRESULT __find_valid_resolution(const dx9::enum_device_settings_combo_t
 // Internal helper function to prepare the enumeration object by creating it if it 
 // didn't already exist and enumerating if desired.
 //--------------------------------------------------------------------------------------
-static dx9::enumeration_t* __prepare_enumeration_object(bool anEnumerate)
+static win32_d3d9_enumeration_t* __prepare_enumeration_object(bool anEnumerate)
 {
 	// create a new CD3DEnumeration object and enumerate all devices unless its already been done
 	if (nullptr == win32_d3d9_state.m_d3d_enumeration)
 	{
-		win32_d3d9_state.m_d3d_enumeration = dx9::enumeration_t::instance();
+		win32_d3d9_state.m_d3d_enumeration = win32_d3d9_enumeration_t::instance();
 
 		anEnumerate = true;
 	}
@@ -153,7 +153,7 @@ static dx9::enumeration_t* __prepare_enumeration_object(bool anEnumerate)
 		// app to change the BehaviorFlags.  The BehaviorFlags defaults non-pure HWVP 
 		// if supported otherwise it will default to SWVP, however the app can change this 
 		// through the ConfirmDevice callback.
-		enumerate(*win32_d3d9_state.m_d3d_enumeration);
+		win32_d3d9_enumerate(*win32_d3d9_state.m_d3d_enumeration);
 	}
 
 	return win32_d3d9_state.m_d3d_enumeration;
@@ -206,8 +206,8 @@ static void __update_device_stats(const ::D3DDEVTYPE aDeviceType, const ::DWORD 
 
 		// Try to get a unique description from the CD3DEnumDeviceSettingsCombo
 		win32_d3d9_device_settings_t* pDeviceSettings = win32_d3d9_state.m_device_settings;
-		dx9::enumeration_t* pd3dEnum = __prepare_enumeration_object(false);
-		const dx9::enum_device_settings_combo_t* pDeviceSettingsCombo = get_device_settings_combo(
+		win32_d3d9_enumeration_t* pd3dEnum = __prepare_enumeration_object(false);
+		const win32_d3d9_enum_device_settings_combo_t* pDeviceSettingsCombo = win32_d3d9_get_device_settings_combo(
 			pDeviceSettings->adapter_ordinal,
 			pDeviceSettings->device_type,
 			pDeviceSettings->adapter_format,
@@ -461,12 +461,12 @@ static ::HRESULT __get_adapter_ordinal_from_monitor(::HMONITOR aMonitor, ::UINT*
 {
 	*anAdapterOrdinal = 0;
 
-	const dx9::enumeration_t* ENUMERATION = __prepare_enumeration_object(false);
+	const win32_d3d9_enumeration_t* ENUMERATION = __prepare_enumeration_object(false);
 
-	const std::vector<dx9::enum_adapter_info_t*>* ADAPTER_LIST = &ENUMERATION->adapter_info_list;
+	const std::vector<win32_d3d9_enum_adapter_info_t*>* ADAPTER_LIST = &ENUMERATION->adapter_info_list;
 	for (uint32_t iAdapter = 0; iAdapter < ADAPTER_LIST->size(); ++iAdapter)
 	{
-		const dx9::enum_adapter_info_t* ADAPTER_INFO = (*ADAPTER_LIST)[iAdapter];
+		const win32_d3d9_enum_adapter_info_t* ADAPTER_INFO = (*ADAPTER_LIST)[iAdapter];
 		const HMONITOR hAdapterMonitor = win32_d3d9_state.m_d3d->GetAdapterMonitor(ADAPTER_INFO->adapter_ordinal);
 		if (hAdapterMonitor == aMonitor)
 		{
@@ -550,7 +550,7 @@ static void __update_back_buffer_desc()
 // Builds valid device settings using the match options, the input device settings, and the 
 // best device settings combo found.
 //--------------------------------------------------------------------------------------
-static void __build_valid_device_settings(win32_d3d9_device_settings_t* someValidDeviceSettings, const dx9::enum_device_settings_combo_t* aBestDeviceSettingsCombo, const win32_d3d9_device_settings_t* someDeviceSettingsIn, const match_options_t* someMatchOptions)
+static void __build_valid_device_settings(win32_d3d9_device_settings_t* someValidDeviceSettings, const win32_d3d9_enum_device_settings_combo_t* aBestDeviceSettingsCombo, const win32_d3d9_device_settings_t* someDeviceSettingsIn, const match_options_t* someMatchOptions)
 {
 	::D3DDISPLAYMODE adapterDesktopDisplayMode;
 	win32_d3d9_state.m_d3d->GetAdapterDisplayMode(aBestDeviceSettingsCombo->adapter_ordinal, &adapterDesktopDisplayMode);
@@ -992,7 +992,7 @@ static void __build_valid_device_settings(win32_d3d9_device_settings_t* someVali
 // Returns a ranking number that describes how closely this device 
 // combo matches the optimal combo based on the match options and the optimal device settings
 //--------------------------------------------------------------------------------------
-static float __rank_device_combo(const dx9::enum_device_settings_combo_t* aDeviceSettingsCombo, const win32_d3d9_device_settings_t* someOptimalDeviceSettings, const ::D3DDISPLAYMODE* anAdapterDesktopDisplayMode)
+static float __rank_device_combo(const win32_d3d9_enum_device_settings_combo_t* aDeviceSettingsCombo, const win32_d3d9_device_settings_t* someOptimalDeviceSettings, const ::D3DDISPLAYMODE* anAdapterDesktopDisplayMode)
 {
 	float fCurRanking = 0.0f;
 
@@ -1178,7 +1178,7 @@ static float __rank_device_combo(const dx9::enum_device_settings_combo_t* aDevic
 // Returns false for any CD3DEnumDeviceSettingsCombo that doesn't meet the preserve 
 // match options against the input someDeviceSettingsIn.
 //--------------------------------------------------------------------------------------
-static bool __does_device_combo_match_preserve_options(const dx9::enum_device_settings_combo_t* aDeviceSettingsCombo, const win32_d3d9_device_settings_t* someDeviceSettingsIn, const match_options_t* someMatchOptions)
+static bool __does_device_combo_match_preserve_options(const win32_d3d9_enum_device_settings_combo_t* aDeviceSettingsCombo, const win32_d3d9_device_settings_t* someDeviceSettingsIn, const match_options_t* someMatchOptions)
 {
 	//---------------------
 	// Adapter ordinal
@@ -1563,7 +1563,7 @@ static HRESULT __find_valid_device_settings(win32_d3d9_device_settings_t* someSe
 	if (someSettingsOut == nullptr)
 		return DXUT_ERR_MSGBOX("FindValidDeviceSettings", E_INVALIDARG);
 
-	const dx9::enumeration_t* ENUMERATION = __prepare_enumeration_object(false);
+	const win32_d3d9_enumeration_t* ENUMERATION = __prepare_enumeration_object(false);
 
 	// Default to IGNORE_INPUT for everything unless someMatchOptions isn't nullptr
 	match_options_t defaultMatchOptions;
@@ -1589,13 +1589,13 @@ static HRESULT __find_valid_device_settings(win32_d3d9_device_settings_t* someSe
 	// given what's available on the system and the match options combined with the device settings input.
 	// This combination of settings is encapsulated by the CD3DEnumDeviceSettingsCombo struct.
 	float fBestRanking = -1.0f;
-	const dx9::enum_device_settings_combo_t* BEST_DEVICE_SETTINGS_COMBO = nullptr;
+	const win32_d3d9_enum_device_settings_combo_t* BEST_DEVICE_SETTINGS_COMBO = nullptr;
 	::D3DDISPLAYMODE adapterDesktopDisplayMode;
 
-	const std::vector<dx9::enum_adapter_info_t*>* ADAPTER_LIST = &ENUMERATION->adapter_info_list;
+	const std::vector<win32_d3d9_enum_adapter_info_t*>* ADAPTER_LIST = &ENUMERATION->adapter_info_list;
 	for (uint32_t iAdapter = 0; iAdapter < ADAPTER_LIST->size(); ++iAdapter)
 	{
-		const dx9::enum_adapter_info_t* ADAPTER_INFO = (*ADAPTER_LIST)[iAdapter];
+		const win32_d3d9_enum_adapter_info_t* ADAPTER_INFO = (*ADAPTER_LIST)[iAdapter];
 
 		// get the desktop display mode of adapter 
 		win32_d3d9_state.m_d3d->GetAdapterDisplayMode(ADAPTER_INFO->adapter_ordinal, &adapterDesktopDisplayMode);
@@ -1604,13 +1604,13 @@ static HRESULT __find_valid_device_settings(win32_d3d9_device_settings_t* someSe
 		// Enum all the device types supported by this adapter to find the best device settings
 		for (uint32_t iDeviceInfo = 0; iDeviceInfo < ADAPTER_INFO->device_info_list.size(); ++iDeviceInfo)
 		{
-			const dx9::enum_device_info_t* DEVICE_INFO = ADAPTER_INFO->device_info_list[iDeviceInfo];
+			const win32_d3d9_enum_device_info_t* DEVICE_INFO = ADAPTER_INFO->device_info_list[iDeviceInfo];
 
 			// Enum all the device settings combinations.  A device settings combination is 
 			// a unique set of an adapter format, back buffer format, and IsWindowed.
 			for (uint32_t iDeviceCombo = 0; iDeviceCombo < DEVICE_INFO->device_settings_combo_list.size(); ++iDeviceCombo)
 			{
-				const dx9::enum_device_settings_combo_t* DEVICE_SETTINGS_COMBO = DEVICE_INFO->device_settings_combo_list[iDeviceCombo];
+				const win32_d3d9_enum_device_settings_combo_t* DEVICE_SETTINGS_COMBO = DEVICE_INFO->device_settings_combo_list[iDeviceCombo];
 
 				// If windowed mode the adapter format has to be the same as the desktop 
 				// display mode format so skip any that don't match
@@ -1805,8 +1805,8 @@ static ::HRESULT __create_3d_environment(::IDirect3DDevice9* aDeviceFromApp)
 	win32_d3d9_state.m_d3d_device->GetDeviceCaps(&win32_d3d9_state.m_caps);
 
 	// update the device stats text
-	dx9::enumeration_t* enumeration = __prepare_enumeration_object(false);
-	const dx9::enum_adapter_info_t* ADAPTER_INFO = get_adapter_info(newDeviceSettings->adapter_ordinal, *enumeration);
+	win32_d3d9_enumeration_t* enumeration = __prepare_enumeration_object(false);
+	const win32_d3d9_enum_adapter_info_t* ADAPTER_INFO = win32_d3d9_get_adapter_info(newDeviceSettings->adapter_ordinal, *enumeration);
 	__update_device_stats(newDeviceSettings->device_type, newDeviceSettings->behavior_flags, &ADAPTER_INFO->adapter_identifier);
 
 	// Call the app's device created callback if non-nullptr

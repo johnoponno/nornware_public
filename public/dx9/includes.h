@@ -66,7 +66,7 @@
 
 #include "win32_dxut.h"
 #include "dxut_misc.h"
-#include "dxut_enum.h"
+#include "win32_dxut_enum.h"
 
 #if defined(DEBUG) || defined(_DEBUG)
 	#ifndef VERIFY
