@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "tpmn_controller.h"
 
-#include "../../dx9/win32_dsound_stream.h"
-#include "../../dx9/win32_input.h"
+#include "../../win32/win32_dsound_stream.h"
+#include "../../win32/win32_input.h"
 #include "tpmn_assets.h"
 
 #define ASSET_TRACK0 "johno_Jungle_2012.ogg"

@@ -1,9 +1,9 @@
 # changelog
 [4:30 PM 4/19/2023] upgrade solution to Microsoft Visual Studio Community 2019 Version 16.11.24
+[4:51 PM 4/20/2023] replace namespaces with prefixes
+[4:51 PM 4/20/2023] dx9 -> win32
 
 # todo
-[ ] replace namespaces with prefixes
-[ ] dx9 -> win32
 [ ] fix mouse cursor position to work with canvas scaling
 [ ] implement mouse wheel example in tpmn
 [ ] re-implement editor

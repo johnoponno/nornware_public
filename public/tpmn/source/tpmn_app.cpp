@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "tpmn_app.h"
 
-#include "../../dx9/win32_d3d9_state.h"
-#include "../../dx9/win32_input.h"
-#include "../../dx9/win32_dsound_stream.h"
+#include "../../win32/win32_d3d9_state.h"
+#include "../../win32/win32_input.h"
+#include "../../win32/win32_dsound_stream.h"
 
 #define APPDATA_PATH "nornware/tpmn"
 #define ASSET_HUB "hubb.tpmn"

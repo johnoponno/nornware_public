@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../../dx9/win32_d3d9_app.h"
-#include "../../dx9/win32_d3d9_softdraw_adapter.h"
+#include "../../win32/win32_d3d9_app.h"
+#include "../../win32/win32_d3d9_softdraw_adapter.h"
 #include "tpmn_model.h"
 #include "tpmn_assets.h"
 #include "tpmn_controller.h"

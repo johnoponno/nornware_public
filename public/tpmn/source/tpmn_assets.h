@@ -2,8 +2,8 @@
 
 #include "../../softdraw/sd_bitmap.h"
 #include "../../softdraw/sd_fontv.h"
-#include "../../dx9/win32_dsound_engine.h"
-#include "../../dx9/win32_dsound_container.h"
+#include "../../win32/win32_dsound_engine.h"
+#include "../../win32/win32_dsound_container.h"
 #include "tpmn_model.h"
 
 #define TPMN_TITLE_COLOR 0xffff

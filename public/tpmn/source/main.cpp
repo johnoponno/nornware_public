@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../../dx9/win32_d3d9_state.h"
+#include "../../win32/win32_d3d9_state.h"
 #include "tpmn_app.h"
 
 //--------------------------------------------------------------------------------------
