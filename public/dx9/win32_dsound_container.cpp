@@ -3,7 +3,7 @@
 
 #include "win32_dsound.h"
 #include "win32_dsound_vorbis_file.h"
-#include "sound_engine.h"
+#include "win32_dsound_engine.h"
 #include "sound_stream.h"
 
 //init (object should exist even if disabled, but its behaviour will differ, ie won't create sound objects)
@@ -22,7 +22,7 @@ bool win32_dsound_container_t::init()
 	return true;
 }
 
-bool win32_dsound_container_t::add_sound(const sound::engine_t& engine, const char* aFileName, const uint32_t anId, const uint32_t aNumChannels) const
+bool win32_dsound_container_t::add_sound(const win32_dsound_engine_t& engine, const char* aFileName, const uint32_t anId, const uint32_t aNumChannels) const
 {
 	//only add sound if DirectSound is active
 	if (engine.directsound && anId < NUM_SOUNDS && aNumChannels > 0)
@@ -160,7 +160,7 @@ void container_stop_all(const container_t& c)
 }
 */
 
-sound::stream_t* win32_dsound_stream_create(const sound::engine_t& engine, const char* aFile)
+sound::stream_t* win32_dsound_stream_create(const win32_dsound_engine_t& engine, const char* aFile)
 {
 	sound::stream_t* stream = nullptr;
 
@@ -169,7 +169,7 @@ sound::stream_t* win32_dsound_stream_create(const sound::engine_t& engine, const
 		win32_dsound_stream_source_i* source = win32_dsound_vorbis_file_t::create(aFile);
 		if (source)
 		{
-			stream = stream_create(engine, source);
+			stream = sound::stream_create(engine, source);
 			if (!stream)
 				delete source;
 		}

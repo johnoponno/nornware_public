@@ -2,7 +2,7 @@
 #include "sound_stream.h"
 
 #include "win32_dsound_stream_source.h"
-#include "sound_engine.h"
+#include "win32_dsound_engine.h"
 
 namespace sound
 {
@@ -13,7 +13,7 @@ namespace sound
 		end_of_sample
 	};
 
-	static bool __init(const engine_t& anEngine, stream_t& s)
+	static bool __init(const win32_dsound_engine_t& anEngine, stream_t& s)
 	{
 #define NUM_FRAMES 100
 		::DSBUFFERDESC dsbd;
@@ -233,7 +233,7 @@ namespace sound
 	}
 
 	stream_t* stream_create(
-		const engine_t& anEngine,
+		const win32_dsound_engine_t& anEngine,
 		win32_dsound_stream_source_i* aSource)
 	{
 		stream_t* s = new stream_t(aSource);

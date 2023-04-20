@@ -3,10 +3,10 @@
 struct IDirectSoundBuffer;
 
 struct win32_dsound_stream_source_i;
+struct win32_dsound_engine_t;
 
 namespace sound
 {
-	struct engine_t;
 
 	struct stream_t
 	{
@@ -28,7 +28,7 @@ namespace sound
 		unsigned stop_pending_eh : 1;
 	};
 
-	stream_t* stream_create(const engine_t& anEngine, win32_dsound_stream_source_i* aSource);
+	stream_t* stream_create(const win32_dsound_engine_t& anEngine, win32_dsound_stream_source_i* aSource);
 	bool stream_play(const bool aLoopFlag, const float aStartPosition, const float aMaxVolume, stream_t& s);
 	bool stream_fade_in_play(const bool aLoopFlag, const float aCurrentTime, const float aDuration, const float aStartPosition, stream_t& s);
 	bool stream_fade_out_stop(const float aCurrentTime, const float aDuration, stream_t& s);

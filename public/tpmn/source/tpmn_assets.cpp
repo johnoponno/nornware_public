@@ -124,7 +124,7 @@ bool tpmn_assets_init(tpmn_assets_t& assets)
 		return false;
 	assets.font.char_spacing = -1;
 
-	if (!engine_init(win32_d3d9_hwnd(), assets.engine))
+	if (!assets.engine.init(win32_d3d9_hwnd()))
 		return false;
 
 	if (!assets.container.init())
@@ -173,7 +173,7 @@ void tpmn_assets_reload(tpmn_assets_t& assets)
 void tpmn_assets_cleanup(tpmn_assets_t& assets)
 {
 	assets.container.cleanup();
-	engine_cleanup(assets.engine);
+	assets.engine.cleanup();
 }
 
 void tpmn_sound_play(const tpmn_assets_t& assets, const uint32_t id)

@@ -101,7 +101,7 @@
     <ClInclude Include="win32_dsound.h" />
     <ClInclude Include="win32_dsound_channel.h" />
     <ClInclude Include="win32_dsound_container.h" />
-    <ClInclude Include="sound_engine.h" />
+    <ClInclude Include="win32_dsound_engine.h" />
     <ClInclude Include="sound_file_wave.h" />
     <ClInclude Include="sound_stream.h" />
     <ClInclude Include="win32_dsound_stream_source.h" />
@@ -123,7 +123,7 @@
     <ClCompile Include="win32_dsound.cpp" />
     <ClCompile Include="win32_dsound_channel.cpp" />
     <ClCompile Include="win32_dsound_container.cpp" />
-    <ClCompile Include="sound_engine.cpp" />
+    <ClCompile Include="win32_dsound_engine.cpp" />
     <ClCompile Include="sound_file_wave.cpp" />
     <ClCompile Include="sound_stream.cpp" />
     <ClCompile Include="win32_dsound_util.cpp" />

@@ -2,7 +2,7 @@
 
 #include "../../softdraw/sd_bitmap.h"
 #include "../../softdraw/sd_fontv.h"
-#include "../../dx9/sound_engine.h"
+#include "../../dx9/win32_dsound_engine.h"
 #include "../../dx9/win32_dsound_container.h"
 #include "tpmn_model.h"
 
@@ -73,7 +73,7 @@ struct tpmn_assets_t
 
 	uint32_t anim_target[TPMN_MAX_TILE];
 
-	sound::engine_t engine;
+	win32_dsound_engine_t engine;
 	win32_dsound_container_t container;
 };
 
