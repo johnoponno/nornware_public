@@ -1,12 +1,12 @@
 # changelog
-[4:30 PM 4/19/2023] upgrade solution to Microsoft Visual Studio Community 2019 Version 16.11.24
-[4:51 PM 4/20/2023] replace namespaces with prefixes
-[4:51 PM 4/20/2023] dx9 -> win32
-[ ] fix mouse cursor position to work with canvas scaling
+* [4:30 PM 4/19/2023] upgrade solution to Microsoft Visual Studio Community 2019 Version 16.11.24
+* [4:51 PM 4/20/2023] replace namespaces with prefixes
+* [4:51 PM 4/20/2023] dx9 -> win32
+* [ ] fix mouse cursor position to work with canvas scaling
 
 # todo
-[ ] implement mouse wheel example in tpmn
-[ ] re-implement editor
+* [ ] implement mouse wheel example in tpmn
+* [ ] re-implement editor
 
 # background
 This public codebase stems from nornware's internal codebase, and is intended mostly as an example of what Johannes 'johno' Norneby thinks is a decent coding style ca late 2019; the most contentious point is probably the shunning of / minimal use of Object Oriented Programming. It's also a small example of a 2d platform game rendered in software, transferred to a texture, and finally rendered as a single quad using DirectX9.0c.
