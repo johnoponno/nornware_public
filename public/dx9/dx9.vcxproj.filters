@@ -43,7 +43,7 @@
     <ClCompile Include="win32_dxut_misc.cpp">
       <Filter>d3d9</Filter>
     </ClCompile>
-    <ClCompile Include="sound_vorbis_file.cpp">
+    <ClCompile Include="win32_dsound_vorbis_file.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
   </ItemGroup>
@@ -109,10 +109,10 @@
     <ClInclude Include="win32_dxut_misc.h">
       <Filter>d3d9</Filter>
     </ClInclude>
-    <ClInclude Include="sound_stream_source.h">
+    <ClInclude Include="win32_dsound_stream_source.h">
       <Filter>dsound</Filter>
     </ClInclude>
-    <ClInclude Include="sound_vorbis_file.h">
+    <ClInclude Include="win32_dsound_vorbis_file.h">
       <Filter>dsound</Filter>
     </ClInclude>
   </ItemGroup>

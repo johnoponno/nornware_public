@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "sound_stream.h"
 
-#include "sound_stream_source.h"
+#include "win32_dsound_stream_source.h"
 #include "sound_engine.h"
 
 namespace sound
@@ -22,7 +22,7 @@ namespace sound
 		::memset(&dsbd, 0, sizeof(dsbd));
 		dsbd.dwSize = sizeof(::DSBUFFERDESC);
 		dsbd.dwFlags = DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLVOLUME;// | DSBCAPS_LOCSOFTWARE;
-		dsbd.dwBufferBytes = s.buffer_size = s.source->frame_size * NUM_FRAMES;
+		dsbd.dwBufferBytes = s.buffer_size = s.source->FRAME_SIZE * NUM_FRAMES;
 		dsbd.lpwfxFormat = (::LPWAVEFORMATEX)&s.source->output_format;
 
 		//try to create buffer
@@ -60,7 +60,7 @@ namespace sound
 				//if looping, load wrapped
 				if (s.looping_eh)
 				{
-					if (s.source->load_wrapped_segment(dst, dstLength))
+					if (s.source->win32_dsound_stream_source_load_wrapped_segment(dst, dstLength))
 					{
 						//set copy length & return value
 						aCopyLength = dstLength;
@@ -75,7 +75,7 @@ namespace sound
 				//else load nonwrapped
 				else
 				{
-					if (s.source->load_segment(dst, dstLength, aCopyLength))
+					if (s.source->win32_dsound_stream_source_load_segment(dst, dstLength, aCopyLength))
 					{
 						//check if reached EOF
 						if (aCopyLength < dstLength)
@@ -128,11 +128,11 @@ namespace sound
 			uint32_t copyLength;
 
 			//rewind stream
-			if (!s.source->rewind(aStartPosition))
+			if (!s.source->win32_dsound_stream_source_rewind(aStartPosition))
 				return false;
 
 			//figure out where we actually started in bytes (based on where we rewinded to)
-			s.total_position = s.source->position_bytes();
+			s.total_position = s.source->win32_dsound_stream_source_position_bytes();
 
 			//fill entire sound buffer
 			copyLength = s.buffer_size;
@@ -208,7 +208,7 @@ namespace sound
 		}
 	}
 
-	stream_t::stream_t(stream_source_i* aSource)
+	stream_t::stream_t(win32_dsound_stream_source_i* aSource)
 	{
 		source = aSource;
 		buffer = nullptr;
@@ -232,7 +232,9 @@ namespace sound
 		delete source;
 	}
 
-	stream_t* stream_create(const engine_t& anEngine, stream_source_i* aSource)
+	stream_t* stream_create(
+		const engine_t& anEngine,
+		win32_dsound_stream_source_i* aSource)
 	{
 		stream_t* s = new stream_t(aSource);
 
@@ -439,7 +441,7 @@ namespace sound
 		::DWORD p;
 		if (SUCCEEDED(s.buffer->GetCurrentPosition(&p, nullptr)))
 		{
-			aTotal = s.source->bytes_total();
+			aTotal = s.source->win32_dsound_stream_source_bytes_total();
 			aPosition = (s.total_position + p) % aTotal;
 		}
 		else

@@ -2,7 +2,7 @@
 #include "win32_dsound_container.h"
 
 #include "win32_dsound.h"
-#include "sound_vorbis_file.h"
+#include "win32_dsound_vorbis_file.h"
 #include "sound_engine.h"
 #include "sound_stream.h"
 
@@ -166,10 +166,7 @@ sound::stream_t* win32_dsound_stream_create(const sound::engine_t& engine, const
 
 	if (engine.directsound)
 	{
-		sound::stream_source_i* source = nullptr;
-
-		source = sound::vorbis_file_t::create(aFile);
-
+		win32_dsound_stream_source_i* source = win32_dsound_vorbis_file_t::create(aFile);
 		if (source)
 		{
 			stream = stream_create(engine, source);
