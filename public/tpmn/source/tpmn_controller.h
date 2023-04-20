@@ -3,10 +3,7 @@
 #include "../../softdraw/sd_bitmap.h"
 #include "tpmn_model.h"
 
-namespace sound
-{
-	struct stream_t;
-}
+struct win32_dsound_stream_t;
 
 struct tpmn_assets_t;
 
@@ -53,7 +50,7 @@ namespace tpmn
 		uint32_t play_menu;
 		uint32_t last_checkpoint;
 		uint32_t track;
-		sound::stream_t* music;
+		win32_dsound_stream_t* music;
 		uint32_t current_tiles[TPMN_MAX_TILE];
 		tpmn_snowflake_t flakes[32];
 		tpmn_death_t deaths[8];

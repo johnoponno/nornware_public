@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "tpmn_controller.h"
 
-#include "../../dx9/sound_stream.h"
+#include "../../dx9/win32_dsound_stream.h"
 #include "../../dx9/win32_input.h"
 #include "tpmn_assets.h"
 
@@ -1033,12 +1033,12 @@ namespace tpmn
 			case 5:		controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK5);	break;
 			}
 			if (controller.music)
-				stream_play(true, 0.f, 1.f, *controller.music);
+				controller.music->play(true, 0.f, 1.f);
 
 			controller.track = model.level.music_track;
 		}
 		if (controller.music)
-			stream_update(tpmn_model_now(model), 1.f, *controller.music);
+			controller.music->update(tpmn_model_now(model), 1.f);
 
 		//tile animations
 		{

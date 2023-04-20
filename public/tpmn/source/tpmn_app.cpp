@@ -3,7 +3,7 @@
 
 #include "../../dx9/win32_d3d9_state.h"
 #include "../../dx9/win32_input.h"
-#include "../../dx9/sound_stream.h"
+#include "../../dx9/win32_dsound_stream.h"
 
 #define APPDATA_PATH "nornware/tpmn"
 #define ASSET_HUB "hubb.tpmn"

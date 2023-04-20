@@ -2,11 +2,7 @@
 
 struct win32_dsound_t;
 struct win32_dsound_engine_t;
-
-namespace sound
-{
-	struct stream_t;
-}
+struct win32_dsound_stream_t;
 
 struct win32_dsound_container_t
 {
@@ -38,4 +34,4 @@ private:
 //bool container_play_looped(const bool anEnable, const uint32_t anId, const float aVolume, const float aPan, const float aFrequency, const void* aHandle, const container_t& c);
 
 //FIXME: move this?
-sound::stream_t* win32_dsound_stream_create(const win32_dsound_engine_t& engine, const char* aFile);
+win32_dsound_stream_t* win32_dsound_stream_create(const win32_dsound_engine_t& engine, const char* aFile);

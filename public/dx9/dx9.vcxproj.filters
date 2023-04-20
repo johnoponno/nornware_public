@@ -19,7 +19,7 @@
     <ClCompile Include="win32_dsound_file_wave.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
-    <ClCompile Include="sound_stream.cpp">
+    <ClCompile Include="win32_dsound_stream.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
     <ClCompile Include="win32_dsound_util.cpp">
@@ -79,7 +79,7 @@
     <ClInclude Include="win32_dsound_file_wave.h">
       <Filter>dsound</Filter>
     </ClInclude>
-    <ClInclude Include="sound_stream.h">
+    <ClInclude Include="win32_dsound_stream.h">
       <Filter>dsound</Filter>
     </ClInclude>
     <ClInclude Include="win32_dsound_util.h">
