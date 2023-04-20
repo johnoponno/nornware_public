@@ -12,21 +12,21 @@
 This public codebase stems from nornware's internal codebase, and is intended mostly as an example of what Johannes 'johno' Norneby thinks is a decent coding style ca late 2019; the most contentious point is probably the shunning of / minimal use of Object Oriented Programming. It's also a small example of a 2d platform game rendered in software, transferred to a texture, and finally rendered as a single quad using DirectX9.0c.
 
 # project overview
-* dx9: minimal Windows /  DirectX9 bootstrapping and software to hardware rendering interface, win32 mouse and keyboard input, and DirectX3 sound.
+* win32: minimal Windows /  DirectX9 bootstrapping and software to hardware rendering interface, win32 mouse and keyboard input, and DirectX3 sound.
 
 * softdraw: 16 bit per pixel software rendering, support for .tga image loading.
 
 * tpmn: backport from Flash/AS3 of the game Twisted Pair Man Nightmare, renders in software (via softdraw) and then transfers the canvas to a texture which is rendered via DirectX9.0c.
 
-* dx9 lib depends on: https://www.microsoft.com/en-us/download/details.aspx?id=6812
+* win32 lib depends on: https://www.microsoft.com/en-us/download/details.aspx?id=6812
 
 * Tested using MSVC 2017 Community Version.
   * Make sure to set tpmn as the startup project, and your working directory to tpmn/assets (tpmn Properties/Configuration Properties/Debugging/Working Directory = ..\assets)
 
   * Use ALT+TAB at any time to switch between windowed and fullscreen mode.
 
-# dx9 (C++ static library)
-The dx9 library is a mashup of the minimal stuff required to get a program window up with DirectX9.0c, support for basic sound (DirectX3) via .wave files with some ogg/vorbis streaming support tacked on.
+# win32 (C++ static library)
+The win32 library is a mashup of the minimal stuff required to get a program window up with DirectX9.0c, support for basic sound (DirectX3) via .wave files with some ogg/vorbis streaming support tacked on.
 
 There are no examples of 3d rendering here, but rather all the graphics stuff is centered around doing rendering "in software" (using the CPU, softdraw lib) in order to be able to "touch the pixels"; DirectX9.0c and similar 3d apis generally don't let you touch the framebuffer directly, and the primitives are triangles (and textures) rather than pixels. It certainly isn't "free" to update the texture each tick (bus traffic from CPU to GPU), but it's a good trade-off to allow for old-school pixel-art games (where the pixels are CRISP!) in a modern world.
 
@@ -45,7 +45,7 @@ Oh yeah, you can configure your app_i subclass to run in either fixed tick mode 
 # softdraw (C++ static library)
 As mentioned, softdraw was created out of a desire to do old-style "blitting" (BLock Image Transfer). The basic primitive is bitmap_t, with functions for drawing to and from them, color keying, various blend modes, etc. All of this is of course far inferior performance-wise as compared to what a GPU can do nowadays, but the whole point of making games with software is for them to be relatively low resolution and "chunky". Also note that all 3d apis (DX / OpenGL / Vulkan) generally specify screen coordinates as floating point values, so it's generally more tricky to get things to line up nicely (especially when building worlds from tiles) when programming triangles on the GPU than doing things the way software does.
 
-There is some flexibility in how the "canvas" (as I usually call the framebuffer) is actually shown on the screen; see how tpmn calculates the size and position of the final quad in app_t::frame_render() as well as the options available in dx9::softdraw_adapter_t. That's really the only contact between the whole game and DirectX; except for app_t the whole game is basically platform independent (the softdraw library is as well).
+There is some flexibility in how the "canvas" (as I usually call the framebuffer) is actually shown on the screen; see how tpmn calculates the size and position of the final quad in app_t::frame_render() as well as the options available in win32_d3d9_softdraw_adapter_t. That's really the only contact between the whole game and DirectX; except for app_t the whole game is basically platform independent (the softdraw library is as well).
 
 # tpmn (C++ win32 application)
 This was a project I did with some students when I was working as a high school teacher, originally done in Flash / AS3 and also originally very object oriented. I recently did a port to C/C++, and because I knew I would be touching basically every line of code in the port from AS3 to C++ I thought it would be fun to see what my current coding style would do to the project.
@@ -84,7 +84,7 @@ Based on that, my style is:
 Controller will often be stateful (and mutable) in that it often needs some variables to track things related to rendering / audio output (particle systems come to mind), and sometimes also to do things like menus that are logically not really part of the simulation itself.
 
 # tpmn application flow
-Looking at app_t::frame_move() (called back each tick from the dx9 system):
+Looking at app_t::frame_move() (called back each tick from the win32 system):
 
 1) Input is sampled from the operating system and cached.
 
@@ -101,7 +101,7 @@ Note that aside from the level loading stuff it is completely "safe" to NOT exam
 This is interleaved input-output in order to simplify all the user interface stuff, with a single pass controlling both what individual keypresses "mean" as well as drawing to the canvas. Doing separate input and output passes would result in some mirroring of control flow, and in this case everything is simple enough to warrant this approach.
 
 
-Looking at app_t::frame_render() (called back each tick from the dx9 system):
+Looking at app_t::frame_render() (called back each tick from the win32 system):
 
 1) The canvas is copied to a texture and rendered via the GPU.
 
