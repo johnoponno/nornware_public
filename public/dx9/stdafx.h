@@ -1,8 +1,8 @@
 #pragma once
 
-#include <vector>
 #include <dsound.h>
-#include "includes.h"
+#include <vector>
+#include "win32_d3d9_includes.h"
 
 template <typename vector_t, typename type_t>
 bool vector_contains(const vector_t& aVector, const type_t& aValue)

@@ -336,7 +336,7 @@ static void __cleanup_3d_environment(const bool aReleaseSettings)
 			if (win32_d3d9_state.m_d3d_device->Release() > 0)
 			{
 				__display_error_message(WIN32_DXUTERR_NONZEROREFCOUNT);
-				DXUT_ERR("__cleanup_3d_environment", WIN32_DXUTERR_NONZEROREFCOUNT);
+				WIN32_DXUT_ERR("__cleanup_3d_environment", WIN32_DXUTERR_NONZEROREFCOUNT);
 			}
 		}
 		win32_d3d9_state.m_d3d_device = nullptr;
@@ -1561,7 +1561,7 @@ static void __build_optimal_device_settings(win32_d3d9_device_settings_t* someOp
 static HRESULT __find_valid_device_settings(win32_d3d9_device_settings_t* someSettingsOut, const win32_d3d9_device_settings_t* someSettingsIn, const match_options_t* someMatchOptions)
 {
 	if (someSettingsOut == nullptr)
-		return DXUT_ERR_MSGBOX("FindValidDeviceSettings", E_INVALIDARG);
+		return WIN32_DXUT_ERR_MSGBOX("FindValidDeviceSettings", E_INVALIDARG);
 
 	const win32_d3d9_enumeration_t* ENUMERATION = __prepare_enumeration_object(false);
 
@@ -1713,7 +1713,7 @@ static ::HRESULT __reset_3d_environment()
 		if (hr == D3DERR_DEVICELOST)
 			return D3DERR_DEVICELOST; // reset could legitimately fail if the device is lost
 		else
-			return DXUT_ERR("reset", WIN32_DXUTERR_RESETTINGDEVICE);
+			return WIN32_DXUT_ERR("reset", WIN32_DXUTERR_RESETTINGDEVICE);
 	}
 
 	// update back buffer desc before calling app's device callbacks
@@ -1730,7 +1730,7 @@ static ::HRESULT __reset_3d_environment()
 	if (FAILED(hr))
 	{
 		// If callback failed, cleanup
-		DXUT_ERR("DeviceResetCallback", hr);
+		WIN32_DXUT_ERR("DeviceResetCallback", hr);
 		if (hr != WIN32_DXUTERR_MEDIANOTFOUND)
 			hr = WIN32_DXUTERR_RESETTINGDEVICEOBJECTS;
 
@@ -1777,7 +1777,7 @@ static ::HRESULT __create_3d_environment(::IDirect3DDevice9* aDeviceFromApp)
 		}
 		else if (FAILED(hr))
 		{
-			DXUT_ERR("CreateDevice", hr);
+			WIN32_DXUT_ERR("CreateDevice", hr);
 			return WIN32_DXUTERR_CREATINGDEVICE;
 		}
 	}
@@ -1818,7 +1818,7 @@ static ::HRESULT __create_3d_environment(::IDirect3DDevice9* aDeviceFromApp)
 		return E_FAIL;
 	if (FAILED(hr))
 	{
-		DXUT_ERR("DeviceCreated callback", hr);
+		WIN32_DXUT_ERR("DeviceCreated callback", hr);
 		return (hr == WIN32_DXUTERR_MEDIANOTFOUND) ? WIN32_DXUTERR_MEDIANOTFOUND : WIN32_DXUTERR_CREATINGDEVICEOBJECTS;
 	}
 	win32_d3d9_state.m_device_objects.created = true;
@@ -1831,7 +1831,7 @@ static ::HRESULT __create_3d_environment(::IDirect3DDevice9* aDeviceFromApp)
 		return E_FAIL;
 	if (FAILED(hr))
 	{
-		DXUT_ERR("DeviceReset callback", hr);
+		WIN32_DXUT_ERR("DeviceReset callback", hr);
 		return (hr == WIN32_DXUTERR_MEDIANOTFOUND) ? WIN32_DXUTERR_MEDIANOTFOUND : WIN32_DXUTERR_RESETTINGDEVICEOBJECTS;
 	}
 	win32_d3d9_state.m_device_objects.reset = true;
@@ -2163,8 +2163,8 @@ static ::HRESULT __change_device(win32_d3d9_device_settings_t* pNewDeviceSetting
 			MONITORINFO miAdapter;
 			miAdapter.cbSize = sizeof(MONITORINFO);
 			::HMONITOR hAdapterMonitor = win32_d3d9_state.m_d3d->GetAdapterMonitor(pNewDeviceSettings->adapter_ordinal);
-			dx9::get_monitor_info(hAdapterMonitor, &miAdapter);
-			::HMONITOR hWindowMonitor = dx9::monitor_from_window(win32_d3d9_hwnd(), MONITOR_DEFAULTTOPRIMARY);
+			win32_d3d9_get_monitor_info(hAdapterMonitor, &miAdapter);
+			::HMONITOR hWindowMonitor = win32_d3d9_monitor_from_window(win32_d3d9_hwnd(), MONITOR_DEFAULTTOPRIMARY);
 
 			// get the rect of the window
 			::RECT rcWindow;
@@ -2204,12 +2204,12 @@ static ::HRESULT __change_device(win32_d3d9_device_settings_t* pNewDeviceSetting
 			// get the rect of the monitor attached to the adapter
 			MONITORINFO miAdapter;
 			miAdapter.cbSize = sizeof(MONITORINFO);
-			dx9::get_monitor_info(win32_d3d9_state.m_d3d->GetAdapterMonitor(pNewDeviceSettings->adapter_ordinal), &miAdapter);
+			win32_d3d9_get_monitor_info(win32_d3d9_state.m_d3d->GetAdapterMonitor(pNewDeviceSettings->adapter_ordinal), &miAdapter);
 
 			// get the rect of the monitor attached to the window
 			MONITORINFO miWindow;
 			miWindow.cbSize = sizeof(MONITORINFO);
-			dx9::get_monitor_info(dx9::monitor_from_window(win32_d3d9_hwnd(), MONITOR_DEFAULTTOPRIMARY), &miWindow);
+			win32_d3d9_get_monitor_info(win32_d3d9_monitor_from_window(win32_d3d9_hwnd(), MONITOR_DEFAULTTOPRIMARY), &miWindow);
 
 			// Do something reasonable if the BackBuffer size is greater than the monitor size
 			int32_t nAdapterMonitorWidth = miAdapter.rcWork.right - miAdapter.rcWork.left;
@@ -2361,7 +2361,7 @@ static void __check_for_window_changing_monitors()
 		return;
 
 	::HRESULT hr;
-	HMONITOR hWindowMonitor = dx9::monitor_from_window(win32_d3d9_hwnd(), MONITOR_DEFAULTTOPRIMARY);
+	HMONITOR hWindowMonitor = win32_d3d9_monitor_from_window(win32_d3d9_hwnd(), MONITOR_DEFAULTTOPRIMARY);
 	HMONITOR hAdapterMonitor = win32_d3d9_state.m_adapter_monitor;
 	if (hWindowMonitor != hAdapterMonitor)
 	{
@@ -2818,7 +2818,7 @@ typedef IDirect3D9* (WINAPI* LPDIRECT3DCREATE9) (UINT);
 	{
 		//FS_ERROR("D3DXCheckVersion() failed");
 		__display_error_message(WIN32_DXUTERR_INCORRECTVERSION);
-		return DXUT_ERR("D3DXCheckVersion", WIN32_DXUTERR_INCORRECTVERSION);
+		return WIN32_DXUT_ERR("D3DXCheckVersion", WIN32_DXUTERR_INCORRECTVERSION);
 	}
 
 	// create a Direct3D object if one has not already been created
@@ -2859,7 +2859,7 @@ typedef IDirect3D9* (WINAPI* LPDIRECT3DCREATE9) (UINT);
 		// If still nullptr, then something went wrong
 		//FS_ERROR("failed to acquire IDirect3D9 interface");
 		__display_error_message(WIN32_DXUTERR_NODIRECT3D);
-		return DXUT_ERR("Direct3DCreate9", WIN32_DXUTERR_NODIRECT3D);
+		return WIN32_DXUT_ERR("Direct3DCreate9", WIN32_DXUTERR_NODIRECT3D);
 	}
 
 	// reset the timer
@@ -2882,7 +2882,7 @@ typedef IDirect3D9* (WINAPI* LPDIRECT3DCREATE9) (UINT);
 
 	// Not allowed to call this from inside the device callbacks
 	if (win32_d3d9_state.m_inside.device_callback)
-		return DXUT_ERR_MSGBOX("DXUTCreateWindow", E_FAIL);
+		return WIN32_DXUT_ERR_MSGBOX("DXUTCreateWindow", E_FAIL);
 
 	win32_d3d9_state.m_window.called = true;
 
@@ -2926,7 +2926,7 @@ typedef IDirect3D9* (WINAPI* LPDIRECT3DCREATE9) (UINT);
 		{
 			::DWORD dwError = ::GetLastError();
 			if (dwError != ERROR_CLASS_ALREADY_EXISTS)
-				return DXUT_ERR_MSGBOX("RegisterClass", HRESULT_FROM_WIN32(dwError));
+				return WIN32_DXUT_ERR_MSGBOX("RegisterClass", HRESULT_FROM_WIN32(dwError));
 		}
 
 		//int32_t x = CW_USEDEFAULT;
@@ -2969,7 +2969,7 @@ typedef IDirect3D9* (WINAPI* LPDIRECT3DCREATE9) (UINT);
 		if (hWnd == nullptr)
 		{
 			DWORD dwError = GetLastError();
-			return DXUT_ERR_MSGBOX("CreateWindow", HRESULT_FROM_WIN32(dwError));
+			return WIN32_DXUT_ERR_MSGBOX("CreateWindow", HRESULT_FROM_WIN32(dwError));
 		}
 
 		win32_d3d9_state.m_window.created = true;
@@ -2994,7 +2994,7 @@ typedef IDirect3D9* (WINAPI* LPDIRECT3DCREATE9) (UINT);
 
 	// Not allowed to call this from inside the device callbacks
 	if (win32_d3d9_state.m_inside.device_callback)
-		return DXUT_ERR_MSGBOX("DXUTCreateWindow", E_FAIL);
+		return WIN32_DXUT_ERR_MSGBOX("DXUTCreateWindow", E_FAIL);
 
 	// Record the app pointer in the global win32_d3d9_state 
 	win32_d3d9_state.app = anApp;
@@ -3124,7 +3124,7 @@ typedef IDirect3D9* (WINAPI* LPDIRECT3DCREATE9) (UINT);
 	if (FAILED(hr)) // the call will fail if no valid devices were found
 	{
 		__display_error_message(hr);
-		return DXUT_ERR("__find_valid_device_settings", hr);
+		return WIN32_DXUT_ERR("__find_valid_device_settings", hr);
 	}
 
 	// Change to a Direct3D device created from the new device settings.  
@@ -3524,7 +3524,7 @@ static void __do_idle_time(win32_d3d9_app_i* anApp)
 	{
 		if ((win32_d3d9_state.m_exit_code == 0) || (win32_d3d9_state.m_exit_code == 11))
 			win32_d3d9_state.m_exit_code = 1;
-		return DXUT_ERR_MSGBOX("MainLoop", E_FAIL);
+		return WIN32_DXUT_ERR_MSGBOX("MainLoop", E_FAIL);
 	}
 
 	win32_d3d9_state.m_inside.main_loop = true;
@@ -3543,7 +3543,7 @@ static void __do_idle_time(win32_d3d9_app_i* anApp)
 	{
 		if ((win32_d3d9_state.m_exit_code == 0) || (win32_d3d9_state.m_exit_code == 11))
 			win32_d3d9_state.m_exit_code = 1;
-		return DXUT_ERR_MSGBOX("MainLoop", E_FAIL);
+		return WIN32_DXUT_ERR_MSGBOX("MainLoop", E_FAIL);
 	}
 
 	// Now we're ready to receive and process Windows messages.

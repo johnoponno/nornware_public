@@ -65,15 +65,15 @@
 #include <strsafe.h>
 
 #include "win32_dxut.h"
-#include "dxut_misc.h"
+#include "win32_dxut_misc.h"
 #include "win32_dxut_enum.h"
 
 #if defined(DEBUG) || defined(_DEBUG)
 	#ifndef VERIFY
-		#define VERIFY(x)           { hr = x; if( FAILED(hr) ) { dx9::trace( __FILE__, (DWORD)__LINE__, hr, #x, true ); } }
+		#define VERIFY(x)           { hr = x; if( FAILED(hr) ) { win32_d3d9_trace( __FILE__, (DWORD)__LINE__, hr, #x, true ); } }
 	#endif
 	#ifndef VERIFY_RETURN
-		#define VERIFY_RETURN(x)    { hr = x; if( FAILED(hr) ) { return dx9::trace( __FILE__, (DWORD)__LINE__, hr, #x, true ); } }
+		#define VERIFY_RETURN(x)    { hr = x; if( FAILED(hr) ) { return win32_d3d9_trace( __FILE__, (DWORD)__LINE__, hr, #x, true ); } }
 	#endif
 #else
 	#ifndef VERIFY

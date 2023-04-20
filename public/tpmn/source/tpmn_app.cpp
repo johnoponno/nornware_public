@@ -44,7 +44,7 @@ bool tpmn_app_t::win32_d3d9_app_modify_device_settings(const ::D3DCAPS9& caps, w
 	{
 		s_bFirstTime = false;
 		if (D3DDEVTYPE_REF == device_settings.device_type)
-			dx9::display_switching_to_ref_warning();
+			win32_d3d9_display_switching_to_ref_warning();
 	}
 
 	device_settings.present_parameters.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;	//no vsync
@@ -170,7 +170,7 @@ void tpmn_app_t::win32_d3d9_app_frame_move(const double, const float)
 		}
 	}
 
-	//single pass imgui, render to the canvas to be pushed to the gpu in frame_render()
+	//single pass imgui, render to the canvas to be pushed to the gpu in win32_d3d9_app_frame_render()
 	switch (tpmn_controller_input_output(_assets, _model, _controller))
 	{
 	case tpmn::tpmn_app_event_t::EXIT_APPLICATION:
