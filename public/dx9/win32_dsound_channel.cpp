@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "win32_dsound_channel.h"
-#include "sound_file_wave.h"
+#include "win32_dsound_file_wave.h"
 
 static float __directx_to_linear_volume(const long aDirectX)
 {
@@ -109,8 +109,8 @@ static bool __buffer_play(
 	::IDirectSound& directsound, win32_dsound_length_t& l)
 {
 	//load a wav file
-	sound::file_wave_t wave;
-	if (!file_wave_load(filename, wave))
+	win32_dsound_file_wave_t wave;
+	if (!wave.load(filename))
 		return nullptr;
 
 	l.in_bytes = wave.size;
