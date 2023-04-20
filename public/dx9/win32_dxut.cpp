@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "state.h"
+#include "win32_d3d9_state.h"
 #include "win32_timer.h"
 #include "win32_d3d9_resource.h"
 #include "win32_d3d9_app.h"

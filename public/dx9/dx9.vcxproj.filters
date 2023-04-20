@@ -15,7 +15,7 @@
     <ClCompile Include="sound_stream.cpp" />
     <ClCompile Include="sound_util.cpp" />
     <ClCompile Include="sound_vorbis_file.cpp" />
-    <ClCompile Include="state.cpp" />
+    <ClCompile Include="win32_d3d9_state.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="win32_timer.cpp" />
   </ItemGroup>
@@ -37,7 +37,7 @@
     <ClInclude Include="sound_stream_source.h" />
     <ClInclude Include="sound_util.h" />
     <ClInclude Include="sound_vorbis_file.h" />
-    <ClInclude Include="state.h" />
+    <ClInclude Include="win32_d3d9_state.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="win32_timer.h" />
     <ClInclude Include="traversable.h" />

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "tpmn_app.h"
 
-#include "../../dx9/state.h"
+#include "../../dx9/win32_d3d9_state.h"
 #include "../../dx9/win32_input.h"
 #include "../../dx9/sound_stream.h"
 

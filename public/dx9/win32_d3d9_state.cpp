@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "State.h"
+#include "win32_d3d9_state.h"
 
 win32_d3d9_state_t::win32_d3d9_state_t()
 {

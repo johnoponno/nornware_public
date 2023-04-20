@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "state.h"
+#include "win32_d3d9_state.h"
 
 //--------------------------------------------------------------------------------------
 // MsgProc for DXUTDisplaySwitchingToREFWarning() dialog box

@@ -2,7 +2,7 @@
 #include "win32_d3d9_softdraw_adapter.h"
 
 #include "../softdraw/sd_bitmap.h"
-#include "state.h"
+#include "win32_d3d9_state.h"
 
 static ::IDirect3DStateBlock9* __state_block_begin(
 	const win32_d3d9_fixed_function_mode_t in_mode, const ::DWORD in_cull, const ::DWORD in_fvf, const bool in_filter,

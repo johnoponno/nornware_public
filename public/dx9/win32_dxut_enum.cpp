@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "state.h"
+#include "win32_d3d9_state.h"
 #include "win32_d3d9_app.h"
 
 struct win32_d3d9_enum_depth_stencil_multisample_conflict_t

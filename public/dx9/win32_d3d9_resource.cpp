@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "win32_d3d9_resource.h"
 
-#include "state.h"
+#include "win32_d3d9_state.h"
 
 TRAVERSABLE(win32_d3d9_resource_t)
 
