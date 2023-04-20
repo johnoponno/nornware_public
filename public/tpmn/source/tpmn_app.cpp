@@ -173,11 +173,11 @@ void tpmn_app_t::win32_d3d9_app_frame_move(const double, const float)
 	//single pass imgui, render to the canvas to be pushed to the gpu in win32_d3d9_app_frame_render()
 	switch (tpmn_controller_input_output(_assets, _model, _controller))
 	{
-	case tpmn::tpmn_app_event_t::EXIT_APPLICATION:
+	case tpmn_app_event_t::EXIT_APPLICATION:
 		win32_d3d9_shutdown(0);
 		break;
 
-	case tpmn::tpmn_app_event_t::START_NEW_GAME:
+	case tpmn_app_event_t::START_NEW_GAME:
 		if (tpmn_model_load_world(ASSET_HUB, true, _model))
 			tpmn_controller_on_load_new_world(_assets, _controller);
 		break;
@@ -197,16 +197,14 @@ bool tpmn_app_t::win32_d3d9_app_frame_render(const double, const float)
 			VERIFY(win32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xff000000, 1.f, 0));
 
 			{
-				const int32_t RENDER_MUL = __min(win32_d3d9_state.m_backbuffer_surface_desc.Width / _controller.canvas.width, win32_d3d9_state.m_backbuffer_surface_desc.Height / _controller.canvas.height);
-				const int32_t SIZE_X = _controller.canvas.width * RENDER_MUL;
-				const int32_t SIZE_Y = _controller.canvas.height * RENDER_MUL;
+				const tpmn_canvas_layout_t LAYOUT = tpmn_canvas_layout(_controller.canvas);
 
 				win32_d3d9_softdraw_adapter_present_2d(
 					_controller.canvas,
-					int32_t((win32_d3d9_state.m_backbuffer_surface_desc.Width - SIZE_X) / 2),
-					int32_t((win32_d3d9_state.m_backbuffer_surface_desc.Height - SIZE_Y) / 2),
-					SIZE_X,
-					SIZE_Y,
+					LAYOUT.x,
+					LAYOUT.y,
+					LAYOUT.width,
+					LAYOUT.height,
 					UINT32_MAX,
 					win32_d3d9_fixed_function_mode_t::SET,
 					false,
