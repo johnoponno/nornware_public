@@ -13,10 +13,7 @@
 #define SD_FONTV_CHARBEGIN 33
 #define SD_FONTV_CHAREND 128
 
-enum
-{
-	SD_FONTV_NUMCHARS = SD_FONTV_CHAREND - SD_FONTV_CHARBEGIN,
-};
+constexpr int32_t SD_FONTV_NUMCHARS = SD_FONTV_CHAREND - SD_FONTV_CHARBEGIN;
 
 enum struct sd_fontv_blit_mode_t
 {

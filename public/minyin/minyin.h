@@ -1,15 +1,6 @@
 #pragma once
 
-#define MINYIN_ESCAPE 0x1B
-
-/*
-struct minyin_vec2i_t
-{
-	int32_t x;
-	int32_t y;
-
-};
-*/
+#define MINYIN_KEY_ESCAPE 0x1B
 
 struct minyin_sound_request_t
 {
@@ -31,15 +22,4 @@ struct minyin_t
 	int32_t _screen_cursor_y;
 	int32_t _canvas_cursor_x;
 	int32_t _canvas_cursor_y;
-	/*
-	int32_t cursor_pos_x;
-	int32_t cursor_pos_y;
-	int32_t cursor_movement_x;
-	int32_t cursor_movement_y;
-	struct
-	{
-		int32_t delta;
-		uint32_t event_consumed;
-	} mouse_wheel;
-	*/
 };

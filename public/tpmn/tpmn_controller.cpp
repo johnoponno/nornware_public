@@ -1,18 +1,8 @@
 #include "stdafx.h"
 #include "tpmn_controller.h"
 
-//#include "../../win32/win32_d3d9_state.h"
-//#include "../../win32/win32_dsound_stream.h"
-//#include "../../win32/win32_input.h"
-#include "../softdraw/minyin.h"
+#include "../minyin/minyin.h"
 #include "tpmn_assets.h"
-
-#define ASSET_TRACK0 "johno_Jungle_2012.ogg"
-#define ASSET_TRACK1 "johno_Minimal_2012.ogg"
-#define ASSET_TRACK2 "johno_Outspaced_Remix_2012.ogg"
-#define ASSET_TRACK3 "johno_Sunshower_2012.ogg"
-#define ASSET_TRACK4 "johno_They_Took_Their_Planet_Back_2012.ogg"
-#define ASSET_TRACK5 "johno_Sevens_2012.ogg"
 
 #define SCROLL_ENABLE false
 
@@ -848,7 +838,7 @@ static void __play_update(
 	if (c.play_menu)
 	{
 		__text(assets, TPMN_CANVAS_HEIGHT / 3, "ESC = Quit", sd_white, c.canvas);
-		if (in_minyin.key_downflank(MINYIN_ESCAPE))
+		if (in_minyin.key_downflank(MINYIN_KEY_ESCAPE))
 		{
 			model.play_bit = 0;
 
@@ -864,7 +854,7 @@ static void __play_update(
 	//play menu not up
 	else
 	{
-		if (in_minyin.key_downflank(MINYIN_ESCAPE))
+		if (in_minyin.key_downflank(MINYIN_KEY_ESCAPE))
 		{
 			c.play_menu = true;
 		}
@@ -993,7 +983,7 @@ static tpmn_app_event_t __idle_update(
 			return tpmn_app_event_t::START_NEW_GAME;
 
 		__text(assets, y += TPMN_TEXT_SPACING, "ESC = Quit", sd_green, controller.canvas);
-		if (in_minyin.key_downflank(MINYIN_ESCAPE))
+		if (in_minyin.key_downflank(MINYIN_KEY_ESCAPE))
 			return tpmn_app_event_t::EXIT_APPLICATION;
 	}
 
@@ -1010,47 +1000,19 @@ static tpmn_app_event_t __idle_update(
 //public
 //public
 
-tpmn_app_event_t tpmn_controller_input_output(
+tpmn_app_event_t tpmn_controller_tick(
 	const minyin_t& in_minyin, const tpmn_assets_t& in_assets,
 	tpmn_model_t& out_model, tpmn_controller_t& out_controller, const char*& out_music_request)
 {
-#if 0
-	//music
-	if (controller.track != model.level.music_track || !controller.music)
-	{
-		if (controller.music)
-		{
-			delete controller.music;
-			controller.music = nullptr;
-		}
-
-		switch (model.level.music_track)
-		{
-		default:	controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK0);	break;
-		case 1:		controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK1);	break;
-		case 2:		controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK2);	break;
-		case 3:		controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK3);	break;
-		case 4:		controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK4);	break;
-		case 5:		controller.music = win32_dsound_stream_create(assets.engine, ASSET_TRACK5);	break;
-		}
-		if (controller.music)
-			controller.music->play(true, 0.f, 1.f);
-
-		controller.track = model.level.music_track;
-	}
-	if (controller.music)
-		controller.music->update(tpmn_model_now(model), 1.f);
-#else
 	switch (out_model.level.music_track)
 	{
-	default:	out_music_request = ASSET_TRACK0;	break;
-	case 1:		out_music_request = ASSET_TRACK1;	break;
-	case 2:		out_music_request = ASSET_TRACK2;	break;
-	case 3:		out_music_request = ASSET_TRACK3;	break;
-	case 4:		out_music_request = ASSET_TRACK4;	break;
-	case 5:		out_music_request = ASSET_TRACK5;	break;
+	default:	out_music_request = "johno_Jungle_2012.ogg";	break;
+	case 1:		out_music_request = "johno_Minimal_2012.ogg";	break;
+	case 2:		out_music_request = "johno_Outspaced_Remix_2012.ogg";	break;
+	case 3:		out_music_request = "johno_Sunshower_2012.ogg";	break;
+	case 4:		out_music_request = "johno_They_Took_Their_Planet_Back_2012.ogg";	break;
+	case 5:		out_music_request = "johno_Sevens_2012.ogg";	break;
 	}
-#endif
 
 	//tile animations
 	{

@@ -102,7 +102,6 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="win32_tpmn_app.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -110,11 +109,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="win32_tpmn_app.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\softdraw\softdraw.vcxproj">
+    <ProjectReference Include="..\minyin\minyin.vcxproj">
       <Project>{58c160c4-27d2-462a-b7d5-e7a1b99a7bfe}</Project>
     </ProjectReference>
     <ProjectReference Include="..\tpmn\tpmn.vcxproj">

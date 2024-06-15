@@ -1,12 +1,9 @@
 #pragma once
 
-#include "../softdraw/sd_bitmap.h"
+#include "../minyin/sd_bitmap.h"
 #include "tpmn_model.h"
 
 struct minyin_t;
-
-//struct win32_dsound_stream_t;
-//struct win32_cursor_position_t;
 
 struct tpmn_assets_t;
 
@@ -50,8 +47,6 @@ struct tpmn_controller_t
 {
 	uint32_t play_menu;
 	uint32_t last_checkpoint;
-	//uint32_t track;
-	//win32_dsound_stream_t* music;
 	uint32_t current_tiles[TPMN_MAX_TILE];
 	tpmn_snowflake_t flakes[32];
 	tpmn_death_t deaths[8];
@@ -61,7 +56,7 @@ struct tpmn_controller_t
 	sd_bitmap_t canvas;
 };
 
-tpmn_app_event_t tpmn_controller_input_output(
+tpmn_app_event_t tpmn_controller_tick(
 	const minyin_t& in_minyin, const tpmn_assets_t& in_assets,
 	tpmn_model_t& out_model, tpmn_controller_t& out_controller, const char*& out_music_request);
 

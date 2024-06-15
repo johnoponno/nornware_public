@@ -1,9 +1,8 @@
 #include "stdafx.h"
 #include "tpmn_assets.h"
 
-//#include "../win32/win32_d3d9_state.h"
-#include "../softdraw/fs.h"
-#include "../softdraw/minyin.h"
+#include "../minyin/fs.h"
+#include "../minyin/minyin.h"
 
 #define ASSET_BG00 "bg00.tga"
 #define ASSET_BG01 "bg01.tga"
@@ -68,17 +67,9 @@
 
 #define BITMAP(a, b) if(!sd_bitmap_load_24(a, b)) return false;
 
-//#define SOUND(asset, id) if (!out_assets.container.add_sound(out_assets.engine, asset, id, 1)) return false;
-
-/*
-tpmn_assets_t::tpmn_assets_t()
-	:container(TPMN_NUM_SOUNDS)
-{
-}
-*/
-
 bool tpmn_assets_init(tpmn_assets_t& out_assets, std::vector<minyin_sound_request_t>& out_sounds)
 {
+	//common info
 	{
 		const fs_blob_t CONTENTS = fs_file_contents(ASSET_COMMON_INFO);
 		const bool RESULT = CONTENTS.data && sizeof(out_assets.anim_target) == CONTENTS.size;
@@ -93,6 +84,7 @@ bool tpmn_assets_init(tpmn_assets_t& out_assets, std::vector<minyin_sound_reques
 			return false;
 	}
 
+	//bitmaps
 	BITMAP(ASSET_BG00, out_assets.backgrounds[0]);
 	BITMAP(ASSET_BG01, out_assets.backgrounds[1]);
 	BITMAP(ASSET_BG02, out_assets.backgrounds[2]);
@@ -124,43 +116,12 @@ bool tpmn_assets_init(tpmn_assets_t& out_assets, std::vector<minyin_sound_reques
 	BITMAP(ASSET_DUST_NEAR, out_assets.dust_near);
 	BITMAP(ASSET_FLAKE, out_assets.flake);
 
+	//font
 	if (!sd_fontv_load_24(out_assets.font, ASSET_FONT, false))
 		return false;
 	out_assets.font.char_spacing = -1;
 
-	/*
-	if (!out_assets.engine.init(win32_d3d9_hwnd()))
-		return false;
-
-	if (!out_assets.container.init())
-		return false;
-
-	SOUND(ASSET_SPAWN, TPMN_SND_SPAWN);
-	SOUND(ASSET_FIXSERVER, TPMN_SND_FIXSERVER);
-	SOUND(ASSET_HEROWHIP, TPMN_SND_HEROWHIP);
-	SOUND(ASSET_HEROJUMP01, TPMN_SND_HEROJUMP01);
-	SOUND(ASSET_HEROJUMP02, TPMN_SND_HEROJUMP02);
-	SOUND(ASSET_HEROJUMP03, TPMN_SND_HEROJUMP03);
-	SOUND(ASSET_HEROJUMP04, TPMN_SND_HEROJUMP04);
-	SOUND(ASSET_HEROJUMP05, TPMN_SND_HEROJUMP05);
-	SOUND(ASSET_HEROLAND01, TPMN_SND_HEROLAND01);
-	SOUND(ASSET_HEROLAND02, TPMN_SND_HEROLAND02);
-	SOUND(ASSET_HEROLAND03, TPMN_SND_HEROLAND03);
-	SOUND(ASSET_HEROLAND04, TPMN_SND_HEROLAND04);
-	SOUND(ASSET_HERODIE01, TPMN_SND_HERODIE01);
-	SOUND(ASSET_HERODIE02, TPMN_SND_HERODIE02);
-	SOUND(ASSET_HERODIE03, TPMN_SND_HERODIE03);
-	SOUND(ASSET_CHECKPOINT, TPMN_SND_CHECKPOINT);
-	SOUND(ASSET_SND_SPIKYGREEN, TPMN_SND_SPIKYGREEN);
-	SOUND(ASSET_SND_BLUEBLOB, TPMN_SND_BLUEBLOB);
-	SOUND(ASSET_SND_BROWNBLOB, TPMN_SND_BROWNBLOB);
-	SOUND(ASSET_SND_PLANT, TPMN_SND_PLANT);
-	SOUND(ASSET_SND_SCORPION, TPMN_SND_SCORPION);
-	SOUND(ASSET_SLIDERDEATH, TPMN_SND_SLIDERDEATH);
-	SOUND(ASSET_BATFLEE, TPMN_SND_BATFLEE);
-	SOUND(ASSET_KEY, TPMN_SND_KEY);
-	SOUND(ASSET_SLIDER, TPMN_SND_SLIDER);
-	*/
+	//request sounds
 	out_sounds.push_back({ ASSET_SPAWN, TPMN_SND_SPAWN });
 	out_sounds.push_back({ ASSET_FIXSERVER, TPMN_SND_FIXSERVER });
 	out_sounds.push_back({ ASSET_HEROWHIP, TPMN_SND_HEROWHIP });
@@ -189,28 +150,3 @@ bool tpmn_assets_init(tpmn_assets_t& out_assets, std::vector<minyin_sound_reques
 
 	return true;
 }
-
-void tpmn_assets_reload(tpmn_assets_t& out_assets)
-{
-	sd_bitmap_load_24(ASSET_TILES, out_assets.tiles);
-	sd_bitmap_load_24(ASSET_BG00, out_assets.backgrounds[0]);
-	sd_bitmap_load_24(ASSET_BG01, out_assets.backgrounds[1]);
-	sd_bitmap_load_24(ASSET_BG03, out_assets.backgrounds[3]);
-	sd_bitmap_load_24(ASSET_BG04, out_assets.backgrounds[4]);
-	sd_bitmap_load_24(ASSET_BG05, out_assets.backgrounds[5]);
-	sd_bitmap_load_24(ASSET_DUST_NEAR, out_assets.dust_near);
-}
-
-void tpmn_assets_cleanup(tpmn_assets_t& in_assets)
-{
-	in_assets;
-	//out_assets.container.cleanup();
-	//out_assets.engine.cleanup();
-}
-
-/*
-void tpmn_sound_play(const tpmn_assets_t& in_assets, const uint32_t in_id)
-{
-	out_assets.container.play(id, 1.f, 0.f, 1.f, nullptr);
-}
-*/

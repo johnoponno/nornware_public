@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "softdraw", "softdraw\softdraw.vcxproj", "{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win32", "win32\win32.vcxproj", "{BCB1C5D2-855F-4B79-94C7-78000C6B4324}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win32_tpmn", "win32_tpmn\win32_tpmn.vcxproj", "{CAC9BF2D-ED65-4E72-AB26-81F1D27F6676}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tpmn", "tpmn\tpmn.vcxproj", "{B1BD23E5-B4FA-49CC-B556-8EA918BD8EF1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "minyin", "minyin\minyin.vcxproj", "{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}.Debug|x86.ActiveCfg = Debug|Win32
-		{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}.Debug|x86.Build.0 = Debug|Win32
-		{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}.Release|x86.ActiveCfg = Release|Win32
-		{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}.Release|x86.Build.0 = Release|Win32
 		{BCB1C5D2-855F-4B79-94C7-78000C6B4324}.Debug|x86.ActiveCfg = Debug|Win32
 		{BCB1C5D2-855F-4B79-94C7-78000C6B4324}.Debug|x86.Build.0 = Debug|Win32
 		{BCB1C5D2-855F-4B79-94C7-78000C6B4324}.Release|x86.ActiveCfg = Release|Win32
@@ -33,6 +29,10 @@ Global
 		{B1BD23E5-B4FA-49CC-B556-8EA918BD8EF1}.Debug|x86.Build.0 = Debug|Win32
 		{B1BD23E5-B4FA-49CC-B556-8EA918BD8EF1}.Release|x86.ActiveCfg = Release|Win32
 		{B1BD23E5-B4FA-49CC-B556-8EA918BD8EF1}.Release|x86.Build.0 = Release|Win32
+		{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}.Debug|x86.ActiveCfg = Debug|Win32
+		{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}.Debug|x86.Build.0 = Debug|Win32
+		{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}.Release|x86.ActiveCfg = Release|Win32
+		{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

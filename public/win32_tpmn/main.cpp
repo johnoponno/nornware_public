@@ -7,10 +7,10 @@
 //--------------------------------------------------------------------------------------
 // specific game implementation
 //--------------------------------------------------------------------------------------
-struct tpmn_app_t : public win32_d3d9_simpleapp_i
+struct tpmn_app_t : public win32_d3d9_softdraw_app_t
 {
 	//this is the main "tick" callback from the win32 / d3d9 harness
-	bool win32_d3d9_simpleapp_tick(const minyin_t& in_minyin) override
+	bool win32_d3d9_softdraw_app_tick(const minyin_t& in_minyin) override
 	{
 		_sound_plays.clear();
 		const char* music_request = nullptr;
@@ -20,14 +20,14 @@ struct tpmn_app_t : public win32_d3d9_simpleapp_i
 
 		for (const uint32_t SP : _sound_plays)
 			_sound_container.play(SP, 1.f, 0.f, 1.f, nullptr);
-		win32_d3d9_simpleapp_handle_music_request(music_request);
+		win32_d3d9_softdraw_app_handle_music_request(music_request);
 
 		return true;
 	}
 
 	//we pass our time-per-tick (1 / fps) and our framebuffer to be rendered
 	explicit tpmn_app_t()
-		:win32_d3d9_simpleapp_i(TPMN_SECONDS_PER_TICK, _game.controller.canvas, TPMN_NUM_SOUNDS)
+		:win32_d3d9_softdraw_app_t(TPMN_SECONDS_PER_TICK, _game.controller.canvas, TPMN_NUM_SOUNDS)
 	{
 	}
 
@@ -62,18 +62,18 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 		std::vector<minyin_sound_request_t> sound_requests;
 		if (!tpmn_game_init(__app._game, sound_requests))
 			return -1;
-		if (!__app.win32_d3d9_simpleapp_init_audio(sound_requests))
+		if (!__app.win32_d3d9_softdraw_app_init_audio(sound_requests))
 			return -1;
 	}
 
 	//enter main loop
 	win32_d3d9_main_loop(&__app);
 
-	//application-specific shutdown
-	tpmn_game_shutdown(__app._game);
+	//application-specific shutdown?
+	//tpmn_game_shutdown(__app._game);
 
 	//cleanup internal win32 / d3d9 / dsound stuff
-	__app.win32_d3d9_simpleapp_cleanup_audio();
+	__app.win32_d3d9_softdraw_app_cleanup_audio();
 
 	//return internal exit code
 	return win32_d3d9_state.m_exit_code;

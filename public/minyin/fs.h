@@ -59,8 +59,8 @@ _______________________________________________________________________________|
 |    0   |     1  |  Number of Characters in Identification Field.             |
 |        |        |                                                            |
 |        |        |  This field is a one-byte unsigned integer, specifying     |
-|        |        |  the length of the image_t Identification Field.  Its range  |
-|        |        |  is 0 to 255.  A value of 0 means that no image_t            |
+|        |        |  the length of the image_t Identification Field.  Its range|
+|        |        |  is 0 to 255.  A value of 0 means that no image_t          |
 |        |        |  Identification Field is included.                         |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
@@ -69,7 +69,7 @@ _______________________________________________________________________________|
 |        |        |  This field contains a binary 1 for Data Type 1 images.    |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-|    2   |     1  |  image_t Type Code.                                          |
+|    2   |     1  |  image_t Type Code.                                        |
 |        |        |                                                            |
 |        |        |  This field will always contain a binary 1.                |
 |        |        |  ( That's what makes it Data Type 1 ).                     |
@@ -88,26 +88,26 @@ _______________________________________________________________________________|
 |        |        |  the Targa 16, 24 for the Targa 24, 32 for the Targa 32.   |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-|    8   |    10  |  image_t Specification.                                      |
+|    8   |    10  |  image_t Specification.                                    |
 |        |        |                                                            |
-|    8   |     2  |  X Origin of image_t.                                        |
+|    8   |     2  |  X Origin of image_t.                                      |
 |        |        |  Integer ( lo-hi ) X coordinate of the lower left corner   |
 |        |        |  of the image.                                             |
 |        |        |                                                            |
-|   10   |     2  |  Y Origin of image_t.                                        |
+|   10   |     2  |  Y Origin of image_t.                                      |
 |        |        |  Integer ( lo-hi ) Y coordinate of the lower left corner   |
 |        |        |  of the image.                                             |
 |        |        |                                                            |
-|   12   |     2  |  Width of image_t.                                           |
+|   12   |     2  |  Width of image_t.                                         |
 |        |        |  Integer ( lo-hi ) width of the image in pixels.           |
 |        |        |                                                            |
-|   14   |     2  |  Height of image_t.                                          |
+|   14   |     2  |  Height of image_t.                                        |
 |        |        |  Integer ( lo-hi ) height of the image in pixels.          |
 |        |        |                                                            |
-|   16   |     1  |  image_t Pixel Size.                                         |
+|   16   |     1  |  image_t Pixel Size.                                       |
 |        |        |  Number of bits in a stored pixel index.                   |
 |        |        |                                                            |
-|   17   |     1  |  image_t Descriptor Byte.                                    |
+|   17   |     1  |  image_t Descriptor Byte.                                  |
 |        |        |  Bits 3-0 - number of attribute bits associated with each  |
 |        |        |             pixel.                                         |
 |        |        |  Bit 4    - reserved.  Must be set to 0.                   |
@@ -123,7 +123,7 @@ _______________________________________________________________________________|
 |        |        |  This entire byte should be set to 0.  Don't ask me.       |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-|   18   | varies |  image_t Identification Field.                               |
+|   18   | varies |  image_t Identification Field.                             |
 |        |        |  Contains a free-form identification field of the length   |
 |        |        |  specified in byte 1 of the image record.  It's usually    |
 |        |        |  omitted ( length in byte 1 = 0 ), but can be up to 255    |
@@ -133,7 +133,7 @@ _______________________________________________________________________________|
 |--------|--------|------------------------------------------------------------|
 | varies | varies |  Color map data.                                           |
 |        |        |                                                            |
-|        |        |  The offset is determined by the size of the image_t         |
+|        |        |  The offset is determined by the size of the image_t       |
 |        |        |  Identification Field.  The length is determined by        |
 |        |        |  the Color Map Specification, which describes the          |
 |        |        |  size of each entry and the number of entries.             |
@@ -142,7 +142,7 @@ _______________________________________________________________________________|
 |        |        |                                                            |
 |        |        |  The 4 byte entry contains 1 byte for blue, 1 byte         |
 |        |        |  for green, 1 byte for red, and 1 byte of attribute        |
-|        |        |  information, in that order.
+|        |        |  information, in that order                                |
 |        |        |                                                            |
 |        |        |  The 3 byte entry contains 1 byte each of blue, green,     |
 |        |        |  and red.                                                  |
@@ -154,7 +154,7 @@ _______________________________________________________________________________|
 |        |        |  second will be ARRRRRGG. "A" represents an attribute bit. |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-| varies | varies |  image_t Data Field.                                         |
+| varies | varies |  image_t Data Field.                                       |
 |        |        |                                                            |
 |        |        |  This field specifies (width) x (height) color map         |
 |        |        |  indices.  Each index is stored as an integral number      |
@@ -177,8 +177,8 @@ _______________________________________________________________________________|
 |    0   |     1  |  Number of Characters in Identification Field.             |
 |        |        |                                                            |
 |        |        |  This field is a one-byte unsigned integer, specifying     |
-|        |        |  the length of the image_t Identification Field.  Its value  |
-|        |        |  is 0 to 255.  A value of 0 means that no image_t            |
+|        |        |  the length of the image_t Identification Field.  Its value|
+|        |        |  is 0 to 255.  A value of 0 means that no image_t          |
 |        |        |  Identification Field is included.                         |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
@@ -191,7 +191,7 @@ _______________________________________________________________________________|
 |        |        |  the first map color if it is present.                     |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-|    2   |     1  |  image_t Type Code.                                          |
+|    2   |     1  |  image_t Type Code.                                        |
 |        |        |                                                            |
 |        |        |  This field will always contain a binary 2.                |
 |        |        |  ( That's what makes it Data Type 2 ).                     |
@@ -213,27 +213,27 @@ _______________________________________________________________________________|
 |        |        |  24 for the Targa 24, 32 for the Targa 32.                 |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-|    8   |    10  |  image_t Specification.                                      |
+|    8   |    10  |  image_t Specification.                                    |
 |        |        |                                                            |
-|    8   |     2  |  X Origin of image_t.                                        |
+|    8   |     2  |  X Origin of image_t.                                      |
 |        |        |  Integer ( lo-hi ) X coordinate of the lower left corner   |
 |        |        |  of the image.                                             |
 |        |        |                                                            |
-|   10   |     2  |  Y Origin of image_t.                                        |
+|   10   |     2  |  Y Origin of image_t.                                      |
 |        |        |  Integer ( lo-hi ) Y coordinate of the lower left corner   |
 |        |        |  of the image.                                             |
 |        |        |                                                            |
-|   12   |     2  |  Width of image_t.                                           |
+|   12   |     2  |  Width of image_t.                                         |
 |        |        |  Integer ( lo-hi ) width of the image in pixels.           |
 |        |        |                                                            |
-|   14   |     2  |  Height of image_t.                                          |
+|   14   |     2  |  Height of image_t.                                        |
 |        |        |  Integer ( lo-hi ) height of the image in pixels.          |
 |        |        |                                                            |
-|   16   |     1  |  image_t Pixel Size.                                         |
+|   16   |     1  |  image_t Pixel Size.                                       |
 |        |        |  Number of bits in a pixel.  This is 16 for Targa 16,      |
 |        |        |  24 for Targa 24, and .... well, you get the idea.         |
 |        |        |                                                            |
-|   17   |     1  |  image_t Descriptor Byte.                                    |
+|   17   |     1  |  image_t Descriptor Byte.                                  |
 |        |        |  Bits 3-0 - number of attribute bits associated with each  |
 |        |        |             pixel.  For the Targa 16, this would be 0 or   |
 |        |        |             1.  For the Targa 24, it should be 0.  For     |
@@ -250,7 +250,7 @@ _______________________________________________________________________________|
 |        |        |             11 = reserved.                                 |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-|   18   | varies |  image_t Identification Field.                               |
+|   18   | varies |  image_t Identification Field.                             |
 |        |        |  Contains a free-form identification field of the length   |
 |        |        |  specified in byte 1 of the image record.  It's usually    |
 |        |        |  omitted ( length in byte 1 = 0 ), but can be up to 255    |
@@ -267,7 +267,7 @@ _______________________________________________________________________________|
 |        |        |  Each color map entry is 2, 3, or 4 bytes.                 |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-| varies | varies |  image_t Data Field.                                         |
+| varies | varies |  image_t Data Field.                                       |
 |        |        |                                                            |
 |        |        |  This field specifies (width) x (height) pixels.  Each     |
 |        |        |  pixel specifies an RGB color value, which is stored as    |
@@ -302,8 +302,8 @@ _______________________________________________________________________________|
 |    0   |     1  |  Number of Characters in Identification Field.             |
 |        |        |                                                            |
 |        |        |  This field is a one-byte unsigned integer, specifying     |
-|        |        |  the length of the image_t Identification Field.  Its value  |
-|        |        |  is 0 to 255.  A value of 0 means that no image_t            |
+|        |        |  the length of the image_t Identification Field.  Its value|
+|        |        |  is 0 to 255.  A value of 0 means that no image_t          |
 |        |        |  Identification Field is included.                         |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
@@ -312,7 +312,7 @@ _______________________________________________________________________________|
 |        |        |  This field is always 1 for color-mapped images.           |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-|    2   |     1  |  image_t Type Code.                                          |
+|    2   |     1  |  image_t Type Code.                                        |
 |        |        |                                                            |
 |        |        |  A binary 9 for this data type.                            |
 |        |        |                                                            |
@@ -330,27 +330,27 @@ _______________________________________________________________________________|
 |        |        |  Targa 16, 24 for the Targa 24, 32 for the Targa 32.       |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-|    8   |    10  |  image_t Specification.                                      |
+|    8   |    10  |  image_t Specification.                                    |
 |        |        |                                                            |
-|    8   |     2  |  X Origin of image_t.                                        |
+|    8   |     2  |  X Origin of image_t.                                      |
 |        |        |  Integer ( lo-hi ) X coordinate of the lower left corner   |
 |        |        |  of the image.                                             |
 |        |        |                                                            |
-|   10   |     2  |  Y Origin of image_t.                                        |
+|   10   |     2  |  Y Origin of image_t.                                      |
 |        |        |  Integer ( lo-hi ) Y coordinate of the lower left corner   |
 |        |        |  of the image.                                             |
 |        |        |                                                            |
-|   12   |     2  |  Width of image_t.                                           |
+|   12   |     2  |  Width of image_t.                                         |
 |        |        |  Integer ( lo-hi ) width of the image in pixels.           |
 |        |        |                                                            |
-|   14   |     2  |  Height of image_t.                                          |
+|   14   |     2  |  Height of image_t.                                        |
 |        |        |  Integer ( lo-hi ) height of the image in pixels.          |
 |        |        |                                                            |
-|   16   |     1  |  image_t Pixel Size.                                         |
+|   16   |     1  |  image_t Pixel Size.                                       |
 |        |        |  Number of bits in a pixel.  This is 16 for Targa 16,      |
 |        |        |  24 for Targa 24, and .... well, you get the idea.         |
 |        |        |                                                            |
-|   17   |     1  |  image_t Descriptor Byte.                                    |
+|   17   |     1  |  image_t Descriptor Byte.                                  |
 |        |        |  Bits 3-0 - number of attribute bits associated with each  |
 |        |        |             pixel.  For the Targa 16, this would be 0 or   |
 |        |        |             1.  For the Targa 24, it should be 0.  For the |
@@ -367,7 +367,7 @@ _______________________________________________________________________________|
 |        |        |             11 = reserved.                                 |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-|   18   | varies |  image_t Identification Field.                               |
+|   18   | varies |  image_t Identification Field.                             |
 |        |        |  Contains a free-form identification field of the length   |
 |        |        |  specified in byte 1 of the image record.  It's usually    |
 |        |        |  omitted ( length in byte 1 = 0 ), but can be up to 255    |
@@ -377,7 +377,7 @@ _______________________________________________________________________________|
 |--------|--------|------------------------------------------------------------|
 | varies | varies |  Color map data.                                           |
 |        |        |                                                            |
-|        |        |  The offset is determined by the size of the image_t         |
+|        |        |  The offset is determined by the size of the image_t       |
 |        |        |  Identification Field.  The length is determined by        |
 |        |        |  the Color Map Specification, which describes the          |
 |        |        |  size of each entry and the number of entries.             |
@@ -386,7 +386,7 @@ _______________________________________________________________________________|
 |        |        |                                                            |
 |        |        |  The 4 byte entry contains 1 byte for blue, 1 byte         |
 |        |        |  for green, 1 byte for red, and 1 byte of attribute        |
-|        |        |  information, in that order.
+|        |        |  information, in that order.                               |
 |        |        |                                                            |
 |        |        |  The 3 byte entry contains 1 byte each of blue, green,     |
 |        |        |  and red.                                                  |
@@ -398,7 +398,7 @@ _______________________________________________________________________________|
 |        |        |  second will be ARRRRRGG. "A" represents an attribute bit. |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-| varies | varies |  image_t Data Field.                                         |
+| varies | varies |  image_t Data Field.                                       |
 |        |        |                                                            |
 |        |        |  This field specifies (width) x (height) color map         |
 |        |        |  indices.  The indices are stored in packets.  There       |
@@ -455,8 +455,8 @@ _______________________________________________________________________________|
 |    0   |     1  |  Number of Characters in Identification Field.             |
 |        |        |                                                            |
 |        |        |  This field is a one-byte unsigned integer, specifying     |
-|        |        |  the length of the image_t Identification Field.  Its range  |
-|        |        |  is 0 to 255.  A value of 0 means that no image_t            |
+|        |        |  the length of the image_t Identification Field.  Its range|
+|        |        |  is 0 to 255.  A value of 0 means that no image_t          |
 |        |        |  Identification Field is included.                         |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
@@ -469,7 +469,7 @@ _______________________________________________________________________________|
 |        |        |  the first map color if it is present.  Wowie zowie.       |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-|    2   |     1  |  image_t Type Code.                                          |
+|    2   |     1  |  image_t Type Code.                                        |
 |        |        |                                                            |
 |        |        |  Binary 10 for this type of image.                         |
 |        |        |                                                            |
@@ -490,27 +490,27 @@ _______________________________________________________________________________|
 |        |        |  the Targa 16, 24 for the Targa 24, 32 for the Targa 32.   |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-|    8   |    10  |  image_t Specification.                                      |
+|    8   |    10  |  image_t Specification.                                    |
 |        |        |                                                            |
-|    8   |     2  |  X Origin of image_t.                                        |
+|    8   |     2  |  X Origin of image_t.                                      |
 |        |        |  Integer ( lo-hi ) X coordinate of the lower left corner   |
 |        |        |  of the image.                                             |
 |        |        |                                                            |
-|   10   |     2  |  Y Origin of image_t.                                        |
+|   10   |     2  |  Y Origin of image_t.                                      |
 |        |        |  Integer ( lo-hi ) Y coordinate of the lower left corner   |
 |        |        |  of the image.                                             |
 |        |        |                                                            |
-|   12   |     2  |  Width of image_t.                                           |
+|   12   |     2  |  Width of image_t.                                         |
 |        |        |  Integer ( lo-hi ) width of the image in pixels.           |
 |        |        |                                                            |
-|   14   |     2  |  Height of image_t.                                          |
+|   14   |     2  |  Height of image_t.                                        |
 |        |        |  Integer ( lo-hi ) height of the image in pixels.          |
 |        |        |                                                            |
-|   16   |     1  |  image_t Pixel Size.                                         |
+|   16   |     1  |  image_t Pixel Size.                                       |
 |        |        |  Number of bits in a pixel.  This is 16 for Targa 16,      |
 |        |        |  24 for Targa 24, and .... well, you get the idea.         |
 |        |        |                                                            |
-|   17   |     1  |  image_t Descriptor Byte.                                    |
+|   17   |     1  |  image_t Descriptor Byte.                                  |
 |        |        |  Bits 3-0 - number of attribute bits associated with each  |
 |        |        |             pixel.  For the Targa 16, this would be 0 or   |
 |        |        |             1.  For the Targa 24, it should be 0.  For the |
@@ -527,7 +527,7 @@ _______________________________________________________________________________|
 |        |        |             11 = reserved.                                 |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-|   18   | varies |  image_t Identification Field.                               |
+|   18   | varies |  image_t Identification Field.                             |
 |        |        |  Contains a free-form identification field of the length   |
 |        |        |  specified in byte 1 of the image record.  It's usually    |
 |        |        |  omitted ( length in byte 1 = 0 ), but can be up to 255    |
@@ -544,7 +544,7 @@ _______________________________________________________________________________|
 |        |        |  Each color map entry is 2, 3, or 4 bytes.                 |
 |        |        |                                                            |
 |--------|--------|------------------------------------------------------------|
-| varies | varies |  image_t Data Field.                                         |
+| varies | varies |  image_t Data Field.                                       |
 |        |        |                                                            |
 |        |        |  This field specifies (width) x (height) pixels.  The      |
 |        |        |  RGB color information for the pixels is stored in         |

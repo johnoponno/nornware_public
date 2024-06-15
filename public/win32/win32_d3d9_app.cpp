@@ -1,10 +1,8 @@
 #include "stdafx.h"
 #include "win32_d3d9_app.h"
 
-#include "../softdraw/sd_bitmap.h"
-//#include "../softdraw/minyin.h"
+#include "../minyin/sd_bitmap.h"
 #include "win32_d3d9_state.h"
-//#include "win32_input.h"
 #include "win32_d3d9_softdraw_adapter.h"
 #include "win32_dsound_stream.h"
 
@@ -30,40 +28,12 @@ static canvas_layout_t __canvas_layout(const sd_bitmap_t& canvas)
 	return result;
 }
 
-/*
-static minyin_vec2i_t __canvas_cursor_pos(const sd_bitmap_t& in_canvas)
-{
-	const canvas_layout_t LAYOUT = __canvas_layout(in_canvas);
-	const minyin_vec2i_t CURSOR_POSITION = win32_mouse_cursor_position();
-
-	float cpx = (float)CURSOR_POSITION.x;
-	cpx -= LAYOUT.x;
-	cpx /= (float)LAYOUT.width;
-	cpx *= (float)in_canvas.width;
-
-	float cpy = (float)CURSOR_POSITION.y;
-	cpy -= LAYOUT.y;
-	cpy /= (float)LAYOUT.height;
-	cpy *= (float)in_canvas.height;
-
-	minyin_vec2i_t i{ (int32_t)cpx, (int32_t)cpy };
-
-	if (cpx < 0.f)
-		--i.x;
-
-	if (cpy < 0.f)
-		--i.y;
-
-	return i;
-}
-*/
-
 //public
 //public
 //public
 //public
 
-bool win32_d3d9_simpleapp_i::win32_d3d9_app_modify_device_settings(const ::D3DCAPS9& caps, win32_d3d9_device_settings_t& device_settings)
+bool win32_d3d9_softdraw_app_t::win32_d3d9_app_modify_device_settings(const ::D3DCAPS9& caps, win32_d3d9_device_settings_t& device_settings)
 {
 	// If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW 
 	// then switch to SWVP.
@@ -100,12 +70,12 @@ bool win32_d3d9_simpleapp_i::win32_d3d9_app_modify_device_settings(const ::D3DCA
 	return true;
 }
 
-::LRESULT win32_d3d9_simpleapp_i::win32_d3d9_app_msg_proc(const HWND, const UINT, const WPARAM, const LPARAM, bool*)
+::LRESULT win32_d3d9_softdraw_app_t::win32_d3d9_app_msg_proc(const HWND, const UINT, const WPARAM, const LPARAM, bool*)
 {
 	return 0;
 }
 
-void win32_d3d9_simpleapp_i::win32_d3d9_app_frame_move(const double, const float)
+void win32_d3d9_softdraw_app_t::win32_d3d9_app_frame_move(const double, const float)
 {
 	//if not foreground, don't run
 	if (!win32_d3d9_state.m_active)
@@ -170,11 +140,11 @@ void win32_d3d9_simpleapp_i::win32_d3d9_app_frame_move(const double, const float
 			--_minyin._canvas_cursor_y;
 	}
 
-	if (!win32_d3d9_simpleapp_tick(_minyin))
+	if (!win32_d3d9_softdraw_app_tick(_minyin))
 		win32_d3d9_shutdown(0);
 }
 
-bool win32_d3d9_simpleapp_i::win32_d3d9_app_frame_render(const double, const float)
+bool win32_d3d9_softdraw_app_t::win32_d3d9_app_frame_render(const double, const float)
 {
 	if (win32_d3d9_state.m_active)
 	{
@@ -209,17 +179,17 @@ bool win32_d3d9_simpleapp_i::win32_d3d9_app_frame_render(const double, const flo
 	return win32_d3d9_state.m_active;
 }
 
-bool win32_d3d9_simpleapp_i::win32_d3d9_app_is_fixed_tick_rate() const
+bool win32_d3d9_softdraw_app_t::win32_d3d9_app_is_fixed_tick_rate() const
 {
 	return true;
 }
 
-float win32_d3d9_simpleapp_i::win32_d3d9_app_seconds_per_fixed_tick() const
+float win32_d3d9_softdraw_app_t::win32_d3d9_app_seconds_per_fixed_tick() const
 {
 	return SECONDS_PER_FIXED_TICK;
 }
 
-bool win32_d3d9_simpleapp_i::win32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const
+bool win32_d3d9_softdraw_app_t::win32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const
 {
 	caps;
 	adapter_format;
@@ -228,7 +198,7 @@ bool win32_d3d9_simpleapp_i::win32_d3d9_app_is_device_acceptable(const ::D3DCAPS
 	return true;
 }
 
-win32_d3d9_simpleapp_i::win32_d3d9_simpleapp_i(const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas, const uint32_t in_num_sounds)
+win32_d3d9_softdraw_app_t::win32_d3d9_softdraw_app_t(const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas, const uint32_t in_num_sounds)
 	:SECONDS_PER_FIXED_TICK(in_seconds_per_fixed_tick)
 	, REF_CANVAS(in_canvas)
 	, _video_adapter(false)
@@ -238,7 +208,7 @@ win32_d3d9_simpleapp_i::win32_d3d9_simpleapp_i(const float in_seconds_per_fixed_
 	_music_stream = nullptr;
 }
 
-bool win32_d3d9_simpleapp_i::win32_d3d9_simpleapp_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests)
+bool win32_d3d9_softdraw_app_t::win32_d3d9_softdraw_app_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests)
 {
 	if (!_sound_engine.init(win32_d3d9_hwnd()))
 		return false;
@@ -255,7 +225,7 @@ bool win32_d3d9_simpleapp_i::win32_d3d9_simpleapp_init_audio(const std::vector<m
 	return true;
 }
 
-void win32_d3d9_simpleapp_i::win32_d3d9_simpleapp_cleanup_audio()
+void win32_d3d9_softdraw_app_t::win32_d3d9_softdraw_app_cleanup_audio()
 {
 	_music_file = nullptr;
 	delete _music_stream;
@@ -264,7 +234,7 @@ void win32_d3d9_simpleapp_i::win32_d3d9_simpleapp_cleanup_audio()
 	_sound_engine.cleanup();
 }
 
-void win32_d3d9_simpleapp_i::win32_d3d9_simpleapp_handle_music_request(const char* in_music_request)
+void win32_d3d9_softdraw_app_t::win32_d3d9_softdraw_app_handle_music_request(const char* in_music_request)
 {
 	if (_music_file != in_music_request || !_music_stream)
 	{

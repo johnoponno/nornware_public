@@ -1,7 +1,8 @@
 #include "stdafx.h"
-#include "win32_input.h"
 
-#include "../softdraw/minyin.h"
+#if 0
+
+#include "win32_input.h"
 
 static struct
 {
@@ -108,9 +109,4 @@ void win32_mouse_cursor_position_set(const ::HWND window, const int32_t anX, con
 	}
 }
 
-/*
-minyin_vec2i_t win32_mouse_cursor_position()
-{
-	return { __state.cursor_pos_x, __state.cursor_pos_y };
-}
-*/
+#endif

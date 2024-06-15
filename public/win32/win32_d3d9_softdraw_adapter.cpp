@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "win32_d3d9_softdraw_adapter.h"
 
-#include "../softdraw/sd_bitmap.h"
+#include "../minyin/sd_bitmap.h"
 #include "win32_d3d9_state.h"
 
 static ::IDirect3DStateBlock9* __state_block_begin(

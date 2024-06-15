@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../softdraw/minyin.h"
+#include "../minyin/minyin.h"
 #include "win32_d3d9_softdraw_adapter.h"
 #include "win32_dsound_engine.h"
 #include "win32_dsound_container.h"
@@ -43,8 +43,13 @@ protected:
 	}
 };
 
-//simplified / fixed tick version
-struct win32_d3d9_simpleapp_i : public win32_d3d9_app_i
+//simplifies winmain
+bool win32_d3d9_init(
+	const char* in_title, const bool in_windowed, const int32_t in_width, const int32_t in_height,
+	win32_d3d9_app_i& out_app);
+
+//simplified / fixed tick version (16 bit softdraw graphics)
+struct win32_d3d9_softdraw_app_t : public win32_d3d9_app_i
 {
 	bool win32_d3d9_app_modify_device_settings(const ::D3DCAPS9& caps, win32_d3d9_device_settings_t& device_settings) override;
 	::LRESULT win32_d3d9_app_msg_proc(const HWND window, const UINT message, const WPARAM wparam, const LPARAM lparam, bool* no_further_processing) override;
@@ -55,11 +60,11 @@ struct win32_d3d9_simpleapp_i : public win32_d3d9_app_i
 	float win32_d3d9_app_seconds_per_fixed_tick() const override;
 	bool win32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const override;
 
-	explicit win32_d3d9_simpleapp_i(const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas, const uint32_t in_num_sounds);
-	bool win32_d3d9_simpleapp_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests);
-	void win32_d3d9_simpleapp_cleanup_audio();
-	void win32_d3d9_simpleapp_handle_music_request(const char* in_music_request);
-	virtual bool win32_d3d9_simpleapp_tick(const minyin_t& in_minyin) = 0;
+	explicit win32_d3d9_softdraw_app_t(const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas, const uint32_t in_num_sounds);
+	bool win32_d3d9_softdraw_app_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests);
+	void win32_d3d9_softdraw_app_cleanup_audio();
+	void win32_d3d9_softdraw_app_handle_music_request(const char* in_music_request);
+	virtual bool win32_d3d9_softdraw_app_tick(const minyin_t& in_minyin) = 0;
 
 protected:
 
@@ -75,8 +80,3 @@ private:
 	win32_dsound_stream_t* _music_stream;
 	minyin_t _minyin;
 };
-
-//simplifies winmain
-bool win32_d3d9_init(
-	const char* in_title, const bool in_windowed, const int32_t in_width, const int32_t in_height,
-	win32_d3d9_app_i& out_app);

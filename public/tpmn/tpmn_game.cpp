@@ -134,7 +134,7 @@ bool tpmn_game_tick(
 	}
 
 	//single pass imgui, render to the canvas to be pushed to the gpu in win32_d3d9_app_frame_render()
-	switch (tpmn_controller_input_output(in_minyin, out_game.assets, out_game.model, out_game.controller, out_music_request))
+	switch (tpmn_controller_tick(in_minyin, out_game.assets, out_game.model, out_game.controller, out_music_request))
 	{
 	case tpmn_app_event_t::EXIT_APPLICATION:
 		return false;
@@ -146,12 +146,4 @@ bool tpmn_game_tick(
 	}
 
 	return true;
-}
-
-void tpmn_game_shutdown(tpmn_game_t& out_game)
-{
-#if 0
-	delete out_game.controller.music;
-#endif
-	tpmn_assets_cleanup(out_game.assets);
 }
