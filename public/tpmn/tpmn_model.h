@@ -50,32 +50,27 @@
 
 #define TPMN_GRAVITY 1300.f
 
-enum
-{
-	TPMN_WORLD_WIDTH = TPMN_TILES_X * 10,
-	TPMN_WORLD_HEIGHT = TPMN_TILES_Y * 4,
-	TPMN_WORLD_SIZE = TPMN_WORLD_WIDTH * TPMN_WORLD_HEIGHT,
+constexpr float TPMN_SECONDS_PER_TICK = 1.f / 60.f;
 
-	TPMN_SCREENS_X = TPMN_WORLD_WIDTH / TPMN_TILES_X,
-	TPMN_SCREENS_Y = TPMN_WORLD_HEIGHT / TPMN_TILES_Y,
-};
+constexpr int32_t TPMN_WORLD_WIDTH = TPMN_TILES_X * 10;
+constexpr int32_t TPMN_WORLD_HEIGHT = TPMN_TILES_Y * 4;
+constexpr int32_t TPMN_WORLD_SIZE = TPMN_WORLD_WIDTH * TPMN_WORLD_HEIGHT;
+constexpr int32_t TPMN_SCREENS_X = TPMN_WORLD_WIDTH / TPMN_TILES_X;
+constexpr int32_t TPMN_SCREENS_Y = TPMN_WORLD_HEIGHT / TPMN_TILES_Y;
 
-enum
-{
-	TPMN_EVENT_BIT_HERO_WHIP = (1 << 0),
-	TPMN_EVENT_BIT_HERO_JUMP = (1 << 1),
-	TPMN_EVENT_BIT_HERO_LANDED = (1 << 2),
-	TPMN_EVENT_BIT_BACK_TO_CHECKPOINT = (1 << 3),
-	TPMN_EVENT_BIT_BAT_FLEE = (1 << 4),
-	TPMN_EVENT_BIT_HERO_DIE = (1 << 5),
-	TPMN_EVENT_BIT_FIXED_SERVER = (1 << 6),
-	TPMN_EVENT_BIT_CHECKPOINT = (1 << 7),
-	TPMN_EVENT_BIT_KEY = (1 << 8),
-	TPMN_EVENT_BIT_ROLLER_DIE = (1 << 9),
-	TPMN_EVENT_BIT_PLANT_DIE = (1 << 10),
-	TPMN_EVENT_BIT_SLIDER_DIE = (1 << 11),
-	TPMN_EVENT_BIT_SLIDER_IMPULSE = (1 << 12),
-};
+constexpr uint32_t TPMN_EVENT_BIT_HERO_WHIP = (1 << 0);
+constexpr uint32_t TPMN_EVENT_BIT_HERO_JUMP = (1 << 1);
+constexpr uint32_t TPMN_EVENT_BIT_HERO_LANDED = (1 << 2);
+constexpr uint32_t TPMN_EVENT_BIT_BACK_TO_CHECKPOINT = (1 << 3);
+constexpr uint32_t TPMN_EVENT_BIT_BAT_FLEE = (1 << 4);
+constexpr uint32_t TPMN_EVENT_BIT_HERO_DIE = (1 << 5);
+constexpr uint32_t TPMN_EVENT_BIT_FIXED_SERVER = (1 << 6);
+constexpr uint32_t TPMN_EVENT_BIT_CHECKPOINT = (1 << 7);
+constexpr uint32_t TPMN_EVENT_BIT_KEY = (1 << 8);
+constexpr uint32_t TPMN_EVENT_BIT_ROLLER_DIE = (1 << 9);
+constexpr uint32_t TPMN_EVENT_BIT_PLANT_DIE = (1 << 10);
+constexpr uint32_t TPMN_EVENT_BIT_SLIDER_DIE = (1 << 11);
+constexpr uint32_t TPMN_EVENT_BIT_SLIDER_IMPULSE = (1 << 12);
 
 struct tpmn_enemy_t
 {
@@ -221,5 +216,3 @@ float tpmn_plant_hero_distance(const tpmn_enemy_t& plant, const tpmn_hero_t& her
 
 uint16_t tpmn_change_endianness(const uint16_t in);
 uint32_t tpmn_change_endianness(const uint32_t in);
-
-constexpr float TPMN_SECONDS_PER_TICK = 1.f / 60.f;

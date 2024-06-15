@@ -2,9 +2,11 @@
 #include "win32_d3d9_app.h"
 
 #include "../softdraw/sd_bitmap.h"
+//#include "../softdraw/minyin.h"
 #include "win32_d3d9_state.h"
-#include "win32_input.h"
+//#include "win32_input.h"
 #include "win32_d3d9_softdraw_adapter.h"
+#include "win32_dsound_stream.h"
 
 struct canvas_layout_t
 {
@@ -28,10 +30,11 @@ static canvas_layout_t __canvas_layout(const sd_bitmap_t& canvas)
 	return result;
 }
 
-static win32_cursor_position_t __canvas_cursor_pos(const sd_bitmap_t& in_canvas)
+/*
+static minyin_vec2i_t __canvas_cursor_pos(const sd_bitmap_t& in_canvas)
 {
 	const canvas_layout_t LAYOUT = __canvas_layout(in_canvas);
-	const win32_cursor_position_t CURSOR_POSITION = win32_mouse_cursor_position();
+	const minyin_vec2i_t CURSOR_POSITION = win32_mouse_cursor_position();
 
 	float cpx = (float)CURSOR_POSITION.x;
 	cpx -= LAYOUT.x;
@@ -43,7 +46,7 @@ static win32_cursor_position_t __canvas_cursor_pos(const sd_bitmap_t& in_canvas)
 	cpy /= (float)LAYOUT.height;
 	cpy *= (float)in_canvas.height;
 
-	win32_cursor_position_t i{ (int32_t)cpx, (int32_t)cpy };
+	minyin_vec2i_t i{ (int32_t)cpx, (int32_t)cpy };
 
 	if (cpx < 0.f)
 		--i.x;
@@ -53,6 +56,7 @@ static win32_cursor_position_t __canvas_cursor_pos(const sd_bitmap_t& in_canvas)
 
 	return i;
 }
+*/
 
 //public
 //public
@@ -108,9 +112,65 @@ void win32_d3d9_simpleapp_i::win32_d3d9_app_frame_move(const double, const float
 		return;
 
 	//sample input from the os and cache it
+#if 0
 	win32_input_poll(win32_d3d9_hwnd());
+#else
+	{
+		for (
+			uint32_t key = 0;
+			key < _countof(_minyin._keys);
+			++key
+			)
+		{
+			_minyin._keys[key].down_last = _minyin._keys[key].down_current;
+			_minyin._keys[key].down_current = 0 != ::GetAsyncKeyState(key);
+		}
 
-	if (!win32_d3d9_simpleapp_tick(__canvas_cursor_pos(REF_CANVAS)))
+		{
+			::POINT cursor_position;
+			::GetCursorPos(&cursor_position);
+			::ScreenToClient(win32_d3d9_hwnd(), &cursor_position);
+
+			//__state.cursor_movement_x = cursor_position.x - __state.cursor_pos_x;
+			//__state.cursor_movement_y = cursor_position.y - __state.cursor_pos_y;
+			_minyin._screen_cursor_x = cursor_position.x;
+			_minyin._screen_cursor_y = cursor_position.y;
+		}
+
+		/*
+		if (__state.mouse_wheel.event_consumed)
+		{
+			__state.mouse_wheel.delta = 0;
+			__state.mouse_wheel.event_consumed = false;
+		}
+		*/
+	}
+#endif
+
+	{
+		const canvas_layout_t LAYOUT = __canvas_layout(REF_CANVAS);
+
+		float cpx = (float)_minyin._screen_cursor_x;
+		cpx -= LAYOUT.x;
+		cpx /= (float)LAYOUT.width;
+		cpx *= (float)REF_CANVAS.width;
+
+		float cpy = (float)_minyin._screen_cursor_y;
+		cpy -= LAYOUT.y;
+		cpy /= (float)LAYOUT.height;
+		cpy *= (float)REF_CANVAS.height;
+
+		_minyin._canvas_cursor_x = (int32_t)cpx;
+		_minyin._canvas_cursor_y = (int32_t)cpy;
+
+		if (cpx < 0.f)
+			--_minyin._canvas_cursor_x;
+
+		if (cpy < 0.f)
+			--_minyin._canvas_cursor_y;
+	}
+
+	if (!win32_d3d9_simpleapp_tick(_minyin))
 		win32_d3d9_shutdown(0);
 }
 
@@ -138,7 +198,7 @@ bool win32_d3d9_simpleapp_i::win32_d3d9_app_frame_render(const double, const flo
 					UINT32_MAX,
 					win32_d3d9_fixed_function_mode_t::SET,
 					false,
-					_adapter
+					_video_adapter
 				);
 			}
 
@@ -168,11 +228,61 @@ bool win32_d3d9_simpleapp_i::win32_d3d9_app_is_device_acceptable(const ::D3DCAPS
 	return true;
 }
 
-win32_d3d9_simpleapp_i::win32_d3d9_simpleapp_i(const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas)
+win32_d3d9_simpleapp_i::win32_d3d9_simpleapp_i(const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas, const uint32_t in_num_sounds)
 	:SECONDS_PER_FIXED_TICK(in_seconds_per_fixed_tick)
 	, REF_CANVAS(in_canvas)
-	, _adapter(false)
+	, _video_adapter(false)
+	, _sound_container(in_num_sounds)
 {
+	_music_file = nullptr;
+	_music_stream = nullptr;
+}
+
+bool win32_d3d9_simpleapp_i::win32_d3d9_simpleapp_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests)
+{
+	if (!_sound_engine.init(win32_d3d9_hwnd()))
+		return false;
+
+	if (!_sound_container.init())
+		return false;
+
+	for (const minyin_sound_request_t& SR : in_sound_requests)
+	{
+		if (!_sound_container.add_sound(_sound_engine, SR.asset, SR.id, 1))
+			return false;
+	}
+
+	return true;
+}
+
+void win32_d3d9_simpleapp_i::win32_d3d9_simpleapp_cleanup_audio()
+{
+	_music_file = nullptr;
+	delete _music_stream;
+	_music_stream = nullptr;
+	_sound_container.cleanup();
+	_sound_engine.cleanup();
+}
+
+void win32_d3d9_simpleapp_i::win32_d3d9_simpleapp_handle_music_request(const char* in_music_request)
+{
+	if (_music_file != in_music_request || !_music_stream)
+	{
+		if (_music_stream)
+		{
+			delete _music_stream;
+			_music_stream = nullptr;
+		}
+
+		_music_stream = win32_dsound_stream_create(_sound_engine, in_music_request);
+		if (_music_stream)
+			_music_stream->play(true, 0.f, 1.f);
+
+		_music_file = in_music_request;
+	}
+
+	if (_music_stream)
+		_music_stream->update(_frame_moves * SECONDS_PER_FIXED_TICK, 1.f);
 }
 
 bool win32_d3d9_init(

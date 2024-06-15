@@ -1,10 +1,12 @@
 #pragma once
 
-#include "../../softdraw/sd_bitmap.h"
-#include "../../softdraw/sd_fontv.h"
-#include "../../win32/win32_dsound_engine.h"
-#include "../../win32/win32_dsound_container.h"
+#include "../softdraw/sd_bitmap.h"
+#include "../softdraw/sd_fontv.h"
+//#include "../win32/win32_dsound_engine.h"
+//#include "../win32/win32_dsound_container.h"
 #include "tpmn_model.h"
+
+struct minyin_sound_request_t;
 
 #define TPMN_TITLE_COLOR 0xffff
 #define TPMN_TEXT_COLOR 0xc7bf
@@ -42,7 +44,7 @@ enum
 
 struct tpmn_assets_t
 {
-	explicit tpmn_assets_t();
+	//explicit tpmn_assets_t();
 
 	sd_bitmap_t backgrounds[7];
 
@@ -73,11 +75,11 @@ struct tpmn_assets_t
 
 	uint32_t anim_target[TPMN_MAX_TILE];
 
-	win32_dsound_engine_t engine;
-	win32_dsound_container_t container;
+	//win32_dsound_engine_t engine;
+	//win32_dsound_container_t container;
 };
 
-bool tpmn_assets_init(tpmn_assets_t& assets);
-void tpmn_assets_reload(tpmn_assets_t& assets);
-void tpmn_assets_cleanup(tpmn_assets_t& assets);
-void tpmn_sound_play(const tpmn_assets_t& assets, const uint32_t id);
+bool tpmn_assets_init(tpmn_assets_t& out_assets, std::vector<minyin_sound_request_t>& out_sounds);
+void tpmn_assets_reload(tpmn_assets_t& out_assets);
+void tpmn_assets_cleanup(tpmn_assets_t& out_assets);
+//void tpmn_sound_play(const tpmn_assets_t& in_assets, const uint32_t in_id);

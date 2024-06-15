@@ -1,10 +1,12 @@
 #pragma once
 
-#include "../../softdraw/sd_bitmap.h"
+#include "../softdraw/sd_bitmap.h"
 #include "tpmn_model.h"
 
-struct win32_dsound_stream_t;
-struct win32_cursor_position_t;
+struct minyin_t;
+
+//struct win32_dsound_stream_t;
+//struct win32_cursor_position_t;
 
 struct tpmn_assets_t;
 
@@ -48,8 +50,8 @@ struct tpmn_controller_t
 {
 	uint32_t play_menu;
 	uint32_t last_checkpoint;
-	uint32_t track;
-	win32_dsound_stream_t* music;
+	//uint32_t track;
+	//win32_dsound_stream_t* music;
 	uint32_t current_tiles[TPMN_MAX_TILE];
 	tpmn_snowflake_t flakes[32];
 	tpmn_death_t deaths[8];
@@ -60,12 +62,10 @@ struct tpmn_controller_t
 };
 
 tpmn_app_event_t tpmn_controller_input_output(
-	const win32_cursor_position_t& in_cursor_position, const tpmn_assets_t& assets, tpmn_model_t& model,
-	tpmn_controller_t& controller);
+	const minyin_t& in_minyin, const tpmn_assets_t& in_assets,
+	tpmn_model_t& out_model, tpmn_controller_t& out_controller, const char*& out_music_request);
 
-void tpmn_controller_on_load_new_world(
-	const tpmn_assets_t& assets,
-	tpmn_controller_t& controller);
+void tpmn_controller_on_load_new_world(tpmn_controller_t& out_controller, std::vector<uint32_t>& out_sound_plays);
 
 void tpmn_controller_death_create(
 	const sd_bitmap_t* aBitmap, const float aX, const float aY, const int32_t aWidth, const int32_t aHeight, const int32_t aSrcX, const int32_t aSrcY,

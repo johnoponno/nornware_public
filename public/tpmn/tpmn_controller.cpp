@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "tpmn_controller.h"
 
-#include "../../win32/win32_d3d9_state.h"
-#include "../../win32/win32_dsound_stream.h"
-#include "../../win32/win32_input.h"
+//#include "../../win32/win32_d3d9_state.h"
+//#include "../../win32/win32_dsound_stream.h"
+//#include "../../win32/win32_input.h"
+#include "../softdraw/minyin.h"
 #include "tpmn_assets.h"
 
 #define ASSET_TRACK0 "johno_Jungle_2012.ogg"
@@ -377,10 +378,10 @@ static uint32_t __num_broken_servers(const tpmn_model_t& model)
 }
 
 static void __draw_dust_pass(
-	const bool add, const float now, const float speed_x, const float speed_y, const sd_bitmap_t& bitmap,
+	const minyin_t& in_minyin, const bool add, const float now, const float speed_x, const float speed_y, const sd_bitmap_t& bitmap,
 	sd_bitmap_t& canvas)
 {
-	if (win32_key_is_down('P'))
+	if (in_minyin.key_is_down('P'))
 		return;
 
 	const int32_t X = int32_t(now * speed_x) % bitmap.width;
@@ -409,8 +410,8 @@ static void __text(
 }
 
 static void __draw_foreground(
-	const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, tpmn_controller_t& controller,
-	sd_bitmap_t& canvas)
+	const minyin_t& in_minyin, const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy,
+	tpmn_controller_t& controller)
 {
 	const int32_t SX = tpmn_screen_x((float)vx);
 	const int32_t SY = tpmn_screen_y((float)vy);
@@ -419,7 +420,7 @@ static void __draw_foreground(
 	switch (index)
 	{
 	case 1:
-		__draw_dust_pass(true, tpmn_model_now(model), 400, 50, assets.dust_near, canvas);
+		__draw_dust_pass(in_minyin, true, tpmn_model_now(model), 400, 50, assets.dust_near, controller.canvas);
 		break;
 
 	case 7:
@@ -429,35 +430,35 @@ static void __draw_foreground(
 
 		int32_t y;
 
-		__text(assets, y = TPMN_CANVAS_HEIGHT + int32_t((tpmn_model_now(model) - controller.credits_start_time) * -16.), "Congratulations!", TPMN_TITLE_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "You made it to the end of the game!", TPMN_TEXT_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "We wanted to put an epic boss fight", TPMN_TEXT_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "here, but we couldn't quite", TPMN_TEXT_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "find the time.", TPMN_TEXT_COLOR, canvas);
+		__text(assets, y = TPMN_CANVAS_HEIGHT + int32_t((tpmn_model_now(model) - controller.credits_start_time) * -16.), "Congratulations!", TPMN_TITLE_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "You made it to the end of the game!", TPMN_TEXT_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "We wanted to put an epic boss fight", TPMN_TEXT_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "here, but we couldn't quite", TPMN_TEXT_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "find the time.", TPMN_TEXT_COLOR, controller.canvas);
 
-		__text(assets, y += TPMN_TEXT_SPACING * 2, "Feel free to explore the game", TPMN_TEXT_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "world further, or play it again,", TPMN_TEXT_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "or whatever you like!", TPMN_TEXT_COLOR, canvas);
+		__text(assets, y += TPMN_TEXT_SPACING * 2, "Feel free to explore the game", TPMN_TEXT_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "world further, or play it again,", TPMN_TEXT_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "or whatever you like!", TPMN_TEXT_COLOR, controller.canvas);
 
-		__text(assets, y += TPMN_TEXT_SPACING * 2, "If you're interested in playing", TPMN_TEXT_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "with the level editor,", TPMN_TEXT_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "or playing with the code base,", TPMN_TEXT_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "or have any other questions", TPMN_TEXT_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "or comments, please contact:", TPMN_TEXT_COLOR, canvas);
+		__text(assets, y += TPMN_TEXT_SPACING * 2, "If you're interested in playing", TPMN_TEXT_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "with the level editor,", TPMN_TEXT_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "or playing with the code base,", TPMN_TEXT_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "or have any other questions", TPMN_TEXT_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "or comments, please contact:", TPMN_TEXT_COLOR, controller.canvas);
 
-		__text(assets, y += TPMN_TEXT_SPACING, "johannes.norneby@gmail.com", TPMN_TITLE_COLOR, canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "johannes.norneby@gmail.com", TPMN_TITLE_COLOR, controller.canvas);
 
-		__text(assets, y += TPMN_TEXT_SPACING * 2, "Thanks for playing!", TPMN_TEXT_COLOR, canvas);
+		__text(assets, y += TPMN_TEXT_SPACING * 2, "Thanks for playing!", TPMN_TEXT_COLOR, controller.canvas);
 
-		__text(assets, y += TPMN_TEXT_SPACING * 4, "TP-Man Nightmare", TPMN_TITLE_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "(c)2012 NTI-Gymnasiet Goteborg", TPMN_TEXT_COLOR, canvas);
+		__text(assets, y += TPMN_TEXT_SPACING * 4, "TP-Man Nightmare", TPMN_TITLE_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "(c)2012 NTI-Gymnasiet Goteborg", TPMN_TEXT_COLOR, controller.canvas);
 
-		__text(assets, y += TPMN_TEXT_SPACING * 2, "Art / Design", TPMN_TITLE_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "Saga Velander", TPMN_TEXT_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "Michael Awakim Manaz", TPMN_TEXT_COLOR, canvas);
+		__text(assets, y += TPMN_TEXT_SPACING * 2, "Art / Design", TPMN_TITLE_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "Saga Velander", TPMN_TEXT_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "Michael Awakim Manaz", TPMN_TEXT_COLOR, controller.canvas);
 
-		__text(assets, y += TPMN_TEXT_SPACING * 2, "Code / Music / Sound", TPMN_TITLE_COLOR, canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "Johannes 'johno' Norneby", TPMN_TEXT_COLOR, canvas);
+		__text(assets, y += TPMN_TEXT_SPACING * 2, "Code / Music / Sound", TPMN_TITLE_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "Johannes 'johno' Norneby", TPMN_TEXT_COLOR, controller.canvas);
 
 		if (y < -32)
 			controller.credits_start_time = tpmn_model_now(model);
@@ -466,7 +467,9 @@ static void __draw_foreground(
 	}
 }
 
-static void __draw_farplane(const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy, tpmn_controller_t& controller)
+static void __draw_farplane(
+	const minyin_t& in_minyin, const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy,
+	tpmn_controller_t& controller)
 {
 	const float now = tpmn_model_now(model);
 
@@ -489,7 +492,7 @@ static void __draw_farplane(const tpmn_model_t& model, const tpmn_assets_t& asse
 
 	case 1:
 		sd_bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
-		__draw_dust_pass(false, now, 100, 20, assets.dust_far, controller.canvas);
+		__draw_dust_pass(in_minyin, false, now, 100, 20, assets.dust_far, controller.canvas);
 		break;
 
 	case 3:
@@ -838,14 +841,14 @@ static void __draw_enemies(
 }
 
 static void __play_update(
-	const tpmn_assets_t& assets, tpmn_model_t& model,
+	const minyin_t& in_minyin, const tpmn_assets_t& assets, tpmn_model_t& model,
 	tpmn_controller_t& c)
 {
 	//play menu up?
 	if (c.play_menu)
 	{
 		__text(assets, TPMN_CANVAS_HEIGHT / 3, "ESC = Quit", sd_white, c.canvas);
-		if (win32_key_up_flank(VK_ESCAPE))
+		if (in_minyin.key_downflank(MINYIN_ESCAPE))
 		{
 			model.play_bit = 0;
 
@@ -853,7 +856,7 @@ static void __play_update(
 		}
 
 		__text(assets, TPMN_CANVAS_HEIGHT / 3 * 2, "R = Resume", sd_white, c.canvas);
-		if (win32_key_up_flank('R'))
+		if (in_minyin.key_downflank('R'))
 		{
 			c.play_menu = false;
 		}
@@ -861,7 +864,7 @@ static void __play_update(
 	//play menu not up
 	else
 	{
-		if (win32_key_up_flank(VK_ESCAPE))
+		if (in_minyin.key_downflank(MINYIN_ESCAPE))
 		{
 			c.play_menu = true;
 		}
@@ -872,19 +875,19 @@ static void __play_update(
 			//hero movement
 			if (model.hero.spawn_time < 0.f)
 			{
-				if (win32_key_down_flank('S'))
+				if (in_minyin.key_downflank('S'))
 					input |= TPMN_HERO_FLAGS_DOWN;
 
-				if (win32_key_is_down('A'))
+				if (in_minyin.key_is_down('A'))
 					input |= TPMN_HERO_FLAGS_LEFT;
 
-				if (win32_key_is_down('D'))
+				if (in_minyin.key_is_down('D'))
 					input |= TPMN_HERO_FLAGS_RIGHT;
 
-				if (win32_key_is_down('K'))
+				if (in_minyin.key_is_down('K'))
 					input |= TPMN_HERO_FLAGS_JUMP;
 
-				if (win32_key_down_flank('J'))
+				if (in_minyin.key_downflank('J'))
 					input |= TPMN_HERO_FLAGS_WHIP;
 			}
 
@@ -898,7 +901,7 @@ static void __play_update(
 		const int32_t VPX = __hero_view_position_x(model);
 		const int32_t VPY = __hero_view_position_y(model);
 
-		__draw_farplane(model, assets, VPX, VPY, c);
+		__draw_farplane(in_minyin, model, assets, VPX, VPY, c);
 		__draw_tiles(model, assets, VPX, VPY, true, c);
 		__draw_portals(model, assets, VPX, VPY, c.canvas);
 		__draw_servers(model, assets, VPX, VPY, c.canvas);
@@ -908,7 +911,7 @@ static void __play_update(
 		if (model.hero.spawn_time < 0.f)
 			__draw_hero(model, assets, VPX, VPY, c.canvas);
 
-		__draw_foreground(model, assets, VPX, VPY, c, c.canvas);
+		__draw_foreground(in_minyin, model, assets, VPX, VPY, c);
 
 		//drawInfos();
 		{
@@ -964,7 +967,7 @@ static void __play_update(
 }
 
 static tpmn_app_event_t __idle_update(
-	const win32_cursor_position_t& in_cursor_position, const tpmn_assets_t& assets,
+	const minyin_t& in_minyin, const tpmn_assets_t& assets,
 	tpmn_controller_t& controller)
 {
 #if 0
@@ -986,16 +989,16 @@ static tpmn_app_event_t __idle_update(
 		__text(assets, y += TPMN_TEXT_SPACING, "Johannes 'johno' Norneby", TPMN_TEXT_COLOR, controller.canvas);
 
 		__text(assets, y += TPMN_TEXT_SPACING * 4, "P = Play", sd_green, controller.canvas);
-		if (win32_key_up_flank('P'))
+		if (in_minyin.key_downflank('P'))
 			return tpmn_app_event_t::START_NEW_GAME;
 
 		__text(assets, y += TPMN_TEXT_SPACING, "ESC = Quit", sd_green, controller.canvas);
-		if (win32_key_up_flank(VK_ESCAPE))
+		if (in_minyin.key_downflank(MINYIN_ESCAPE))
 			return tpmn_app_event_t::EXIT_APPLICATION;
 	}
 
 #if 1
-	sd_bitmap_cross(controller.canvas, in_cursor_position.x, in_cursor_position.y, 8, 0xffff);
+	sd_bitmap_cross(controller.canvas, in_minyin._canvas_cursor_x, in_minyin._canvas_cursor_y, 8, 0xffff);
 #endif
 
 	return tpmn_app_event_t::NOTHING;
@@ -1008,9 +1011,10 @@ static tpmn_app_event_t __idle_update(
 //public
 
 tpmn_app_event_t tpmn_controller_input_output(
-	const win32_cursor_position_t& in_cursor_position, const tpmn_assets_t& assets, tpmn_model_t& model,
-	tpmn_controller_t& controller)
+	const minyin_t& in_minyin, const tpmn_assets_t& in_assets,
+	tpmn_model_t& out_model, tpmn_controller_t& out_controller, const char*& out_music_request)
 {
+#if 0
 	//music
 	if (controller.track != model.level.music_track || !controller.music)
 	{
@@ -1036,28 +1040,39 @@ tpmn_app_event_t tpmn_controller_input_output(
 	}
 	if (controller.music)
 		controller.music->update(tpmn_model_now(model), 1.f);
+#else
+	switch (out_model.level.music_track)
+	{
+	default:	out_music_request = ASSET_TRACK0;	break;
+	case 1:		out_music_request = ASSET_TRACK1;	break;
+	case 2:		out_music_request = ASSET_TRACK2;	break;
+	case 3:		out_music_request = ASSET_TRACK3;	break;
+	case 4:		out_music_request = ASSET_TRACK4;	break;
+	case 5:		out_music_request = ASSET_TRACK5;	break;
+	}
+#endif
 
 	//tile animations
 	{
-		controller.tile_anim_tick += TILE_FPS * TPMN_SECONDS_PER_TICK;
-		while (controller.tile_anim_tick > 1)
+		out_controller.tile_anim_tick += TILE_FPS * TPMN_SECONDS_PER_TICK;
+		while (out_controller.tile_anim_tick > 1)
 		{
 			for (uint32_t t = 0; t < TPMN_MAX_TILE; ++t)
 			{
-				const uint32_t tile = controller.current_tiles[t];
-				controller.current_tiles[t] = assets.anim_target[tile];
+				const uint32_t TILE = out_controller.current_tiles[t];
+				out_controller.current_tiles[t] = in_assets.anim_target[TILE];
 			}
 
-			controller.tile_anim_tick -= 1;
+			out_controller.tile_anim_tick -= 1;
 		}
 	}
 
 	//this is single pass IMGUI, so input and output are intertwined
 	tpmn_app_event_t result = tpmn_app_event_t::NOTHING;
-	if (model.play_bit)
-		__play_update(assets, model, controller);
+	if (out_model.play_bit)
+		__play_update(in_minyin, in_assets, out_model, out_controller);
 	else
-		result = __idle_update(in_cursor_position, assets, controller);
+		result = __idle_update(in_minyin, in_assets, out_controller);
 
 #if 0
 	//display the number of dropped frames (60hz)
@@ -1071,15 +1086,18 @@ tpmn_app_event_t tpmn_controller_input_output(
 	return result;
 }
 
-void tpmn_controller_on_load_new_world(
-	const tpmn_assets_t& assets,
-	tpmn_controller_t& controller)
+void tpmn_controller_on_load_new_world(tpmn_controller_t& out_controller, std::vector<uint32_t>& out_sound_plays)
 {
-	tpmn_sound_play(assets, TPMN_SND_SPAWN);
+	//tpmn_sound_play(in_assets, TPMN_SND_SPAWN);
+	out_sound_plays.push_back(TPMN_SND_SPAWN);
 
-	controller.play_menu = false;
+	out_controller.play_menu = false;
 
-	for (tpmn_snowflake_t* f = controller.flakes; f < controller.flakes + _countof(controller.flakes); ++f)
+	for (
+		tpmn_snowflake_t* f = out_controller.flakes;
+		f < out_controller.flakes + _countof(out_controller.flakes);
+		++f
+		)
 	{
 		f->x = tpmn_random_unit() * TPMN_CANVAS_WIDTH;
 		f->y = tpmn_random_unit() * TPMN_CANVAS_HEIGHT;

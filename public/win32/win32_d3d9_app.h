@@ -1,10 +1,12 @@
 #pragma once
 
+#include "../softdraw/minyin.h"
 #include "win32_d3d9_softdraw_adapter.h"
+#include "win32_dsound_engine.h"
+#include "win32_dsound_container.h"
 
 struct sd_bitmap_t;
 
-struct win32_cursor_position_t;
 struct win32_d3d9_device_settings_t;
 
 struct win32_d3d9_app_i
@@ -53,16 +55,25 @@ struct win32_d3d9_simpleapp_i : public win32_d3d9_app_i
 	float win32_d3d9_app_seconds_per_fixed_tick() const override;
 	bool win32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const override;
 
-	virtual bool win32_d3d9_simpleapp_tick(const win32_cursor_position_t& in_cursor_position) = 0;
+	explicit win32_d3d9_simpleapp_i(const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas, const uint32_t in_num_sounds);
+	bool win32_d3d9_simpleapp_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests);
+	void win32_d3d9_simpleapp_cleanup_audio();
+	void win32_d3d9_simpleapp_handle_music_request(const char* in_music_request);
+	virtual bool win32_d3d9_simpleapp_tick(const minyin_t& in_minyin) = 0;
 
-	explicit win32_d3d9_simpleapp_i(
-		const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas);
+protected:
+
+	win32_dsound_container_t _sound_container;
 
 private:
 
 	const float SECONDS_PER_FIXED_TICK;
 	const sd_bitmap_t& REF_CANVAS;
-	win32_d3d9_softdraw_adapter_t _adapter;
+	win32_d3d9_softdraw_adapter_t _video_adapter;
+	win32_dsound_engine_t _sound_engine;
+	const char* _music_file;
+	win32_dsound_stream_t* _music_stream;
+	minyin_t _minyin;
 };
 
 //simplifies winmain

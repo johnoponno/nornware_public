@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "tpmn_model.h"
 
-#include "../../softdraw/fs.h"
+#include "../softdraw/fs.h"
 
 #define ASSET_COMMON_INFO "model.common"
 
