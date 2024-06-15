@@ -4,6 +4,7 @@
 #include "tpmn_model.h"
 
 struct win32_dsound_stream_t;
+struct win32_cursor_position_t;
 
 struct tpmn_assets_t;
 
@@ -58,17 +59,9 @@ struct tpmn_controller_t
 	sd_bitmap_t canvas;
 };
 
-struct tpmn_canvas_layout_t
-{
-	int32_t x;
-	int32_t y;
-	int32_t width;
-	int32_t height;
-};
-
 tpmn_app_event_t tpmn_controller_input_output(
-	const tpmn_assets_t& assets,
-	tpmn_model_t& model, tpmn_controller_t& controller);
+	const win32_cursor_position_t& in_cursor_position, const tpmn_assets_t& assets, tpmn_model_t& model,
+	tpmn_controller_t& controller);
 
 void tpmn_controller_on_load_new_world(
 	const tpmn_assets_t& assets,
@@ -77,5 +70,3 @@ void tpmn_controller_on_load_new_world(
 void tpmn_controller_death_create(
 	const sd_bitmap_t* aBitmap, const float aX, const float aY, const int32_t aWidth, const int32_t aHeight, const int32_t aSrcX, const int32_t aSrcY,
 	tpmn_controller_t& controller);
-
-tpmn_canvas_layout_t tpmn_canvas_layout(const sd_bitmap_t& canvas);

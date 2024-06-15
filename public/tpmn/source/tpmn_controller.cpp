@@ -963,34 +963,8 @@ static void __play_update(
 	}
 }
 
-static win32_cursor_position_t __canvas_cursor_pos(const sd_bitmap_t& in_canvas)
-{
-	const tpmn_canvas_layout_t LAYOUT = tpmn_canvas_layout(in_canvas);
-	const win32_cursor_position_t CURSOR_POSITION = win32_mouse_cursor_position();
-
-	float cpx = (float)CURSOR_POSITION.x;
-	cpx -= LAYOUT.x;
-	cpx /= (float)LAYOUT.width;
-	cpx *= (float)in_canvas.width;
-
-	float cpy = (float)CURSOR_POSITION.y;
-	cpy -= LAYOUT.y;
-	cpy /= (float)LAYOUT.height;
-	cpy *= (float)in_canvas.height;
-
-	win32_cursor_position_t i{ (int32_t)cpx, (int32_t)cpy };
-
-	if (cpx < 0.f)
-		--i.x;
-
-	if (cpy < 0.f)
-		--i.y;
-
-	return i;
-}
-
 static tpmn_app_event_t __idle_update(
-	const tpmn_assets_t& assets,
+	const win32_cursor_position_t& in_cursor_position, const tpmn_assets_t& assets,
 	tpmn_controller_t& controller)
 {
 #if 0
@@ -1005,7 +979,7 @@ static tpmn_app_event_t __idle_update(
 		int32_t y;
 
 		__text(assets, y = 8, "TP-Man Nightmare", TPMN_TITLE_COLOR, controller.canvas);
-		__text(assets, y += TPMN_TEXT_SPACING, "(c)2012-2023 nornware AB", TPMN_TEXT_COLOR, controller.canvas);
+		__text(assets, y += TPMN_TEXT_SPACING, "(c)2012-2024 nornware AB", TPMN_TEXT_COLOR, controller.canvas);
 		__text(assets, y += TPMN_TEXT_SPACING * 2, "Talent", TPMN_TITLE_COLOR, controller.canvas);
 		__text(assets, y += TPMN_TEXT_SPACING, "Saga Velander", TPMN_TEXT_COLOR, controller.canvas);
 		__text(assets, y += TPMN_TEXT_SPACING, "Michael Awakim Manaz", TPMN_TEXT_COLOR, controller.canvas);
@@ -1021,10 +995,7 @@ static tpmn_app_event_t __idle_update(
 	}
 
 #if 1
-	{
-		const win32_cursor_position_t cp = __canvas_cursor_pos(controller.canvas);
-		sd_bitmap_cross(controller.canvas, cp.x, cp.y, 8, 0xffff);
-	}
+	sd_bitmap_cross(controller.canvas, in_cursor_position.x, in_cursor_position.y, 8, 0xffff);
 #endif
 
 	return tpmn_app_event_t::NOTHING;
@@ -1035,8 +1006,9 @@ static tpmn_app_event_t __idle_update(
 //public
 //public
 //public
+
 tpmn_app_event_t tpmn_controller_input_output(
-	const tpmn_assets_t& assets, tpmn_model_t& model,
+	const win32_cursor_position_t& in_cursor_position, const tpmn_assets_t& assets, tpmn_model_t& model,
 	tpmn_controller_t& controller)
 {
 	//music
@@ -1085,7 +1057,7 @@ tpmn_app_event_t tpmn_controller_input_output(
 	if (model.play_bit)
 		__play_update(assets, model, controller);
 	else
-		result = __idle_update(assets, controller);
+		result = __idle_update(in_cursor_position, assets, controller);
 
 #if 0
 	//display the number of dropped frames (60hz)
@@ -1131,18 +1103,4 @@ void tpmn_controller_death_create(
 	d->h = aHeight;
 	d->src_x = aSrcX;
 	d->src_y = aSrcY;
-}
-
-tpmn_canvas_layout_t tpmn_canvas_layout(const sd_bitmap_t& canvas)
-{
-	const int32_t RENDER_MUL = __min(win32_d3d9_state.m_backbuffer_surface_desc.Width / canvas.width, win32_d3d9_state.m_backbuffer_surface_desc.Height / canvas.height);
-	tpmn_canvas_layout_t result;
-
-	result.width = canvas.width * RENDER_MUL;
-	result.height = canvas.height * RENDER_MUL;
-
-	result.x = ((int32_t)win32_d3d9_state.m_backbuffer_surface_desc.Width - result.width) / 2;
-	result.y = ((int32_t)win32_d3d9_state.m_backbuffer_surface_desc.Height - result.height) / 2;
-
-	return result;
 }

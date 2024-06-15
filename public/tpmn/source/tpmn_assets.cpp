@@ -2,7 +2,7 @@
 #include "tpmn_assets.h"
 
 #include "../../win32/win32_d3d9_state.h"
-#include "../../softdraw/tga.h"
+#include "../../softdraw/fs.h"
 
 #define ASSET_BG00 "bg00.tga"
 #define ASSET_BG01 "bg01.tga"
@@ -76,16 +76,16 @@ tpmn_assets_t::tpmn_assets_t()
 bool tpmn_assets_init(tpmn_assets_t& assets)
 {
 	{
-		fs::blob_t contents = fs::file_contents(ASSET_COMMON_INFO);
-		const bool result = contents.data && sizeof(assets.anim_target) == contents.size;
-		if (result)
+		const fs_blob_t CONTENTS = fs_file_contents(ASSET_COMMON_INFO);
+		const bool RESULT = CONTENTS.data && sizeof(assets.anim_target) == CONTENTS.size;
+		if (RESULT)
 		{
-			::memcpy(&assets.anim_target, contents.data, contents.size);
+			::memcpy(&assets.anim_target, CONTENTS.data, CONTENTS.size);
 			for (uint32_t* at = assets.anim_target; at < assets.anim_target + TPMN_MAX_TILE; ++at)
 				*at = tpmn_change_endianness(*at);
 		}
-		delete[] contents.data;
-		if (!result)
+		delete[] CONTENTS.data;
+		if (!RESULT)
 			return false;
 	}
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "tpmn_model.h"
 
-#include "../../softdraw/tga.h"	//this is a bad dep, here because the file loading is in tga.h... :(
+#include "../../softdraw/fs.h"
 
 #define ASSET_COMMON_INFO "model.common"
 
@@ -354,7 +354,7 @@ static tpmn_events_t __test_roller(
 	{
 		if (model.hero.y > r->y)
 		{
-			result.bits |= EVENT_BIT_HERO_DIE;
+			result.bits |= TPMN_EVENT_BIT_HERO_DIE;
 			return result;
 		}
 		else
@@ -375,7 +375,7 @@ static tpmn_events_t __test_roller(
 				model.hero.sy *= -.5f;
 
 				//kill roller
-				result.bits = EVENT_BIT_ROLLER_DIE;
+				result.bits = TPMN_EVENT_BIT_ROLLER_DIE;
 				result.roller_type = r->type;
 				result.roller_x = r->x;
 				result.roller_y = r->y;
@@ -388,7 +388,7 @@ static tpmn_events_t __test_roller(
 
 			default:
 				//kill player
-				result.bits |= EVENT_BIT_HERO_DIE;
+				result.bits |= TPMN_EVENT_BIT_HERO_DIE;
 				return result;
 			}
 		}
@@ -397,7 +397,7 @@ static tpmn_events_t __test_roller(
 	else if (r->type != TPMN_LOGIC_INDEX_BLUEBLOB && tpmn_hero_whip_extended(now, model.hero) && __whip_collide(r->x, r->y, ROLLER_HALF_ASPECT, model.hero))
 	{
 		//kill roller
-		result.bits |= EVENT_BIT_ROLLER_DIE;
+		result.bits |= TPMN_EVENT_BIT_ROLLER_DIE;
 		result.roller_type = r->type;
 		result.roller_x = r->x;
 		result.roller_y = r->y;
@@ -425,13 +425,13 @@ static tpmn_events_t __test_plant(
 	if (__can_bite(*p, model.hero))
 	{
 		//player death
-		result.bits |= EVENT_BIT_HERO_DIE;
+		result.bits |= TPMN_EVENT_BIT_HERO_DIE;
 		return result;
 	}
 	else if (tpmn_hero_whip_extended(now, model.hero) && __whip_collide(p->x, p->y, PLANT_HALF_ASPECT, model.hero))
 	{
 		//plant death / respawn
-		result.bits |= EVENT_BIT_PLANT_DIE;
+		result.bits |= TPMN_EVENT_BIT_PLANT_DIE;
 		result.plant_type = p->type;
 		result.plant_x = p->x;
 		result.plant_y = p->y;
@@ -466,7 +466,7 @@ static uint32_t __test_bat(
 			b->state = TPMN_BAT_S_FLEEING;
 			b->change_time = now + BAT_SCARED_TIME;
 
-			result |= EVENT_BIT_BAT_FLEE;
+			result |= TPMN_EVENT_BIT_BAT_FLEE;
 		}
 	}
 
@@ -484,7 +484,7 @@ static tpmn_events_t __test_slider(
 		//if player below slider, he dies
 		if (model.hero.y > s->y)
 		{
-			result.bits |= EVENT_BIT_HERO_DIE;
+			result.bits |= TPMN_EVENT_BIT_HERO_DIE;
 			return result;
 		}
 		else
@@ -495,7 +495,7 @@ static tpmn_events_t __test_slider(
 			model.hero.sy *= -1.f;
 
 			//kill slider
-			result.bits |= EVENT_BIT_SLIDER_DIE;
+			result.bits |= TPMN_EVENT_BIT_SLIDER_DIE;
 			result.slider_x = s->x;
 			result.slider_y = s->y;
 			result.slider_speed = s->speed;
@@ -531,7 +531,7 @@ static tpmn_events_t __enemy_collision_tests(
 			if (now > e->spawn_time)
 			{
 				result = __test_roller(result, now, old_y, model, e);
-				if (EVENT_BIT_HERO_DIE & result.bits)
+				if (TPMN_EVENT_BIT_HERO_DIE & result.bits)
 					return result;
 			}
 			break;
@@ -541,7 +541,7 @@ static tpmn_events_t __enemy_collision_tests(
 			if (now > e->spawn_time)
 			{
 				result = __test_plant(result, now, model, e);
-				if (EVENT_BIT_HERO_DIE & result.bits)
+				if (TPMN_EVENT_BIT_HERO_DIE & result.bits)
 					return result;
 			}
 			break;
@@ -550,7 +550,7 @@ static tpmn_events_t __enemy_collision_tests(
 			if (now > e->spawn_time)
 			{
 				result = __test_slider(result, now, old_y, model, e);
-				if (EVENT_BIT_HERO_DIE & result.bits)
+				if (TPMN_EVENT_BIT_HERO_DIE & result.bits)
 					return result;
 			}
 			break;
@@ -558,7 +558,7 @@ static tpmn_events_t __enemy_collision_tests(
 		case TPMN_LOGIC_INDEX_FIREDUDE:
 			if (__self_in_box(e->x, e->y, FIREDUDE_RADIUS, model.hero))
 			{
-				result.bits |= EVENT_BIT_HERO_DIE;
+				result.bits |= TPMN_EVENT_BIT_HERO_DIE;
 				return result;
 			}
 			break;
@@ -573,7 +573,7 @@ static tpmn_events_t __enemy_collision_tests(
 			{
 				if (__self_in_box(e->x, e->y, ICICLE_HALF_ASPECT, model.hero))
 				{
-					result.bits |= EVENT_BIT_HERO_DIE;
+					result.bits |= TPMN_EVENT_BIT_HERO_DIE;
 					return result;
 				}
 			}
@@ -672,7 +672,7 @@ static uint32_t __world_collision_tests(const float old_x, const float old_y, tp
 	{
 		if (model.hero.air_bit)
 		{
-			result |= EVENT_BIT_HERO_LANDED;
+			result |= TPMN_EVENT_BIT_HERO_LANDED;
 
 			model.hero.air_bit = false;
 		}
@@ -968,7 +968,7 @@ static tpmn_events_t __slider_update(const tpmn_events_t& input, const float now
 				s->speed += SLIDER_IMPULSE;
 			}
 			if (tpmn_screen_x(s->x) == tpmn_screen_x(model.hero.x) && tpmn_screen_y(s->y) == tpmn_screen_y(model.hero.y))
-				result.bits |= EVENT_BIT_SLIDER_IMPULSE;
+				result.bits |= TPMN_EVENT_BIT_SLIDER_IMPULSE;
 		}
 
 		s->x += s->speed * TPMN_SECONDS_PER_TICK;
@@ -1062,12 +1062,13 @@ static const tpmn_portal_t* __portal_for_offset(const uint32_t offset, const tpm
 //public
 //public
 //public
+
 bool tpmn_model_load_world(const char* file, const bool new_game, tpmn_model_t& model)
 {
 	::strcpy_s(model.last_world, model.world);
 	::strcpy_s(model.world, file);
 
-	fs::blob_t contents = fs::file_contents(file);
+	fs_blob_t contents = fs_file_contents(file);
 	assert(contents.data);
 	iterator_t it;
 	it.it = (uint8_t*)contents.data;
@@ -1213,19 +1214,19 @@ bool tpmn_model_load_world(const char* file, const bool new_game, tpmn_model_t& 
 
 bool tpmn_model_init(tpmn_model_t& model)
 {
-	fs::blob_t contents = fs::file_contents(ASSET_COMMON_INFO);
-	const bool result = contents.data && sizeof(model.tile_info) == contents.size;
-	if (result)
+	const fs_blob_t CONTENTS = fs_file_contents(ASSET_COMMON_INFO);
+	const bool RESULT = CONTENTS.data && sizeof(model.tile_info) == CONTENTS.size;
+	if (RESULT)
 	{
-		::memcpy(&model.tile_info, contents.data, contents.size);
+		::memcpy(&model.tile_info, CONTENTS.data, CONTENTS.size);
 		for (tile_info_t* i = model.tile_info; i < model.tile_info + TPMN_MAX_TILE; ++i)
 		{
 			i->hero_pass = tpmn_change_endianness(i->hero_pass);
 			i->special = tpmn_change_endianness(i->special);
 		}
 	}
-	delete[] contents.data;
-	return result;
+	delete[] CONTENTS.data;
+	return RESULT;
 }
 
 tpmn_events_t tpmn_model_update(tpmn_model_t& model)
@@ -1298,7 +1299,7 @@ tpmn_events_t tpmn_model_update(tpmn_model_t& model)
 		if (TPMN_HERO_FLAGS_WHIP & model.hero.input)
 		{
 			model.hero.whip_time = now;
-			result.bits |= EVENT_BIT_HERO_WHIP;
+			result.bits |= TPMN_EVENT_BIT_HERO_WHIP;
 		}
 
 		//x acceleration
@@ -1326,7 +1327,7 @@ tpmn_events_t tpmn_model_update(tpmn_model_t& model)
 			{
 				model.hero.air_bit = true;
 				model.hero.sy = -HERO_JUMP;
-				result.bits |= EVENT_BIT_HERO_JUMP;
+				result.bits |= TPMN_EVENT_BIT_HERO_JUMP;
 			}
 		}
 
@@ -1346,7 +1347,7 @@ tpmn_events_t tpmn_model_update(tpmn_model_t& model)
 		//a bunch of tests...
 		if (S_LETHAL == __get_tile_info_for_position(model.hero.x, model.hero.y, model).special)
 		{
-			result.bits |= EVENT_BIT_HERO_DIE;
+			result.bits |= TPMN_EVENT_BIT_HERO_DIE;
 		}
 		else
 		{
@@ -1354,7 +1355,7 @@ tpmn_events_t tpmn_model_update(tpmn_model_t& model)
 			result.bits |= __world_collision_tests(old_x, old_y, model);
 			__bounds_tests(model.hero);
 		}
-		if (EVENT_BIT_HERO_DIE & result.bits)
+		if (TPMN_EVENT_BIT_HERO_DIE & result.bits)
 		{
 			model.hero.spawn_time = now + HERO_DEAD_TIME;
 		}
@@ -1375,7 +1376,7 @@ tpmn_events_t tpmn_model_update(tpmn_model_t& model)
 			model.hero.fixed_servers = model.hero.checkpoint_fixed_servers;
 			model.hero.whip_time = -100.;
 
-			result.bits |= EVENT_BIT_BACK_TO_CHECKPOINT;
+			result.bits |= TPMN_EVENT_BIT_BACK_TO_CHECKPOINT;
 		}
 	}
 
@@ -1391,19 +1392,19 @@ tpmn_events_t tpmn_model_update(tpmn_model_t& model)
 			model.hero.checkpoint_keys = model.hero.keys;
 			model.hero.checkpoint_fixed_servers = model.hero.fixed_servers;
 
-			result.bits |= EVENT_BIT_CHECKPOINT;
+			result.bits |= TPMN_EVENT_BIT_CHECKPOINT;
 			break;
 
 		case TPMN_LOGIC_INDEX_SERVER:
 			if (__add_fixed_server(model.world, tpmn_world_to_offset(model.hero.x, model.hero.y), model.hero))
-				result.bits |= EVENT_BIT_FIXED_SERVER;
+				result.bits |= TPMN_EVENT_BIT_FIXED_SERVER;
 			break;
 
 		case TPMN_LOGIC_INDEX_KEY0:
 			if (0 == (model.hero.keys & TPMN_HERO_KEY0))
 			{
 				model.hero.keys |= TPMN_HERO_KEY0;
-				result.bits |= EVENT_BIT_KEY;
+				result.bits |= TPMN_EVENT_BIT_KEY;
 			}
 			break;
 
@@ -1411,7 +1412,7 @@ tpmn_events_t tpmn_model_update(tpmn_model_t& model)
 			if (0 == (model.hero.keys & TPMN_HERO_KEY1))
 			{
 				model.hero.keys |= TPMN_HERO_KEY1;
-				result.bits |= EVENT_BIT_KEY;
+				result.bits |= TPMN_EVENT_BIT_KEY;
 			}
 			break;
 
@@ -1419,7 +1420,7 @@ tpmn_events_t tpmn_model_update(tpmn_model_t& model)
 			if (0 == (model.hero.keys & TPMN_HERO_KEY2))
 			{
 				model.hero.keys |= TPMN_HERO_KEY2;
-				result.bits |= EVENT_BIT_KEY;
+				result.bits |= TPMN_EVENT_BIT_KEY;
 			}
 			break;
 		}
@@ -1589,5 +1590,3 @@ uint32_t tpmn_change_endianness(const uint32_t in)
 	dst[3] = src[0];
 	return out;
 }
-
-const float TPMN_SECONDS_PER_TICK = 1.f / 60.f;

@@ -46,6 +46,9 @@
     <ClCompile Include="win32_dsound_vorbis_file.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
+    <ClCompile Include="win32_d3d9_app.cpp">
+      <Filter>d3d9</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win32_input.h" />

@@ -81,7 +81,7 @@
     <ClInclude Include="sd_bitmap.h" />
     <ClInclude Include="sd_fontv.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="tga.h" />
+    <ClInclude Include="fs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sd_bitmap.cpp" />
@@ -90,7 +90,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="tga.cpp" />
+    <ClCompile Include="fs.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

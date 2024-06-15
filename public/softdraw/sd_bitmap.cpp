@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "sd_bitmap.h"
 
-#include "tga.h"
+#include "fs.h"
 
 sd_color24_t __rgb_shift{};
 sd_color24_t __rgb_bits{};
@@ -926,9 +926,9 @@ bool sd_bitmap_load_24(const char* aFileName, sd_bitmap_t& bm)
 	}
 
 	bool result = false;
-	fs::tga::image_t image{};
-	if (read_24(aFileName, image))
-		result = sd_bitmap_import_flip_vertical_swap_r_b(image.header->image_spec_width, image.header->image_spec_height, (const sd_color24_t*)image.pixels, bm);
+	fs_tga_image_t image{};
+	if (fs_tga_read_24(aFileName, image))
+		result = sd_bitmap_import_flip_vertical_swap_r_b(image.header->image_spec_width, image.header->image_spec_height, (sd_color24_t*)image.pixels, bm);
 	delete[] image.memory;
 	return result;
 }

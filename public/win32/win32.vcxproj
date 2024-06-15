@@ -114,6 +114,7 @@
     <ClInclude Include="vorbis_file.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="win32_d3d9_app.cpp" />
     <ClCompile Include="win32_d3d9_resource.cpp" />
     <ClCompile Include="win32_dxut.cpp" />
     <ClCompile Include="win32_dxut_enum.cpp" />

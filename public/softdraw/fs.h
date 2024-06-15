@@ -607,66 +607,44 @@ _______________________________________________________________________________|
 
 */
 
-namespace fs
-{
-	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
-	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
-	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
-	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
-	namespace tga
-	{
 #pragma pack(push, 1)
-		struct header_t
-		{
-			uint8_t id_length;
-			uint8_t color_map_type;
-			uint8_t image_type;
-			uint16_t color_map_origin;
-			uint16_t color_map_length;
-			uint8_t color_map_entry_size;
-			uint16_t image_spec_origin_x;
-			uint16_t image_spec_origin_y;
-			uint16_t image_spec_width;
-			uint16_t image_spec_height;
-			uint8_t image_spec_bpp;
-			uint8_t image_spec_descriptor;
-		};
+struct fs_tga_header_t
+{
+	uint8_t id_length;
+	uint8_t color_map_type;
+	uint8_t image_type;
+	uint16_t color_map_origin;
+	uint16_t color_map_length;
+	uint8_t color_map_entry_size;
+	uint16_t image_spec_origin_x;
+	uint16_t image_spec_origin_y;
+	uint16_t image_spec_width;
+	uint16_t image_spec_height;
+	uint8_t image_spec_bpp;
+	uint8_t image_spec_descriptor;
+};
 #pragma pack(pop)
 
-		struct image_t
-		{
-			uint32_t memory_size;
-			uint8_t* memory;
-			header_t* header;
-			uint8_t* pixels;
-		};
-		bool create_24(const uint16_t aWidth, const uint16_t aHeight, image_t& anImage);
-		bool create_32(const uint16_t aWidth, const uint16_t aHeight, image_t& anImage);
+struct fs_tga_image_t
+{
+	uint32_t memory_size;
+	uint8_t* memory;
+	fs_tga_header_t* header;
+	uint8_t* pixels;
+};
+bool fs_tga_create_24(const uint16_t aWidth, const uint16_t aHeight, fs_tga_image_t& anImage);
+bool fs_tga_create_32(const uint16_t aWidth, const uint16_t aHeight, fs_tga_image_t& anImage);
 
-		bool read_8(const char* aFile, image_t& anImage);
-		bool read_24(const char* aFile, image_t& anImage);	//supports RLE
-		bool read_32(const char* aFile, image_t& anImage);	//supports RLE
+bool fs_tga_read_8(const char* aFile, fs_tga_image_t& anImage);
+bool fs_tga_read_24(const char* aFile, fs_tga_image_t& anImage);	//supports RLE
+bool fs_tga_read_32(const char* aFile, fs_tga_image_t& anImage);	//supports RLE
 
-		void flip_vertical(image_t& anImage);
-	}
-	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
-	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
-	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
-	//FIXME: bad place for this, is just a file format, has nothing to do with softdraw
+void fs_tga_flip_vertical(fs_tga_image_t& anImage);
 
-	//FIXME: bad place for this, used by sound code (dx9 lib)
-	//FIXME: bad place for this, used by sound code (dx9 lib)
-	//FIXME: bad place for this, used by sound code (dx9 lib)
-	//FIXME: bad place for this, used by sound code (dx9 lib)
-	struct blob_t
-	{
-		void* data;
-		uint32_t size;
-	};
+struct fs_blob_t
+{
+	void* data;
+	uint32_t size;
+};
 
-	blob_t file_contents(const char* file);
-	//FIXME: bad place for this, used by sound code (dx9 lib)
-	//FIXME: bad place for this, used by sound code (dx9 lib)
-	//FIXME: bad place for this, used by sound code (dx9 lib)
-	//FIXME: bad place for this, used by sound code (dx9 lib)
-}
+fs_blob_t fs_file_contents(const char* in_file);

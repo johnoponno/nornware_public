@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "win32_dsound_file_wave.h"
 
-#include "../softdraw/tga.h"
+#include "../softdraw/fs.h"
 
 static void __destroy(win32_dsound_file_wave_t& fws)
 {
@@ -116,7 +116,7 @@ bool win32_dsound_file_wave_t::load(const char* aFileName)
 	//cleanup
 	__destroy(*this);
 
-	fs::blob_t contents = fs::file_contents(aFileName);
+	fs_blob_t contents = fs_file_contents(aFileName);
 	if (!contents.data)
 		return false;
 
