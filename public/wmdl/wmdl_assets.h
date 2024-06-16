@@ -9,6 +9,7 @@ struct minyin_sound_request_t;
 
 #define WMDL_TITLE_COLOR 0xffff
 #define WMDL_TEXT_COLOR 0xc7bf
+#define WMDL_BLIT_KEY 2
 
 enum
 {

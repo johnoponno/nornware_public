@@ -52,8 +52,8 @@ void minyin_cross(minyin_bitmap_t& bm, const int32_t x, const int32_t y, const i
 
 void minyin_blit(minyin_bitmap_t& aDst, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
 //void minyin_blit_add(minyin_bitmap_t& aDst, const sd_bitmap_t& SRC, const int32_t aDstX, const int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
-void minyin_blit_key(minyin_bitmap_t& aDst, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
-void minyin_blit_key_clip(minyin_bitmap_t& aDst, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
+void minyin_blit_key(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
+void minyin_blit_key_clip(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
 //void minyin_blit_add_key_clip(minyin_bitmap_t& aDst, const sd_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
 //void minyin_blit_half_key_clip(minyin_bitmap_t& aDst, const sd_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
 

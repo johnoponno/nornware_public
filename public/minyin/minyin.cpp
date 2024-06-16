@@ -410,14 +410,47 @@ void minyin_blit(
 
 void minyin_blit_key(
 	minyin_bitmap_t& out_bitmap,
-	const minyin_bitmap_t& in_src, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
+	const uint8_t in_key, const minyin_bitmap_t& in_src, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
 {
-	minyin_blit(out_bitmap, in_src, in_dst_x, in_dst_y, in_copy_width, in_copy_height, in_src_x, in_src_y);
+	if (0 == in_copy_width || in_copy_width > in_src.width)
+		in_copy_width = in_src.width;
+	if (0 == in_copy_height || in_copy_height > in_src.height)
+		in_copy_height = in_src.height;
+
+	const uint8_t* BYTE_SRC = in_src.pixels + in_src_x + in_src_y * in_src.width;
+	uint8_t* byte_dst = out_bitmap.pixels + in_dst_x + in_dst_y * out_bitmap.width;
+
+	for (
+		int32_t y = 0;
+		y < in_copy_height;
+		++y
+		)
+	{
+		const uint8_t* BYTE_SCAN_SRC = BYTE_SRC;
+		uint8_t* byte_scan_dst = byte_dst;
+
+		for (
+			int32_t x = 0;
+			x < in_copy_width;
+			++x
+			)
+		{
+			assert(BYTE_SRC >= in_src.pixels && BYTE_SRC < (in_src.pixels + in_src.width * in_src.height));
+			assert(byte_dst >= out_bitmap.pixels && byte_dst < (out_bitmap.pixels + out_bitmap.width * out_bitmap.height));
+			if (in_key != *BYTE_SRC)
+				*byte_dst = *BYTE_SRC;
+			++byte_dst;
+			++BYTE_SRC;
+		}
+
+		BYTE_SRC = BYTE_SCAN_SRC + in_src.width;
+		byte_dst = byte_scan_dst + out_bitmap.width;
+	}
 }
 
 void minyin_blit_key_clip(
 	minyin_bitmap_t& out_bitmap,
-	const minyin_bitmap_t& in_src, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
+	const uint8_t in_key, const minyin_bitmap_t& in_src, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
 {
 	if (0 == in_copy_width || in_copy_width > in_src.width)
 		in_copy_width = in_src.width;
@@ -432,7 +465,7 @@ void minyin_blit_key_clip(
 
 		in_src_x, in_src_y, in_dst_x, in_dst_y, in_copy_width, in_copy_height))
 	{
-		minyin_blit(out_bitmap, in_src, in_dst_x, in_dst_y, in_copy_width, in_copy_height, in_src_x, in_src_y);
+		minyin_blit_key(out_bitmap, in_key, in_src, in_dst_x, in_dst_y, in_copy_width, in_copy_height, in_src_x, in_src_y);
 	}
 }
 
