@@ -105,9 +105,9 @@ static void __draw_portals(
 			char slask[4];
 			::sprintf_s(slask, "%u", p->server_count);
 			if (p->server_count >= 10)
-				minyin_print(out_canvas, in_assets.font, x + 1, y + 4, slask);
+				minyin_print(out_canvas, WMDL_BLIT_KEY, in_assets.font, x + 1, y + 4, slask);
 			else
-				minyin_print(out_canvas, in_assets.font, x + 6, y + 4, slask);
+				minyin_print(out_canvas, WMDL_BLIT_KEY, in_assets.font, x + 6, y + 4, slask);
 		}
 	}
 }
@@ -270,7 +270,7 @@ static const char* __text(const uint32_t in_id, const uint32_t in_line)
 	case 0:
 		switch (in_line)
 		{
-		case 0:		return "Welcome TP-Man,";
+		case 0:		return "Welcome Whip Man,";
 		case 1:		return "use ADK to get around!";
 		}
 		break;
@@ -386,10 +386,10 @@ static void __draw_dust_pass(
 */
 
 static void __text(
-	const wmdl_assets_t& in_assets, const int in_dst_y, const char* in_string, const uint16_t in_color,
+	const wmdl_assets_t& in_assets, const int in_dst_y, const char* in_string, const uint8_t in_color,
 	minyin_bitmap_t& out_canvas)
 {
-	minyin_print_color_not_black(out_canvas, in_assets.font, in_color, (out_canvas.width - sd_fontv_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
+	minyin_print_color_not_black(out_canvas, WMDL_BLIT_KEY, in_assets.font, in_color, (out_canvas.width - minyin_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
 }
 
 static void __draw_foreground(
@@ -430,16 +430,17 @@ static void __draw_foreground(
 		__text(in_assets, y += WMDL_TEXT_SPACING, "or have any other questions", WMDL_TEXT_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING, "or comments, please contact:", WMDL_TEXT_COLOR, out_controller.canvas);
 
-		__text(in_assets, y += WMDL_TEXT_SPACING, "johannes.norneby@gmail.com", WMDL_TITLE_COLOR, out_controller.canvas);
+		__text(in_assets, y += WMDL_TEXT_SPACING, "contact@nornware.com", WMDL_TITLE_COLOR, out_controller.canvas);
 
 		__text(in_assets, y += WMDL_TEXT_SPACING * 2, "Thanks for playing!", WMDL_TEXT_COLOR, out_controller.canvas);
 
-		__text(in_assets, y += WMDL_TEXT_SPACING * 4, "TP-Man Nightmare", WMDL_TITLE_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012 NTI-Gymnasiet Goteborg", WMDL_TEXT_COLOR, out_controller.canvas);
+		__text(in_assets, y += WMDL_TEXT_SPACING * 4, "Whip Man Danger Land", WMDL_TITLE_COLOR, out_controller.canvas);
+		__text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012-2024 nornware AB", WMDL_TEXT_COLOR, out_controller.canvas);
 
 		__text(in_assets, y += WMDL_TEXT_SPACING * 2, "Art / Design", WMDL_TITLE_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING, "Saga Velander", WMDL_TEXT_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING, "Michael Awakim Manaz", WMDL_TEXT_COLOR, out_controller.canvas);
+		__text(in_assets, y += WMDL_TEXT_SPACING, "Mats Persson", WMDL_TEXT_COLOR, out_controller.canvas);
 
 		__text(in_assets, y += WMDL_TEXT_SPACING * 2, "Code / Music / Sound", WMDL_TITLE_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING, "Johannes 'johno' Norneby", WMDL_TEXT_COLOR, out_controller.canvas);
@@ -919,7 +920,7 @@ static void __play_update(
 	//play menu up?
 	if (out_controller.play_menu)
 	{
-		__text(in_assets, WMDL_CANVAS_HEIGHT / 3, "ESC = Quit", sd_white, out_controller.canvas);
+		__text(in_assets, WMDL_CANVAS_HEIGHT / 3, "ESC = Quit", 0, out_controller.canvas);
 		if (in_minyin.key_downflank(MINYIN_KEY_ESCAPE))
 		{
 			in_model.play_bit = 0;
@@ -927,7 +928,7 @@ static void __play_update(
 			out_controller.play_menu = false;
 		}
 
-		__text(in_assets, WMDL_CANVAS_HEIGHT / 3 * 2, "R = Resume", sd_white, out_controller.canvas);
+		__text(in_assets, WMDL_CANVAS_HEIGHT / 3 * 2, "R = Resume", 0, out_controller.canvas);
 		if (in_minyin.key_downflank('R'))
 		{
 			out_controller.play_menu = false;
@@ -994,11 +995,11 @@ static void __play_update(
 
 				s = __text(INFO->id, 0);
 				if (s)
-					__text(in_assets, 0, s, 0xffff, out_controller.canvas);
+					__text(in_assets, 0, s, 0, out_controller.canvas);
 
 				s = __text(INFO->id, 1);
 				if (s)
-					__text(in_assets, 24, s, 0xffff, out_controller.canvas);
+					__text(in_assets, in_assets.font.height, s, 0, out_controller.canvas);
 			}
 		}
 
@@ -1010,9 +1011,9 @@ static void __play_update(
 				char slask[4];
 				::sprintf_s(slask, "%u", in_model.hero.fixed_servers.count);
 				if (in_model.hero.fixed_servers.count < 10)
-					minyin_print(out_controller.canvas, in_assets.font, 6, 6, slask);
+					minyin_print(out_controller.canvas, WMDL_BLIT_KEY, in_assets.font, 6, 6, slask);
 				else
-					minyin_print(out_controller.canvas, in_assets.font, 1, 6, slask);
+					minyin_print(out_controller.canvas, WMDL_BLIT_KEY, in_assets.font, 1, 6, slask);
 			}
 
 			//keys gui
@@ -1038,8 +1039,8 @@ static void __play_update(
 
 		if (out_controller.play_menu)
 		{
-			__text(in_assets, WMDL_CANVAS_HEIGHT / 3, "ESC = Quit", sd_white, out_controller.canvas);
-			__text(in_assets, WMDL_CANVAS_HEIGHT / 3 * 2, "R = Resume", sd_white, out_controller.canvas);
+			__text(in_assets, WMDL_CANVAS_HEIGHT / 3, "ESC = Quit", 0, out_controller.canvas);
+			__text(in_assets, WMDL_CANVAS_HEIGHT / 3 * 2, "R = Resume", 0, out_controller.canvas);
 		}
 	}
 }
@@ -1053,18 +1054,19 @@ static wmdl_app_event_t __idle_update(
 	{
 		int32_t y;
 
-		__text(in_assets, y = 8, "TP-Man Nightmare", WMDL_TITLE_COLOR, out_controller.canvas);
+		__text(in_assets, y = 8, "Whip Man Danger Land", WMDL_TITLE_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012-2024 nornware AB", WMDL_TEXT_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING * 2, "Talent", WMDL_TITLE_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING, "Saga Velander", WMDL_TEXT_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING, "Michael Awakim Manaz", WMDL_TEXT_COLOR, out_controller.canvas);
+		__text(in_assets, y += WMDL_TEXT_SPACING, "Mats Persson", WMDL_TEXT_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING, "Johannes 'johno' Norneby", WMDL_TEXT_COLOR, out_controller.canvas);
 
-		__text(in_assets, y += WMDL_TEXT_SPACING * 4, "P = Play", sd_green, out_controller.canvas);
+		__text(in_assets, y += WMDL_TEXT_SPACING * 4, "P = Play", 5, out_controller.canvas);
 		if (in_minyin.key_downflank('P'))
 			return wmdl_app_event_t::START_NEW_GAME;
 
-		__text(in_assets, y += WMDL_TEXT_SPACING, "ESC = Quit", sd_green, out_controller.canvas);
+		__text(in_assets, y += WMDL_TEXT_SPACING, "ESC = Quit", 5, out_controller.canvas);
 		if (in_minyin.key_downflank(MINYIN_KEY_ESCAPE))
 			return wmdl_app_event_t::EXIT_APPLICATION;
 	}

@@ -1,14 +1,14 @@
 #pragma once
 
-#include "../minyin/sd_bitmap.h"
-#include "../minyin/sd_fontv.h"
+//#include "../minyin/sd_bitmap.h"
+//#include "../minyin/sd_fontv.h"
 #include "../minyin/minyin.h"
 #include "wmdl_model.h"
 
 struct minyin_sound_request_t;
 
-#define WMDL_TITLE_COLOR 0xffff
-#define WMDL_TEXT_COLOR 0xc7bf
+#define WMDL_TITLE_COLOR 0
+#define WMDL_TEXT_COLOR 1
 #define WMDL_BLIT_KEY 2
 
 enum
@@ -65,11 +65,11 @@ struct wmdl_assets_t
 	minyin_bitmap_t hero;
 	minyin_bitmap_t whip;
 
-	sd_bitmap_t dust_far;
-	sd_bitmap_t dust_near;
+	//sd_bitmap_t dust_far;
+	//sd_bitmap_t dust_near;
 	minyin_bitmap_t flake;
 
-	sd_fontv_t font;
+	minyin_font_t font;
 
 	uint32_t anim_target[WMDL_MAX_TILE];
 };

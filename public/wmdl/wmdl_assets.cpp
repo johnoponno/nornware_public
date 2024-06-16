@@ -31,11 +31,11 @@
 #define ASSET_HERO "8hero.tga"
 #define ASSET_WHIP "8whip.tga"
 
-#define ASSET_DUST_FAR "dust_far.tga"
-#define ASSET_DUST_NEAR "dust_near.tga"
+//#define ASSET_DUST_FAR "dust_far.tga"
+//#define ASSET_DUST_NEAR "dust_near.tga"
 #define ASSET_FLAKE "8snowflakes.tga"
 
-#define ASSET_FONT "bigfont.tga"
+#define ASSET_FONT "8bigfont.tga"
 
 #define ASSET_COMMON_INFO "view.common"
 
@@ -119,12 +119,12 @@ bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_reques
 	BITMAP8(ASSET_HERO, out_assets.hero);
 	BITMAP8(ASSET_WHIP, out_assets.whip);
 
-	BITMAP(ASSET_DUST_FAR, out_assets.dust_far);
-	BITMAP(ASSET_DUST_NEAR, out_assets.dust_near);
+	//BITMAP(ASSET_DUST_FAR, out_assets.dust_far);
+	//BITMAP(ASSET_DUST_NEAR, out_assets.dust_near);
 	BITMAP8(ASSET_FLAKE, out_assets.flake);
 
 	//font
-	if (!sd_fontv_load_24(out_assets.font, ASSET_FONT, false))
+	if (!minyin_font_load_8(out_assets.font, ASSET_FONT, WMDL_BLIT_KEY))
 		return false;
 	out_assets.font.char_spacing = -1;
 
