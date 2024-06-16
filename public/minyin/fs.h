@@ -635,7 +635,6 @@ struct fs_tga_image_t
 bool fs_tga_create_24(const uint16_t aWidth, const uint16_t aHeight, fs_tga_image_t& anImage);
 bool fs_tga_create_32(const uint16_t aWidth, const uint16_t aHeight, fs_tga_image_t& anImage);
 
-bool fs_tga_read_8(const char* aFile, fs_tga_image_t& anImage);
 bool fs_tga_read_24(const char* aFile, fs_tga_image_t& anImage);	//supports RLE
 bool fs_tga_read_32(const char* aFile, fs_tga_image_t& anImage);	//supports RLE
 

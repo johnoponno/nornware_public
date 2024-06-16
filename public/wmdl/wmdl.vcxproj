@@ -11,7 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{BCB1C5D2-855F-4B79-94C7-78000C6B4324}</ProjectGuid>
+    <ProjectGuid>{2A4CB141-3A7A-4500-89BF-320543CDA8E1}</ProjectGuid>
+    <RootNamespace>softdraw</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -32,21 +33,17 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</IntDir>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
-    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -61,16 +58,12 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
-    <Lib>
-      <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -80,62 +73,26 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>
       </DebugInformationFormat>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
-    <Lib>
-      <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="win32_d3d9_app.h" />
-    <ClInclude Include="vorbis_codec.h" />
-    <ClInclude Include="win32_d3d9_resource.h" />
-    <ClInclude Include="win32_dxut.h" />
-    <ClInclude Include="win32_dxut_enum.h" />
-    <ClInclude Include="win32_dxut_misc.h" />
-    <ClInclude Include="win32_d3d9_includes.h" />
-    <ClInclude Include="win32_input.h" />
-    <ClInclude Include="ogg.h" />
-    <ClInclude Include="os_types.h" />
-    <ClInclude Include="win32_d3d9_softdraw_adapter.h" />
-    <ClInclude Include="win32_dsound.h" />
-    <ClInclude Include="win32_dsound_channel.h" />
-    <ClInclude Include="win32_dsound_container.h" />
-    <ClInclude Include="win32_dsound_engine.h" />
-    <ClInclude Include="win32_dsound_file_wave.h" />
-    <ClInclude Include="win32_dsound_stream.h" />
-    <ClInclude Include="win32_dsound_stream_source.h" />
-    <ClInclude Include="win32_dsound_util.h" />
-    <ClInclude Include="win32_dsound_vorbis_file.h" />
-    <ClInclude Include="win32_d3d9_state.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="win32_timer.h" />
-    <ClInclude Include="traversable.h" />
-    <ClInclude Include="vorbis_file.h" />
+    <ClInclude Include="wmdl_assets.h" />
+    <ClInclude Include="wmdl_controller.h" />
+    <ClInclude Include="wmdl_game.h" />
+    <ClInclude Include="wmdl_model.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="w32_d3d9_chunky_adapter.cpp" />
-    <ClCompile Include="win32_d3d9_app.cpp" />
-    <ClCompile Include="win32_d3d9_resource.cpp" />
-    <ClCompile Include="win32_dxut.cpp" />
-    <ClCompile Include="win32_dxut_enum.cpp" />
-    <ClCompile Include="win32_dxut_misc.cpp" />
-    <ClCompile Include="win32_input.cpp" />
-    <ClCompile Include="win32_d3d9_softdraw_adapter.cpp" />
-    <ClCompile Include="win32_dsound.cpp" />
-    <ClCompile Include="win32_dsound_channel.cpp" />
-    <ClCompile Include="win32_dsound_container.cpp" />
-    <ClCompile Include="win32_dsound_engine.cpp" />
-    <ClCompile Include="win32_dsound_file_wave.cpp" />
-    <ClCompile Include="win32_dsound_stream.cpp" />
-    <ClCompile Include="win32_dsound_util.cpp" />
-    <ClCompile Include="win32_dsound_vorbis_file.cpp" />
-    <ClCompile Include="win32_d3d9_state.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="win32_timer.cpp" />
+    <ClCompile Include="wmdl_assets.cpp" />
+    <ClCompile Include="wmdl_controller.cpp" />
+    <ClCompile Include="wmdl_game.cpp" />
+    <ClCompile Include="wmdl_model.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

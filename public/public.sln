@@ -11,6 +11,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tpmn", "tpmn\tpmn.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "minyin", "minyin\minyin.vcxproj", "{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win32_wmdl", "win32_wmdl\win32_wmdl.vcxproj", "{A56DC1C2-E8DF-4D2C-B291-A19C516C7AD3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wmdl", "wmdl\wmdl.vcxproj", "{2A4CB141-3A7A-4500-89BF-320543CDA8E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -33,6 +37,14 @@ Global
 		{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}.Debug|x86.Build.0 = Debug|Win32
 		{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}.Release|x86.ActiveCfg = Release|Win32
 		{58C160C4-27D2-462A-B7D5-E7A1B99A7BFE}.Release|x86.Build.0 = Release|Win32
+		{A56DC1C2-E8DF-4D2C-B291-A19C516C7AD3}.Debug|x86.ActiveCfg = Debug|Win32
+		{A56DC1C2-E8DF-4D2C-B291-A19C516C7AD3}.Debug|x86.Build.0 = Debug|Win32
+		{A56DC1C2-E8DF-4D2C-B291-A19C516C7AD3}.Release|x86.ActiveCfg = Release|Win32
+		{A56DC1C2-E8DF-4D2C-B291-A19C516C7AD3}.Release|x86.Build.0 = Release|Win32
+		{2A4CB141-3A7A-4500-89BF-320543CDA8E1}.Debug|x86.ActiveCfg = Debug|Win32
+		{2A4CB141-3A7A-4500-89BF-320543CDA8E1}.Debug|x86.Build.0 = Debug|Win32
+		{2A4CB141-3A7A-4500-89BF-320543CDA8E1}.Release|x86.ActiveCfg = Release|Win32
+		{2A4CB141-3A7A-4500-89BF-320543CDA8E1}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

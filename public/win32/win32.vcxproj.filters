@@ -49,6 +49,9 @@
     <ClCompile Include="win32_d3d9_app.cpp">
       <Filter>d3d9</Filter>
     </ClCompile>
+    <ClCompile Include="w32_d3d9_chunky_adapter.cpp">
+      <Filter>d3d9</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="win32_input.h" />

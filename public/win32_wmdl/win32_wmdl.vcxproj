@@ -11,19 +11,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{BCB1C5D2-855F-4B79-94C7-78000C6B4324}</ProjectGuid>
+    <ProjectGuid>{A56DC1C2-E8DF-4D2C-B291-A19C516C7AD3}</ProjectGuid>
+    <RootNamespace>sabkd3d</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
     <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
@@ -32,28 +33,29 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Debug\</IntDir>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Release\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
     <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(DXSDK_DIR)\Include;$(IncludePath)</IncludePath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
+    <LibraryPath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(DXSDK_DIR)\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
-      <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -61,81 +63,64 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
-    <Lib>
-      <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
-    </Lib>
+    <Link>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;winmm.lib;dsound.lib;d3dx9.lib;dxerr.lib;comctl32.lib;wsock32.lib;../win32/ogg_static.lib;../win32/vorbisfile_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
       <IntrinsicFunctions>false</IntrinsicFunctions>
-      <WholeProgramOptimization>true</WholeProgramOptimization>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <StringPooling>true</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>
       </DebugInformationFormat>
+      <WholeProgramOptimization>true</WholeProgramOptimization>
+      <StringPooling>true</StringPooling>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
-    <Lib>
-      <OutputFile>$(OutDir)$(ProjectName).lib</OutputFile>
-    </Lib>
+    <Link>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;winmm.lib;dsound.lib;d3dx9.lib;dxerr.lib;comctl32.lib;wsock32.lib;../win32/ogg_static.lib;../win32/vorbisfile_static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <TargetMachine>MachineX86</TargetMachine>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="win32_d3d9_app.h" />
-    <ClInclude Include="vorbis_codec.h" />
-    <ClInclude Include="win32_d3d9_resource.h" />
-    <ClInclude Include="win32_dxut.h" />
-    <ClInclude Include="win32_dxut_enum.h" />
-    <ClInclude Include="win32_dxut_misc.h" />
-    <ClInclude Include="win32_d3d9_includes.h" />
-    <ClInclude Include="win32_input.h" />
-    <ClInclude Include="ogg.h" />
-    <ClInclude Include="os_types.h" />
-    <ClInclude Include="win32_d3d9_softdraw_adapter.h" />
-    <ClInclude Include="win32_dsound.h" />
-    <ClInclude Include="win32_dsound_channel.h" />
-    <ClInclude Include="win32_dsound_container.h" />
-    <ClInclude Include="win32_dsound_engine.h" />
-    <ClInclude Include="win32_dsound_file_wave.h" />
-    <ClInclude Include="win32_dsound_stream.h" />
-    <ClInclude Include="win32_dsound_stream_source.h" />
-    <ClInclude Include="win32_dsound_util.h" />
-    <ClInclude Include="win32_dsound_vorbis_file.h" />
-    <ClInclude Include="win32_d3d9_state.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="win32_timer.h" />
-    <ClInclude Include="traversable.h" />
-    <ClInclude Include="vorbis_file.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="w32_d3d9_chunky_adapter.cpp" />
-    <ClCompile Include="win32_d3d9_app.cpp" />
-    <ClCompile Include="win32_d3d9_resource.cpp" />
-    <ClCompile Include="win32_dxut.cpp" />
-    <ClCompile Include="win32_dxut_enum.cpp" />
-    <ClCompile Include="win32_dxut_misc.cpp" />
-    <ClCompile Include="win32_input.cpp" />
-    <ClCompile Include="win32_d3d9_softdraw_adapter.cpp" />
-    <ClCompile Include="win32_dsound.cpp" />
-    <ClCompile Include="win32_dsound_channel.cpp" />
-    <ClCompile Include="win32_dsound_container.cpp" />
-    <ClCompile Include="win32_dsound_engine.cpp" />
-    <ClCompile Include="win32_dsound_file_wave.cpp" />
-    <ClCompile Include="win32_dsound_stream.cpp" />
-    <ClCompile Include="win32_dsound_util.cpp" />
-    <ClCompile Include="win32_dsound_vorbis_file.cpp" />
-    <ClCompile Include="win32_d3d9_state.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="win32_timer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\minyin\minyin.vcxproj">
+      <Project>{58c160c4-27d2-462a-b7d5-e7a1b99a7bfe}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\win32\win32.vcxproj">
+      <Project>{bcb1c5d2-855f-4b79-94c7-78000c6b4324}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\wmdl\wmdl.vcxproj">
+      <Project>{2a4cb141-3a7a-4500-89bf-320543cda8e1}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

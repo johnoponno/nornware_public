@@ -133,7 +133,7 @@ static bool __rle_decode(fs_tga_image_t& out_image)
 //public
 
 bool fs_tga_create_24(
-	const uint16_t in_width, const uint16_t in_height, 
+	const uint16_t in_width, const uint16_t in_height,
 	fs_tga_image_t& out_image)
 {
 	delete[] out_image.memory;
@@ -155,7 +155,7 @@ bool fs_tga_create_24(
 }
 
 bool fs_tga_create_32(
-	const uint16_t in_width, const uint16_t in_height, 
+	const uint16_t in_width, const uint16_t in_height,
 	fs_tga_image_t& out_image)
 {
 	delete[] out_image.memory;
@@ -176,24 +176,8 @@ bool fs_tga_create_32(
 	return true;
 }
 
-bool fs_tga_read_8(
-	const char* in_file, 
-	fs_tga_image_t& out_image)
-{
-	if (!__read(in_file, out_image))
-		return false;
-
-	if ((1 != out_image.header->image_type && 3 != out_image.header->image_type) || 8 != out_image.header->image_spec_bpp)
-	{
-		delete[] out_image.memory;
-		out_image = {};
-	}
-
-	return nullptr != out_image.memory;
-}
-
 bool fs_tga_read_24(
-	const char* in_file, 
+	const char* in_file,
 	fs_tga_image_t& out_image)
 {
 	if (!__read(in_file, out_image))
