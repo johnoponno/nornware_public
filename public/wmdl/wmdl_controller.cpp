@@ -4,7 +4,7 @@
 #include "../minyin/minyin.h"
 #include "wmdl_assets.h"
 
-#define SCROLL_ENABLE false
+#define SCROLL_ENABLE 0
 
 #define SLIDER_PREPARE_SPEED 50.f
 

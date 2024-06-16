@@ -105,6 +105,7 @@ static bool __flip_vertical(
 }
 */
 
+//from project ninja - for loading 8 bit .tga files "properly" (with palette support)
 static struct octamap_t
 {
 	fs_tga_header_t* header;
@@ -130,6 +131,70 @@ static struct octamap_t
 	assert(result.pixels + result.header->image_spec_width * result.header->image_spec_height < (uint8_t*)blob.data + blob.size);
 
 	return result;
+}
+
+static bool __clip(
+
+	//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
+	const int32_t in_cliprect_x,
+	const int32_t in_cliprect_y,
+	const int32_t in_cliprect_z,
+	const int32_t in_cliprect_w,
+	//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
+
+	int32_t& out_src_x, int32_t& out_src_y, int32_t& out_dst_x, int32_t& out_dst_y, int32_t& out_width, int32_t& out_height)
+{
+	//REJECTION TEST
+	if ((out_dst_x + out_width) < in_cliprect_x ||
+		out_dst_x >= in_cliprect_z ||
+		(out_dst_y + out_height) < in_cliprect_y ||
+		out_dst_y >= in_cliprect_w)
+	{
+		return false;
+	}
+
+	int32_t clip;
+
+	//CLIP
+	//x
+	if (out_dst_x < in_cliprect_x)
+	{
+		clip = out_dst_x - in_cliprect_x;
+		out_src_x -= clip;
+		out_width += clip;
+		out_dst_x = in_cliprect_x;
+	}
+
+	//return if no width
+	if (out_width <= 0)
+		return false;
+
+	//z
+	if ((out_dst_x + out_width) >= in_cliprect_z)
+		out_width = in_cliprect_z - out_dst_x;
+
+	//return if no width
+	if (out_width <= 0)
+		return false;
+
+	//y
+	if (out_dst_y < in_cliprect_y)
+	{
+		clip = out_dst_y - in_cliprect_y;
+		out_src_y -= clip;
+		out_height += clip;
+		out_dst_y = in_cliprect_y;
+	}
+
+	//return if no height
+	if (out_height <= 0)
+		return false;
+
+	//w
+	if ((out_dst_y + out_height) >= in_cliprect_w)
+		out_height = in_cliprect_w - out_dst_y;
+
+	return out_height > 0;
 }
 
 //public
@@ -343,75 +408,6 @@ void minyin_blit(
 	}
 }
 
-static sd_cliprect_t __clip_rect(const minyin_bitmap_t& bitmap)
-{
-	return { 0, 0, bitmap.width, bitmap.height };
-}
-
-static bool __clip_b(const sd_cliprect_t& aClipRect, int32_t& aSrcX, int32_t& aSrcY, int32_t& aDstX, int32_t& aDstY, int32_t& aWidth, int32_t& aHeight)
-{
-	//REJECTION TEST
-	if ((aDstX + aWidth) < aClipRect.x ||
-		aDstX >= aClipRect.z ||
-		(aDstY + aHeight) < aClipRect.y ||
-		aDstY >= aClipRect.w)
-	{
-		return false;
-	}
-
-	int32_t clip;
-
-	//CLIP
-	//x
-	if (aDstX < aClipRect.x)
-	{
-		clip = aDstX - aClipRect.x;
-		aSrcX -= clip;
-		aWidth += clip;
-		aDstX = aClipRect.x;
-	}
-
-	//return if no width
-	if (aWidth <= 0)
-		return false;
-
-	//z
-	if ((aDstX + aWidth) >= aClipRect.z)
-	{
-		aWidth = aClipRect.z - aDstX;
-	}
-
-	//return if no width
-	if (aWidth <= 0)
-		return false;
-
-	//y
-	if (aDstY < aClipRect.y)
-	{
-		clip = aDstY - aClipRect.y;
-		aSrcY -= clip;
-		aHeight += clip;
-		aDstY = aClipRect.y;
-	}
-
-	//return if no height
-	if (aHeight <= 0)
-		return false;
-
-	//w
-	if ((aDstY + aHeight) >= aClipRect.w)
-	{
-		aHeight = aClipRect.w - aDstY;
-	}
-
-	return aHeight > 0;
-}
-
-static bool __clip_a(const minyin_bitmap_t& aDst, int32_t& aSrcX, int32_t& aSrcY, int32_t& aDstX, int32_t& aDstY, int32_t& aCopyWidth, int32_t& aCopyHeight)
-{
-	return __clip_b(__clip_rect(aDst), aSrcX, aSrcY, aDstX, aDstY, aCopyWidth, aCopyHeight);
-}
-
 void minyin_blit_key(
 	minyin_bitmap_t& out_bitmap,
 	const minyin_bitmap_t& in_src, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
@@ -428,8 +424,16 @@ void minyin_blit_key_clip(
 	if (0 == in_copy_height || in_copy_height > in_src.height)
 		in_copy_height = in_src.height;
 
-	if (__clip_a(out_bitmap, in_src_x, in_src_y, in_dst_x, in_dst_y, in_copy_width, in_copy_height))
+	if (__clip(
+
+		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
+		0, 0, out_bitmap.width, out_bitmap.height,
+		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
+
+		in_src_x, in_src_y, in_dst_x, in_dst_y, in_copy_width, in_copy_height))
+	{
 		minyin_blit(out_bitmap, in_src, in_dst_x, in_dst_y, in_copy_width, in_copy_height, in_src_x, in_src_y);
+	}
 }
 
 void minyin_print(
