@@ -1,7 +1,5 @@
 #pragma once
 
-//#include "../minyin/sd_bitmap.h"
-//#include "../minyin/sd_fontv.h"
 #include "../minyin/minyin.h"
 #include "wmdl_model.h"
 

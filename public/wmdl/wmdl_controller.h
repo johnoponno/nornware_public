@@ -3,8 +3,6 @@
 #include "../minyin/minyin.h"
 #include "wmdl_model.h"
 
-struct minyin_t;
-
 struct wmdl_assets_t;
 
 #define WMDL_CANVAS_WIDTH 600
@@ -57,7 +55,7 @@ struct wmdl_controller_t
 };
 
 wmdl_app_event_t wmdl_controller_tick(
-	const minyin_t& in_minyin, const wmdl_assets_t& in_assets,
+	const minyin_input_t& in_minyin, const wmdl_assets_t& in_assets,
 	wmdl_model_t& out_model, wmdl_controller_t& out_controller, const char*& out_music_request);
 
 void wmdl_controller_on_load_new_world(wmdl_controller_t& out_controller, std::vector<uint32_t>& out_sound_plays);

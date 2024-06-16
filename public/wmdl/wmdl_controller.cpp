@@ -393,7 +393,7 @@ static void __text(
 }
 
 static void __draw_foreground(
-	const minyin_t& in_minyin, const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
+	const minyin_input_t& in_minyin, const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
 	wmdl_controller_t& out_controller)
 {
 	const int32_t SX = wmdl_screen_x((float)in_vx);
@@ -453,7 +453,7 @@ static void __draw_foreground(
 }
 
 static void __draw_farplane(
-	const minyin_t& in_minyin, const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
+	const minyin_input_t& in_minyin, const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
 	wmdl_controller_t& out_controller)
 {
 	const float NOW = wmdl_model_now(in_model);
@@ -914,14 +914,14 @@ static void __draw_enemies(
 }
 
 static void __play_update(
-	const minyin_t& in_minyin, const wmdl_assets_t& in_assets, wmdl_model_t& in_model,
+	const minyin_input_t& in_minyin, const wmdl_assets_t& in_assets, wmdl_model_t& in_model,
 	wmdl_controller_t& out_controller)
 {
 	//play menu up?
 	if (out_controller.play_menu)
 	{
 		__text(in_assets, WMDL_CANVAS_HEIGHT / 3, "ESC = Quit", 0, out_controller.canvas);
-		if (in_minyin.key_downflank(MINYIN_KEY_ESCAPE))
+		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
 		{
 			in_model.play_bit = 0;
 
@@ -929,7 +929,7 @@ static void __play_update(
 		}
 
 		__text(in_assets, WMDL_CANVAS_HEIGHT / 3 * 2, "R = Resume", 0, out_controller.canvas);
-		if (in_minyin.key_downflank('R'))
+		if (minyin_key_downflank(in_minyin, 'R'))
 		{
 			out_controller.play_menu = false;
 		}
@@ -937,7 +937,7 @@ static void __play_update(
 	//play menu not up
 	else
 	{
-		if (in_minyin.key_downflank(MINYIN_KEY_ESCAPE))
+		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
 		{
 			out_controller.play_menu = true;
 		}
@@ -948,19 +948,19 @@ static void __play_update(
 			//hero movement
 			if (in_model.hero.spawn_time < 0.f)
 			{
-				if (in_minyin.key_downflank('S'))
+				if (minyin_key_downflank(in_minyin, 'S'))
 					input |= WMDL_HERO_FLAGS_DOWN;
 
-				if (in_minyin.key_is_down('A'))
+				if (minyin_key_is_down(in_minyin, 'A'))
 					input |= WMDL_HERO_FLAGS_LEFT;
 
-				if (in_minyin.key_is_down('D'))
+				if (minyin_key_is_down(in_minyin, 'D'))
 					input |= WMDL_HERO_FLAGS_RIGHT;
 
-				if (in_minyin.key_is_down('K'))
+				if (minyin_key_is_down(in_minyin, 'K'))
 					input |= WMDL_HERO_FLAGS_JUMP;
 
-				if (in_minyin.key_downflank('J'))
+				if (minyin_key_downflank(in_minyin, 'J'))
 					input |= WMDL_HERO_FLAGS_WHIP;
 			}
 
@@ -1046,7 +1046,7 @@ static void __play_update(
 }
 
 static wmdl_app_event_t __idle_update(
-	const minyin_t& in_minyin, const wmdl_assets_t& in_assets,
+	const minyin_input_t& in_minyin, const wmdl_assets_t& in_assets,
 	wmdl_controller_t& out_controller)
 {
 	minyin_blit(out_controller.canvas, in_assets.idle, 0, 0);
@@ -1063,17 +1063,17 @@ static wmdl_app_event_t __idle_update(
 		__text(in_assets, y += WMDL_TEXT_SPACING, "Johannes 'johno' Norneby", WMDL_TEXT_COLOR, out_controller.canvas);
 
 		__text(in_assets, y += WMDL_TEXT_SPACING * 4, "P = Play", 5, out_controller.canvas);
-		if (in_minyin.key_downflank('P'))
+		if (minyin_key_downflank(in_minyin, 'P'))
 			return wmdl_app_event_t::START_NEW_GAME;
 
 		__text(in_assets, y += WMDL_TEXT_SPACING, "ESC = Quit", 5, out_controller.canvas);
-		if (in_minyin.key_downflank(MINYIN_KEY_ESCAPE))
+		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
 			return wmdl_app_event_t::EXIT_APPLICATION;
 	}
 
 	//cursor test
 #if 1
-	minyin_cross(out_controller.canvas, in_minyin._canvas_cursor_x, in_minyin._canvas_cursor_y, 8, 0xff);
+	minyin_cross(out_controller.canvas, in_minyin.canvas_cursor_x, in_minyin.canvas_cursor_y, 8, 0xff);
 #endif
 
 	return wmdl_app_event_t::NOTHING;
@@ -1085,7 +1085,7 @@ static wmdl_app_event_t __idle_update(
 //public
 
 wmdl_app_event_t wmdl_controller_tick(
-	const minyin_t& in_minyin, const wmdl_assets_t& in_assets,
+	const minyin_input_t& in_minyin, const wmdl_assets_t& in_assets,
 	wmdl_model_t& out_model, wmdl_controller_t& out_controller, const char*& out_music_request)
 {
 	switch (out_model.level.music_track)

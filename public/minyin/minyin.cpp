@@ -9,34 +9,6 @@
 #define CHAREND 128
 static_assert(_countof(minyin_font_t::characters) == CHAREND - CHARBEGIN, "wtf!?");
 
-static bool __allocate(
-	const uint32_t in_size,
-	minyin_bitmap_t& out_bitmap)
-{
-	assert(!out_bitmap.pixels);
-	out_bitmap.pixels = new uint8_t[in_size];
-	if (!out_bitmap.pixels)
-		return false;
-
-	return true;
-}
-
-void __deallocate(
-	const uint32_t in_size,
-	minyin_bitmap_t& out_bitmap)
-{
-	if (in_size)
-	{
-		assert(out_bitmap.width && out_bitmap.height && out_bitmap.pixels && (uint32_t)(out_bitmap.width * out_bitmap.height) == in_size);
-		delete[] out_bitmap.pixels;
-		out_bitmap.pixels = nullptr;
-	}
-	else
-	{
-		assert(!out_bitmap.width && !out_bitmap.height && !out_bitmap.pixels);
-	}
-}
-
 static void __min_max(int32_t& aMin, int32_t& aMax)
 {
 	if (aMin > aMax)
@@ -170,17 +142,17 @@ minyin_font_t::minyin_font_t(const int32_t in_char_spacing)
 	space_width = 0;
 }
 
-bool minyin_t::key_is_down(const int32_t in_key) const
+bool minyin_key_is_down(const minyin_input_t& in_minyin, const int32_t in_key)
 {
-	if (in_key >= 0 && in_key < _countof(_keys))
-		return _keys[in_key].down_current;
+	if (in_key >= 0 && in_key < _countof(in_minyin.keys))
+		return in_minyin.keys[in_key].down_current;
 	return false;
 }
 
-bool minyin_t::key_downflank(const int32_t in_key) const
+bool minyin_key_downflank(const minyin_input_t& in_minyin, const int32_t in_key)
 {
-	if (in_key >= 0 && in_key < _countof(_keys))
-		return _keys[in_key].down_current && !_keys[in_key].down_last;
+	if (in_key >= 0 && in_key < _countof(in_minyin.keys))
+		return in_minyin.keys[in_key].down_current && !in_minyin.keys[in_key].down_last;
 	return false;
 }
 
@@ -192,7 +164,9 @@ bool minyin_bitmap_init(
 	minyin_bitmap_relinquish(out_bitmap);
 
 	//get new memory
-	if (!__allocate(in_width * in_height, out_bitmap))
+	assert(!out_bitmap.pixels);
+	out_bitmap.pixels = new uint8_t[in_width * in_height];
+	if (!out_bitmap.pixels)
 		return false;
 
 	//store new settings
@@ -263,7 +237,18 @@ bool minyin_bitmap_load_8(
 
 void minyin_bitmap_relinquish(minyin_bitmap_t& out_bitmap)
 {
-	__deallocate(out_bitmap.width * out_bitmap.height, out_bitmap);
+	const uint32_t SIZE = out_bitmap.width * out_bitmap.height;
+	if (SIZE)
+	{
+		assert(out_bitmap.width && out_bitmap.height && out_bitmap.pixels && (uint32_t)(out_bitmap.width * out_bitmap.height) == SIZE);
+		delete[] out_bitmap.pixels;
+		out_bitmap.pixels = nullptr;
+	}
+	else
+	{
+		assert(!out_bitmap.width && !out_bitmap.height && !out_bitmap.pixels);
+	}
+
 	out_bitmap.width = 0;
 	out_bitmap.height = 0;
 }

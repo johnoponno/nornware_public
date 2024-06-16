@@ -120,12 +120,12 @@ void win32_d3d9_softdraw_app_t::win32_d3d9_app_frame_move(const double, const fl
 	{
 		for (
 			uint32_t key = 0;
-			key < _countof(_minyin._keys);
+			key < _countof(_input.keys);
 			++key
 			)
 		{
-			_minyin._keys[key].down_last = _minyin._keys[key].down_current;
-			_minyin._keys[key].down_current = 0 != ::GetAsyncKeyState(key);
+			_input.keys[key].down_last = _input.keys[key].down_current;
+			_input.keys[key].down_current = 0 != ::GetAsyncKeyState(key);
 		}
 
 		{
@@ -135,8 +135,8 @@ void win32_d3d9_softdraw_app_t::win32_d3d9_app_frame_move(const double, const fl
 
 			//__state.cursor_movement_x = cursor_position.x - __state.cursor_pos_x;
 			//__state.cursor_movement_y = cursor_position.y - __state.cursor_pos_y;
-			_minyin._screen_cursor_x = cursor_position.x;
-			_minyin._screen_cursor_y = cursor_position.y;
+			_input.screen_cursor_x = cursor_position.x;
+			_input.screen_cursor_y = cursor_position.y;
 		}
 
 		/*
@@ -152,27 +152,27 @@ void win32_d3d9_softdraw_app_t::win32_d3d9_app_frame_move(const double, const fl
 	{
 		const canvas_layout_t LAYOUT = __canvas_layout(REF_CANVAS.width, REF_CANVAS.height);
 
-		float cpx = (float)_minyin._screen_cursor_x;
+		float cpx = (float)_input.screen_cursor_x;
 		cpx -= LAYOUT.x;
 		cpx /= (float)LAYOUT.width;
 		cpx *= (float)REF_CANVAS.width;
 
-		float cpy = (float)_minyin._screen_cursor_y;
+		float cpy = (float)_input.screen_cursor_y;
 		cpy -= LAYOUT.y;
 		cpy /= (float)LAYOUT.height;
 		cpy *= (float)REF_CANVAS.height;
 
-		_minyin._canvas_cursor_x = (int32_t)cpx;
-		_minyin._canvas_cursor_y = (int32_t)cpy;
+		_input.canvas_cursor_x = (int32_t)cpx;
+		_input.canvas_cursor_y = (int32_t)cpy;
 
 		if (cpx < 0.f)
-			--_minyin._canvas_cursor_x;
+			--_input.canvas_cursor_x;
 
 		if (cpy < 0.f)
-			--_minyin._canvas_cursor_y;
+			--_input.canvas_cursor_y;
 	}
 
-	if (!win32_d3d9_softdraw_app_tick(_minyin))
+	if (!win32_d3d9_softdraw_app_tick(_input, _sound_container))
 		win32_d3d9_shutdown(0);
 }
 
@@ -349,12 +349,12 @@ void win32_d3d9_chunky_app_t::win32_d3d9_app_frame_move(const double, const floa
 	{
 		for (
 			uint32_t key = 0;
-			key < _countof(_minyin._keys);
+			key < _countof(_input.keys);
 			++key
 			)
 		{
-			_minyin._keys[key].down_last = _minyin._keys[key].down_current;
-			_minyin._keys[key].down_current = 0 != ::GetAsyncKeyState(key);
+			_input.keys[key].down_last = _input.keys[key].down_current;
+			_input.keys[key].down_current = 0 != ::GetAsyncKeyState(key);
 		}
 
 		{
@@ -364,8 +364,8 @@ void win32_d3d9_chunky_app_t::win32_d3d9_app_frame_move(const double, const floa
 
 			//__state.cursor_movement_x = cursor_position.x - __state.cursor_pos_x;
 			//__state.cursor_movement_y = cursor_position.y - __state.cursor_pos_y;
-			_minyin._screen_cursor_x = cursor_position.x;
-			_minyin._screen_cursor_y = cursor_position.y;
+			_input.screen_cursor_x = cursor_position.x;
+			_input.screen_cursor_y = cursor_position.y;
 		}
 
 		/*
@@ -381,27 +381,27 @@ void win32_d3d9_chunky_app_t::win32_d3d9_app_frame_move(const double, const floa
 	{
 		const canvas_layout_t LAYOUT = __canvas_layout(REF_CANVAS.width, REF_CANVAS.height);
 
-		float cpx = (float)_minyin._screen_cursor_x;
+		float cpx = (float)_input.screen_cursor_x;
 		cpx -= LAYOUT.x;
 		cpx /= (float)LAYOUT.width;
 		cpx *= (float)REF_CANVAS.width;
 
-		float cpy = (float)_minyin._screen_cursor_y;
+		float cpy = (float)_input.screen_cursor_y;
 		cpy -= LAYOUT.y;
 		cpy /= (float)LAYOUT.height;
 		cpy *= (float)REF_CANVAS.height;
 
-		_minyin._canvas_cursor_x = (int32_t)cpx;
-		_minyin._canvas_cursor_y = (int32_t)cpy;
+		_input.canvas_cursor_x = (int32_t)cpx;
+		_input.canvas_cursor_y = (int32_t)cpy;
 
 		if (cpx < 0.f)
-			--_minyin._canvas_cursor_x;
+			--_input.canvas_cursor_x;
 
 		if (cpy < 0.f)
-			--_minyin._canvas_cursor_y;
+			--_input.canvas_cursor_y;
 	}
 
-	if (!win32_d3d9_chunky_app_tick(_minyin))
+	if (!win32_d3d9_chunky_app_tick(_input, _sound_container))
 		win32_d3d9_shutdown(0);
 }
 

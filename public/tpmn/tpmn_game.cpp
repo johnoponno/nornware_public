@@ -21,7 +21,7 @@ bool tpmn_game_init(tpmn_game_t& out_game, std::vector<minyin_sound_request_t>& 
 }
 
 bool tpmn_game_tick(
-	const minyin_t& in_minyin,
+	const minyin_input_t& in_minyin,
 	tpmn_game_t& out_game, std::vector<uint32_t>& out_sound_plays, const char*& out_music_request)
 {
 	{

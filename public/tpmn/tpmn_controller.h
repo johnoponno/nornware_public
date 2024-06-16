@@ -3,7 +3,7 @@
 #include "../minyin/sd_bitmap.h"
 #include "tpmn_model.h"
 
-struct minyin_t;
+struct minyin_input_t;
 
 struct tpmn_assets_t;
 
@@ -57,7 +57,7 @@ struct tpmn_controller_t
 };
 
 tpmn_app_event_t tpmn_controller_tick(
-	const minyin_t& in_minyin, const tpmn_assets_t& in_assets,
+	const minyin_input_t& in_minyin, const tpmn_assets_t& in_assets,
 	tpmn_model_t& out_model, tpmn_controller_t& out_controller, const char*& out_music_request);
 
 void tpmn_controller_on_load_new_world(tpmn_controller_t& out_controller, std::vector<uint32_t>& out_sound_plays);

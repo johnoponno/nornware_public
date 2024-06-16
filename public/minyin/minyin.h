@@ -1,8 +1,5 @@
 #pragma once
 
-//struct sd_bitmap_t;
-//struct sd_fontv_t;
-
 #define MINYIN_KEY_ESCAPE 0x1B
 
 struct minyin_sound_request_t
@@ -11,21 +8,21 @@ struct minyin_sound_request_t
 	uint32_t id;
 };
 
-struct minyin_t
+struct minyin_input_t
 {
-	bool key_is_down(const int32_t in_key) const;
-	bool key_downflank(const int32_t in_key) const;
-
 	struct
 	{
-		bool down_current;
-		bool down_last;
-	} _keys[256];
-	int32_t _screen_cursor_x;
-	int32_t _screen_cursor_y;
-	int32_t _canvas_cursor_x;
-	int32_t _canvas_cursor_y;
+		uint8_t down_current : 1;
+		uint8_t down_last : 1;
+	} keys[256];
+	int32_t screen_cursor_x;
+	int32_t screen_cursor_y;
+	int32_t canvas_cursor_x;
+	int32_t canvas_cursor_y;
 };
+
+bool minyin_key_is_down(const minyin_input_t& in_minyin, const int32_t in_key);
+bool minyin_key_downflank(const minyin_input_t& in_minyin, const int32_t in_key);
 
 struct minyin_bitmap_t
 {
@@ -38,9 +35,23 @@ struct minyin_bitmap_t
 
 private:
 
-	explicit minyin_bitmap_t(const minyin_bitmap_t& other);
-	void operator = (const minyin_bitmap_t& other);
+	explicit minyin_bitmap_t(const minyin_bitmap_t& other) = delete;
+	void operator = (const minyin_bitmap_t& other) = delete;
 };
+
+bool minyin_bitmap_init(minyin_bitmap_t& bm, const int32_t aWidth, const int32_t aHeight);
+bool minyin_bitmap_load_8(minyin_bitmap_t& bm, const char* aFileName);
+void minyin_bitmap_relinquish(minyin_bitmap_t& bm);
+
+void minyin_h_line(minyin_bitmap_t& bm, int32_t x1, int32_t x2, const int32_t y1, const uint8_t aColor);
+void minyin_v_line(minyin_bitmap_t& bm, const int32_t x1, int32_t y1, int32_t y2, const uint8_t aColor);
+void minyin_cross(minyin_bitmap_t& bm, const int32_t x, const int32_t y, const int32_t aSize, const uint8_t aColor);
+
+void minyin_blit(minyin_bitmap_t& aDst, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
+void minyin_blit_key(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
+void minyin_blit_key_clip(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
+void minyin_blit_key_color_not_black(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, const uint8_t aColor, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
+void minyin_blit_key_color_not_black_clip(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, const uint8_t aColor, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
 
 struct minyin_font_t
 {
@@ -60,23 +71,9 @@ struct minyin_font_t
 
 private:
 
-	explicit minyin_font_t(const minyin_font_t& other);
-	void operator = (const minyin_font_t& other);
+	explicit minyin_font_t(const minyin_font_t& other) = delete;
+	void operator = (const minyin_font_t& other) = delete;
 };
-
-bool minyin_bitmap_init(minyin_bitmap_t& bm, const int32_t aWidth, const int32_t aHeight);
-bool minyin_bitmap_load_8(minyin_bitmap_t& bm, const char* aFileName);
-void minyin_bitmap_relinquish(minyin_bitmap_t& bm);
-
-void minyin_h_line(minyin_bitmap_t& bm, int32_t x1, int32_t x2, const int32_t y1, const uint8_t aColor);
-void minyin_v_line(minyin_bitmap_t& bm, const int32_t x1, int32_t y1, int32_t y2, const uint8_t aColor);
-void minyin_cross(minyin_bitmap_t& bm, const int32_t x, const int32_t y, const int32_t aSize, const uint8_t aColor);
-
-void minyin_blit(minyin_bitmap_t& aDst, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
-void minyin_blit_key(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
-void minyin_blit_key_clip(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
-void minyin_blit_key_color_not_black(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, const uint8_t aColor, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
-void minyin_blit_key_color_not_black_clip(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, const uint8_t aColor, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
 
 bool minyin_font_load_8(minyin_font_t& out_font, const char* in_filename, const uint8_t in_key);
 int32_t minyin_font_string_width(const minyin_font_t& f, const char* aString);

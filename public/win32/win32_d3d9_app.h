@@ -64,11 +64,7 @@ struct win32_d3d9_softdraw_app_t : public win32_d3d9_app_i
 	bool win32_d3d9_softdraw_app_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests);
 	void win32_d3d9_softdraw_app_cleanup_audio();
 	void win32_d3d9_softdraw_app_handle_music_request(const char* in_music_request);
-	virtual bool win32_d3d9_softdraw_app_tick(const minyin_t& in_minyin) = 0;
-
-protected:
-
-	win32_dsound_container_t _sound_container;
+	virtual bool win32_d3d9_softdraw_app_tick(const minyin_input_t& in_input, const win32_dsound_container_t& in_sounds) = 0;
 
 private:
 
@@ -76,9 +72,10 @@ private:
 	const sd_bitmap_t& REF_CANVAS;
 	win32_d3d9_softdraw_adapter_t _video_adapter;
 	win32_dsound_engine_t _sound_engine;
+	win32_dsound_container_t _sound_container;
 	const char* _music_file;
 	win32_dsound_stream_t* _music_stream;
-	minyin_t _minyin;
+	minyin_input_t _input;
 };
 
 //simplified / fixed tick version (8 bit palettized graphics)
@@ -97,11 +94,7 @@ struct win32_d3d9_chunky_app_t : public win32_d3d9_app_i
 	bool win32_d3d9_chunky_app_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests);
 	void win32_d3d9_chunky_app_cleanup_audio();
 	void win32_d3d9_chunky_app_handle_music_request(const char* in_music_request);
-	virtual bool win32_d3d9_chunky_app_tick(const minyin_t& in_minyin) = 0;
-
-protected:
-
-	win32_dsound_container_t _sound_container;
+	virtual bool win32_d3d9_chunky_app_tick(const minyin_input_t& in_input, const win32_dsound_container_t& in_sounds) = 0;
 
 private:
 
@@ -109,7 +102,8 @@ private:
 	const minyin_bitmap_t& REF_CANVAS;
 	win32_d3d9_softdraw_adapter_t _video_adapter;
 	win32_dsound_engine_t _sound_engine;
+	win32_dsound_container_t _sound_container;
 	const char* _music_file;
 	win32_dsound_stream_t* _music_stream;
-	minyin_t _minyin;
+	minyin_input_t _input;
 };
