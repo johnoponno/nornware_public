@@ -4,6 +4,35 @@
 #include "../minyin/fs.h"
 #include "../minyin/minyin.h"
 
+#define PALETTIZE 0
+
+#if PALETTIZE
+#define ASSET_BG00 "bg00.tga"
+#define ASSET_BG01 "bg01.tga"
+#define ASSET_BG02 "bg02.tga"
+#define ASSET_BG03 "bg03.tga"
+#define ASSET_BG04 "bg04.tga"
+#define ASSET_BG05 "bg05.tga"
+#define ASSET_BG06 "bg06.tga"
+#define ASSET_PORTAL "portal.tga"
+#define ASSET_SERVER "server.tga"
+#define ASSET_ARCS "arcs.tga"
+#define ASSET_SPIKYGREEN "spikygreen.tga"
+#define ASSET_BLUEBLOB "blueblob.tga"
+#define ASSET_BROWNBLOB "brownblob.tga"
+#define ASSET_PENGUIN "pingu.tga"
+#define ASSET_PLANT "plantenemy.tga"
+#define ASSET_SCORPION "scorpion.tga"
+#define ASSET_FIREDUDE "firedude.tga"
+#define ASSET_BAT "bat.tga"
+#define ASSET_GUISERVERFIXED "gui_server_fixed.tga"
+#define ASSET_GUISERVERBROKEN "gui_server_broken.tga"
+#define ASSET_IDLE "idle.tga"
+#define ASSET_TILES "tiles.tga"
+#define ASSET_HERO "hero.tga"
+#define ASSET_WHIP "whip.tga"
+#define ASSET_FLAKE "snowflakes.tga"
+#else
 #define ASSET_BG00 "8bg00.tga"
 #define ASSET_BG01 "8bg01.tga"
 #define ASSET_BG02 "8bg02.tga"
@@ -11,7 +40,6 @@
 #define ASSET_BG04 "8bg04.tga"
 #define ASSET_BG05 "8bg05.tga"
 #define ASSET_BG06 "8bg06.tga"
-
 #define ASSET_PORTAL "8portal.tga"
 #define ASSET_SERVER "8server.tga"
 #define ASSET_ARCS "8arcs.tga"
@@ -26,15 +54,11 @@
 #define ASSET_GUISERVERFIXED "8gui_server_fixed.tga"
 #define ASSET_GUISERVERBROKEN "8gui_server_broken.tga"
 #define ASSET_IDLE "8idle.tga"
-
 #define ASSET_TILES "8tiles.tga"
 #define ASSET_HERO "8hero.tga"
 #define ASSET_WHIP "8whip.tga"
-
-//#define ASSET_DUST_FAR "dust_far.tga"
-//#define ASSET_DUST_NEAR "dust_near.tga"
 #define ASSET_FLAKE "8snowflakes.tga"
-
+#endif
 #define ASSET_FONT "8bigfont.tga"
 
 #define ASSET_COMMON_INFO "view.common"
@@ -83,7 +107,7 @@ bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_reques
 				++at
 				)
 			{
-				*at =  wmdl_change_endianness(*at);
+				*at = wmdl_change_endianness(*at);
 			}
 		}
 		delete[] CONTENTS.data;
@@ -91,7 +115,44 @@ bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_reques
 			return false;
 	}
 
+	//font
+	if (!minyin_font_load_8(out_assets.font, ASSET_FONT, WMDL_BLIT_KEY))
+		return false;
+	out_assets.font.char_spacing = -1;
+
 	//bitmaps
+#if PALETTIZE
+	{
+		minyin_palettizer_t p;
+		minyin_palettizer_item(ASSET_BG00, out_assets.backgrounds[0], p);
+		minyin_palettizer_item(ASSET_BG01, out_assets.backgrounds[1], p);
+		minyin_palettizer_item(ASSET_BG02, out_assets.backgrounds[2], p);
+		minyin_palettizer_item(ASSET_BG03, out_assets.backgrounds[3], p);
+		minyin_palettizer_item(ASSET_BG04, out_assets.backgrounds[4], p);
+		minyin_palettizer_item(ASSET_BG05, out_assets.backgrounds[5], p);
+		minyin_palettizer_item(ASSET_BG06, out_assets.backgrounds[6], p);
+		minyin_palettizer_item(ASSET_PORTAL, out_assets.portal, p);
+		minyin_palettizer_item(ASSET_SERVER, out_assets.server, p);
+		minyin_palettizer_item(ASSET_ARCS, out_assets.arcs, p);
+		minyin_palettizer_item(ASSET_SPIKYGREEN, out_assets.spikygreen, p);
+		minyin_palettizer_item(ASSET_BLUEBLOB, out_assets.blueblob, p);
+		minyin_palettizer_item(ASSET_BROWNBLOB, out_assets.brownblob, p);
+		minyin_palettizer_item(ASSET_PENGUIN, out_assets.penguin, p);
+		minyin_palettizer_item(ASSET_PLANT, out_assets.plant, p);
+		minyin_palettizer_item(ASSET_SCORPION, out_assets.scorpion, p);
+		minyin_palettizer_item(ASSET_FIREDUDE, out_assets.firedude, p);
+		minyin_palettizer_item(ASSET_BAT, out_assets.bat, p);
+		minyin_palettizer_item(ASSET_GUISERVERFIXED, out_assets.gui_server_fixed, p);
+		minyin_palettizer_item(ASSET_GUISERVERBROKEN, out_assets.gui_server_broken, p);
+		minyin_palettizer_item(ASSET_IDLE, out_assets.idle, p);
+		minyin_palettizer_item(ASSET_TILES, out_assets.tiles, p);
+		minyin_palettizer_item(ASSET_HERO, out_assets.hero, p);
+		minyin_palettizer_item(ASSET_WHIP, out_assets.whip, p);
+		minyin_palettizer_item(ASSET_FLAKE, out_assets.flake, p);
+		if (!minyin_palettizer_process(256, p))
+			return false;
+}
+#else
 	BITMAP8(ASSET_BG00, out_assets.backgrounds[0]);
 	BITMAP8(ASSET_BG01, out_assets.backgrounds[1]);
 	BITMAP8(ASSET_BG02, out_assets.backgrounds[2]);
@@ -99,7 +160,6 @@ bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_reques
 	BITMAP8(ASSET_BG04, out_assets.backgrounds[4]);
 	BITMAP8(ASSET_BG05, out_assets.backgrounds[5]);
 	BITMAP8(ASSET_BG06, out_assets.backgrounds[6]);
-
 	BITMAP8(ASSET_PORTAL, out_assets.portal);
 	BITMAP8(ASSET_SERVER, out_assets.server);
 	BITMAP8(ASSET_ARCS, out_assets.arcs);
@@ -114,19 +174,11 @@ bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_reques
 	BITMAP8(ASSET_GUISERVERFIXED, out_assets.gui_server_fixed);
 	BITMAP8(ASSET_GUISERVERBROKEN, out_assets.gui_server_broken);
 	BITMAP8(ASSET_IDLE, out_assets.idle);
-
 	BITMAP8(ASSET_TILES, out_assets.tiles);
 	BITMAP8(ASSET_HERO, out_assets.hero);
 	BITMAP8(ASSET_WHIP, out_assets.whip);
-
-	//BITMAP(ASSET_DUST_FAR, out_assets.dust_far);
-	//BITMAP(ASSET_DUST_NEAR, out_assets.dust_near);
 	BITMAP8(ASSET_FLAKE, out_assets.flake);
-
-	//font
-	if (!minyin_font_load_8(out_assets.font, ASSET_FONT, WMDL_BLIT_KEY))
-		return false;
-	out_assets.font.char_spacing = -1;
+#endif
 
 	//request sounds
 	out_sounds.push_back({ ASSET_SPAWN, WMDL_SND_SPAWN });
