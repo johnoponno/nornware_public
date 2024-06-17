@@ -105,6 +105,40 @@ static void __split(
 	}
 }
 
+static uint32_t __nearest_palette_entry(
+	const pixel_t* in_palette, const uint32_t in_palette_size, const pixel_t& in_source_image_pixel,
+	std::map<pixel_t, uint32_t>& out_cache)
+{
+	assert(in_palette_size <= 256);
+
+	//search in cache
+	auto find = out_cache.find(in_source_image_pixel);
+	if (out_cache.cend() != find)
+		return find->second;
+
+	//search for the nearest color (euclidean)
+	float nd = FLT_MAX;
+	uint32_t npe = UINT32_MAX;
+	for (uint32_t pe = 0; pe < in_palette_size; ++pe)
+	{
+		const float R = (float)in_palette[pe].r - (float)in_source_image_pixel.r;
+		const float G = (float)in_palette[pe].g - (float)in_source_image_pixel.g;
+		const float B = (float)in_palette[pe].b - (float)in_source_image_pixel.b;
+		const float D = ::sqrtf(R * R + G * G + B * B);
+		if (D < nd)
+		{
+			nd = D;
+			npe = pe;
+		}
+	}
+	assert(nd < FLT_MAX);
+	assert(npe < in_palette_size);
+
+	out_cache.insert({ in_source_image_pixel, npe });
+
+	return npe;
+}
+
 //public
 //public
 //public
@@ -206,45 +240,31 @@ bool paletas_calculate(
 	}
 
 	//5) create all the palettize bitmaps by remapping all pixels to the final palette of averaged colors (use the nearest color)
-	for (uint32_t i = 0; i < out_paletas.items.size(); ++i)
 	{
-		paletas_t::item_t& item = out_paletas.items[i];
-
-		assert(!item.bitmap->width);
-		item.bitmap->width = source_images[i]->header->image_spec_width;
-
-		assert(!item.bitmap->height);
-		item.bitmap->height = source_images[i]->header->image_spec_height;
-
-		assert(!item.bitmap->pixels);
-		item.bitmap->pixels = new uint8_t[item.bitmap->width * item.bitmap->height];
-		assert(item.bitmap->pixels);
-
-		for (int32_t y = 0; y < source_images[i]->header->image_spec_height; ++y)
+		std::map<pixel_t, uint32_t> remap_cache;
+		for (uint32_t i = 0; i < out_paletas.items.size(); ++i)
 		{
-			for (int32_t x = 0; x < source_images[i]->header->image_spec_width; ++x)
+			paletas_t::item_t& item = out_paletas.items[i];
+
+			assert(!item.bitmap->width);
+			item.bitmap->width = source_images[i]->header->image_spec_width;
+
+			assert(!item.bitmap->height);
+			item.bitmap->height = source_images[i]->header->image_spec_height;
+
+			assert(!item.bitmap->pixels);
+			item.bitmap->pixels = new uint8_t[item.bitmap->width * item.bitmap->height];
+			assert(item.bitmap->pixels);
+
+			for (int32_t y = 0; y < source_images[i]->header->image_spec_height; ++y)
 			{
-				const pixel_t* SOURCE_IMAGE_I_PIXEL = (pixel_t*)source_images[i]->pixels + x + y * source_images[i]->header->image_spec_width;
-
-				//search for the nearest color (euclidean)
-				float nd = FLT_MAX;
-				uint32_t npe = UINT32_MAX;
-				for (uint32_t pe = 0; pe < in_palette_size; ++pe)
+				for (int32_t x = 0; x < source_images[i]->header->image_spec_width; ++x)
 				{
-					const float R = (float)palette[pe].r - (float)SOURCE_IMAGE_I_PIXEL->r;
-					const float G = (float)palette[pe].g - (float)SOURCE_IMAGE_I_PIXEL->g;
-					const float B = (float)palette[pe].b - (float)SOURCE_IMAGE_I_PIXEL->b;
-					const float D = ::sqrtf(R * R + G * G + B * B);
-					if (D < nd)
-					{
-						nd = D;
-						npe = pe;
-					}
+					const pixel_t* SOURCE_IMAGE_I_PIXEL = (pixel_t*)source_images[i]->pixels + x + y * source_images[i]->header->image_spec_width;
+					const uint32_t NEAREST_PALETTE_ENTRY = __nearest_palette_entry(palette, in_palette_size, *SOURCE_IMAGE_I_PIXEL, remap_cache);
+					assert(NEAREST_PALETTE_ENTRY < in_palette_size);
+					item.bitmap->pixels[x + (item.bitmap->height - 1 - y) * item.bitmap->width] = (uint8_t)NEAREST_PALETTE_ENTRY;
 				}
-				assert(nd < FLT_MAX);
-				assert(npe < in_palette_size);
-
-				item.bitmap->pixels[x + (item.bitmap->height - 1 - y) * item.bitmap->width] = (uint8_t)npe;
 			}
 		}
 	}
