@@ -158,18 +158,12 @@ bool paletas_calculate(
 	assert(in_palette_size <= 256);
 
 	//load all source images (24 bit)
-	std::vector<fs_tga_image_t*> source_images;
+	std::vector<fs_tga_image_t> source_images;
 	for (const paletas_t::item_t& ITEM : out_paletas.items)
 	{
-		fs_tga_image_t* source_image = new fs_tga_image_t;
-		if (!source_image)
+		fs_tga_image_t source_image{};
+		if (!fs_tga_read_24(ITEM.file, source_image))
 			return false;
-		*source_image = {};
-		if (!fs_tga_read_24(ITEM.file, *source_image))
-		{
-			delete source_image;
-			return false;
-		}
 		source_images.push_back(source_image);
 	}
 
@@ -180,11 +174,11 @@ bool paletas_calculate(
 		std::vector<std::vector<pixel_t>> all_buckets;
 		{
 			std::set<pixel_t> unique_pixels_set;
-			for (const fs_tga_image_t* SOURCE_IMAGE : source_images)
+			for (const fs_tga_image_t& SOURCE_IMAGE : source_images)
 			{
 				for (
-					pixel_t* pixel = (pixel_t*)SOURCE_IMAGE->pixels;
-					pixel < (pixel_t*)SOURCE_IMAGE->pixels + SOURCE_IMAGE->header->image_spec_width * SOURCE_IMAGE->header->image_spec_height;
+					pixel_t* pixel = (pixel_t*)SOURCE_IMAGE.pixels;
+					pixel < (pixel_t*)SOURCE_IMAGE.pixels + SOURCE_IMAGE.header->image_spec_width * SOURCE_IMAGE.header->image_spec_height;
 					++pixel
 					)
 				{
@@ -247,20 +241,20 @@ bool paletas_calculate(
 			paletas_t::item_t& item = out_paletas.items[i];
 
 			assert(!item.bitmap->width);
-			item.bitmap->width = source_images[i]->header->image_spec_width;
+			item.bitmap->width = source_images[i].header->image_spec_width;
 
 			assert(!item.bitmap->height);
-			item.bitmap->height = source_images[i]->header->image_spec_height;
+			item.bitmap->height = source_images[i].header->image_spec_height;
 
 			assert(!item.bitmap->pixels);
 			item.bitmap->pixels = new uint8_t[item.bitmap->width * item.bitmap->height];
 			assert(item.bitmap->pixels);
 
-			for (int32_t y = 0; y < source_images[i]->header->image_spec_height; ++y)
+			for (int32_t y = 0; y < source_images[i].header->image_spec_height; ++y)
 			{
-				for (int32_t x = 0; x < source_images[i]->header->image_spec_width; ++x)
+				for (int32_t x = 0; x < source_images[i].header->image_spec_width; ++x)
 				{
-					const pixel_t* SOURCE_IMAGE_I_PIXEL = (pixel_t*)source_images[i]->pixels + x + y * source_images[i]->header->image_spec_width;
+					const pixel_t* SOURCE_IMAGE_I_PIXEL = (pixel_t*)source_images[i].pixels + x + y * source_images[i].header->image_spec_width;
 					const uint32_t NEAREST_PALETTE_ENTRY = __nearest_palette_entry(palette, in_palette_size, *SOURCE_IMAGE_I_PIXEL, remap_cache);
 					assert(NEAREST_PALETTE_ENTRY < in_palette_size);
 					item.bitmap->pixels[x + (item.bitmap->height - 1 - y) * item.bitmap->width] = (uint8_t)NEAREST_PALETTE_ENTRY;
@@ -274,8 +268,8 @@ bool paletas_calculate(
 		minyin_palette[i] = sd_color_encode(palette[i].b, palette[i].g, palette[i].r);
 
 	//cleanup loaded source images
-	for (fs_tga_image_t* source_image : source_images)
-		delete source_image;
+	for (fs_tga_image_t& source_image : source_images)
+		delete[] source_image.memory;
 
 	return true;
 }
