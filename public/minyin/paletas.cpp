@@ -5,6 +5,12 @@
 #include "fs.h"
 #include "sd_bitmap.h"
 
+struct bucket_t
+{
+	uint32_t start;
+	uint32_t end;
+};
+
 static int32_t __sort_r(const void* elem1, const void* elem2)
 {
 	const pixel_t* ELEM1 = (pixel_t*)elem1;
@@ -45,6 +51,55 @@ static int32_t __sort_b(const void* elem1, const void* elem2)
 		return 1;
 
 	return 0;
+}
+
+static void __sort(
+	const uint32_t in_bucket_start, const uint32_t in_bucket_end,
+	std::vector<pixel_t>& out_pixels)
+{
+	int32_t low_r = INT_MAX;
+	int32_t low_g = INT_MAX;
+	int32_t low_b = INT_MAX;
+	int32_t high_r = INT_MIN;
+	int32_t high_g = INT_MIN;
+	int32_t high_b = INT_MIN;
+	for (uint32_t i = in_bucket_start; i < in_bucket_end; ++i)
+	{
+		const pixel_t& PIXEL = out_pixels[i];
+		low_r = __min(low_r, PIXEL.r);
+		low_g = __min(low_g, PIXEL.g);
+		low_b = __min(low_b, PIXEL.b);
+		high_r = __max(high_r, PIXEL.r);
+		high_g = __max(high_g, PIXEL.g);
+		high_b = __max(high_b, PIXEL.b);
+	}
+	const int32_t RED = high_r - low_r;
+	const int32_t GREEN = high_g - low_g;
+	const int32_t BLUE = high_b - low_b;
+
+	//3) sort by greatest range
+	const int32_t GREATEST = __max(RED, __max(GREEN, BLUE));
+	if (GREATEST == RED)
+		::qsort(out_pixels.data() + in_bucket_start, in_bucket_end - in_bucket_start, sizeof(pixel_t), __sort_r);
+	else if (GREATEST == GREEN)
+		::qsort(out_pixels.data() + in_bucket_start, in_bucket_end - in_bucket_start, sizeof(pixel_t), __sort_g);
+	else if (GREATEST == BLUE)
+		::qsort(out_pixels.data() + in_bucket_start, in_bucket_end - in_bucket_start, sizeof(pixel_t), __sort_b);
+	else
+		assert(0);
+}
+
+static void __sort_recursive(
+	const uint32_t in_depth, const uint32_t in_palette_size, const uint32_t in_bucket_start, const uint32_t in_bucket_end,
+	std::vector<pixel_t>& out_pixels)
+{
+	if (in_depth > in_palette_size)
+		return;
+	if (in_bucket_start >= in_bucket_end)
+		return;
+	__sort(in_bucket_start, in_bucket_end, out_pixels);
+	__sort_recursive(in_depth * 2, in_palette_size, in_bucket_start, in_bucket_end / 2, out_pixels);
+	__sort_recursive(in_depth * 2, in_palette_size, in_bucket_start + in_bucket_end / 2, in_bucket_end, out_pixels);
 }
 
 //public
@@ -106,45 +161,7 @@ bool paletas_calculate(
 		}
 
 		//2) figure out which channel has the greatest range
-		{
-			int32_t low_r = INT_MAX;
-			int32_t low_g = INT_MAX;
-			int32_t low_b = INT_MAX;
-			int32_t high_r = INT_MIN;
-			int32_t high_g = INT_MIN;
-			int32_t high_b = INT_MIN;
-			for (const pixel_t& PIXEL : unique_pixels_vector)
-			{
-				low_r = __min(low_r, PIXEL.r);
-				low_g = __min(low_g, PIXEL.g);
-				low_b = __min(low_b, PIXEL.b);
-				high_r = __max(high_r, PIXEL.r);
-				high_g = __max(high_g, PIXEL.g);
-				high_b = __max(high_b, PIXEL.b);
-			}
-			const int32_t RANGE_R = high_r - low_r;
-			const int32_t RANGE_G = high_g - low_g;
-			const int32_t RANGE_B = high_b - low_b;
-
-			//3) sort by greatest range
-			if (RANGE_R > RANGE_G && RANGE_R > RANGE_B)
-			{
-				::qsort(unique_pixels_vector.data(), unique_pixels_vector.size(), sizeof(pixel_t), __sort_r);
-			}
-			else if (RANGE_G > RANGE_R && RANGE_G > RANGE_B)
-			{
-				::qsort(unique_pixels_vector.data(), unique_pixels_vector.size(), sizeof(pixel_t), __sort_g);
-			}
-			else if (RANGE_B > RANGE_R && RANGE_B > RANGE_G)
-			{
-				::qsort(unique_pixels_vector.data(), unique_pixels_vector.size(), sizeof(pixel_t), __sort_b);
-			}
-			else
-			{
-				assert(RANGE_R == RANGE_G && RANGE_R == RANGE_B);
-				::qsort(unique_pixels_vector.data(), unique_pixels_vector.size(), sizeof(pixel_t), __sort_r);
-			}
-		}
+		__sort_recursive(1, in_palette_size, 0, unique_pixels_vector.size(), unique_pixels_vector);
 
 		//4) split into buckets (desired number of colors) and average buckets to a single color (these colors will be final palette colors)
 		const float FLOAT_PIXELS_IN_BUCKET = (float)unique_pixels_vector.size() / (float)in_palette_size;
