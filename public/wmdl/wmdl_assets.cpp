@@ -3,8 +3,9 @@
 
 #include "../minyin/fs.h"
 #include "../minyin/minyin.h"
+#include "../minyin/paletas.h"
 
-#define PALETTIZE 0
+#define PALETTIZE 1
 
 #if PALETTIZE
 #define ASSET_BG00 "bg00.tga"
@@ -123,33 +124,33 @@ bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_reques
 	//bitmaps
 #if PALETTIZE
 	{
-		minyin_palettizer_t p;
-		minyin_palettizer_item(ASSET_BG00, out_assets.backgrounds[0], p);
-		minyin_palettizer_item(ASSET_BG01, out_assets.backgrounds[1], p);
-		minyin_palettizer_item(ASSET_BG02, out_assets.backgrounds[2], p);
-		minyin_palettizer_item(ASSET_BG03, out_assets.backgrounds[3], p);
-		minyin_palettizer_item(ASSET_BG04, out_assets.backgrounds[4], p);
-		minyin_palettizer_item(ASSET_BG05, out_assets.backgrounds[5], p);
-		minyin_palettizer_item(ASSET_BG06, out_assets.backgrounds[6], p);
-		minyin_palettizer_item(ASSET_PORTAL, out_assets.portal, p);
-		minyin_palettizer_item(ASSET_SERVER, out_assets.server, p);
-		minyin_palettizer_item(ASSET_ARCS, out_assets.arcs, p);
-		minyin_palettizer_item(ASSET_SPIKYGREEN, out_assets.spikygreen, p);
-		minyin_palettizer_item(ASSET_BLUEBLOB, out_assets.blueblob, p);
-		minyin_palettizer_item(ASSET_BROWNBLOB, out_assets.brownblob, p);
-		minyin_palettizer_item(ASSET_PENGUIN, out_assets.penguin, p);
-		minyin_palettizer_item(ASSET_PLANT, out_assets.plant, p);
-		minyin_palettizer_item(ASSET_SCORPION, out_assets.scorpion, p);
-		minyin_palettizer_item(ASSET_FIREDUDE, out_assets.firedude, p);
-		minyin_palettizer_item(ASSET_BAT, out_assets.bat, p);
-		minyin_palettizer_item(ASSET_GUISERVERFIXED, out_assets.gui_server_fixed, p);
-		minyin_palettizer_item(ASSET_GUISERVERBROKEN, out_assets.gui_server_broken, p);
-		minyin_palettizer_item(ASSET_IDLE, out_assets.idle, p);
-		minyin_palettizer_item(ASSET_TILES, out_assets.tiles, p);
-		minyin_palettizer_item(ASSET_HERO, out_assets.hero, p);
-		minyin_palettizer_item(ASSET_WHIP, out_assets.whip, p);
-		minyin_palettizer_item(ASSET_FLAKE, out_assets.flake, p);
-		if (!minyin_palettizer_process(256, p))
+		paletas_t p;
+		paletas_item(ASSET_BG00, out_assets.backgrounds[0], p);
+		paletas_item(ASSET_BG01, out_assets.backgrounds[1], p);
+		paletas_item(ASSET_BG02, out_assets.backgrounds[2], p);
+		paletas_item(ASSET_BG03, out_assets.backgrounds[3], p);
+		paletas_item(ASSET_BG04, out_assets.backgrounds[4], p);
+		paletas_item(ASSET_BG05, out_assets.backgrounds[5], p);
+		paletas_item(ASSET_BG06, out_assets.backgrounds[6], p);
+		paletas_item(ASSET_PORTAL, out_assets.portal, p);
+		paletas_item(ASSET_SERVER, out_assets.server, p);
+		paletas_item(ASSET_ARCS, out_assets.arcs, p);
+		paletas_item(ASSET_SPIKYGREEN, out_assets.spikygreen, p);
+		paletas_item(ASSET_BLUEBLOB, out_assets.blueblob, p);
+		paletas_item(ASSET_BROWNBLOB, out_assets.brownblob, p);
+		paletas_item(ASSET_PENGUIN, out_assets.penguin, p);
+		paletas_item(ASSET_PLANT, out_assets.plant, p);
+		paletas_item(ASSET_SCORPION, out_assets.scorpion, p);
+		paletas_item(ASSET_FIREDUDE, out_assets.firedude, p);
+		paletas_item(ASSET_BAT, out_assets.bat, p);
+		paletas_item(ASSET_GUISERVERFIXED, out_assets.gui_server_fixed, p);
+		paletas_item(ASSET_GUISERVERBROKEN, out_assets.gui_server_broken, p);
+		paletas_item(ASSET_IDLE, out_assets.idle, p);
+		paletas_item(ASSET_TILES, out_assets.tiles, p);
+		paletas_item(ASSET_HERO, out_assets.hero, p);
+		paletas_item(ASSET_WHIP, out_assets.whip, p);
+		paletas_item(ASSET_FLAKE, out_assets.flake, p);
+		if (!paletas_process(256, p))
 			return false;
 }
 #else

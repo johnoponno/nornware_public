@@ -2,6 +2,16 @@
 
 #define MINYIN_KEY_ESCAPE 0x1B
 
+struct pixel_t
+{
+	bool operator < (const pixel_t& in_other) const;
+	bool operator >= (const pixel_t& in_other) const;
+
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+};
+
 struct minyin_sound_request_t
 {
 	const char* asset;
@@ -80,18 +90,5 @@ int32_t minyin_font_string_width(const minyin_font_t& f, const char* aString);
 
 void minyin_print(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_font_t& f, const int32_t aX, const int32_t aY, const char* aText);
 void minyin_print_color_not_black(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_font_t& FONT, const uint8_t aColor, const int32_t aDstX, const int32_t aDstY, const char* message);
-
-struct minyin_palettizer_t
-{
-	struct item_t
-	{
-		const char* file;
-		minyin_bitmap_t* bitmap;
-	};
-	std::vector<item_t> items;
-};
-
-void minyin_palettizer_item(const char* in_file, minyin_bitmap_t& out_bitmap, minyin_palettizer_t& out_palettizer);
-bool minyin_palettizer_process(const uint32_t in_palette_size, minyin_palettizer_t& out_palettizer);
 
 extern uint16_t minyin_palette[256];

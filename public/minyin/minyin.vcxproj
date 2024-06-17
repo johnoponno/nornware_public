@@ -79,6 +79,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="minyin.h" />
+    <ClInclude Include="paletas.h" />
     <ClInclude Include="sd_bitmap.h" />
     <ClInclude Include="sd_fontv.h" />
     <ClInclude Include="stdafx.h" />
@@ -86,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="minyin.cpp" />
+    <ClCompile Include="paletas.cpp" />
     <ClCompile Include="sd_bitmap.cpp" />
     <ClCompile Include="sd_fontv.cpp" />
     <ClCompile Include="stdafx.cpp">
