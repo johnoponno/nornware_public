@@ -420,9 +420,9 @@ void minyin_blit_key_clip(
 	}
 }
 
-void minyin_blit_key_color_not_black(
+void minyin_blit_key2_colorize(
 	minyin_bitmap_t& out_bitmap,
-	const uint8_t in_key, const minyin_bitmap_t& in_src, const uint8_t in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
+	const uint8_t in_key, const uint8_t in_key2, const minyin_bitmap_t& in_src, const uint8_t in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
 {
 	if (0 == in_copy_width || in_copy_width > in_src.width)
 		in_copy_width = in_src.width;
@@ -451,7 +451,7 @@ void minyin_blit_key_color_not_black(
 			assert(byte_dst >= out_bitmap.pixels && byte_dst < (out_bitmap.pixels + out_bitmap.width * out_bitmap.height));
 			if (in_key != *BYTE_SRC)
 			{
-				if (0 == *BYTE_SRC)
+				if (in_key2 != *BYTE_SRC)
 					*byte_dst = in_color;
 				else
 					*byte_dst = *BYTE_SRC;
@@ -465,9 +465,9 @@ void minyin_blit_key_color_not_black(
 	}
 }
 
-void minyin_blit_key_color_not_black_clip(
+void minyin_blit_key2_colorize_clip(
 	minyin_bitmap_t& out_bitmap,
-	const uint8_t in_key, const minyin_bitmap_t& in_src, const uint8_t in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
+	const uint8_t in_key, const uint8_t in_key2, const minyin_bitmap_t& in_src, const uint8_t in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
 {
 	if (0 == in_copy_width || in_copy_width > in_src.width)
 		in_copy_width = in_src.width;
@@ -482,14 +482,14 @@ void minyin_blit_key_color_not_black_clip(
 
 		in_src_x, in_src_y, in_dst_x, in_dst_y, in_copy_width, in_copy_height))
 	{
-		minyin_blit_key_color_not_black(out_bitmap, in_key, in_src, in_color, in_dst_x, in_dst_y, in_copy_width, in_copy_height, in_src_x, in_src_y);
+		minyin_blit_key2_colorize(out_bitmap, in_key, in_key2, in_src, in_color, in_dst_x, in_dst_y, in_copy_width, in_copy_height, in_src_x, in_src_y);
 	}
 }
 
 
-bool minyin_font_load_8(minyin_font_t& out_font, const char* in_filename, const uint8_t in_key)
+bool minyin_font_init(minyin_font_t& out_font, const uint8_t in_key)
 {
-	if (!minyin_bitmap_load_8(out_font.rep, in_filename))
+	if (!out_font.rep.pixels || !out_font.rep.width || !out_font.rep.height)
 		return false;
 
 	out_font.height = out_font.rep.height / CHARSPERHEIGHT;
@@ -656,9 +656,9 @@ void minyin_print(
 	}
 }
 
-void minyin_print_color_not_black(
+void minyin_print_colorize(
 	minyin_bitmap_t& out_bitmap,
-	const uint8_t in_key, const minyin_font_t& in_font, const uint8_t in_color, const int32_t in_dst_x, const int32_t in_dst_y, const char* in_message)
+	const uint8_t in_key, const uint8_t in_key2, const minyin_font_t& in_font, const uint8_t in_color, const int32_t in_dst_x, const int32_t in_dst_y, const char* in_message)
 {
 	if (!in_message || !*in_message)
 		return;
@@ -695,7 +695,7 @@ void minyin_print_color_not_black(
 		{
 			ch -= CHARBEGIN;
 
-			minyin_blit_key_color_not_black_clip(out_bitmap, in_key, in_font.rep, in_color, x, y, in_font.characters[ch].w, in_font.characters[ch].h, in_font.characters[ch].s, in_font.characters[ch].t);
+			minyin_blit_key2_colorize_clip(out_bitmap, in_key, in_key2, in_font.rep, in_color, x, y, in_font.characters[ch].w, in_font.characters[ch].h, in_font.characters[ch].s, in_font.characters[ch].t);
 
 			x += in_font.characters[ch].w + in_font.char_spacing;
 		}

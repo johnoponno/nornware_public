@@ -389,7 +389,7 @@ static void __text(
 	const wmdl_assets_t& in_assets, const int in_dst_y, const char* in_string, const uint8_t in_color,
 	minyin_bitmap_t& out_canvas)
 {
-	minyin_print_color_not_black(out_canvas, in_assets.key_index, in_assets.font, in_color, (out_canvas.width - minyin_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
+	minyin_print_colorize(out_canvas, in_assets.key_index, in_assets.text_edge_index, in_assets.font, in_color, (out_canvas.width - minyin_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
 }
 
 static void __draw_foreground(
@@ -920,7 +920,7 @@ static void __play_update(
 	//play menu up?
 	if (out_controller.play_menu)
 	{
-		__text(in_assets, WMDL_CANVAS_HEIGHT / 3, "ESC = Quit", 0, out_controller.canvas);
+		__text(in_assets, WMDL_CANVAS_HEIGHT / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
 		{
 			in_model.play_bit = 0;
@@ -928,7 +928,7 @@ static void __play_update(
 			out_controller.play_menu = false;
 		}
 
-		__text(in_assets, WMDL_CANVAS_HEIGHT / 3 * 2, "R = Resume", 0, out_controller.canvas);
+		__text(in_assets, WMDL_CANVAS_HEIGHT / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (minyin_key_downflank(in_minyin, 'R'))
 		{
 			out_controller.play_menu = false;
@@ -995,11 +995,11 @@ static void __play_update(
 
 				s = __text(INFO->id, 0);
 				if (s)
-					__text(in_assets, 0, s, 0, out_controller.canvas);
+					__text(in_assets, 0, s, WMDL_PROMPT_COLOR, out_controller.canvas);
 
 				s = __text(INFO->id, 1);
 				if (s)
-					__text(in_assets, in_assets.font.height, s, 0, out_controller.canvas);
+					__text(in_assets, in_assets.font.height, s, WMDL_PROMPT_COLOR, out_controller.canvas);
 			}
 		}
 
@@ -1051,6 +1051,22 @@ static wmdl_app_event_t __idle_update(
 {
 	minyin_blit(out_controller.canvas, in_assets.idle, 0, 0);
 
+#if 0
+	{//show palette
+		constexpr int32_t CELL = 4;
+		for (uint32_t i = 0; i < 256; ++i)
+		{
+			for (int32_t y = 0; y < CELL; ++y)
+			{
+				for (int32_t x = 0; x < CELL; ++x)
+				{
+					out_controller.canvas.pixels[(CELL * (i % 16) + x) + (CELL * (i / 16) + y) * out_controller.canvas.width] = (uint8_t)i;
+				}
+			}
+		}
+	}//show palette
+#endif
+
 	{
 		int32_t y;
 
@@ -1062,11 +1078,11 @@ static wmdl_app_event_t __idle_update(
 		__text(in_assets, y += WMDL_TEXT_SPACING, "Mats Persson", WMDL_TEXT_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING, "Johannes 'johno' Norneby", WMDL_TEXT_COLOR, out_controller.canvas);
 
-		__text(in_assets, y += WMDL_TEXT_SPACING * 4, "P = Play", 5, out_controller.canvas);
+		__text(in_assets, y += WMDL_TEXT_SPACING * 4, "P = Play", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (minyin_key_downflank(in_minyin, 'P'))
 			return wmdl_app_event_t::START_NEW_GAME;
 
-		__text(in_assets, y += WMDL_TEXT_SPACING, "ESC = Quit", 5, out_controller.canvas);
+		__text(in_assets, y += WMDL_TEXT_SPACING, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
 			return wmdl_app_event_t::EXIT_APPLICATION;
 	}
@@ -1130,7 +1146,7 @@ wmdl_app_event_t wmdl_controller_tick(
 		char str[16];
 		::sprintf_s(str, "%u", dx9::state.app->_frame_drops);
 		__text(assets, WMDL_CANVAS_HEIGHT - assets.font.height, str, softdraw::red, controller.canvas);
-	}
+}
 #endif
 
 	return result;

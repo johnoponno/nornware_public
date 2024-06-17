@@ -5,9 +5,6 @@
 #include "../minyin/minyin.h"
 #include "../minyin/paletas.h"
 
-#define PALETTIZE 1
-
-#if PALETTIZE
 #define ASSET_BG00 "bg00.tga"
 #define ASSET_BG01 "bg01.tga"
 #define ASSET_BG02 "bg02.tga"
@@ -33,34 +30,7 @@
 #define ASSET_HERO "hero.tga"
 #define ASSET_WHIP "whip.tga"
 #define ASSET_FLAKE "snowflakes.tga"
-#else
-#define ASSET_BG00 "8bg00.tga"
-#define ASSET_BG01 "8bg01.tga"
-#define ASSET_BG02 "8bg02.tga"
-#define ASSET_BG03 "8bg03.tga"
-#define ASSET_BG04 "8bg04.tga"
-#define ASSET_BG05 "8bg05.tga"
-#define ASSET_BG06 "8bg06.tga"
-#define ASSET_PORTAL "8portal.tga"
-#define ASSET_SERVER "8server.tga"
-#define ASSET_ARCS "8arcs.tga"
-#define ASSET_SPIKYGREEN "8spikygreen.tga"
-#define ASSET_BLUEBLOB "8blueblob.tga"
-#define ASSET_BROWNBLOB "8brownblob.tga"
-#define ASSET_PENGUIN "8pingu.tga"
-#define ASSET_PLANT "8plantenemy.tga"
-#define ASSET_SCORPION "8scorpion.tga"
-#define ASSET_FIREDUDE "8firedude.tga"
-#define ASSET_BAT "8bat.tga"
-#define ASSET_GUISERVERFIXED "8gui_server_fixed.tga"
-#define ASSET_GUISERVERBROKEN "8gui_server_broken.tga"
-#define ASSET_IDLE "8idle.tga"
-#define ASSET_TILES "8tiles.tga"
-#define ASSET_HERO "8hero.tga"
-#define ASSET_WHIP "8whip.tga"
-#define ASSET_FLAKE "8snowflakes.tga"
-#endif
-#define ASSET_FONT "8bigfont.tga"
+#define ASSET_FONT "bigfont.tga"
 
 #define ASSET_COMMON_INFO "view.common"
 
@@ -116,13 +86,7 @@ bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_reques
 			return false;
 	}
 
-	//font
-	if (!minyin_font_load_8(out_assets.font, ASSET_FONT, 2))
-		return false;
-	out_assets.font.char_spacing = -1;
-
 	//bitmaps
-#if PALETTIZE
 	{
 		paletas_t p;
 		paletas_item(ASSET_BG00, out_assets.backgrounds[0], p);
@@ -150,42 +114,17 @@ bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_reques
 		paletas_item(ASSET_HERO, out_assets.hero, p);
 		paletas_item(ASSET_WHIP, out_assets.whip, p);
 		paletas_item(ASSET_FLAKE, out_assets.flake, p);
-#if 1
+		paletas_item(ASSET_FONT, out_assets.font.rep, p);
 		if (!paletas_calculate(256, p))
 			return false;
-#else
-		if (!paletas_use("8tiles_palette.tga", p))
-			return false;
-#endif
 		out_assets.key_index = out_assets.hero.pixels[0];
+		out_assets.text_edge_index = out_assets.font.rep.pixels[0];
 	}
-#else
-	BITMAP8(ASSET_BG00, out_assets.backgrounds[0]);
-	BITMAP8(ASSET_BG01, out_assets.backgrounds[1]);
-	BITMAP8(ASSET_BG02, out_assets.backgrounds[2]);
-	BITMAP8(ASSET_BG03, out_assets.backgrounds[3]);
-	BITMAP8(ASSET_BG04, out_assets.backgrounds[4]);
-	BITMAP8(ASSET_BG05, out_assets.backgrounds[5]);
-	BITMAP8(ASSET_BG06, out_assets.backgrounds[6]);
-	BITMAP8(ASSET_PORTAL, out_assets.portal);
-	BITMAP8(ASSET_SERVER, out_assets.server);
-	BITMAP8(ASSET_ARCS, out_assets.arcs);
-	BITMAP8(ASSET_SPIKYGREEN, out_assets.spikygreen);
-	BITMAP8(ASSET_BLUEBLOB, out_assets.blueblob);
-	BITMAP8(ASSET_BROWNBLOB, out_assets.brownblob);
-	BITMAP8(ASSET_PENGUIN, out_assets.penguin);
-	BITMAP8(ASSET_PLANT, out_assets.plant);
-	BITMAP8(ASSET_SCORPION, out_assets.scorpion);
-	BITMAP8(ASSET_FIREDUDE, out_assets.firedude);
-	BITMAP8(ASSET_BAT, out_assets.bat);
-	BITMAP8(ASSET_GUISERVERFIXED, out_assets.gui_server_fixed);
-	BITMAP8(ASSET_GUISERVERBROKEN, out_assets.gui_server_broken);
-	BITMAP8(ASSET_IDLE, out_assets.idle);
-	BITMAP8(ASSET_TILES, out_assets.tiles);
-	BITMAP8(ASSET_HERO, out_assets.hero);
-	BITMAP8(ASSET_WHIP, out_assets.whip);
-	BITMAP8(ASSET_FLAKE, out_assets.flake);
-#endif
+
+	//font
+	if (!minyin_font_init(out_assets.font, out_assets.key_index))
+		return false;
+	out_assets.font.char_spacing = -1;
 
 	//request sounds
 	out_sounds.push_back({ ASSET_SPAWN, WMDL_SND_SPAWN });

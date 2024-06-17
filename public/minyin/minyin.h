@@ -72,8 +72,8 @@ void minyin_cross(minyin_bitmap_t& bm, const int32_t x, const int32_t y, const i
 void minyin_blit(minyin_bitmap_t& aDst, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
 void minyin_blit_key(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
 void minyin_blit_key_clip(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
-void minyin_blit_key_color_not_black(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, const uint8_t aColor, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
-void minyin_blit_key_color_not_black_clip(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_bitmap_t& SRC, const uint8_t aColor, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
+void minyin_blit_key2_colorize(minyin_bitmap_t& aDst, const uint8_t in_key, const uint8_t in_key2, const minyin_bitmap_t& SRC, const uint8_t aColor, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
+void minyin_blit_key2_colorize_clip(minyin_bitmap_t& aDst, const uint8_t in_key, const uint8_t in_key2, const minyin_bitmap_t& SRC, const uint8_t aColor, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
 
 struct minyin_font_t
 {
@@ -97,10 +97,10 @@ private:
 	void operator = (const minyin_font_t& other) = delete;
 };
 
-bool minyin_font_load_8(minyin_font_t& out_font, const char* in_filename, const uint8_t in_key);
+bool minyin_font_init(minyin_font_t& out_font, const uint8_t in_key);
 int32_t minyin_font_string_width(const minyin_font_t& f, const char* aString);
 
 void minyin_print(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_font_t& f, const int32_t aX, const int32_t aY, const char* aText);
-void minyin_print_color_not_black(minyin_bitmap_t& aDst, const uint8_t in_key, const minyin_font_t& FONT, const uint8_t aColor, const int32_t aDstX, const int32_t aDstY, const char* message);
+void minyin_print_colorize(minyin_bitmap_t& aDst, const uint8_t in_key, const uint8_t in_key2, const minyin_font_t& FONT, const uint8_t aColor, const int32_t aDstX, const int32_t aDstY, const char* message);
 
 extern uint16_t minyin_palette[256];
