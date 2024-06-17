@@ -117,7 +117,7 @@ bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_reques
 	}
 
 	//font
-	if (!minyin_font_load_8(out_assets.font, ASSET_FONT, WMDL_BLIT_KEY))
+	if (!minyin_font_load_8(out_assets.font, ASSET_FONT, 2))
 		return false;
 	out_assets.font.char_spacing = -1;
 
@@ -150,9 +150,15 @@ bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_reques
 		paletas_item(ASSET_HERO, out_assets.hero, p);
 		paletas_item(ASSET_WHIP, out_assets.whip, p);
 		paletas_item(ASSET_FLAKE, out_assets.flake, p);
-		if (!paletas_process(256, p))
+#if 1
+		if (!paletas_calculate(256, p))
 			return false;
-}
+#else
+		if (!paletas_use("8tiles_palette.tga", p))
+			return false;
+#endif
+		out_assets.key_index = out_assets.hero.pixels[0];
+	}
 #else
 	BITMAP8(ASSET_BG00, out_assets.backgrounds[0]);
 	BITMAP8(ASSET_BG01, out_assets.backgrounds[1]);

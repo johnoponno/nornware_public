@@ -25,34 +25,6 @@ static bool __string_has_extension(const char* in_extension, const char* in_stri
 	return nullptr != LAST_DOT && 0 == ::strcmp(LAST_DOT + 1, in_extension);
 }
 
-//from project ninja - for loading 8 bit .tga files "properly" (with palette support)
-static struct octamap_t
-{
-	fs_tga_header_t* header;
-	uint8_t* palette;
-	uint8_t* pixels;
-} __octamap_make(const fs_blob_t& blob)
-{
-	octamap_t result{};
-
-	result.header = (fs_tga_header_t*)blob.data;
-	assert(0 == result.header->id_length);
-	assert(1 == result.header->color_map_type);
-	assert(1 == result.header->image_type);
-	assert(0 == result.header->color_map_origin);
-	assert(256 == result.header->color_map_length);
-	assert(24 == result.header->color_map_entry_size);
-	assert(768 == (uint32_t)result.header->color_map_length * ((uint32_t)result.header->color_map_entry_size / 8));
-
-	result.palette = (uint8_t*)blob.data + sizeof(fs_tga_header_t);
-	assert(result.palette + 768 < (uint8_t*)blob.data + blob.size);
-
-	result.pixels = result.palette + 768;
-	assert(result.pixels + result.header->image_spec_width * result.header->image_spec_height < (uint8_t*)blob.data + blob.size);
-
-	return result;
-}
-
 static bool __clip(
 
 	//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
@@ -144,6 +116,29 @@ bool pixel_t::operator >= (const pixel_t& in_other) const
 	return !(*this < in_other);
 }
 
+//from project ninja - for loading 8 bit .tga files "properly" (with palette support)
+octamap_t octamap_make(const fs_blob_t& blob)
+{
+	octamap_t result{};
+
+	result.header = (fs_tga_header_t*)blob.data;
+	assert(0 == result.header->id_length);
+	assert(1 == result.header->color_map_type);
+	assert(1 == result.header->image_type);
+	assert(0 == result.header->color_map_origin);
+	assert(256 == result.header->color_map_length);
+	assert(24 == result.header->color_map_entry_size);
+	assert(768 == (uint32_t)result.header->color_map_length * ((uint32_t)result.header->color_map_entry_size / 8));
+
+	result.palette = (uint8_t*)blob.data + sizeof(fs_tga_header_t);
+	assert(result.palette + 768 < (uint8_t*)blob.data + blob.size);
+
+	result.pixels = result.palette + 768;
+	assert(result.pixels + result.header->image_spec_width * result.header->image_spec_height < (uint8_t*)blob.data + blob.size);
+
+	return result;
+}
+
 minyin_bitmap_t::minyin_bitmap_t()
 {
 	pixels = nullptr;
@@ -213,7 +208,7 @@ bool minyin_bitmap_load_8(
 	const fs_blob_t BLOB = fs_file_contents(in_filename);
 	if (!BLOB.data || !BLOB.size)
 		return false;
-	const octamap_t OCTAMAP = __octamap_make(BLOB);
+	const octamap_t OCTAMAP = octamap_make(BLOB);
 
 	//FIXME: remove?
 	for (
@@ -245,6 +240,7 @@ bool minyin_bitmap_load_8(
 
 		result = true;
 	}
+
 	delete[] BLOB.data;
 	return result;
 }
@@ -705,6 +701,5 @@ void minyin_print_color_not_black(
 		}
 	}
 }
-
 
 uint16_t minyin_palette[256];

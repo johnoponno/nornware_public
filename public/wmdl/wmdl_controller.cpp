@@ -97,7 +97,7 @@ static void __draw_portals(
 		else
 			frame = 0;
 
-		minyin_blit_key_clip(out_canvas, WMDL_BLIT_KEY, in_assets.portal, x, y, WMDL_TILE_ASPECT, in_assets.portal.height, frame * in_assets.portal.width / 2, 0);
+		minyin_blit_key_clip(out_canvas, in_assets.key_index, in_assets.portal, x, y, WMDL_TILE_ASPECT, in_assets.portal.height, frame * in_assets.portal.width / 2, 0);
 
 		//if not accessible, draw number
 		if (in_model.hero.fixed_servers.count < p->server_count)
@@ -105,9 +105,9 @@ static void __draw_portals(
 			char slask[4];
 			::sprintf_s(slask, "%u", p->server_count);
 			if (p->server_count >= 10)
-				minyin_print(out_canvas, WMDL_BLIT_KEY, in_assets.font, x + 1, y + 4, slask);
+				minyin_print(out_canvas, in_assets.key_index, in_assets.font, x + 1, y + 4, slask);
 			else
-				minyin_print(out_canvas, WMDL_BLIT_KEY, in_assets.font, x + 6, y + 4, slask);
+				minyin_print(out_canvas, in_assets.key_index, in_assets.font, x + 6, y + 4, slask);
 		}
 	}
 }
@@ -166,7 +166,7 @@ static void __draw_servers(
 					//minyin_blit_add(
 					minyin_blit_key(
 						out_canvas,
-						WMDL_BLIT_KEY,
+						in_assets.key_index,
 						in_assets.arcs,
 						x * WMDL_TILE_ASPECT - sx - 4,
 						y * WMDL_TILE_ASPECT - sy - WMDL_TILE_ASPECT - 4 + int32_t(wmdl_random_unit() * WMDL_TILE_ASPECT),
@@ -189,7 +189,7 @@ static void __draw_tile(
 
 	minyin_blit_key_clip(
 		out_canvas,
-		WMDL_BLIT_KEY,
+		in_assets.key_index,
 		in_assets.tiles,
 		in_x, in_y,
 		WMDL_TILE_ASPECT, WMDL_TILE_ASPECT,
@@ -254,7 +254,7 @@ static void __draw_scorpion(
 
 	minyin_blit_key_clip(
 		out_canvas,
-		WMDL_BLIT_KEY,
+		in_assets.key_index,
 		in_assets.scorpion,
 		in_x + xOffs, in_y - 14,
 		in_assets.scorpion.width / 2, in_assets.scorpion.height / 6,
@@ -389,7 +389,7 @@ static void __text(
 	const wmdl_assets_t& in_assets, const int in_dst_y, const char* in_string, const uint8_t in_color,
 	minyin_bitmap_t& out_canvas)
 {
-	minyin_print_color_not_black(out_canvas, WMDL_BLIT_KEY, in_assets.font, in_color, (out_canvas.width - minyin_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
+	minyin_print_color_not_black(out_canvas, in_assets.key_index, in_assets.font, in_color, (out_canvas.width - minyin_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
 }
 
 static void __draw_foreground(
@@ -507,7 +507,7 @@ static void __draw_farplane(
 			}
 
 			//minyin_blit_half_key_clip(controller.canvas, assets.flake, (int32_t)f->x, (int32_t)f->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (f->t % 3) * FLAKE_FRAME_ASPECT, f->t / 3 * FLAKE_FRAME_ASPECT);
-			minyin_blit_key_clip(out_controller.canvas, WMDL_BLIT_KEY, in_assets.flake, (int32_t)f->x, (int32_t)f->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (f->t % 3) * FLAKE_FRAME_ASPECT, f->t / 3 * FLAKE_FRAME_ASPECT);
+			minyin_blit_key_clip(out_controller.canvas, in_assets.key_index, in_assets.flake, (int32_t)f->x, (int32_t)f->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (f->t % 3) * FLAKE_FRAME_ASPECT, f->t / 3 * FLAKE_FRAME_ASPECT);
 		}
 		break;
 
@@ -565,7 +565,7 @@ static void __draw_hero(
 	//blit
 	minyin_blit_key_clip(
 		out_canvas,
-		WMDL_BLIT_KEY,
+		in_assets.key_index,
 		in_assets.hero,
 		int32_t(in_model.hero.x - in_vx - WMDL_HERO_WIDTH / 2), int32_t(in_model.hero.y - in_vy - WMDL_HERO_HEIGHT / 2),
 		WMDL_HERO_WIDTH, WMDL_HERO_HEIGHT,
@@ -577,7 +577,7 @@ static void __draw_hero(
 	{
 		minyin_blit_key_clip(
 			out_canvas,
-			WMDL_BLIT_KEY,
+			in_assets.key_index,
 			in_assets.whip,
 			int32_t(wmdl_hero_whip_min_x(in_model.hero) - in_vx),
 			int32_t(wmdl_hero_whip_y(in_model.hero) - in_vy - 22),
@@ -660,7 +660,7 @@ static void __draw_tiles(
 }
 
 static void __draw_deaths(
-	const int32_t in_vx, const int32_t in_vy,
+	const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
 	wmdl_controller_t& out_controller)
 {
 	wmdl_death_t* death = out_controller.deaths;
@@ -677,7 +677,7 @@ static void __draw_deaths(
 		{
 			minyin_blit_key_clip(
 				out_controller.canvas,
-				WMDL_BLIT_KEY,
+				in_assets.key_index,
 				*death->bm,
 				int32_t(death->x - in_vx - death->w / 2),
 				int32_t(death->y - in_vy - death->h / 2),
@@ -730,7 +730,7 @@ static void __draw_enemies(
 			{
 				minyin_blit_key_clip(
 					out_canvas,
-					WMDL_BLIT_KEY,
+					in_assets.key_index,
 					in_assets.spikygreen,
 					int32_t(ENEMY->x - in_vx - in_assets.spikygreen.width / 2),
 					int32_t(ENEMY->y - in_vy - in_assets.spikygreen.width / 2),
@@ -746,7 +746,7 @@ static void __draw_enemies(
 			if (NOW > ENEMY->spawn_time)
 				minyin_blit_key_clip(
 					out_canvas,
-					WMDL_BLIT_KEY,
+					in_assets.key_index,
 					in_assets.blueblob,
 					int32_t(ENEMY->x - in_vx - WMDL_BLOB_FRAME_ASPECT / 2),
 					int32_t(ENEMY->y - in_vy - WMDL_BLOB_FRAME_ASPECT / 2),
@@ -761,7 +761,7 @@ static void __draw_enemies(
 			if (NOW > ENEMY->spawn_time)
 				minyin_blit_key_clip(
 					out_canvas,
-					WMDL_BLIT_KEY,
+					in_assets.key_index,
 					in_assets.brownblob,
 					int32_t(ENEMY->x - in_vx - WMDL_BLOB_FRAME_ASPECT / 2),
 					int32_t(ENEMY->y - in_vy - WMDL_BLOB_FRAME_ASPECT / 2),
@@ -808,7 +808,7 @@ static void __draw_enemies(
 				}
 				minyin_blit_key_clip(
 					out_canvas,
-					WMDL_BLIT_KEY,
+					in_assets.key_index,
 					in_assets.plant,
 					int32_t(ENEMY->x - in_vx) + x_offset,
 					int32_t(ENEMY->y - in_vy) - 20,
@@ -830,7 +830,7 @@ static void __draw_enemies(
 			{
 				minyin_blit_key_clip(
 					out_canvas,
-					WMDL_BLIT_KEY,
+					in_assets.key_index,
 					in_assets.penguin,
 					int32_t(ENEMY->x - in_vx - in_assets.penguin.width / 4),
 					int32_t(ENEMY->y - in_vy + 2),
@@ -845,7 +845,7 @@ static void __draw_enemies(
 		case WMDL_LOGIC_INDEX_FIREDUDE:
 			minyin_blit_key_clip(
 				out_canvas,
-				WMDL_BLIT_KEY,
+				in_assets.key_index,
 				in_assets.firedude,
 				int32_t(ENEMY->x - in_vx - FIREDUDE_FRAME_ASPECT / 2),
 				int32_t(ENEMY->y - in_vy - FIREDUDE_FRAME_ASPECT / 2),
@@ -869,7 +869,7 @@ static void __draw_enemies(
 
 			minyin_blit_key_clip(
 				out_canvas,
-				WMDL_BLIT_KEY,
+				in_assets.key_index,
 				in_assets.bat,
 				int32_t(ENEMY->x - in_vx - in_assets.bat.width / 2),
 				int32_t(ENEMY->y - in_vy - bat_frame_height / 2),
@@ -979,7 +979,7 @@ static void __play_update(
 		__draw_portals(in_model, in_assets, VPX, VPY, out_controller.canvas);
 		__draw_servers(in_model, in_assets, VPX, VPY, out_controller.canvas);
 		__draw_enemies(in_model, in_assets, VPX, VPY, out_controller.canvas);
-		__draw_deaths(VPX, VPY, out_controller);
+		__draw_deaths(in_assets, VPX, VPY, out_controller);
 
 		if (in_model.hero.spawn_time < 0.f)
 			__draw_hero(in_model, in_assets, VPX, VPY, out_controller.canvas);
@@ -1006,14 +1006,14 @@ static void __play_update(
 		//draw gui
 		{
 			//total servers fixed
-			minyin_blit_key(out_controller.canvas, WMDL_BLIT_KEY, in_assets.gui_server_fixed, 0, 0);
+			minyin_blit_key(out_controller.canvas, in_assets.key_index, in_assets.gui_server_fixed, 0, 0);
 			{
 				char slask[4];
 				::sprintf_s(slask, "%u", in_model.hero.fixed_servers.count);
 				if (in_model.hero.fixed_servers.count < 10)
-					minyin_print(out_controller.canvas, WMDL_BLIT_KEY, in_assets.font, 6, 6, slask);
+					minyin_print(out_controller.canvas, in_assets.key_index, in_assets.font, 6, 6, slask);
 				else
-					minyin_print(out_controller.canvas, WMDL_BLIT_KEY, in_assets.font, 1, 6, slask);
+					minyin_print(out_controller.canvas, in_assets.key_index, in_assets.font, 1, 6, slask);
 			}
 
 			//keys gui
@@ -1033,7 +1033,7 @@ static void __play_update(
 				++i
 				)
 			{
-				minyin_blit_key(out_controller.canvas, WMDL_BLIT_KEY, in_assets.gui_server_broken, WMDL_CANVAS_WIDTH - i * 14 - 20, 0);
+				minyin_blit_key(out_controller.canvas, in_assets.key_index, in_assets.gui_server_broken, WMDL_CANVAS_WIDTH - i * 14 - 20, 0);
 			}
 		}
 

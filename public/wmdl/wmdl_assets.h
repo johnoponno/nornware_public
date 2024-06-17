@@ -7,7 +7,6 @@ struct minyin_sound_request_t;
 
 #define WMDL_TITLE_COLOR 0
 #define WMDL_TEXT_COLOR 1
-#define WMDL_BLIT_KEY 2
 
 enum
 {
@@ -70,6 +69,8 @@ struct wmdl_assets_t
 	minyin_font_t font;
 
 	uint32_t anim_target[WMDL_MAX_TILE];
+
+	uint8_t key_index;
 };
 
 bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_request_t>& out_sounds);

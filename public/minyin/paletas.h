@@ -12,5 +12,6 @@ struct paletas_t
 	std::vector<item_t> items;
 };
 
-void paletas_item(const char* in_file, minyin_bitmap_t& out_bitmap, paletas_t& out_palettizer);
-bool paletas_process(const uint32_t in_palette_size, paletas_t& out_palettizer);
+void paletas_item(const char* in_file, minyin_bitmap_t& out_bitmap, paletas_t& out_paletas);
+bool paletas_calculate(const uint32_t in_palette_size, paletas_t& out_paletas);
+bool paletas_use(const char* in_file, paletas_t& out_paletas);

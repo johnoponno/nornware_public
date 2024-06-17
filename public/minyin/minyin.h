@@ -2,6 +2,9 @@
 
 #define MINYIN_KEY_ESCAPE 0x1B
 
+struct fs_blob_t;
+struct fs_tga_header_t;
+
 struct pixel_t
 {
 	bool operator < (const pixel_t& in_other) const;
@@ -11,6 +14,15 @@ struct pixel_t
 	uint8_t g;
 	uint8_t b;
 };
+
+struct octamap_t
+{
+	fs_tga_header_t* header;
+	uint8_t* palette;
+	uint8_t* pixels;
+};
+
+octamap_t octamap_make(const fs_blob_t& blob);
 
 struct minyin_sound_request_t
 {

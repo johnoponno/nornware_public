@@ -59,7 +59,7 @@ void paletas_item(
 	out_paletas.items.push_back({ in_file, &out_bitmap });
 }
 
-bool paletas_process(
+bool paletas_calculate(
 	const uint32_t in_palette_size,
 	paletas_t& out_paletas)
 {
@@ -191,18 +191,20 @@ bool paletas_process(
 		item.bitmap->pixels = new uint8_t[item.bitmap->width * item.bitmap->height];
 		assert(item.bitmap->pixels);
 
-		const pixel_t* SOURCE_IMAGE_I_PIXELS = (pixel_t*)source_images[i]->pixels;
 		for (int32_t y = 0; y < source_images[i]->header->image_spec_height; ++y)
 		{
 			for (int32_t x = 0; x < source_images[i]->header->image_spec_width; ++x)
 			{
+				const pixel_t* SOURCE_IMAGE_I_PIXEL = (pixel_t*)source_images[i]->pixels + x + y * source_images[i]->header->image_spec_width;
+
+				//search for the nearest color (euclidean)
 				float nd = FLT_MAX;
 				uint32_t npe = UINT32_MAX;
 				for (uint32_t pe = 0; pe < in_palette_size; ++pe)
 				{
-					const float R = (float)palette[pe].r - (float)SOURCE_IMAGE_I_PIXELS[x + y * source_images[i]->header->image_spec_width].r;
-					const float G = (float)palette[pe].g - (float)SOURCE_IMAGE_I_PIXELS[x + y * source_images[i]->header->image_spec_width].g;
-					const float B = (float)palette[pe].b - (float)SOURCE_IMAGE_I_PIXELS[x + y * source_images[i]->header->image_spec_width].b;
+					const float R = (float)palette[pe].r - (float)SOURCE_IMAGE_I_PIXEL->r;
+					const float G = (float)palette[pe].g - (float)SOURCE_IMAGE_I_PIXEL->g;
+					const float B = (float)palette[pe].b - (float)SOURCE_IMAGE_I_PIXEL->b;
 					const float D = ::sqrtf(R * R + G * G + B * B);
 					if (D < nd)
 					{
@@ -212,6 +214,7 @@ bool paletas_process(
 				}
 				assert(nd < FLT_MAX);
 				assert(npe < in_palette_size);
+
 				item.bitmap->pixels[x + (item.bitmap->height - 1 - y) * item.bitmap->width] = (uint8_t)npe;
 			}
 		}
@@ -224,6 +227,88 @@ bool paletas_process(
 	//cleanup loaded source images
 	for (fs_tga_image_t* source_image : source_images)
 		delete source_image;
+
+	return true;
+}
+
+bool paletas_use(
+	const char* in_file,
+	paletas_t& out_paletas)
+{
+	//load the file to get the palette from
+	const fs_blob_t BLOB = fs_file_contents(in_file);
+	if (!BLOB.data || !BLOB.size)
+		return false;
+	const octamap_t OCTAMAP = octamap_make(BLOB);
+	const pixel_t* palette = (pixel_t*)OCTAMAP.palette;
+
+	//load all source images (24 bit)
+	std::vector<fs_tga_image_t*> source_images;
+	for (const paletas_t::item_t& ITEM : out_paletas.items)
+	{
+		fs_tga_image_t* source_image = new fs_tga_image_t;
+		if (!source_image)
+			return false;
+		*source_image = {};
+		if (!fs_tga_read_24(ITEM.file, *source_image))
+		{
+			delete source_image;
+			return false;
+		}
+		source_images.push_back(source_image);
+	}
+
+	//5) create all the palettize bitmaps by remapping all pixels to the final palette of averaged colors (use the nearest color)
+	for (uint32_t i = 0; i < out_paletas.items.size(); ++i)
+	{
+		paletas_t::item_t& item = out_paletas.items[i];
+
+		assert(!item.bitmap->width);
+		item.bitmap->width = source_images[i]->header->image_spec_width;
+
+		assert(!item.bitmap->height);
+		item.bitmap->height = source_images[i]->header->image_spec_height;
+
+		assert(!item.bitmap->pixels);
+		item.bitmap->pixels = new uint8_t[item.bitmap->width * item.bitmap->height];
+		assert(item.bitmap->pixels);
+
+		const pixel_t* SOURCE_IMAGE_I_PIXELS = (pixel_t*)source_images[i]->pixels;
+		for (int32_t y = 0; y < source_images[i]->header->image_spec_height; ++y)
+		{
+			for (int32_t x = 0; x < source_images[i]->header->image_spec_width; ++x)
+			{
+				float nd = FLT_MAX;
+				uint32_t npe = UINT32_MAX;
+				for (uint32_t pe = 0; pe < 256; ++pe)
+				{
+					const float R = (float)palette[pe].r - (float)SOURCE_IMAGE_I_PIXELS[x + y * source_images[i]->header->image_spec_width].r;
+					const float G = (float)palette[pe].g - (float)SOURCE_IMAGE_I_PIXELS[x + y * source_images[i]->header->image_spec_width].g;
+					const float B = (float)palette[pe].b - (float)SOURCE_IMAGE_I_PIXELS[x + y * source_images[i]->header->image_spec_width].b;
+					const float D = ::sqrtf(R * R + G * G + B * B);
+					if (D < nd)
+					{
+						nd = D;
+						npe = pe;
+					}
+				}
+				assert(nd < FLT_MAX);
+				assert(npe < 256);
+				item.bitmap->pixels[x + (item.bitmap->height - 1 - y) * item.bitmap->width] = (uint8_t)npe;
+			}
+		}
+	}
+
+	//output final palette (sd format)
+	for (uint32_t i = 0; i < 256; ++i)
+		minyin_palette[i] = sd_color_encode(palette[i].b, palette[i].g, palette[i].r);
+
+	//cleanup loaded source images
+	for (fs_tga_image_t* source_image : source_images)
+		delete source_image;
+
+	//cleanup loaded palette image
+	delete[] BLOB.data;
 
 	return true;
 }
