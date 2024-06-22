@@ -112,8 +112,8 @@ void win32_d3d9_chunky_present_2d(
 			};
 			const float XF = (float)in_x;
 			const float YF = (float)in_y;
-			const float WIDTHF = (float)in_width - .5f;
-			const float HEIGHTF = (float)in_height - .5f;
+			const float WIDTH = (float)in_width - .5f;
+			const float HEIGHT = (float)in_height - .5f;
 			const float U_MAX = (float)in_canvas.width / (float)in_adapter.texture_aspect;
 			const float V_MAX = (float)in_canvas.height / (float)in_adapter.texture_aspect;
 			const struct
@@ -128,9 +128,9 @@ void win32_d3d9_chunky_present_2d(
 			} VERTICES[4] =
 			{
 				{ XF + 0, YF + 0, 0.f, 1.f, in_color, 0.f, 0.f },
-				{ XF + WIDTHF, YF + 0, 0.f, 1.f, in_color, U_MAX, 0.f },
-				{ XF + 0, YF + HEIGHTF, 0.f, 1.f, in_color, 0.f, V_MAX },
-				{ XF + WIDTHF, YF + HEIGHTF, 0.f, 1.f, in_color, U_MAX, V_MAX },
+				{ XF + WIDTH, YF + 0, 0.f, 1.f, in_color, U_MAX, 0.f },
+				{ XF + 0, YF + HEIGHT, 0.f, 1.f, in_color, 0.f, V_MAX },
+				{ XF + WIDTH, YF + HEIGHT, 0.f, 1.f, in_color, U_MAX, V_MAX },
 			};
 			VERIFY(win32_d3d9_state.m_d3d_device->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, 4, 2, INDICES, D3DFMT_INDEX16, VERTICES, sizeof(VERTICES[0])));
 		}

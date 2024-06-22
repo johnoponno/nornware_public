@@ -12,7 +12,7 @@ bool wmdl_game_init(wmdl_game_t& out_game, std::vector<minyin_sound_request_t>& 
 	for (uint32_t i = 0; i < WMDL_MAX_TILE; ++i)
 		out_game.controller.current_tiles[i] = i;
 
-	if (!minyin_bitmap_init(out_game.controller.canvas, WMDL_CANVAS_WIDTH, WMDL_CANVAS_HEIGHT))
+	if (!minyin_bitmap_init(out_game.controller.canvas, 600, 320))
 		return false;
 
 	return true;

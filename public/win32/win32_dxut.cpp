@@ -3240,7 +3240,7 @@ static void __do_frame(::IDirect3DDevice9* device, const float now, const float 
 	if (win32_d3d9_state.app)
 	{
 		win32_d3d9_state.app->win32_d3d9_app_frame_move(now, elapsed);
-		++win32_d3d9_state.app->_frame_moves;
+		++win32_d3d9_state.app->_win32_d3d9_app_frame_moves;
 		if (nullptr == win32_d3d9_state.m_d3d_device)// Handle shutdown from inside callback
 			return;
 	}
@@ -3480,7 +3480,7 @@ static void __do_idle_time(win32_d3d9_app_i* anApp)
 			}
 			else
 			{
-				++anApp->_frame_drops;
+				++anApp->_win32_d3d9_app_frame_drops;
 			}
 		}
 		else

@@ -52,7 +52,15 @@
 #define HERO_MAX_SPEEDY 500.f
 #define HERO_HALF_WIDTH 8
 #define HERO_HALF_HEIGHT 12
+
+/*
+#if HANNAH
+#define HERO_JUMP 300.f
+#else
 #define HERO_JUMP 400.f
+#endif
+*/
+
 #define HERO_DEAD_TIME 2.f
 #define HERO_WHIP_TIME .1f
 #define HERO_WHIP_LENGTH 32
@@ -235,15 +243,15 @@ const wmdl_tile_t& __get_tile_for_position(const wmdl_model_t& in_model, const f
 	return __get_tile(in_model, __world_to_grid(in_x), __world_to_grid(in_y));
 }
 
-static const tile_info_t& __get_tile_info_for_position(const wmdl_model_t& in_model, const float in_x, const float in_y)
+static const wmdl_tile_info_t& __get_tile_info_for_position(const wmdl_model_t& in_model, const float in_x, const float in_y)
 {
 	return wmdl_model_get_tile_info(in_model, __get_tile_for_position(in_model, in_x, in_y), true);
 }
 
 static bool __on_slippery(const wmdl_model_t& in_model)
 {
-	const tile_info_t& info = __get_tile_info_for_position(in_model, in_model.hero.x, in_model.hero.y + WMDL_TILE_ASPECT);
-	return info.special == S_SLIPPERY || info.hero_pass == HP_CLEAR;
+	const wmdl_tile_info_t& INFO = __get_tile_info_for_position(in_model, in_model.hero.x, in_model.hero.y + WMDL_TILE_ASPECT);
+	return INFO.special == S_SLIPPERY || INFO.hero_pass == HP_CLEAR;
 }
 
 static float __acceleration(const wmdl_model_t& in_model)
@@ -602,12 +610,12 @@ static float __get_test_below_x(const bool in_second, const wmdl_hero_t& in_hero
 
 static bool __is_solid_below(const wmdl_model_t& in_model, const float in_x, const float in_y)
 {
-	const tile_info_t& info = __get_tile_info_for_position(in_model, in_x, in_y);
+	const wmdl_tile_info_t& INFO = __get_tile_info_for_position(in_model, in_x, in_y);
 
 	if (in_model.hero.sy >= 0)
-		return info.hero_pass == HP_SOLID || info.hero_pass == HP_PLATFORM;
+		return INFO.hero_pass == HP_SOLID || INFO.hero_pass == HP_PLATFORM;
 
-	return info.hero_pass == HP_SOLID;
+	return INFO.hero_pass == HP_SOLID;
 }
 
 static bool __is_solid_below(const wmdl_model_t& in_model)
@@ -732,7 +740,7 @@ static uint32_t __world_collision_tests(
 	}
 
 	//sanity check
-	const tile_info_t& INFO = __get_tile_info_for_position(out_model, out_model.hero.x, out_model.hero.y);
+	const wmdl_tile_info_t& INFO = __get_tile_info_for_position(out_model, out_model.hero.x, out_model.hero.y);
 	if (INFO.hero_pass == HP_SOLID)
 	{
 		out_model.hero.x = in_old_x;
@@ -1037,7 +1045,7 @@ static void __icicle_update(
 			break;
 
 		case WMDL_ICICLE_S_FALLING:
-			out_icicle->speed += WMDL_GRAVITY * WMDL_SECONDS_PER_TICK;
+			out_icicle->speed += wmdl_gravity() * WMDL_SECONDS_PER_TICK;
 			out_icicle->y += out_icicle->speed * WMDL_SECONDS_PER_TICK;
 
 			if (HP_CLEAR != __get_tile_info_for_position(in_model, out_icicle->x, out_icicle->y).hero_pass)
@@ -1244,7 +1252,11 @@ bool wmdl_model_init(wmdl_model_t& out_model)
 	if (RESULT)
 	{
 		::memcpy(&out_model.tile_info, CONTENTS.data, CONTENTS.size);
-		for (tile_info_t* i = out_model.tile_info; i < out_model.tile_info + WMDL_MAX_TILE; ++i)
+		for (
+			wmdl_tile_info_t* i = out_model.tile_info; 
+			i < out_model.tile_info + WMDL_MAX_TILE; 
+			++i
+			)
 		{
 			i->hero_pass = wmdl_change_endianness(i->hero_pass);
 			i->special = wmdl_change_endianness(i->special);
@@ -1319,7 +1331,11 @@ wmdl_events_t wmdl_model_update(wmdl_model_t& out_model)
 		if (WMDL_HERO_FLAGS_DOWN & out_model.hero.input)
 		{
 			const wmdl_portal_t* PORTAL = __portal_for_offset(out_model, wmdl_world_to_offset(out_model.hero.x, out_model.hero.y));
+#if 1
 			if (PORTAL && out_model.hero.fixed_servers.count >= PORTAL->server_count)
+#else
+			if (PORTAL)//this allows passage thru portals regardless of server count
+#endif
 				return { PORTAL->target_world };
 		}
 
@@ -1354,13 +1370,13 @@ wmdl_events_t wmdl_model_update(wmdl_model_t& out_model)
 			if (!out_model.hero.air_bit && !__is_solid_above(out_model))
 			{
 				out_model.hero.air_bit = true;
-				out_model.hero.sy = -HERO_JUMP;
+				out_model.hero.sy = wmdl_hero_jump();
 				result.bits |= WMDL_EVENT_BIT_HERO_JUMP;
 			}
 		}
 
 		//gravity
-		out_model.hero.sy += WMDL_GRAVITY * WMDL_SECONDS_PER_TICK;
+		out_model.hero.sy += wmdl_gravity() * WMDL_SECONDS_PER_TICK;
 		if (out_model.hero.sy > HERO_MAX_SPEEDY)
 			out_model.hero.sy = HERO_MAX_SPEEDY;
 		else if (out_model.hero.sy < -HERO_MAX_SPEEDY)
@@ -1500,7 +1516,7 @@ uint32_t wmdl_model_screen(const wmdl_model_t& in_model, const int32_t in_x, con
 	return in_model.level.screens[in_x + in_y * WMDL_SCREENS_X];
 }
 
-const tile_info_t& wmdl_model_get_tile_info(const wmdl_model_t& in_model, const wmdl_tile_t& in_tile, const bool in_replace)
+const wmdl_tile_info_t& wmdl_model_get_tile_info(const wmdl_model_t& in_model, const wmdl_tile_t& in_tile, const bool in_replace)
 {
 	if (in_replace)
 	{
@@ -1625,3 +1641,19 @@ uint32_t wmdl_change_endianness(const uint32_t in)
 	dst[3] = src[0];
 	return out;
 }
+
+float wmdl_gravity()
+{
+	if (wmdl_tune_new)
+		return 850.f;
+	return 1300.f;
+}
+
+float wmdl_hero_jump()
+{
+	if (wmdl_tune_new)
+		return -300.f;
+	return -400.f;
+}
+
+bool wmdl_tune_new = false;

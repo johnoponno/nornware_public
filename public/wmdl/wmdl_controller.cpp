@@ -46,8 +46,13 @@ static int32_t __hero_view_position_x(const wmdl_model_t& in_model)
 	//bounds
 	if (x < 0)
 		x = 0;
-	else if (x > (WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - WMDL_CANVAS_WIDTH))
-		x = WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - WMDL_CANVAS_WIDTH;
+#if 0
+	else if (x > (WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - out_controller.canvas.width))
+		x = WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - out_controller.canvas.width;
+#else
+	else if (x > (WMDL_WORLD_WIDTH - WMDL_TILES_X) * WMDL_TILE_ASPECT)
+		x = (WMDL_WORLD_WIDTH - WMDL_TILES_X) * WMDL_TILE_ASPECT;
+#endif
 
 	return x;
 }
@@ -71,8 +76,13 @@ static int32_t __hero_view_position_y(const wmdl_model_t& in_model)
 	//bounds
 	if (y < 0)
 		y = 0;
-	else if (y > (WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - WMDL_CANVAS_HEIGHT))
-		y = WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - WMDL_CANVAS_HEIGHT;
+#if 0
+	else if (y > (WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - out_controller.canvas.height))
+		y = WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - out_controller.canvas.height;
+#else
+	else if (y > (WMDL_WORLD_HEIGHT - WMDL_TILES_Y) * WMDL_TILE_ASPECT)
+		y = (WMDL_WORLD_HEIGHT - WMDL_TILES_Y) * WMDL_TILE_ASPECT;
+#endif
 
 	return y;
 }
@@ -134,8 +144,8 @@ static void __draw_servers(
 				int32_t frame;
 				int32_t ox;
 				int32_t oy;
-				const bool fixed = wmdl_model_is_server_fixed(in_model.world, wmdl_grid_to_offset(gx + x, gy + y), in_model.hero);
-				if (fixed)
+				const bool FIXED = wmdl_model_is_server_fixed(in_model.world, wmdl_grid_to_offset(gx + x, gy + y), in_model.hero);
+				if (FIXED)
 				{
 					frame = 2;
 					ox = oy = 0;
@@ -159,7 +169,7 @@ static void __draw_servers(
 				);
 
 				//arcs
-				if (!fixed)
+				if (!FIXED)
 				{
 					frame = int32_t(wmdl_model_now(in_model) * 16) % 4;
 
@@ -414,7 +424,7 @@ static void __draw_foreground(
 
 		int32_t y;
 
-		__text(in_assets, y = WMDL_CANVAS_HEIGHT + int32_t((wmdl_model_now(in_model) - out_controller.credits_start_time) * -16.), "Congratulations!", WMDL_TITLE_COLOR, out_controller.canvas);
+		__text(in_assets, y = out_controller.canvas.height + int32_t((wmdl_model_now(in_model) - out_controller.credits_start_time) * -16.), "Congratulations!", WMDL_TITLE_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING, "You made it to the end of the game!", WMDL_TEXT_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING, "We wanted to put an epic boss fight", WMDL_TEXT_COLOR, out_controller.canvas);
 		__text(in_assets, y += WMDL_TEXT_SPACING, "here, but we couldn't quite", WMDL_TEXT_COLOR, out_controller.canvas);
@@ -495,13 +505,13 @@ static void __draw_farplane(
 
 			if (f->x < -FLAKE_FRAME_ASPECT)
 			{
-				f->x = WMDL_CANVAS_WIDTH;
+				f->x = (float)out_controller.canvas.width;
 			}
-			else if (f->x >= WMDL_CANVAS_WIDTH)
+			else if (f->x >= out_controller.canvas.width)
 			{
 				f->x = -FLAKE_FRAME_ASPECT;
 			}
-			if (f->y >= WMDL_CANVAS_HEIGHT)
+			if (f->y >= out_controller.canvas.height)
 			{
 				f->y = -FLAKE_FRAME_ASPECT;
 			}
@@ -666,14 +676,14 @@ static void __draw_deaths(
 	wmdl_death_t* death = out_controller.deaths;
 	while (death < out_controller.deaths + out_controller.num_deaths)
 	{
-		death->s += WMDL_GRAVITY * WMDL_SECONDS_PER_TICK;
+		death->s += wmdl_gravity() * WMDL_SECONDS_PER_TICK;
 
 		death->y += death->s * WMDL_SECONDS_PER_TICK;
 
 		const int32_t SX = int32_t(death->x - in_vx);
 		const int32_t SY = int32_t(death->y - in_vy);
 
-		if (SX >= (-death->w / 2) && SY >= (-death->h / 2) && SX < (WMDL_CANVAS_WIDTH + death->w / 2) && SY < (WMDL_CANVAS_HEIGHT + death->h / 2))
+		if (SX >= (-death->w / 2) && SY >= (-death->h / 2) && SX < (out_controller.canvas.width + death->w / 2) && SY < (out_controller.canvas.height + death->h / 2))
 		{
 			minyin_blit_key_clip(
 				out_controller.canvas,
@@ -913,6 +923,27 @@ static void __draw_enemies(
 	}
 }
 
+static void __map_pixel(
+	const int32_t in_x, const int32_t in_y, const uint8_t in_color,
+	minyin_bitmap_t& out_canvas)
+{
+	uint8_t* p = out_canvas.pixels + (out_canvas.width - WMDL_WORLD_WIDTH * 2) / 2 + 2 * in_x + (out_canvas.height - 2 * WMDL_WORLD_HEIGHT + 2 * in_y) * out_canvas.width;
+	p[0] = in_color;
+	p[1] = in_color;
+	p[0 + out_canvas.width] = in_color;
+	p[1 + out_canvas.width] = in_color;
+}
+
+static void __map_mover(
+	const float in_world_x, const float in_world_y, const uint8_t in_color,
+	minyin_bitmap_t& out_canvas)
+{
+	const uint32_t OFFSET = wmdl_world_to_offset(in_world_x, in_world_y);
+	const int32_t X = OFFSET % WMDL_WORLD_WIDTH;
+	const int32_t Y = OFFSET / WMDL_WORLD_WIDTH;
+	__map_pixel(X, Y, in_color, out_canvas);
+}
+
 static void __play_update(
 	const minyin_input_t& in_minyin, const wmdl_assets_t& in_assets, wmdl_model_t& in_model,
 	wmdl_controller_t& out_controller)
@@ -920,7 +951,7 @@ static void __play_update(
 	//play menu up?
 	if (out_controller.play_menu)
 	{
-		__text(in_assets, WMDL_CANVAS_HEIGHT / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
+		__text(in_assets, out_controller.canvas.height / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
 		{
 			in_model.play_bit = 0;
@@ -928,7 +959,7 @@ static void __play_update(
 			out_controller.play_menu = false;
 		}
 
-		__text(in_assets, WMDL_CANVAS_HEIGHT / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
+		__text(in_assets, out_controller.canvas.height / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (minyin_key_downflank(in_minyin, 'R'))
 		{
 			out_controller.play_menu = false;
@@ -943,6 +974,9 @@ static void __play_update(
 		}
 		else
 		{
+			if (minyin_key_downflank(in_minyin, 'N'))
+				wmdl_tune_new ^= 1;
+
 			uint32_t input = 0;
 
 			//hero movement
@@ -1033,14 +1067,64 @@ static void __play_update(
 				++i
 				)
 			{
-				minyin_blit_key(out_controller.canvas, in_assets.key_index, in_assets.gui_server_broken, WMDL_CANVAS_WIDTH - i * 14 - 20, 0);
+				minyin_blit_key(out_controller.canvas, in_assets.key_index, in_assets.gui_server_broken, out_controller.canvas.width - i * 14 - 20, 0);
 			}
 		}
 
 		if (out_controller.play_menu)
 		{
-			__text(in_assets, WMDL_CANVAS_HEIGHT / 3, "ESC = Quit", 0, out_controller.canvas);
-			__text(in_assets, WMDL_CANVAS_HEIGHT / 3 * 2, "R = Resume", 0, out_controller.canvas);
+			__text(in_assets, out_controller.canvas.height / 3, "ESC = Quit", 0, out_controller.canvas);
+			__text(in_assets, out_controller.canvas.height / 3 * 2, "R = Resume", 0, out_controller.canvas);
+		}
+
+		if (wmdl_tune_new)
+			out_controller.canvas.pixels[0] = 255;
+
+		//map
+		{
+			//tiles
+			for (int32_t y = 0; y < WMDL_WORLD_HEIGHT; ++y)
+			{
+				for (int32_t x = 0; x < WMDL_WORLD_WIDTH; ++x)
+				{
+					const wmdl_tile_t& TILE = wmdl_model_get_tile(in_model, x, y);
+					switch (TILE.index)
+					{
+					default:
+						if (wmdl_model_get_tile_info(in_model, TILE, true).hero_pass)
+							__map_pixel(x, y, 15, out_controller.canvas);
+						else
+							__map_pixel(x, y, 0, out_controller.canvas);
+						break;
+
+					case WMDL_LOGIC_INDEX_SERVER:
+						if (wmdl_model_is_server_fixed(in_model.world, wmdl_grid_to_offset(x, y), in_model.hero))
+						{
+							__map_pixel(x, y, 63 + 2 * 16, out_controller.canvas);
+							__map_pixel(x, y - 1, 63 + 2 * 16, out_controller.canvas);
+						}
+						else
+						{
+							__map_pixel(x, y, 63, out_controller.canvas);
+							__map_pixel(x, y - 1, 63, out_controller.canvas);
+						}
+						break;
+					}
+				}
+			}
+
+			//enemies
+			for (
+				const wmdl_enemy_t* E = in_model.enemy; 
+				E < in_model.enemy + in_model.num_enemy; 
+				++E
+				)
+			{
+				__map_mover(E->x, E->y, 255 - 1 * 16, out_controller.canvas);
+			}
+
+			//hero
+			__map_mover(in_model.hero.x, in_model.hero.y, 255, out_controller.canvas);
 		}
 	}
 }
@@ -1051,7 +1135,7 @@ static wmdl_app_event_t __idle_update(
 {
 	minyin_blit(out_controller.canvas, in_assets.idle, 0, 0);
 
-#if 0
+#if 1
 	{//show palette
 		constexpr int32_t CELL = 4;
 		for (uint32_t i = 0; i < 256; ++i)
@@ -1145,8 +1229,8 @@ wmdl_app_event_t wmdl_controller_tick(
 	{
 		char str[16];
 		::sprintf_s(str, "%u", dx9::state.app->_frame_drops);
-		__text(assets, WMDL_CANVAS_HEIGHT - assets.font.height, str, softdraw::red, controller.canvas);
-}
+		__text(in_assets, out_controller.canvas.height - assets.font.height, str, softdraw::red, controller.canvas);
+	}
 #endif
 
 	return result;
@@ -1165,8 +1249,8 @@ void wmdl_controller_on_load_new_world(wmdl_controller_t& out_controller, std::v
 		++flake
 		)
 	{
-		flake->x = wmdl_random_unit() * WMDL_CANVAS_WIDTH;
-		flake->y = wmdl_random_unit() * WMDL_CANVAS_HEIGHT;
+		flake->x = wmdl_random_unit() * out_controller.canvas.width;
+		flake->y = wmdl_random_unit() * out_controller.canvas.height;
 		flake->sx = wmdl_random_unit() * 50 - 25;
 		flake->sy = wmdl_random_unit() * 75 + 25;
 		flake->t = uint32_t(wmdl_random_unit() * 6);

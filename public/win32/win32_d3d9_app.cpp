@@ -28,6 +28,20 @@ static canvas_layout_t __canvas_layout(const int32_t in_width, const int32_t in_
 	return result;
 }
 
+static uint32_t __clear_color(const win32_d3d9_app_i* in_app)
+{
+	uint32_t result;
+
+	static uint32_t last_frame_drops = 0;
+	if (in_app->_win32_d3d9_app_frame_drops != last_frame_drops)
+		result = 0xffff0000;
+	else
+		result = 0xff000000;
+	last_frame_drops = in_app->_win32_d3d9_app_frame_drops;
+
+	return result;
+}
+
 //public
 //public
 //public
@@ -186,7 +200,7 @@ bool win32_d3d9_softdraw_app_t::win32_d3d9_app_frame_render(const double, const 
 		if (SUCCEEDED(win32_d3d9_state.m_d3d_device->BeginScene()))
 		{
 			// Clear the render target and the zbuffer
-			VERIFY(win32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xff000000, 1.f, 0));
+			VERIFY(win32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, __clear_color(this), 1.f, 0));
 
 			{
 				const canvas_layout_t LAYOUT = __canvas_layout(REF_CANVAS.width, REF_CANVAS.height);
@@ -284,7 +298,7 @@ void win32_d3d9_softdraw_app_t::win32_d3d9_softdraw_app_handle_music_request(con
 	}
 
 	if (_music_stream)
-		_music_stream->update(_frame_moves * SECONDS_PER_FIXED_TICK, 1.f);
+		_music_stream->update(_win32_d3d9_app_frame_moves * SECONDS_PER_FIXED_TICK, 1.f);
 }
 
 //chunky
@@ -415,7 +429,7 @@ bool win32_d3d9_chunky_app_t::win32_d3d9_app_frame_render(const double, const fl
 		if (SUCCEEDED(win32_d3d9_state.m_d3d_device->BeginScene()))
 		{
 			// Clear the render target and the zbuffer
-			VERIFY(win32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, 0xff000000, 1.f, 0));
+			VERIFY(win32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, __clear_color(this), 1.f, 0));
 
 			{
 				const canvas_layout_t LAYOUT = __canvas_layout(REF_CANVAS.width, REF_CANVAS.height);
@@ -513,5 +527,5 @@ void win32_d3d9_chunky_app_t::win32_d3d9_chunky_app_handle_music_request(const c
 	}
 
 	if (_music_stream)
-		_music_stream->update(_frame_moves * SECONDS_PER_FIXED_TICK, 1.f);
+		_music_stream->update(_win32_d3d9_app_frame_moves * SECONDS_PER_FIXED_TICK, 1.f);
 }

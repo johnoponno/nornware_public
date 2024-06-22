@@ -48,7 +48,13 @@
 
 #define WMDL_PLANT_BITE_DISTANCE 24.f
 
+/*
+#if HANNAH
+#define WMDL_GRAVITY 850.f
+#else
 #define WMDL_GRAVITY 1300.f
+#endif
+*/
 
 constexpr float WMDL_SECONDS_PER_TICK = 1.f / 60.f;
 
@@ -105,7 +111,7 @@ struct wmdl_info_t
 	uint32_t id;
 };
 
-struct level_t
+struct wmdl_level_t
 {
 	uint32_t magic;
 	wmdl_tile_t tiles[WMDL_WORLD_SIZE];
@@ -118,7 +124,7 @@ struct level_t
 	uint32_t num_infos;
 };
 
-struct tile_info_t
+struct wmdl_tile_info_t
 {
 	uint32_t hero_pass;
 	uint32_t special;
@@ -156,8 +162,8 @@ struct wmdl_hero_t
 
 struct wmdl_model_t
 {
-	level_t level;
-	tile_info_t tile_info[WMDL_MAX_TILE];	//FIXME: immutable after program startup, move out!
+	wmdl_level_t level;
+	wmdl_tile_info_t tile_info[WMDL_MAX_TILE];	//FIXME: immutable after program startup, move out!
 	wmdl_enemy_t enemy[64];
 	wmdl_hero_t hero;
 	char last_world[32];
@@ -195,7 +201,7 @@ float wmdl_model_now(const wmdl_model_t& model);
 bool wmdl_model_is_server_fixed(const char* world, const uint32_t offset, const wmdl_hero_t& hero);
 const wmdl_info_t* wmdl_model_info_for_offset(const wmdl_model_t& model, const uint32_t offset);
 uint32_t wmdl_model_screen(const wmdl_model_t& model, const int32_t x, const int32_t y);
-const tile_info_t& wmdl_model_get_tile_info(const wmdl_model_t& model, const wmdl_tile_t& tile, const bool replace);
+const wmdl_tile_info_t& wmdl_model_get_tile_info(const wmdl_model_t& model, const wmdl_tile_t& tile, const bool replace);
 
 bool wmdl_hero_is_checkpoint(const wmdl_hero_t& hero, const int32_t x, const int32_t y);
 bool wmdl_hero_left_input(const wmdl_hero_t& hero);
@@ -216,3 +222,8 @@ float wmdl_plant_hero_distance(const wmdl_enemy_t& plant, const wmdl_hero_t& her
 
 uint16_t wmdl_change_endianness(const uint16_t in);
 uint32_t wmdl_change_endianness(const uint32_t in);
+
+float wmdl_gravity();
+float wmdl_hero_jump();
+
+extern bool wmdl_tune_new;

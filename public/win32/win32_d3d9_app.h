@@ -31,15 +31,15 @@ struct win32_d3d9_app_i
 		return true;
 	}
 
-	uint32_t _frame_drops;
-	uint32_t _frame_moves;
+	uint32_t _win32_d3d9_app_frame_drops;
+	uint32_t _win32_d3d9_app_frame_moves;
 
 protected:
 
 	explicit win32_d3d9_app_i()
 	{
-		_frame_drops = 0;
-		_frame_moves = 0;
+		_win32_d3d9_app_frame_drops = 0;
+		_win32_d3d9_app_frame_moves = 0;
 	}
 };
 

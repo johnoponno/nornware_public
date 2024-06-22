@@ -5,8 +5,6 @@
 
 struct wmdl_assets_t;
 
-#define WMDL_CANVAS_WIDTH 600
-#define WMDL_CANVAS_HEIGHT 240
 #define WMDL_TEXT_SPACING 13
 #define WMDL_HERO_WIDTH 16
 #define WMDL_HERO_HEIGHT 24
