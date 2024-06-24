@@ -263,6 +263,45 @@ void minyin_bitmap_relinquish(minyin_bitmap_t& out_bitmap)
 	out_bitmap.height = 0;
 }
 
+void minyin_clear(
+	minyin_bitmap_t& out_bitmap, 
+	const uint8_t in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_clear_width, int32_t in_clear_height)
+{
+	//check defaults
+	if (!in_clear_width || in_clear_width > out_bitmap.width)
+		in_clear_width = out_bitmap.width;
+	if (!in_clear_height || in_clear_height > out_bitmap.height)
+		in_clear_height = out_bitmap.height;
+
+	//clip
+	int32_t src_x = 0;
+	int32_t src_y = 0;
+	if (__clip(
+
+		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
+		0, 0, out_bitmap.width, out_bitmap.height,
+		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
+
+		src_x, src_y, in_dst_x, in_dst_y, in_clear_width, in_clear_height))
+	{
+		//short clear
+		uint8_t* dst = out_bitmap.pixels + in_dst_x + in_dst_y * out_bitmap.width;
+		uint8_t* scan_dst;
+		for (int32_t y = 0; y < in_clear_height; ++y)
+		{
+			scan_dst = dst;
+
+			for (int32_t x = 0; x < in_clear_width; ++x)
+			{
+				assert(dst >= out_bitmap.pixels && dst < (out_bitmap.pixels + out_bitmap.width * out_bitmap.height));
+				*dst++ = in_color;
+			}
+
+			dst = scan_dst + out_bitmap.width;
+		}
+	}
+}
+
 void minyin_cross(
 	minyin_bitmap_t& out_bitmap,
 	const int32_t in_x, const int32_t in_y, const int32_t in_size, const uint8_t in_color)

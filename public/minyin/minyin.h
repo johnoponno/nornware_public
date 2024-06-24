@@ -65,6 +65,7 @@ bool minyin_bitmap_init(minyin_bitmap_t& bm, const int32_t aWidth, const int32_t
 bool minyin_bitmap_load_8(minyin_bitmap_t& bm, const char* aFileName);
 void minyin_bitmap_relinquish(minyin_bitmap_t& bm);
 
+void minyin_clear(minyin_bitmap_t& bm, const uint8_t aColor, int32_t aDstX = 0, int32_t aDstY = 0, int32_t aClearWidth = 0, int32_t aClearHeight = 0);
 void minyin_h_line(minyin_bitmap_t& bm, int32_t x1, int32_t x2, const int32_t y1, const uint8_t aColor);
 void minyin_v_line(minyin_bitmap_t& bm, const int32_t x1, int32_t y1, int32_t y2, const uint8_t aColor);
 void minyin_cross(minyin_bitmap_t& bm, const int32_t x, const int32_t y, const int32_t aSize, const uint8_t aColor);

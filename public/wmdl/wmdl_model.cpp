@@ -53,13 +53,7 @@
 #define HERO_HALF_WIDTH 8
 #define HERO_HALF_HEIGHT 12
 
-/*
-#if HANNAH
-#define HERO_JUMP 300.f
-#else
-#define HERO_JUMP 400.f
-#endif
-*/
+#define HERO_JUMP -400.f
 
 #define HERO_DEAD_TIME 2.f
 #define HERO_WHIP_TIME .1f
@@ -1045,7 +1039,7 @@ static void __icicle_update(
 			break;
 
 		case WMDL_ICICLE_S_FALLING:
-			out_icicle->speed += wmdl_gravity() * WMDL_SECONDS_PER_TICK;
+			out_icicle->speed += WMDL_GRAVITY * WMDL_SECONDS_PER_TICK;
 			out_icicle->y += out_icicle->speed * WMDL_SECONDS_PER_TICK;
 
 			if (HP_CLEAR != __get_tile_info_for_position(in_model, out_icicle->x, out_icicle->y).hero_pass)
@@ -1370,13 +1364,13 @@ wmdl_events_t wmdl_model_update(wmdl_model_t& out_model)
 			if (!out_model.hero.air_bit && !__is_solid_above(out_model))
 			{
 				out_model.hero.air_bit = true;
-				out_model.hero.sy = wmdl_hero_jump();
+				out_model.hero.sy = HERO_JUMP;
 				result.bits |= WMDL_EVENT_BIT_HERO_JUMP;
 			}
 		}
 
 		//gravity
-		out_model.hero.sy += wmdl_gravity() * WMDL_SECONDS_PER_TICK;
+		out_model.hero.sy += WMDL_GRAVITY * WMDL_SECONDS_PER_TICK;
 		if (out_model.hero.sy > HERO_MAX_SPEEDY)
 			out_model.hero.sy = HERO_MAX_SPEEDY;
 		else if (out_model.hero.sy < -HERO_MAX_SPEEDY)
@@ -1444,25 +1438,25 @@ wmdl_events_t wmdl_model_update(wmdl_model_t& out_model)
 			break;
 
 		case WMDL_LOGIC_INDEX_KEY0:
-			if (0 == (out_model.hero.keys & WMDL_HERO_KEY0))
+			if (0 == (out_model.hero.keys & WMDL_HERO_KEYBITS_0))
 			{
-				out_model.hero.keys |= WMDL_HERO_KEY0;
+				out_model.hero.keys |= WMDL_HERO_KEYBITS_0;
 				result.bits |= WMDL_EVENT_BIT_KEY;
 			}
 			break;
 
 		case WMDL_LOGIC_INDEX_KEY1:
-			if (0 == (out_model.hero.keys & WMDL_HERO_KEY1))
+			if (0 == (out_model.hero.keys & WMDL_HERO_KEYBITS_1))
 			{
-				out_model.hero.keys |= WMDL_HERO_KEY1;
+				out_model.hero.keys |= WMDL_HERO_KEYBITS_1;
 				result.bits |= WMDL_EVENT_BIT_KEY;
 			}
 			break;
 
 		case WMDL_LOGIC_INDEX_KEY2:
-			if (0 == (out_model.hero.keys & WMDL_HERO_KEY2))
+			if (0 == (out_model.hero.keys & WMDL_HERO_KEYBITS_2))
 			{
-				out_model.hero.keys |= WMDL_HERO_KEY2;
+				out_model.hero.keys |= WMDL_HERO_KEYBITS_2;
 				result.bits |= WMDL_EVENT_BIT_KEY;
 			}
 			break;
@@ -1523,17 +1517,17 @@ const wmdl_tile_info_t& wmdl_model_get_tile_info(const wmdl_model_t& in_model, c
 		switch (in_tile.index)
 		{
 		case WMDL_LOGIC_INDEX_KEY0BLOCK:
-			if (in_model.hero.keys & WMDL_HERO_KEY0)
+			if (in_model.hero.keys & WMDL_HERO_KEYBITS_0)
 				return in_model.tile_info[WMDL_LOGIC_INDEX_AIR];
 			break;
 
 		case WMDL_LOGIC_INDEX_KEY1BLOCK:
-			if (in_model.hero.keys & WMDL_HERO_KEY1)
+			if (in_model.hero.keys & WMDL_HERO_KEYBITS_1)
 				return in_model.tile_info[WMDL_LOGIC_INDEX_AIR];
 			break;
 
 		case WMDL_LOGIC_INDEX_KEY2BLOCK:
-			if (in_model.hero.keys & WMDL_HERO_KEY2)
+			if (in_model.hero.keys & WMDL_HERO_KEYBITS_2)
 				return in_model.tile_info[WMDL_LOGIC_INDEX_AIR];
 			break;
 		}
@@ -1642,6 +1636,7 @@ uint32_t wmdl_change_endianness(const uint32_t in)
 	return out;
 }
 
+/*
 float wmdl_gravity()
 {
 	if (wmdl_tune_new)
@@ -1657,3 +1652,4 @@ float wmdl_hero_jump()
 }
 
 bool wmdl_tune_new = false;
+*/

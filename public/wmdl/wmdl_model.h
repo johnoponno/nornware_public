@@ -34,9 +34,9 @@
 #define WMDL_HERO_FLAGS_RIGHT 8
 #define WMDL_HERO_FLAGS_JUMP 16
 
-#define WMDL_HERO_KEY0 1
-#define WMDL_HERO_KEY1 2
-#define WMDL_HERO_KEY2 4
+#define WMDL_HERO_KEYBITS_0 1
+#define WMDL_HERO_KEYBITS_1 2
+#define WMDL_HERO_KEYBITS_2 4
 
 #define WMDL_ICICLE_S_IDLE 0
 #define WMDL_ICICLE_S_PENDING 1
@@ -48,13 +48,7 @@
 
 #define WMDL_PLANT_BITE_DISTANCE 24.f
 
-/*
-#if HANNAH
-#define WMDL_GRAVITY 850.f
-#else
 #define WMDL_GRAVITY 1300.f
-#endif
-*/
 
 constexpr float WMDL_SECONDS_PER_TICK = 1.f / 60.f;
 
@@ -222,8 +216,3 @@ float wmdl_plant_hero_distance(const wmdl_enemy_t& plant, const wmdl_hero_t& her
 
 uint16_t wmdl_change_endianness(const uint16_t in);
 uint32_t wmdl_change_endianness(const uint32_t in);
-
-float wmdl_gravity();
-float wmdl_hero_jump();
-
-extern bool wmdl_tune_new;

@@ -196,16 +196,25 @@ static void __draw_tile(
 	minyin_bitmap_t& out_canvas)
 {
 	const int32_t TILES_ON_SOURCE_X = in_assets.tiles.width / WMDL_TILE_ASPECT;
-
-	minyin_blit_key_clip(
-		out_canvas,
-		in_assets.key_index,
-		in_assets.tiles,
-		in_x, in_y,
-		WMDL_TILE_ASPECT, WMDL_TILE_ASPECT,
-		(in_tile % TILES_ON_SOURCE_X) * WMDL_TILE_ASPECT,
-		in_tile / TILES_ON_SOURCE_X * WMDL_TILE_ASPECT
-	);
+	const int32_t TILES_ON_SOURCE_Y = in_assets.tiles.height / WMDL_TILE_ASPECT;
+	if (in_tile < uint32_t(TILES_ON_SOURCE_X * TILES_ON_SOURCE_Y))
+	{
+		const int32_t SRC_X = (in_tile % TILES_ON_SOURCE_X) * WMDL_TILE_ASPECT;
+		const int32_t SRC_Y = in_tile / TILES_ON_SOURCE_X * WMDL_TILE_ASPECT;
+		minyin_blit_key_clip(
+			out_canvas,
+			in_assets.key_index,
+			in_assets.tiles,
+			in_x, in_y,
+			WMDL_TILE_ASPECT, WMDL_TILE_ASPECT,
+			SRC_X,
+			SRC_Y
+		);
+	}
+	else
+	{
+		minyin_clear(out_canvas, 255, in_x, in_y, WMDL_TILE_ASPECT, WMDL_TILE_ASPECT);
+	}
 }
 
 static uint32_t __plant_state(const wmdl_hero_t& in_hero, const wmdl_enemy_t& in_plant)
@@ -643,19 +652,19 @@ static void __draw_tiles(
 
 				case WMDL_LOGIC_INDEX_KEY0:
 				case WMDL_LOGIC_INDEX_KEY0BLOCK:
-					if (in_model.hero.keys & WMDL_HERO_KEY0)
+					if (in_model.hero.keys & WMDL_HERO_KEYBITS_0)
 						index = WMDL_LOGIC_INDEX_AIR;
 					break;
 
 				case WMDL_LOGIC_INDEX_KEY1:
 				case WMDL_LOGIC_INDEX_KEY1BLOCK:
-					if (in_model.hero.keys & WMDL_HERO_KEY1)
+					if (in_model.hero.keys & WMDL_HERO_KEYBITS_1)
 						index = WMDL_LOGIC_INDEX_AIR;
 					break;
 
 				case WMDL_LOGIC_INDEX_KEY2:
 				case WMDL_LOGIC_INDEX_KEY2BLOCK:
-					if (in_model.hero.keys & WMDL_HERO_KEY2)
+					if (in_model.hero.keys & WMDL_HERO_KEYBITS_2)
 						index = WMDL_LOGIC_INDEX_AIR;
 					break;
 				}
@@ -676,7 +685,7 @@ static void __draw_deaths(
 	wmdl_death_t* death = out_controller.deaths;
 	while (death < out_controller.deaths + out_controller.num_deaths)
 	{
-		death->s += wmdl_gravity() * WMDL_SECONDS_PER_TICK;
+		death->s += WMDL_GRAVITY * WMDL_SECONDS_PER_TICK;
 
 		death->y += death->s * WMDL_SECONDS_PER_TICK;
 
@@ -974,8 +983,10 @@ static void __play_update(
 		}
 		else
 		{
+			/*
 			if (minyin_key_downflank(in_minyin, 'N'))
 				wmdl_tune_new ^= 1;
+				*/
 
 			uint32_t input = 0;
 
@@ -1052,11 +1063,11 @@ static void __play_update(
 
 			//keys gui
 			int32_t x = WMDL_TILE_ASPECT;
-			if (in_model.hero.keys & WMDL_HERO_KEY0)
+			if (in_model.hero.keys & WMDL_HERO_KEYBITS_0)
 				__draw_tile(in_assets, x, 0, WMDL_LOGIC_INDEX_KEY0, out_controller.canvas);
-			if (in_model.hero.keys & WMDL_HERO_KEY1)
+			if (in_model.hero.keys & WMDL_HERO_KEYBITS_1)
 				__draw_tile(in_assets, x += WMDL_TILE_ASPECT, 0, WMDL_LOGIC_INDEX_KEY1, out_controller.canvas);
-			if (in_model.hero.keys & WMDL_HERO_KEY2)
+			if (in_model.hero.keys & WMDL_HERO_KEYBITS_2)
 				__draw_tile(in_assets, x += WMDL_TILE_ASPECT, 0, WMDL_LOGIC_INDEX_KEY2, out_controller.canvas);
 
 			//servers to fix (in current level)
@@ -1077,8 +1088,10 @@ static void __play_update(
 			__text(in_assets, out_controller.canvas.height / 3 * 2, "R = Resume", 0, out_controller.canvas);
 		}
 
+		/*
 		if (wmdl_tune_new)
 			out_controller.canvas.pixels[0] = 255;
+			*/
 
 		//map
 		{
@@ -1100,8 +1113,8 @@ static void __play_update(
 					case WMDL_LOGIC_INDEX_SERVER:
 						if (wmdl_model_is_server_fixed(in_model.world, wmdl_grid_to_offset(x, y), in_model.hero))
 						{
-							__map_pixel(x, y, 63 + 2 * 16, out_controller.canvas);
-							__map_pixel(x, y - 1, 63 + 2 * 16, out_controller.canvas);
+							__map_pixel(x, y, 95, out_controller.canvas);
+							__map_pixel(x, y - 1, 95, out_controller.canvas);
 						}
 						else
 						{
@@ -1109,14 +1122,38 @@ static void __play_update(
 							__map_pixel(x, y - 1, 63, out_controller.canvas);
 						}
 						break;
+
+					case WMDL_LOGIC_INDEX_KEY0:
+					case WMDL_LOGIC_INDEX_KEY0BLOCK:
+						if (in_model.hero.keys & WMDL_HERO_KEYBITS_0)
+							__map_pixel(x, y, 0, out_controller.canvas);
+						else
+							__map_pixel(x, y, 63, out_controller.canvas);
+						break;
+
+					case WMDL_LOGIC_INDEX_KEY1:
+					case WMDL_LOGIC_INDEX_KEY1BLOCK:
+						if (in_model.hero.keys & WMDL_HERO_KEYBITS_1)
+							__map_pixel(x, y, 0, out_controller.canvas);
+						else
+							__map_pixel(x, y, 95, out_controller.canvas);
+						break;
+
+					case WMDL_LOGIC_INDEX_KEY2:
+					case WMDL_LOGIC_INDEX_KEY2BLOCK:
+						if (in_model.hero.keys & WMDL_HERO_KEYBITS_2)
+							__map_pixel(x, y, 0, out_controller.canvas);
+						else
+							__map_pixel(x, y, 159, out_controller.canvas);
+						break;
 					}
 				}
 			}
 
 			//enemies
 			for (
-				const wmdl_enemy_t* E = in_model.enemy; 
-				E < in_model.enemy + in_model.num_enemy; 
+				const wmdl_enemy_t* E = in_model.enemy;
+				E < in_model.enemy + in_model.num_enemy;
 				++E
 				)
 			{
@@ -1230,7 +1267,7 @@ wmdl_app_event_t wmdl_controller_tick(
 		char str[16];
 		::sprintf_s(str, "%u", dx9::state.app->_frame_drops);
 		__text(in_assets, out_controller.canvas.height - assets.font.height, str, softdraw::red, controller.canvas);
-	}
+}
 #endif
 
 	return result;
