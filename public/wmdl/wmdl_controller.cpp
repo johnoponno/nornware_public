@@ -282,7 +282,7 @@ static void __draw_scorpion(
 	);
 }
 
-static const char* __text(const uint32_t in_id, const uint32_t in_line)
+static const char* __draw_text(const uint32_t in_id, const uint32_t in_line)
 {
 	switch (in_id)
 	{
@@ -404,7 +404,7 @@ static void __draw_dust_pass(
 }
 */
 
-static void __text(
+static void __draw_text(
 	const wmdl_assets_t& in_assets, const int in_dst_y, const char* in_string, const uint8_t in_color,
 	minyin_bitmap_t& out_canvas)
 {
@@ -433,36 +433,36 @@ static void __draw_foreground(
 
 		int32_t y;
 
-		__text(in_assets, y = out_controller.canvas.height + int32_t((wmdl_model_now(in_model) - out_controller.credits_start_time) * -16.), "Congratulations!", WMDL_TITLE_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "You made it to the end of the game!", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "We wanted to put an epic boss fight", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "here, but we couldn't quite", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "find the time.", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y = out_controller.canvas.height + int32_t((wmdl_model_now(in_model) - out_controller.credits_start_time) * -16.), "Congratulations!", WMDL_TITLE_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "You made it to the end of the game!", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "We wanted to put an epic boss fight", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "here, but we couldn't quite", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "find the time.", WMDL_TEXT_COLOR, out_controller.canvas);
 
-		__text(in_assets, y += WMDL_TEXT_SPACING * 2, "Feel free to explore the game", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "world further, or play it again,", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "or whatever you like!", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Feel free to explore the game", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "world further, or play it again,", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "or whatever you like!", WMDL_TEXT_COLOR, out_controller.canvas);
 
-		__text(in_assets, y += WMDL_TEXT_SPACING * 2, "If you're interested in playing", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "with the level editor,", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "or playing with the code base,", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "or have any other questions", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "or comments, please contact:", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "If you're interested in playing", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "with the level editor,", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "or playing with the code base,", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "or have any other questions", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "or comments, please contact:", WMDL_TEXT_COLOR, out_controller.canvas);
 
-		__text(in_assets, y += WMDL_TEXT_SPACING, "contact@nornware.com", WMDL_TITLE_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "contact@nornware.com", WMDL_TITLE_COLOR, out_controller.canvas);
 
-		__text(in_assets, y += WMDL_TEXT_SPACING * 2, "Thanks for playing!", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Thanks for playing!", WMDL_TEXT_COLOR, out_controller.canvas);
 
-		__text(in_assets, y += WMDL_TEXT_SPACING * 4, "Whip Man Danger Land", WMDL_TITLE_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012-2024 nornware AB", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 4, "Whip Man Danger Land", WMDL_TITLE_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012-2024 nornware AB", WMDL_TEXT_COLOR, out_controller.canvas);
 
-		__text(in_assets, y += WMDL_TEXT_SPACING * 2, "Art / Design", WMDL_TITLE_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "Saga Velander", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "Michael Awakim Manaz", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "Mats Persson", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Art / Design", WMDL_TITLE_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Saga Velander", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Michael Awakim Manaz", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Mats Persson", WMDL_TEXT_COLOR, out_controller.canvas);
 
-		__text(in_assets, y += WMDL_TEXT_SPACING * 2, "Code / Music / Sound", WMDL_TITLE_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "Johannes 'johno' Norneby", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Code / Music / Sound", WMDL_TITLE_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Johannes 'johno' Norneby", WMDL_TEXT_COLOR, out_controller.canvas);
 
 		if (y < -32)
 			out_controller.credits_start_time = wmdl_model_now(in_model);
@@ -960,7 +960,7 @@ static void __play_update(
 	//play menu up?
 	if (out_controller.play_menu)
 	{
-		__text(in_assets, out_controller.canvas.height / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
+//		__draw_text(in_assets, out_controller.canvas.height / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
 		{
 			in_model.play_bit = 0;
@@ -968,7 +968,7 @@ static void __play_update(
 			out_controller.play_menu = false;
 		}
 
-		__text(in_assets, out_controller.canvas.height / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
+//		__draw_text(in_assets, out_controller.canvas.height / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (minyin_key_downflank(in_minyin, 'R'))
 		{
 			out_controller.play_menu = false;
@@ -1038,13 +1038,13 @@ static void __play_update(
 			{
 				const char* s;
 
-				s = __text(INFO->id, 0);
+				s = __draw_text(INFO->id, 0);
 				if (s)
-					__text(in_assets, 0, s, WMDL_PROMPT_COLOR, out_controller.canvas);
+					__draw_text(in_assets, 0, s, WMDL_PROMPT_COLOR, out_controller.canvas);
 
-				s = __text(INFO->id, 1);
+				s = __draw_text(INFO->id, 1);
 				if (s)
-					__text(in_assets, in_assets.font.height, s, WMDL_PROMPT_COLOR, out_controller.canvas);
+					__draw_text(in_assets, in_assets.font.height, s, WMDL_PROMPT_COLOR, out_controller.canvas);
 			}
 		}
 
@@ -1084,8 +1084,8 @@ static void __play_update(
 
 		if (out_controller.play_menu)
 		{
-			__text(in_assets, out_controller.canvas.height / 3, "ESC = Quit", 0, out_controller.canvas);
-			__text(in_assets, out_controller.canvas.height / 3 * 2, "R = Resume", 0, out_controller.canvas);
+			__draw_text(in_assets, out_controller.canvas.height / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
+			__draw_text(in_assets, out_controller.canvas.height / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
 		}
 
 		/*
@@ -1191,19 +1191,19 @@ static wmdl_app_event_t __idle_update(
 	{
 		int32_t y;
 
-		__text(in_assets, y = 8, "Whip Man Danger Land", WMDL_TITLE_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012-2024 nornware AB", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING * 2, "Talent", WMDL_TITLE_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "Saga Velander", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "Michael Awakim Manaz", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "Mats Persson", WMDL_TEXT_COLOR, out_controller.canvas);
-		__text(in_assets, y += WMDL_TEXT_SPACING, "Johannes 'johno' Norneby", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y = 8, "Whip Man Danger Land", WMDL_TITLE_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012-2024 nornware AB", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Talent", WMDL_TITLE_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Saga Velander", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Michael Awakim Manaz", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Mats Persson", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Johannes 'johno' Norneby", WMDL_TEXT_COLOR, out_controller.canvas);
 
-		__text(in_assets, y += WMDL_TEXT_SPACING * 4, "P = Play", WMDL_PROMPT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 4, "P = Play", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (minyin_key_downflank(in_minyin, 'P'))
 			return wmdl_app_event_t::START_NEW_GAME;
 
-		__text(in_assets, y += WMDL_TEXT_SPACING, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
 			return wmdl_app_event_t::EXIT_APPLICATION;
 	}
@@ -1266,7 +1266,7 @@ wmdl_app_event_t wmdl_controller_tick(
 	{
 		char str[16];
 		::sprintf_s(str, "%u", dx9::state.app->_frame_drops);
-		__text(in_assets, out_controller.canvas.height - assets.font.height, str, softdraw::red, controller.canvas);
+		__draw_text(in_assets, out_controller.canvas.height - assets.font.height, str, softdraw::red, controller.canvas);
 }
 #endif
 
