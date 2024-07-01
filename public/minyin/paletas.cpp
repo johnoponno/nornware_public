@@ -169,7 +169,7 @@ bool paletas_calculate(
 
 	pixel_t palette[256]{};
 	{
-		//1) get all unique pixels
+		//get all unique pixels
 		uint32_t total_source_pixels = 0;
 		std::vector<std::vector<pixel_t>> all_buckets;
 		{
@@ -193,7 +193,7 @@ bool paletas_calculate(
 			all_buckets.push_back(first_bucket);
 		}
 
-		//2) figure out which channel has the greatest range, sort, and split until we have as many buckets as we want palette indices
+		//figure out which channel has the greatest range, sort, and split until we have as many buckets as we want palette indices
 		while (all_buckets.size() < in_palette_size)
 		{
 			std::vector<std::vector<pixel_t>> new_buckets;
@@ -208,7 +208,7 @@ bool paletas_calculate(
 		}
 		assert(all_buckets.size() == in_palette_size);
 
-		//4) average buckets to a single color (these colors will be final palette colors)
+		//average buckets to a single color (these colors will be final palette colors)
 		for (uint32_t bucket_index = 0; bucket_index < all_buckets.size(); ++bucket_index)
 		{
 			const std::vector<pixel_t>& BUCKET = all_buckets[bucket_index];
@@ -233,7 +233,7 @@ bool paletas_calculate(
 		}
 	}
 
-	//5) create all the palettize bitmaps by remapping all pixels to the final palette of averaged colors (use the nearest color)
+	//create all the palettize bitmaps by remapping all pixels to the final palette of averaged colors (use the nearest color)
 	{
 		std::map<pixel_t, uint32_t> remap_cache;
 		for (uint32_t i = 0; i < out_paletas.items.size(); ++i)

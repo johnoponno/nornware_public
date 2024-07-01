@@ -92,6 +92,7 @@
     <ClCompile Include="wmdl_assets.cpp" />
     <ClCompile Include="wmdl_controller.cpp" />
     <ClCompile Include="wmdl_game.cpp" />
+    <ClCompile Include="wmdl_map.cpp" />
     <ClCompile Include="wmdl_model.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -27,6 +27,10 @@
 
 #define TILE_FPS 16.f
 
+void wmdl_map(
+	const wmdl_model_t& in_model,
+	minyin_bitmap_t& out_canvas);
+
 static int32_t __hero_view_position_x(const wmdl_model_t& in_model)
 {
 	int32_t x = (int32_t)in_model.hero.x;
@@ -932,26 +936,6 @@ static void __draw_enemies(
 	}
 }
 
-static void __map_pixel(
-	const int32_t in_x, const int32_t in_y, const uint8_t in_color,
-	minyin_bitmap_t& out_canvas)
-{
-	uint8_t* p = out_canvas.pixels + (out_canvas.width - WMDL_WORLD_WIDTH * 2) / 2 + 2 * in_x + (out_canvas.height - 2 * WMDL_WORLD_HEIGHT + 2 * in_y) * out_canvas.width;
-	p[0] = in_color;
-	p[1] = in_color;
-	p[0 + out_canvas.width] = in_color;
-	p[1 + out_canvas.width] = in_color;
-}
-
-static void __map_mover(
-	const float in_world_x, const float in_world_y, const uint8_t in_color,
-	minyin_bitmap_t& out_canvas)
-{
-	const uint32_t OFFSET = wmdl_world_to_offset(in_world_x, in_world_y);
-	const int32_t X = OFFSET % WMDL_WORLD_WIDTH;
-	const int32_t Y = OFFSET / WMDL_WORLD_WIDTH;
-	__map_pixel(X, Y, in_color, out_canvas);
-}
 
 static void __play_update(
 	const minyin_input_t& in_minyin, const wmdl_assets_t& in_assets, wmdl_model_t& in_model,
@@ -960,7 +944,7 @@ static void __play_update(
 	//play menu up?
 	if (out_controller.play_menu)
 	{
-//		__draw_text(in_assets, out_controller.canvas.height / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
+		//		__draw_text(in_assets, out_controller.canvas.height / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
 		{
 			in_model.play_bit = 0;
@@ -968,7 +952,7 @@ static void __play_update(
 			out_controller.play_menu = false;
 		}
 
-//		__draw_text(in_assets, out_controller.canvas.height / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
+		//		__draw_text(in_assets, out_controller.canvas.height / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (minyin_key_downflank(in_minyin, 'R'))
 		{
 			out_controller.play_menu = false;
@@ -1012,10 +996,9 @@ static void __play_update(
 			//always set
 			in_model.hero.input = input;
 		}
-	}
+	}//input
 
-	//doOutput();
-	{
+	{//output
 		const int32_t VPX = __hero_view_position_x(in_model);
 		const int32_t VPY = __hero_view_position_y(in_model);
 
@@ -1093,77 +1076,8 @@ static void __play_update(
 			out_controller.canvas.pixels[0] = 255;
 			*/
 
-		//map
-		{
-			//tiles
-			for (int32_t y = 0; y < WMDL_WORLD_HEIGHT; ++y)
-			{
-				for (int32_t x = 0; x < WMDL_WORLD_WIDTH; ++x)
-				{
-					const wmdl_tile_t& TILE = wmdl_model_get_tile(in_model, x, y);
-					switch (TILE.index)
-					{
-					default:
-						if (wmdl_model_get_tile_info(in_model, TILE, true).hero_pass)
-							__map_pixel(x, y, 15, out_controller.canvas);
-						else
-							__map_pixel(x, y, 0, out_controller.canvas);
-						break;
-
-					case WMDL_LOGIC_INDEX_SERVER:
-						if (wmdl_model_is_server_fixed(in_model.world, wmdl_grid_to_offset(x, y), in_model.hero))
-						{
-							__map_pixel(x, y, 95, out_controller.canvas);
-							__map_pixel(x, y - 1, 95, out_controller.canvas);
-						}
-						else
-						{
-							__map_pixel(x, y, 63, out_controller.canvas);
-							__map_pixel(x, y - 1, 63, out_controller.canvas);
-						}
-						break;
-
-					case WMDL_LOGIC_INDEX_KEY0:
-					case WMDL_LOGIC_INDEX_KEY0BLOCK:
-						if (in_model.hero.keys & WMDL_HERO_KEYBITS_0)
-							__map_pixel(x, y, 0, out_controller.canvas);
-						else
-							__map_pixel(x, y, 63, out_controller.canvas);
-						break;
-
-					case WMDL_LOGIC_INDEX_KEY1:
-					case WMDL_LOGIC_INDEX_KEY1BLOCK:
-						if (in_model.hero.keys & WMDL_HERO_KEYBITS_1)
-							__map_pixel(x, y, 0, out_controller.canvas);
-						else
-							__map_pixel(x, y, 95, out_controller.canvas);
-						break;
-
-					case WMDL_LOGIC_INDEX_KEY2:
-					case WMDL_LOGIC_INDEX_KEY2BLOCK:
-						if (in_model.hero.keys & WMDL_HERO_KEYBITS_2)
-							__map_pixel(x, y, 0, out_controller.canvas);
-						else
-							__map_pixel(x, y, 159, out_controller.canvas);
-						break;
-					}
-				}
-			}
-
-			//enemies
-			for (
-				const wmdl_enemy_t* E = in_model.enemy;
-				E < in_model.enemy + in_model.num_enemy;
-				++E
-				)
-			{
-				__map_mover(E->x, E->y, 255 - 1 * 16, out_controller.canvas);
-			}
-
-			//hero
-			__map_mover(in_model.hero.x, in_model.hero.y, 255, out_controller.canvas);
-		}
-	}
+		wmdl_map(in_model, out_controller.canvas);
+	}//output
 }
 
 static wmdl_app_event_t __idle_update(

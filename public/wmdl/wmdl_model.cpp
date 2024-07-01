@@ -1325,7 +1325,7 @@ wmdl_events_t wmdl_model_update(wmdl_model_t& out_model)
 		if (WMDL_HERO_FLAGS_DOWN & out_model.hero.input)
 		{
 			const wmdl_portal_t* PORTAL = __portal_for_offset(out_model, wmdl_world_to_offset(out_model.hero.x, out_model.hero.y));
-#if 1
+#if 0
 			if (PORTAL && out_model.hero.fixed_servers.count >= PORTAL->server_count)
 #else
 			if (PORTAL)//this allows passage thru portals regardless of server count
