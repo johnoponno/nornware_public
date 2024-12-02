@@ -108,7 +108,7 @@
     <ClInclude Include="win32_dsound_vorbis_file.h" />
     <ClInclude Include="win32_d3d9_state.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="win32_timer.h" />
+    <ClInclude Include="w32_timer.h" />
     <ClInclude Include="vorbis_file.h" />
   </ItemGroup>
   <ItemGroup>
@@ -132,7 +132,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="win32_timer.cpp" />
+    <ClCompile Include="w32_timer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

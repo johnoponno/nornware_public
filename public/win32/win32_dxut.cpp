@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "win32_d3d9_state.h"
-#include "win32_timer.h"
+#include "w32_timer.h"
 #include "win32_d3d9_resource.h"
 #include "win32_d3d9_app.h"
 
@@ -62,10 +62,10 @@ static void __revert(win32_d3d9_device_settings_t& settings, match_options_t& op
 	}
 }
 
-win32_timer_t& __timer()
+w32_timer_t& __timer()
 {
 	// using an accessor function gives control of the construction order
-	static win32_timer_t t;
+	static w32_timer_t t;
 	return t;
 }
 
@@ -3443,7 +3443,7 @@ static void __do_idle_time(win32_d3d9_app_i* anApp)
 	//fixed update central
 	{
 		// get the app's time, in seconds. Skip rendering if no time elapsed
-		const win32_timer_values_t TIME_VALUES = __timer().mutate_and_get_values();
+		const w32_timer_values_t TIME_VALUES = __timer().mutate_and_get_values();
 
 		if (anApp && anApp->win32_d3d9_app_is_fixed_tick_rate())
 		{

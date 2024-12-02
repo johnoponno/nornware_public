@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="win32_timer.cpp" />
+    <ClCompile Include="w32_timer.cpp" />
     <ClCompile Include="win32_dsound.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
@@ -54,7 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="win32_timer.h" />
+    <ClInclude Include="w32_timer.h" />
     <ClInclude Include="ogg.h">
       <Filter>ogg/vorbis</Filter>
     </ClInclude>
