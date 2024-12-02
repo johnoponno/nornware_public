@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "win32_dsound_stream.h"
+#include "w32_dsound_stream.h"
 
-#include "win32_dsound_stream_source.h"
-#include "win32_dsound_engine.h"
+#include "w32_dsound_stream_source.h"
+#include "w32_dsound_engine.h"
 
 #define NUM_FRAMES 100
 
@@ -14,8 +14,8 @@ enum struct copy_to_buffer_result_t
 };
 
 static bool __init(
-	const win32_dsound_engine_t& anEngine,
-	win32_dsound_stream_t& s)
+	const w32_dsound_engine_t& anEngine,
+	w32_dsound_stream_t& s)
 {
 	::DSBUFFERDESC dsbd;
 
@@ -35,7 +35,7 @@ static bool __init(
 
 static copy_to_buffer_result_t __copy_to_buffer(
 	const uint32_t aDstOffset, uint32_t& aCopyLength,
-	win32_dsound_stream_t& s)
+	w32_dsound_stream_t& s)
 {
 	::HRESULT error;
 	uint8_t* dst;
@@ -63,7 +63,7 @@ static copy_to_buffer_result_t __copy_to_buffer(
 			//if looping, load wrapped
 			if (s.looping_eh)
 			{
-				if (s.source->win32_dsound_stream_source_load_wrapped_segment(dst, dstLength))
+				if (s.source->w32_dsound_stream_source_load_wrapped_segment(dst, dstLength))
 				{
 					//set copy length & return value
 					aCopyLength = dstLength;
@@ -78,7 +78,7 @@ static copy_to_buffer_result_t __copy_to_buffer(
 			//else load nonwrapped
 			else
 			{
-				if (s.source->win32_dsound_stream_source_load_segment(dst, dstLength, aCopyLength))
+				if (s.source->w32_dsound_stream_source_load_segment(dst, dstLength, aCopyLength))
 				{
 					//check if reached EOF
 					if (aCopyLength < dstLength)
@@ -120,7 +120,7 @@ static copy_to_buffer_result_t __copy_to_buffer(
 
 static bool __play(
 	const bool aLoopFlag, const float aVolume, const float aStartPosition,
-	win32_dsound_stream_t& s)
+	w32_dsound_stream_t& s)
 {
 	s.total_position = 0;
 
@@ -133,11 +133,11 @@ static bool __play(
 		uint32_t copyLength;
 
 		//rewind stream
-		if (!s.source->win32_dsound_stream_source_rewind(aStartPosition))
+		if (!s.source->w32_dsound_stream_source_rewind(aStartPosition))
 			return false;
 
 		//figure out where we actually started in bytes (based on where we rewinded to)
-		s.total_position = s.source->win32_dsound_stream_source_position_bytes();
+		s.total_position = s.source->w32_dsound_stream_source_position_bytes();
 
 		//fill entire sound buffer
 		copyLength = s.buffer_size;
@@ -157,7 +157,7 @@ static bool __play(
 	}
 
 	//set volume
-	if (s.buffer->SetVolume(win32_dsound_linear_to_directx_volume(aVolume)) != DS_OK)
+	if (s.buffer->SetVolume(w32_dsound_linear_to_directx_volume(aVolume)) != DS_OK)
 		return false;
 
 	//reset buffer
@@ -177,7 +177,7 @@ static bool __play(
 
 static void __clear_buffer(
 	const uint32_t aDstOffset, const uint32_t aClearLength,
-	win32_dsound_stream_t& s)
+	w32_dsound_stream_t& s)
 {
 	HRESULT error;
 	uint8_t* dst;
@@ -215,7 +215,7 @@ static void __clear_buffer(
 	}
 }
 
-static void __stop_playback(win32_dsound_stream_t& s)
+static void __stop_playback(w32_dsound_stream_t& s)
 {
 	s.buffer->Stop();
 
@@ -236,7 +236,7 @@ static void __stop_playback(win32_dsound_stream_t& s)
 //public
 //public
 //public
-win32_dsound_stream_t::win32_dsound_stream_t(win32_dsound_stream_source_i* aSource)
+w32_dsound_stream_t::w32_dsound_stream_t(w32_dsound_stream_source_i* aSource)
 {
 	source = aSource;
 	buffer = nullptr;
@@ -253,18 +253,18 @@ win32_dsound_stream_t::win32_dsound_stream_t(win32_dsound_stream_source_i* aSour
 	stop_pending_eh = 0;
 }
 
-win32_dsound_stream_t::~win32_dsound_stream_t()
+w32_dsound_stream_t::~w32_dsound_stream_t()
 {
 	if (buffer)
 		buffer->Release();
 	delete source;
 }
 
-win32_dsound_stream_t* win32_dsound_stream_t::create(
-	const win32_dsound_engine_t& anEngine,
-	win32_dsound_stream_source_i* aSource)
+w32_dsound_stream_t* w32_dsound_stream_t::create(
+	const w32_dsound_engine_t& anEngine,
+	w32_dsound_stream_source_i* aSource)
 {
-	win32_dsound_stream_t* s = new win32_dsound_stream_t(aSource);
+	w32_dsound_stream_t* s = new w32_dsound_stream_t(aSource);
 
 	if (s && !__init(anEngine, *s))
 	{
@@ -275,7 +275,7 @@ win32_dsound_stream_t* win32_dsound_stream_t::create(
 	return s;
 }
 
-bool win32_dsound_stream_t::play(const bool aLoopFlag, const float aStartPosition, const float aMaxVolume)
+bool w32_dsound_stream_t::play(const bool aLoopFlag, const float aStartPosition, const float aMaxVolume)
 {
 	if (!playing_eh)
 		return __play(aLoopFlag, aMaxVolume, aStartPosition, *this);
@@ -283,7 +283,7 @@ bool win32_dsound_stream_t::play(const bool aLoopFlag, const float aStartPositio
 	return false;
 }
 
-bool win32_dsound_stream_t::update(const float aCurrentTime, const float aMaxVolume)
+bool w32_dsound_stream_t::update(const float aCurrentTime, const float aMaxVolume)
 {
 	//if not playing, just return
 	if (!playing_eh)
@@ -337,7 +337,7 @@ bool win32_dsound_stream_t::update(const float aCurrentTime, const float aMaxVol
 		}
 
 		//set volume
-		if (FAILED(buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume))))
+		if (FAILED(buffer->SetVolume(w32_dsound_linear_to_directx_volume(volume))))
 			return false;
 	}
 
@@ -411,7 +411,7 @@ bool win32_dsound_stream_t::update(const float aCurrentTime, const float aMaxVol
 /*
 bool stream_fade_in_play(
 	const bool aLoopFlag, const float aCurrentTime, const float aDuration, const float aStartPosition,
-	win32_dsound_stream_t& s)
+	w32_dsound_stream_t& s)
 {
 	if (!s.playing_eh)
 	{
@@ -428,7 +428,7 @@ bool stream_fade_in_play(
 
 bool stream_fade_out_stop(
 	const float aCurrentTime, const float aDuration,
-	win32_dsound_stream_t& s)
+	w32_dsound_stream_t& s)
 {
 	if (s.playing_eh)
 	{
@@ -444,7 +444,7 @@ bool stream_fade_out_stop(
 }
 
 
-void stream_position_bytes(uint32_t& aPosition, uint32_t& aTotal, const win32_dsound_stream_t& s)
+void stream_position_bytes(uint32_t& aPosition, uint32_t& aTotal, const w32_dsound_stream_t& s)
 {
 	::DWORD p;
 	if (SUCCEEDED(s.buffer->GetCurrentPosition(&p, nullptr)))
@@ -458,7 +458,7 @@ void stream_position_bytes(uint32_t& aPosition, uint32_t& aTotal, const win32_ds
 	}
 }
 
-float stream_position_seconds(const win32_dsound_stream_t& s)
+float stream_position_seconds(const w32_dsound_stream_t& s)
 {
 	uint32_t p;
 	uint32_t t;

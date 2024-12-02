@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "win32_dsound_channel.h"
-#include "win32_dsound_file_wave.h"
+#include "w32_dsound_channel.h"
+#include "w32_dsound_file_wave.h"
 
 static float __directx_to_linear_volume(const long aDirectX)
 {
@@ -13,24 +13,6 @@ static float __directx_to_linear_volume(const long aDirectX)
 
 	return ::powf(10.0f, (float)aDirectX / 2000.f);
 }
-
-/*
-static float __directx_to_linear_pan(const long aDirectX)
-{
-	if (aDirectX <= -10000)
-		return -1.f;
-
-	if (aDirectX >= 10000)
-		return 1.f;
-
-	const float LINEAR(::powf((float)::abs(aDirectX) / 10000.f, 1.f / 3.f));
-	if (aDirectX < 0)
-		return -LINEAR;
-
-	return LINEAR;
-
-}
-*/
 
 static long __linear_to_directx_pan(const float aLinear)
 {
@@ -64,14 +46,14 @@ static bool __buffer_play_looped(
 	if (__buffer_is_playing(buffer))
 	{
 		return
-			buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume)) == DS_OK &&
+			buffer->SetVolume(w32_dsound_linear_to_directx_volume(volume)) == DS_OK &&
 			buffer->SetPan(__linear_to_directx_pan(pan)) == DS_OK &&
 			buffer->SetFrequency((uint32_t)(44100.f * frequency)) == DS_OK;
 	}
 
 	return
 		buffer->SetCurrentPosition(0) == DS_OK &&
-		buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume)) == DS_OK &&
+		buffer->SetVolume(w32_dsound_linear_to_directx_volume(volume)) == DS_OK &&
 		buffer->SetPan(__linear_to_directx_pan(pan)) == DS_OK &&
 		buffer->SetFrequency((uint32_t)(44100.f * frequency)) == DS_OK &&
 		buffer->Play(0, 0, DSBPLAY_LOOPING) == DS_OK;
@@ -91,7 +73,7 @@ static bool __buffer_play(
 		return
 			DS_OK == buffer->Stop() &&
 			DS_OK == buffer->SetCurrentPosition(0) &&
-			DS_OK == buffer->SetVolume(win32_dsound_linear_to_directx_volume(volume)) &&
+			DS_OK == buffer->SetVolume(w32_dsound_linear_to_directx_volume(volume)) &&
 			DS_OK == buffer->SetPan(__linear_to_directx_pan(pan)) &&
 			DS_OK == buffer->SetFrequency((uint32_t)(44100.f * frequency)) &&
 			DS_OK == buffer->Play(0, 0, 0);
@@ -106,10 +88,10 @@ static bool __buffer_play(
 //public
 ::IDirectSoundBuffer* win32_dsound_load_waveform(
 	const char* filename,
-	::IDirectSound& directsound, win32_dsound_length_t& l)
+	::IDirectSound& directsound, w32_dsound_length_t& l)
 {
 	//load a wav file
-	win32_dsound_file_wave_t wave;
+	w32_dsound_file_wave_t wave;
 	if (!wave.load(filename))
 		return nullptr;
 
@@ -216,12 +198,12 @@ static bool __buffer_play(
 	return new_buffer;
 }
 
-bool win32_dsound_channel_t::is_playing() const
+bool w32_dsound_channel_t::is_playing() const
 {
 	return __buffer_is_playing(buffer);
 }
 
-float win32_dsound_channel_t::volume() const
+float w32_dsound_channel_t::volume() const
 {
 	long v = 0;
 
@@ -231,13 +213,13 @@ float win32_dsound_channel_t::volume() const
 	return __directx_to_linear_volume(v);
 }
 
-win32_dsound_channel_t::win32_dsound_channel_t()
+w32_dsound_channel_t::w32_dsound_channel_t()
 {
 	handle = nullptr;
 	buffer = nullptr;
 }
 
-win32_dsound_channel_t::~win32_dsound_channel_t()
+w32_dsound_channel_t::~w32_dsound_channel_t()
 {
 	if (buffer)
 	{
@@ -246,41 +228,7 @@ win32_dsound_channel_t::~win32_dsound_channel_t()
 	}
 }
 
-/*
-float buffer_pan(const buffer_t& b)
-{
-	long p = 0;
-
-	if (b.buffer)
-		b.buffer->GetPan(&p);
-
-	return __directx_to_linear_pan(p);
-}
-
-uint32_t buffer_position(const buffer_t& b)
-{
-	::DWORD position;
-	if (SUCCEEDED(b.buffer->GetCurrentPosition(&position, nullptr)))
-		return position;
-
-	return 0;
-}
-*/
-
-/*
-*/
-
-/*
-bool buffer_play_looped(const bool anEnable, const float aVolume, const float aPan, const float aFrequency, const buffer_t& b)
-{
-	if (anEnable && aVolume > 0.f)
-		return buffer_play_looped(aVolume, aPan, aFrequency, b);
-
-	return buffer_stop(b);
-}
-*/
-
-bool win32_dsound_channel_t::play(const bool in_looped, const float in_volume, const float in_pan, const float in_frequency, const void* in_handle)
+bool w32_dsound_channel_t::play(const bool in_looped, const float in_volume, const float in_pan, const float in_frequency, const void* in_handle)
 {
 	bool result;
 
@@ -295,7 +243,7 @@ bool win32_dsound_channel_t::play(const bool in_looped, const float in_volume, c
 	return result;
 }
 
-bool win32_dsound_channel_t::stop(const void* in_handle)
+bool w32_dsound_channel_t::stop(const void* in_handle)
 {
 	if ((in_handle && handle == in_handle) || !in_handle)
 	{

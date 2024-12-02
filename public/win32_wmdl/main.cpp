@@ -10,7 +10,7 @@
 struct tpmn_app_t : public win32_d3d9_chunky_app_t
 {
 	//this is the main "tick" callback from the win32 / d3d9 harness
-	bool win32_d3d9_chunky_app_tick(const minyin_input_t& in_input, const win32_dsound_container_t& in_sounds) override
+	bool win32_d3d9_chunky_app_tick(const minyin_input_t& in_input, const w32_dsound_container_t& in_sounds) override
 	{
 		_sound_plays.clear();
 		const char* music_request = nullptr;

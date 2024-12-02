@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "win32_dsound.h"
+#include "w32_dsound.h"
 
-#include "win32_dsound_channel.h"
+#include "w32_dsound_channel.h"
 
-static win32_dsound_channel_t* __channel(
+static w32_dsound_channel_t* __channel(
 	const void* aHandle,
-	win32_dsound_t& s)
+	w32_dsound_t& s)
 {
 	//try to match handle
 	if (aHandle)
@@ -49,10 +49,10 @@ static win32_dsound_channel_t* __channel(
 	return nullptr;
 }
 
-static bool __create_channels(::IDirectSound& aDirectSound, ::IDirectSoundBuffer* aBuffer, win32_dsound_t& s)
+static bool __create_channels(::IDirectSound& aDirectSound, ::IDirectSoundBuffer* aBuffer, w32_dsound_t& s)
 {
 	//create sound channels
-	s.channels = new win32_dsound_channel_t[s.NUM_CHANNELS];
+	s.channels = new w32_dsound_channel_t[s.NUM_CHANNELS];
 	if (!s.channels)
 		return false;
 
@@ -71,7 +71,7 @@ static bool __create_channels(::IDirectSound& aDirectSound, ::IDirectSoundBuffer
 
 static bool __init(
 	const char* aFileName, ::IDirectSound& aDirectSound,
-	win32_dsound_t& s)
+	w32_dsound_t& s)
 {
 	//load main buffer
 	::IDirectSoundBuffer* main_buffer = win32_dsound_load_waveform(aFileName, aDirectSound, s.length);
@@ -95,13 +95,13 @@ static bool __init(
 //public
 //public
 //public
-win32_dsound_t* win32_dsound_t::create(const char* aFileName, const uint32_t aNumChannels, ::IDirectSound& aDirectSound)
+w32_dsound_t* w32_dsound_t::create(const char* aFileName, const uint32_t aNumChannels, ::IDirectSound& aDirectSound)
 {
-	win32_dsound_t* sound = nullptr;
+	w32_dsound_t* sound = nullptr;
 
 	if (aNumChannels > 0)
 	{
-		sound = new win32_dsound_t(aNumChannels);
+		sound = new w32_dsound_t(aNumChannels);
 
 		if (sound && !__init(aFileName, aDirectSound, *sound))
 		{
@@ -113,7 +113,7 @@ win32_dsound_t* win32_dsound_t::create(const char* aFileName, const uint32_t aNu
 	return sound;
 }
 
-bool win32_dsound_t::stop_handle(const void* aHandle)
+bool w32_dsound_t::stop_handle(const void* aHandle)
 {
 	bool result = true;
 
@@ -123,14 +123,14 @@ bool win32_dsound_t::stop_handle(const void* aHandle)
 	return result;
 }
 
-bool win32_dsound_t::stop_channel(const uint32_t aChannel)
+bool w32_dsound_t::stop_channel(const uint32_t aChannel)
 {
 	return aChannel < NUM_CHANNELS && channels[aChannel].stop(nullptr);
 }
 
-bool win32_dsound_t::play(const bool aLooped, const float aVolume, const float aPan, const float aFrequency, const void* aHandle)
+bool w32_dsound_t::play(const bool aLooped, const float aVolume, const float aPan, const float aFrequency, const void* aHandle)
 {
-	win32_dsound_channel_t* c = nullptr;
+	w32_dsound_channel_t* c = nullptr;
 
 	c = __channel(aHandle, *this);
 	if (c)
@@ -139,7 +139,7 @@ bool win32_dsound_t::play(const bool aLooped, const float aVolume, const float a
 	return false;
 }
 
-bool win32_dsound_t::play_looped(const bool anEnable, const float aVolume, const float aPan, const float aFrequency, const void* aHandle)
+bool w32_dsound_t::play_looped(const bool anEnable, const float aVolume, const float aPan, const float aFrequency, const void* aHandle)
 {
 	if (anEnable && aVolume > 0.f)
 		return play(true, aVolume, aPan, aFrequency, aHandle);
@@ -147,7 +147,7 @@ bool win32_dsound_t::play_looped(const bool anEnable, const float aVolume, const
 	return stop_handle(aHandle);
 }
 
-bool win32_dsound_t::playing_eh() const
+bool w32_dsound_t::playing_eh() const
 {
 	for (uint32_t i = 0; i < NUM_CHANNELS; ++i)
 	{
@@ -158,12 +158,12 @@ bool win32_dsound_t::playing_eh() const
 	return false;
 }
 
-bool win32_dsound_t::playing_eh(const uint32_t aChannel) const
+bool w32_dsound_t::playing_eh(const uint32_t aChannel) const
 {
 	return aChannel < NUM_CHANNELS && channels[aChannel].is_playing();
 }
 
-win32_dsound_t::win32_dsound_t(const uint32_t aNumChannels)
+w32_dsound_t::w32_dsound_t(const uint32_t aNumChannels)
 	:NUM_CHANNELS(aNumChannels)
 	, channels(nullptr)
 {
@@ -173,7 +173,7 @@ win32_dsound_t::win32_dsound_t(const uint32_t aNumChannels)
 		stats[i] = 0;
 }
 
-win32_dsound_t::~win32_dsound_t()
+w32_dsound_t::~w32_dsound_t()
 {
 	delete[] channels;
 	channels = nullptr;

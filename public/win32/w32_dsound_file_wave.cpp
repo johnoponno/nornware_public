@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "win32_dsound_file_wave.h"
+#include "w32_dsound_file_wave.h"
 
 #include "../minyin/fs.h"
 
-static void __destroy(win32_dsound_file_wave_t& fws)
+static void __destroy(w32_dsound_file_wave_t& fws)
 {
 	//clear header
 	::memset(&fws.header, 0, sizeof(fws.header));
@@ -21,7 +21,7 @@ static void __destroy(win32_dsound_file_wave_t& fws)
 
 static bool __parse_wave_data(
 	const uint8_t* aFileData,
-	win32_dsound_file_wave_t& fws)
+	w32_dsound_file_wave_t& fws)
 {
 	//set up pointer to the start of the chunk of memory.
 	uint32_t* mem_ptr = (uint32_t*)aFileData;
@@ -53,11 +53,11 @@ static bool __parse_wave_data(
 			//found the format part
 		case mmioFOURCC('f', 'm', 't', ' '):
 			//something's wrong! Not a WAV
-			if (length < sizeof(win32_wav_format_t))
+			if (length < sizeof(w32_wav_format_t))
 				return false;
 
 			//copy header
-			::memcpy(&fws.header, mem_ptr, sizeof(win32_wav_format_ex_t));
+			::memcpy(&fws.header, mem_ptr, sizeof(w32_wav_format_ex_t));
 
 			//cbSize should always be 0 for PCM sounds,
 			//according to Patrik Larsson at DECAM and the DirectSound debug DLLs
@@ -99,19 +99,19 @@ static bool __parse_wave_data(
 	return false;
 }
 
-win32_dsound_file_wave_t::win32_dsound_file_wave_t()
+w32_dsound_file_wave_t::w32_dsound_file_wave_t()
 {
 	header = {};
 	data = nullptr;
 	size = 0;
 }
 
-win32_dsound_file_wave_t::~win32_dsound_file_wave_t()
+w32_dsound_file_wave_t::~w32_dsound_file_wave_t()
 {
 	__destroy(*this);
 }
 
-bool win32_dsound_file_wave_t::load(const char* aFileName)
+bool w32_dsound_file_wave_t::load(const char* aFileName)
 {
 	//cleanup
 	__destroy(*this);

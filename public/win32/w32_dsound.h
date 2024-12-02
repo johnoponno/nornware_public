@@ -1,11 +1,11 @@
 #pragma once
 
-#include "win32_dsound_util.h"
+#include "w32_dsound_util.h"
 
 struct IDirectSound;
 struct IDirectSoundBuffer;
 
-struct win32_dsound_channel_t;
+struct w32_dsound_channel_t;
 
 enum
 {
@@ -14,9 +14,9 @@ enum
 	WIN32_DSOUND_NUM_STATS,
 };
 
-struct win32_dsound_t
+struct w32_dsound_t
 {
-	static win32_dsound_t* create(const char* aFileName, const uint32_t aNumChannels, ::IDirectSound& aDirectSound);
+	static w32_dsound_t* create(const char* aFileName, const uint32_t aNumChannels, ::IDirectSound& aDirectSound);
 
 	bool play(const bool aLooped, const float aVolume, const float aPan, const float aFrequency, const void* aHandle);
 	bool play_looped(const bool anEnable, const float aVolume, const float aPan, const float aFrequency, const void* aHandle);
@@ -26,14 +26,14 @@ struct win32_dsound_t
 	bool playing_eh(const uint32_t aChannel) const;
 	bool playing_eh() const;
 
-	~win32_dsound_t();
+	~w32_dsound_t();
 
 	const uint32_t NUM_CHANNELS;
-	win32_dsound_channel_t* channels;
+	w32_dsound_channel_t* channels;
 	uint32_t stats[WIN32_DSOUND_NUM_STATS];
-	win32_dsound_length_t length;
+	w32_dsound_length_t length;
 
 private:
 
-	explicit win32_dsound_t(const uint32_t in_num_channels);
+	explicit w32_dsound_t(const uint32_t in_num_channels);
 };

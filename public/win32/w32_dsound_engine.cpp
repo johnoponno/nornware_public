@@ -1,17 +1,17 @@
 #include "stdafx.h"
 
-#include "win32_dsound_engine.h"
-#include "win32_dsound_util.h"
+#include "w32_dsound_engine.h"
+#include "w32_dsound_util.h"
 
 #ifdef _DEBUG
-win32_dsound_engine_t::~win32_dsound_engine_t()
+w32_dsound_engine_t::~w32_dsound_engine_t()
 {
 	assert(nullptr == this->primary_buffer);
 	assert(nullptr == this->directsound);
 }
 #endif
 
-bool win32_dsound_engine_t::init(const ::HWND window)
+bool w32_dsound_engine_t::init(const ::HWND window)
 {
 	::HRESULT err;
 
@@ -46,15 +46,15 @@ bool win32_dsound_engine_t::init(const ::HWND window)
 		return false;
 
 	//make sure is our desired format
-	if (wav_format.wFormatTag != WIN32_DSOUND_STEREO_WAV_FORMAT.format_tag ||
-		wav_format.nChannels != WIN32_DSOUND_STEREO_WAV_FORMAT.num_channels ||
-		wav_format.nSamplesPerSec != WIN32_DSOUND_STEREO_WAV_FORMAT.samples_per_second ||
-		wav_format.nAvgBytesPerSec != WIN32_DSOUND_STEREO_WAV_FORMAT.average_bytes_per_second ||
-		wav_format.nBlockAlign != WIN32_DSOUND_STEREO_WAV_FORMAT.blockAlign ||
-		wav_format.wBitsPerSample != WIN32_DSOUND_STEREO_WAV_FORMAT.bitsPerSample ||
-		wav_format.cbSize != WIN32_DSOUND_STEREO_WAV_FORMAT.extraInfoSize)
+	if (wav_format.wFormatTag != W32_DSOUND_STEREO_WAV_FORMAT.format_tag ||
+		wav_format.nChannels != W32_DSOUND_STEREO_WAV_FORMAT.num_channels ||
+		wav_format.nSamplesPerSec != W32_DSOUND_STEREO_WAV_FORMAT.samples_per_second ||
+		wav_format.nAvgBytesPerSec != W32_DSOUND_STEREO_WAV_FORMAT.average_bytes_per_second ||
+		wav_format.nBlockAlign != W32_DSOUND_STEREO_WAV_FORMAT.blockAlign ||
+		wav_format.wBitsPerSample != W32_DSOUND_STEREO_WAV_FORMAT.bitsPerSample ||
+		wav_format.cbSize != W32_DSOUND_STEREO_WAV_FORMAT.extraInfoSize)
 	{
-		err = primary_buffer->SetFormat((::LPCWAVEFORMATEX)&WIN32_DSOUND_STEREO_WAV_FORMAT);
+		err = primary_buffer->SetFormat((::LPCWAVEFORMATEX)&W32_DSOUND_STEREO_WAV_FORMAT);
 		if (FAILED(err))
 			return false;
 	}
@@ -67,7 +67,7 @@ bool win32_dsound_engine_t::init(const ::HWND window)
 	return true;
 }
 
-void win32_dsound_engine_t::cleanup()
+void w32_dsound_engine_t::cleanup()
 {
 	if (primary_buffer)
 		primary_buffer->Release();

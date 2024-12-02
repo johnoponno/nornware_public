@@ -4,7 +4,7 @@
 #include "../minyin/sd_bitmap.h"
 #include "win32_d3d9_state.h"
 #include "win32_d3d9_softdraw_adapter.h"
-#include "win32_dsound_stream.h"
+#include "w32_dsound_stream.h"
 
 struct canvas_layout_t
 {
