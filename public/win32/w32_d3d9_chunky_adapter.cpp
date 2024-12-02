@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "win32_d3d9_softdraw_adapter.h"
+#include "w32_d3d9_softdraw_adapter.h"
 
 #include "../minyin/minyin.h"
 #include "../minyin/sd_bitmap.h"
-#include "win32_d3d9_state.h"
+#include "w32_d3d9_state.h"
 
 static void __copy(const minyin_bitmap_t& in_canvas, const ::D3DLOCKED_RECT& in_rect)
 {
@@ -67,9 +67,9 @@ static void __copy_alpha(const minyin_bitmap_t& in_canvas, const ::D3DLOCKED_REC
 //public
 //public
 
-void win32_d3d9_chunky_present_2d(
-	const minyin_bitmap_t& in_canvas, const int32_t in_x, const int32_t in_y, const int32_t in_width, const int32_t in_height, const uint32_t in_color, const win32_d3d9_fixed_function_mode_t in_mode, const bool in_filter,
-	win32_d3d9_softdraw_adapter_t& out_adapter)
+void w32_d3d9_chunky_present_2d(
+	const minyin_bitmap_t& in_canvas, const int32_t in_x, const int32_t in_y, const int32_t in_width, const int32_t in_height, const uint32_t in_color, const w32_d3d9_fixed_function_mode_t in_mode, const bool in_filter,
+	w32_d3d9_softdraw_adapter_t& out_adapter)
 {
 	::HRESULT hr;
 
@@ -93,16 +93,16 @@ void win32_d3d9_chunky_present_2d(
 			out_adapter.texture_aspect *= 2;
 		}
 
-		assert(win32_d3d9_state.m_d3d_device);
+		assert(w32_d3d9_state.m_d3d_device);
 
 		//texture format depends on if we want alpha test support
 		if (out_adapter.ALPHA)
 		{
-			VERIFY(win32_d3d9_state.m_d3d_device->CreateTexture(out_adapter.texture_aspect, out_adapter.texture_aspect, 1, 0, D3DFMT_A1R5G5B5, D3DPOOL_MANAGED, &out_adapter.texture, nullptr));
+			VERIFY(w32_d3d9_state.m_d3d_device->CreateTexture(out_adapter.texture_aspect, out_adapter.texture_aspect, 1, 0, D3DFMT_A1R5G5B5, D3DPOOL_MANAGED, &out_adapter.texture, nullptr));
 		}
 		else
 		{
-			VERIFY(win32_d3d9_state.m_d3d_device->CreateTexture(out_adapter.texture_aspect, out_adapter.texture_aspect, 1, 0, D3DFMT_R5G6B5, D3DPOOL_MANAGED, &out_adapter.texture, nullptr));
+			VERIFY(w32_d3d9_state.m_d3d_device->CreateTexture(out_adapter.texture_aspect, out_adapter.texture_aspect, 1, 0, D3DFMT_R5G6B5, D3DPOOL_MANAGED, &out_adapter.texture, nullptr));
 		}
 	}
 
@@ -122,7 +122,7 @@ void win32_d3d9_chunky_present_2d(
 
 	{
 		//setup fixed function state in preparation for render
-		::IDirect3DStateBlock9* state_block = win32_d3d9_state_block_begin(
+		::IDirect3DStateBlock9* state_block = w32_d3d9_state_block_begin(
 			in_mode,
 			::D3DCULL_CCW,
 			D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1,
@@ -159,7 +159,7 @@ void win32_d3d9_chunky_present_2d(
 				{ XF + 0, YF + HEIGHT, 0.f, 1.f, in_color, 0.f, V_MAX },
 				{ XF + WIDTH, YF + HEIGHT, 0.f, 1.f, in_color, U_MAX, V_MAX },
 			};
-			VERIFY(win32_d3d9_state.m_d3d_device->DrawIndexedPrimitiveUP(
+			VERIFY(w32_d3d9_state.m_d3d_device->DrawIndexedPrimitiveUP(
 				D3DPT_TRIANGLELIST, 
 				0, 
 				4, 

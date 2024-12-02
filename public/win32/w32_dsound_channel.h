@@ -20,6 +20,6 @@ struct w32_dsound_channel_t
 	::IDirectSoundBuffer* buffer;
 };
 
-::IDirectSoundBuffer* win32_dsound_load_waveform(
+::IDirectSoundBuffer* w32_dsound_load_waveform(
 	const char* filename,
 	::IDirectSound& directsound, w32_dsound_length_t& l);

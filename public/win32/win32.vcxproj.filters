@@ -24,28 +24,28 @@
     <ClCompile Include="w32_dsound_util.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
-    <ClCompile Include="win32_d3d9_resource.cpp">
+    <ClCompile Include="w32_d3d9_resource.cpp">
       <Filter>d3d9</Filter>
     </ClCompile>
-    <ClCompile Include="win32_d3d9_softdraw_adapter.cpp">
+    <ClCompile Include="w32_d3d9_softdraw_adapter.cpp">
       <Filter>d3d9</Filter>
     </ClCompile>
-    <ClCompile Include="win32_d3d9_state.cpp">
+    <ClCompile Include="w32_d3d9_state.cpp">
       <Filter>d3d9</Filter>
     </ClCompile>
-    <ClCompile Include="win32_dxut.cpp">
+    <ClCompile Include="w32_dxut.cpp">
       <Filter>d3d9</Filter>
     </ClCompile>
-    <ClCompile Include="win32_dxut_enum.cpp">
+    <ClCompile Include="w32_dxut_enum.cpp">
       <Filter>d3d9</Filter>
     </ClCompile>
-    <ClCompile Include="win32_dxut_misc.cpp">
+    <ClCompile Include="w32_dxut_misc.cpp">
       <Filter>d3d9</Filter>
     </ClCompile>
     <ClCompile Include="w32_dsound_vorbis_file.cpp">
       <Filter>dsound</Filter>
     </ClCompile>
-    <ClCompile Include="win32_d3d9_app.cpp">
+    <ClCompile Include="w32_d3d9_app.cpp">
       <Filter>d3d9</Filter>
     </ClCompile>
     <ClCompile Include="w32_d3d9_chunky_adapter.cpp">
@@ -88,28 +88,28 @@
     <ClInclude Include="w32_dsound_util.h">
       <Filter>dsound</Filter>
     </ClInclude>
-    <ClInclude Include="win32_d3d9_app.h">
+    <ClInclude Include="w32_d3d9_app.h">
       <Filter>d3d9</Filter>
     </ClInclude>
-    <ClInclude Include="win32_d3d9_includes.h">
+    <ClInclude Include="w32_d3d9_includes.h">
       <Filter>d3d9</Filter>
     </ClInclude>
-    <ClInclude Include="win32_d3d9_resource.h">
+    <ClInclude Include="w32_d3d9_resource.h">
       <Filter>d3d9</Filter>
     </ClInclude>
-    <ClInclude Include="win32_d3d9_softdraw_adapter.h">
+    <ClInclude Include="w32_d3d9_softdraw_adapter.h">
       <Filter>d3d9</Filter>
     </ClInclude>
-    <ClInclude Include="win32_d3d9_state.h">
+    <ClInclude Include="w32_d3d9_state.h">
       <Filter>d3d9</Filter>
     </ClInclude>
-    <ClInclude Include="win32_dxut.h">
+    <ClInclude Include="w32_dxut.h">
       <Filter>d3d9</Filter>
     </ClInclude>
-    <ClInclude Include="win32_dxut_enum.h">
+    <ClInclude Include="w32_dxut_enum.h">
       <Filter>d3d9</Filter>
     </ClInclude>
-    <ClInclude Include="win32_dxut_misc.h">
+    <ClInclude Include="w32_dxut_misc.h">
       <Filter>d3d9</Filter>
     </ClInclude>
     <ClInclude Include="w32_dsound_stream_source.h">

@@ -3,16 +3,16 @@
 // These macros are very similar to dxerr's but it special cases the HRESULT defined
 // by DXUT to pop better message boxes. 
 #if defined(DEBUG) || defined(_DEBUG)
-#define WIN32_DXUT_ERR(str,hr)           win32_d3d9_trace( __FILE__, (DWORD)__LINE__, hr, str, false )
-#define WIN32_DXUT_ERR_MSGBOX(str,hr)    win32_d3d9_trace( __FILE__, (DWORD)__LINE__, hr, str, true )
+#define WIN32_DXUT_ERR(str,hr)           w32_d3d9_trace( __FILE__, (DWORD)__LINE__, hr, str, false )
+#define WIN32_DXUT_ERR_MSGBOX(str,hr)    w32_d3d9_trace( __FILE__, (DWORD)__LINE__, hr, str, true )
 	//#define DXUTTRACE                  DebugString
 #else
 #define WIN32_DXUT_ERR(str,hr)           (hr)
 #define WIN32_DXUT_ERR_MSGBOX(str,hr)    (hr)
 #endif
 
-void win32_d3d9_display_switching_to_ref_warning();
-::HRESULT WINAPI win32_d3d9_trace(const CHAR* strFile, DWORD dwLine, HRESULT hr, const char* strMsg, bool bPopMsgBox);
+void w32_d3d9_display_switching_to_ref_warning();
+::HRESULT WINAPI w32_d3d9_trace(const CHAR* strFile, DWORD dwLine, HRESULT hr, const char* strMsg, bool bPopMsgBox);
 
 //--------------------------------------------------------------------------------------
 // Multimon handling to support OSes with or without multimon API support.  
@@ -39,5 +39,5 @@ typedef MONITORINFOEXW MONITORINFOEX;
 typedef LPMONITORINFOEXW LPMONITORINFOEX;
 #endif
 
-HMONITOR win32_d3d9_monitor_from_window(HWND hWnd, DWORD dwFlags);
-BOOL win32_d3d9_get_monitor_info(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo);
+HMONITOR w32_d3d9_monitor_from_window(HWND hWnd, DWORD dwFlags);
+BOOL w32_d3d9_get_monitor_info(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo);

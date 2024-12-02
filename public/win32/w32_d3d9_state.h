@@ -1,20 +1,20 @@
 #pragma once
 
-struct win32_d3d9_backbuffer_size_t
+struct w32_d3d9_backbuffer_size_t
 {
 	uint32_t width;
 	uint32_t height;
 };
 
-struct win32_d3d9_state_t
+struct w32_d3d9_state_t
 {
-	explicit win32_d3d9_state_t();
-	~win32_d3d9_state_t();
+	explicit w32_d3d9_state_t();
+	~w32_d3d9_state_t();
 
 	IDirect3D9* m_d3d;                     // the main D3D object
 	IDirect3DDevice9* m_d3d_device;               // the D3D rendering device
-	win32_d3d9_enumeration_t* m_d3d_enumeration;          // CD3DEnumeration object
-	win32_d3d9_device_settings_t* m_device_settings;   // current device settings
+	w32_d3d9_enumeration_t* m_d3d_enumeration;          // CD3DEnumeration object
+	w32_d3d9_device_settings_t* m_device_settings;   // current device settings
 	D3DSURFACE_DESC m_backbuffer_surface_desc;   // back buffer surface description
 	D3DCAPS9 m_caps;                    // D3D caps for current device
 	struct
@@ -25,8 +25,8 @@ struct win32_d3d9_state_t
 	} m_hwnd;
 	HMONITOR m_adapter_monitor;          // the monitor of the adapter 
 	HMENU m_menu;                       // handle to menu
-	win32_d3d9_backbuffer_size_t fullscreen_backbuffer_at_mode_change;
-	win32_d3d9_backbuffer_size_t windowed_backbuffer_at_mode_change;
+	w32_d3d9_backbuffer_size_t fullscreen_backbuffer_at_mode_change;
+	w32_d3d9_backbuffer_size_t windowed_backbuffer_at_mode_change;
 	DWORD m_windowed_style_at_mode_change;  // window style
 	WINDOWPLACEMENT m_windowed_placement; // record of windowed HWND position/show state/etc
 	bool m_topmost_while_windowed;       // if true, the windowed HWND is topmost 
@@ -74,17 +74,17 @@ struct win32_d3d9_state_t
 		uint32_t x;
 		uint32_t y;
 	} desktop_resolution;
-	win32_d3d9_app_i* app;
+	w32_d3d9_app_i* app;
 };
 
-::HWND win32_d3d9_hwnd();
-bool win32_d3d9_is_windowed();
-bool win32_d3d9_is_rendering_paused();
+::HWND w32_d3d9_hwnd();
+bool w32_d3d9_is_windowed();
+bool w32_d3d9_is_rendering_paused();
 
 //2023-04-20 - these are just commented out, use if needed
-//extern vec2f_t win32_d3d9_get_backbuffer_size();
-//extern float win32_d3d9_get_backbuffer_aspect_ratio();
-//extern void win32_d3d9_toggle_wireframe();
-//extern bool win32_d3d9_is_wireframe();
+//extern vec2f_t w32_d3d9_get_backbuffer_size();
+//extern float w32_d3d9_get_backbuffer_aspect_ratio();
+//extern void w32_d3d9_toggle_wireframe();
+//extern bool w32_d3d9_is_wireframe();
 
-extern win32_d3d9_state_t win32_d3d9_state;
+extern w32_d3d9_state_t w32_d3d9_state;

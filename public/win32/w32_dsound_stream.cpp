@@ -449,7 +449,7 @@ void stream_position_bytes(uint32_t& aPosition, uint32_t& aTotal, const w32_dsou
 	::DWORD p;
 	if (SUCCEEDED(s.buffer->GetCurrentPosition(&p, nullptr)))
 	{
-		aTotal = s.source->win32_dsound_stream_source_bytes_total();
+		aTotal = s.source->w32_dsound_stream_source_bytes_total();
 		aPosition = (s.total_position + p) % aTotal;
 	}
 	else

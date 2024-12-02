@@ -74,7 +74,7 @@ static bool __init(
 	w32_dsound_t& s)
 {
 	//load main buffer
-	::IDirectSoundBuffer* main_buffer = win32_dsound_load_waveform(aFileName, aDirectSound, s.length);
+	::IDirectSoundBuffer* main_buffer = w32_dsound_load_waveform(aFileName, aDirectSound, s.length);
 	if (main_buffer)
 	{
 		if (__create_channels(aDirectSound, main_buffer, s))

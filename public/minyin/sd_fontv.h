@@ -13,8 +13,6 @@
 #define SD_FONTV_CHARBEGIN 33
 #define SD_FONTV_CHAREND 128
 
-constexpr int32_t SD_FONTV_NUMCHARS = SD_FONTV_CHAREND - SD_FONTV_CHARBEGIN;
-
 enum struct sd_fontv_blit_mode_t
 {
 	NORMAL,
@@ -34,7 +32,7 @@ struct sd_fontv_t
 		int32_t t;
 		int32_t w;
 		int32_t h;
-	} characters[SD_FONTV_NUMCHARS];
+	} characters[SD_FONTV_CHAREND - SD_FONTV_CHARBEGIN];
 	int32_t height;
 	int32_t char_spacing;
 	int32_t space_width;	//same as '_'

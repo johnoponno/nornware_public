@@ -86,7 +86,7 @@ static bool __buffer_play(
 //public
 //public
 //public
-::IDirectSoundBuffer* win32_dsound_load_waveform(
+::IDirectSoundBuffer* w32_dsound_load_waveform(
 	const char* filename,
 	::IDirectSound& directsound, w32_dsound_length_t& l)
 {

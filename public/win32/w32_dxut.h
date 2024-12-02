@@ -1,6 +1,6 @@
 #pragma once
 
-struct win32_d3d9_app_i;
+struct w32_d3d9_app_i;
 
 //--------------------------------------------------------------------------------------
 // Error codes
@@ -15,7 +15,7 @@ struct win32_d3d9_app_i;
 #define WIN32_DXUTERR_RESETTINGDEVICEOBJECTS  MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0x0908)
 #define WIN32_DXUTERR_INCORRECTVERSION        MAKE_HRESULT(SEVERITY_ERROR, FACILITY_ITF, 0x0909)
 
-struct win32_d3d9_device_settings_t
+struct w32_d3d9_device_settings_t
 {
 	::UINT adapter_ordinal;
 	::D3DDEVTYPE device_type;
@@ -24,11 +24,11 @@ struct win32_d3d9_device_settings_t
 	::D3DPRESENT_PARAMETERS present_parameters;
 };
 
-::HRESULT win32_d3d9_init();
-void win32_d3d9_pause(const char* aFunction, const char* aContext, const bool bPauseTime, const bool bPauseRendering);
-void win32_d3d9_shutdown(const int32_t nExitCode = 0);
-::HRESULT win32_d3d9_toggle_fullscreen(const bool aDoToggle = true);
-::HRESULT win32_d3d9_create_window(const char* aWindowTitle, const ::DWORD aWindowStyle = 0);
-void win32_d3d9_set_cursor_settings(const bool bShowCursorWhenFullScreen, const bool bClipCursorWhenFullScreen);
-::HRESULT win32_d3d9_create_device(const uint32_t AdapterOrdinal, const bool bWindowed, const int32_t nSuggestedWidth, const int32_t nSuggestedHeight, win32_d3d9_app_i* anApp);
-::HRESULT win32_d3d9_main_loop(win32_d3d9_app_i* anApp);
+::HRESULT w32_d3d9_init();
+void w32_d3d9_pause(const char* aFunction, const char* aContext, const bool bPauseTime, const bool bPauseRendering);
+void w32_d3d9_shutdown(const int32_t nExitCode = 0);
+::HRESULT w32_d3d9_toggle_fullscreen(const bool aDoToggle = true);
+::HRESULT w32_d3d9_create_window(const char* aWindowTitle, const ::DWORD aWindowStyle = 0);
+void w32_d3d9_set_cursor_settings(const bool bShowCursorWhenFullScreen, const bool bClipCursorWhenFullScreen);
+::HRESULT w32_d3d9_create_device(const uint32_t AdapterOrdinal, const bool bWindowed, const int32_t nSuggestedWidth, const int32_t nSuggestedHeight, w32_d3d9_app_i* anApp);
+::HRESULT w32_d3d9_main_loop(w32_d3d9_app_i* anApp);

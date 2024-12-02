@@ -95,7 +95,7 @@ void w32_dsound_container_t::clear() const
 	}
 }
 
-w32_dsound_stream_t* win32_dsound_stream_create(const w32_dsound_engine_t& engine, const char* aFile)
+w32_dsound_stream_t* w32_dsound_stream_create(const w32_dsound_engine_t& engine, const char* aFile)
 {
 	w32_dsound_stream_t* stream = nullptr;
 

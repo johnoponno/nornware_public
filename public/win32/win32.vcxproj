@@ -87,16 +87,16 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="win32_d3d9_app.h" />
+    <ClInclude Include="w32_d3d9_app.h" />
     <ClInclude Include="vorbis_codec.h" />
-    <ClInclude Include="win32_d3d9_resource.h" />
-    <ClInclude Include="win32_dxut.h" />
-    <ClInclude Include="win32_dxut_enum.h" />
-    <ClInclude Include="win32_dxut_misc.h" />
-    <ClInclude Include="win32_d3d9_includes.h" />
+    <ClInclude Include="w32_d3d9_resource.h" />
+    <ClInclude Include="w32_dxut.h" />
+    <ClInclude Include="w32_dxut_enum.h" />
+    <ClInclude Include="w32_dxut_misc.h" />
+    <ClInclude Include="w32_d3d9_includes.h" />
     <ClInclude Include="ogg.h" />
     <ClInclude Include="os_types.h" />
-    <ClInclude Include="win32_d3d9_softdraw_adapter.h" />
+    <ClInclude Include="w32_d3d9_softdraw_adapter.h" />
     <ClInclude Include="w32_dsound.h" />
     <ClInclude Include="w32_dsound_channel.h" />
     <ClInclude Include="w32_dsound_container.h" />
@@ -106,19 +106,19 @@
     <ClInclude Include="w32_dsound_stream_source.h" />
     <ClInclude Include="w32_dsound_util.h" />
     <ClInclude Include="w32_dsound_vorbis_file.h" />
-    <ClInclude Include="win32_d3d9_state.h" />
+    <ClInclude Include="w32_d3d9_state.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="w32_timer.h" />
     <ClInclude Include="vorbis_file.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="w32_d3d9_chunky_adapter.cpp" />
-    <ClCompile Include="win32_d3d9_app.cpp" />
-    <ClCompile Include="win32_d3d9_resource.cpp" />
-    <ClCompile Include="win32_dxut.cpp" />
-    <ClCompile Include="win32_dxut_enum.cpp" />
-    <ClCompile Include="win32_dxut_misc.cpp" />
-    <ClCompile Include="win32_d3d9_softdraw_adapter.cpp" />
+    <ClCompile Include="w32_d3d9_app.cpp" />
+    <ClCompile Include="w32_d3d9_resource.cpp" />
+    <ClCompile Include="w32_dxut.cpp" />
+    <ClCompile Include="w32_dxut_enum.cpp" />
+    <ClCompile Include="w32_dxut_misc.cpp" />
+    <ClCompile Include="w32_d3d9_softdraw_adapter.cpp" />
     <ClCompile Include="w32_dsound.cpp" />
     <ClCompile Include="w32_dsound_channel.cpp" />
     <ClCompile Include="w32_dsound_container.cpp" />
@@ -127,7 +127,7 @@
     <ClCompile Include="w32_dsound_stream.cpp" />
     <ClCompile Include="w32_dsound_util.cpp" />
     <ClCompile Include="w32_dsound_vorbis_file.cpp" />
-    <ClCompile Include="win32_d3d9_state.cpp" />
+    <ClCompile Include="w32_d3d9_state.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
-#include "win32_d3d9_state.h"
-#include "win32_d3d9_app.h"
+#include "w32_d3d9_state.h"
+#include "w32_d3d9_app.h"
 
-struct win32_d3d9_enum_depth_stencil_multisample_conflict_t
+struct w32_d3d9_enum_depth_stencil_multisample_conflict_t
 {
 	D3DFORMAT myDSFormat;
 	D3DMULTISAMPLE_TYPE myMSType;
@@ -41,12 +41,12 @@ static int32_t __cdecl __sort_modes_callback(const void* arg1, const void* arg2)
 	return 0;
 }
 
-static void __clear_adapter_info_list(win32_d3d9_enumeration_t& e)
+static void __clear_adapter_info_list(w32_d3d9_enumeration_t& e)
 {
 	vector_set_delete_all_and_clear(e.adapter_info_list);
 }
 
-static void __build_present_interval_list(win32_d3d9_enum_device_info_t* pDeviceInfo, win32_d3d9_enum_device_settings_combo_t* pDeviceCombo, win32_d3d9_enumeration_t& e)
+static void __build_present_interval_list(w32_d3d9_enum_device_info_t* pDeviceInfo, w32_d3d9_enum_device_settings_combo_t* pDeviceCombo, w32_d3d9_enumeration_t& e)
 {
 	UINT pi;
 	for (uint32_t ipi = 0; ipi < e.present_interval_list.size(); ++ipi)
@@ -71,9 +71,9 @@ static void __build_present_interval_list(win32_d3d9_enum_device_info_t* pDevice
 	}
 }
 
-static void __build_dsms_conflict_list(win32_d3d9_enum_device_settings_combo_t* pDeviceCombo)
+static void __build_dsms_conflict_list(w32_d3d9_enum_device_settings_combo_t* pDeviceCombo)
 {
-	win32_d3d9_enum_depth_stencil_multisample_conflict_t DSMSConflict;
+	w32_d3d9_enum_depth_stencil_multisample_conflict_t DSMSConflict;
 
 	for (uint32_t iDS = 0; iDS < pDeviceCombo->depth_stencil_formats.size(); ++iDS)
 	{
@@ -82,7 +82,7 @@ static void __build_dsms_conflict_list(win32_d3d9_enum_device_settings_combo_t* 
 		for (uint32_t iMS = 0; iMS < pDeviceCombo->multisample_types.size(); ++iMS)
 		{
 			const D3DMULTISAMPLE_TYPE MSTYPE = pDeviceCombo->multisample_types[iMS];
-			if (FAILED(win32_d3d9_state.m_d3d->CheckDeviceMultiSampleType(pDeviceCombo->adapter_ordinal, pDeviceCombo->device_type, dsFmt, pDeviceCombo->windowed, MSTYPE, nullptr)))
+			if (FAILED(w32_d3d9_state.m_d3d->CheckDeviceMultiSampleType(pDeviceCombo->adapter_ordinal, pDeviceCombo->device_type, dsFmt, pDeviceCombo->windowed, MSTYPE, nullptr)))
 			{
 				DSMSConflict.myDSFormat = dsFmt;
 				DSMSConflict.myMSType = MSTYPE;
@@ -92,14 +92,14 @@ static void __build_dsms_conflict_list(win32_d3d9_enum_device_settings_combo_t* 
 	}
 }
 
-static void __build_multisample_type_list(win32_d3d9_enum_device_settings_combo_t* pDeviceCombo, win32_d3d9_enumeration_t& e)
+static void __build_multisample_type_list(w32_d3d9_enum_device_settings_combo_t* pDeviceCombo, w32_d3d9_enumeration_t& e)
 {
 	D3DMULTISAMPLE_TYPE msType;
 	DWORD msQuality;
 	for (uint32_t imst = 0; imst < e.multisample_type_list.size(); ++imst)
 	{
 		msType = e.multisample_type_list[imst];
-		if (SUCCEEDED(win32_d3d9_state.m_d3d->CheckDeviceMultiSampleType(pDeviceCombo->adapter_ordinal, pDeviceCombo->device_type, pDeviceCombo->backbuffer_format, pDeviceCombo->windowed, msType, &msQuality)))
+		if (SUCCEEDED(w32_d3d9_state.m_d3d->CheckDeviceMultiSampleType(pDeviceCombo->adapter_ordinal, pDeviceCombo->device_type, pDeviceCombo->backbuffer_format, pDeviceCombo->windowed, msType, &msQuality)))
 		{
 			pDeviceCombo->multisample_types.push_back(msType);
 			if (msQuality > e.multisample_quality_max + 1)
@@ -109,15 +109,15 @@ static void __build_multisample_type_list(win32_d3d9_enum_device_settings_combo_
 	}
 }
 
-static void __build_depth_stencil_format_list(win32_d3d9_enum_device_settings_combo_t* pDeviceCombo, win32_d3d9_enumeration_t& e)
+static void __build_depth_stencil_format_list(w32_d3d9_enum_device_settings_combo_t* pDeviceCombo, w32_d3d9_enumeration_t& e)
 {
 	D3DFORMAT depthStencilFmt;
 	for (uint32_t idsf = 0; idsf < e.depth_stencil_possible_list.size(); ++idsf)
 	{
 		depthStencilFmt = e.depth_stencil_possible_list[idsf];
-		if (SUCCEEDED(win32_d3d9_state.m_d3d->CheckDeviceFormat(pDeviceCombo->adapter_ordinal, pDeviceCombo->device_type, pDeviceCombo->adapter_format, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, depthStencilFmt)))
+		if (SUCCEEDED(w32_d3d9_state.m_d3d->CheckDeviceFormat(pDeviceCombo->adapter_ordinal, pDeviceCombo->device_type, pDeviceCombo->adapter_format, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, depthStencilFmt)))
 		{
-			if (SUCCEEDED(win32_d3d9_state.m_d3d->CheckDepthStencilMatch(pDeviceCombo->adapter_ordinal, pDeviceCombo->device_type, pDeviceCombo->adapter_format, pDeviceCombo->backbuffer_format, depthStencilFmt)))
+			if (SUCCEEDED(w32_d3d9_state.m_d3d->CheckDepthStencilMatch(pDeviceCombo->adapter_ordinal, pDeviceCombo->device_type, pDeviceCombo->adapter_format, pDeviceCombo->backbuffer_format, depthStencilFmt)))
 			{
 				pDeviceCombo->depth_stencil_formats.push_back(depthStencilFmt);
 			}
@@ -125,7 +125,7 @@ static void __build_depth_stencil_format_list(win32_d3d9_enum_device_settings_co
 	}
 }
 
-static ::HRESULT __enumerate_device_combos(win32_d3d9_enum_adapter_info_t* pAdapterInfo, win32_d3d9_enum_device_info_t* pDeviceInfo, std::vector<D3DFORMAT>* pAdapterFormatList, win32_d3d9_enumeration_t& e)
+static ::HRESULT __enumerate_device_combos(w32_d3d9_enum_adapter_info_t* pAdapterInfo, w32_d3d9_enum_device_info_t* pDeviceInfo, std::vector<D3DFORMAT>* pAdapterFormatList, w32_d3d9_enumeration_t& e)
 {
 	const D3DFORMAT BACKBUFFER_FORMAT_ARRAY[] =
 	{
@@ -151,7 +151,7 @@ static ::HRESULT __enumerate_device_combos(win32_d3d9_enum_adapter_info_t* pAdap
 				if (0 == nWindowed && 0 == pAdapterInfo->display_mode_list.size())
 					continue;
 
-				if (FAILED(win32_d3d9_state.m_d3d->CheckDeviceType(pAdapterInfo->adapter_ordinal, pDeviceInfo->device_type, adapterFormat, backBufferFormat, nWindowed)))
+				if (FAILED(w32_d3d9_state.m_d3d->CheckDeviceType(pAdapterInfo->adapter_ordinal, pDeviceInfo->device_type, adapterFormat, backBufferFormat, nWindowed)))
 				{
 					continue;
 				}
@@ -161,7 +161,7 @@ static ::HRESULT __enumerate_device_combos(win32_d3d9_enum_adapter_info_t* pAdap
 					// If the backbuffer format doesn't support D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING
 					// then alpha test, pixel fog, render-target blending, color write enable, and dithering. 
 					// are not supported.
-					if (FAILED(win32_d3d9_state.m_d3d->CheckDeviceFormat(pAdapterInfo->adapter_ordinal, pDeviceInfo->device_type, adapterFormat, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING, D3DRTYPE_TEXTURE, backBufferFormat)))
+					if (FAILED(w32_d3d9_state.m_d3d->CheckDeviceFormat(pAdapterInfo->adapter_ordinal, pDeviceInfo->device_type, adapterFormat, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING, D3DRTYPE_TEXTURE, backBufferFormat)))
 					{
 						continue;
 					}
@@ -169,9 +169,9 @@ static ::HRESULT __enumerate_device_combos(win32_d3d9_enum_adapter_info_t* pAdap
 
 				// If an application callback function has been provided, make sure this device
 				// is acceptable to the app.
-				if (win32_d3d9_state.app)
+				if (w32_d3d9_state.app)
 				{
-					if (!win32_d3d9_state.app->win32_d3d9_app_is_device_acceptable(pDeviceInfo->caps, adapterFormat, backBufferFormat, FALSE != nWindowed))
+					if (!w32_d3d9_state.app->w32_d3d9_app_is_device_acceptable(pDeviceInfo->caps, adapterFormat, backBufferFormat, FALSE != nWindowed))
 						continue;
 				}
 
@@ -179,7 +179,7 @@ static ::HRESULT __enumerate_device_combos(win32_d3d9_enum_adapter_info_t* pAdap
 				// DeviceCombo that is supported by the system and acceptable to the app. We still 
 				// need to find one or more suitable depth/stencil buffer format,
 				// multisample type, and present interval.
-				win32_d3d9_enum_device_settings_combo_t* pDeviceCombo = new win32_d3d9_enum_device_settings_combo_t;
+				w32_d3d9_enum_device_settings_combo_t* pDeviceCombo = new w32_d3d9_enum_device_settings_combo_t;
 				if (pDeviceCombo == nullptr)
 					return E_OUTOFMEMORY;
 
@@ -210,7 +210,7 @@ static ::HRESULT __enumerate_device_combos(win32_d3d9_enum_adapter_info_t* pAdap
 	return S_OK;
 }
 
-static ::HRESULT __enumerate_devices(win32_d3d9_enum_adapter_info_t* pAdapterInfo, std::vector<D3DFORMAT>* pAdapterFormatList, win32_d3d9_enumeration_t& e)
+static ::HRESULT __enumerate_devices(w32_d3d9_enum_adapter_info_t* pAdapterInfo, std::vector<D3DFORMAT>* pAdapterFormatList, w32_d3d9_enumeration_t& e)
 {
 	const D3DDEVTYPE DEV_TYPE_ARRAY[] =
 	{
@@ -223,7 +223,7 @@ static ::HRESULT __enumerate_devices(win32_d3d9_enum_adapter_info_t* pAdapterInf
 	::HRESULT hr;
 	for (UINT iDeviceType = 0; iDeviceType < _countof(DEV_TYPE_ARRAY); ++iDeviceType)
 	{
-		win32_d3d9_enum_device_info_t* pDeviceInfo = new win32_d3d9_enum_device_info_t;
+		w32_d3d9_enum_device_info_t* pDeviceInfo = new w32_d3d9_enum_device_info_t;
 		if (pDeviceInfo == nullptr)
 			return E_OUTOFMEMORY;
 
@@ -231,7 +231,7 @@ static ::HRESULT __enumerate_devices(win32_d3d9_enum_adapter_info_t* pAdapterInf
 		pDeviceInfo->device_type = DEV_TYPE_ARRAY[iDeviceType];
 
 		// Store device caps
-		if (FAILED(hr = win32_d3d9_state.m_d3d->GetDeviceCaps(pAdapterInfo->adapter_ordinal, pDeviceInfo->device_type, &pDeviceInfo->caps)))
+		if (FAILED(hr = w32_d3d9_state.m_d3d->GetDeviceCaps(pAdapterInfo->adapter_ordinal, pDeviceInfo->device_type, &pDeviceInfo->caps)))
 		{
 			delete pDeviceInfo;
 			continue;
@@ -239,7 +239,7 @@ static ::HRESULT __enumerate_devices(win32_d3d9_enum_adapter_info_t* pAdapterInf
 
 		// create a dummy device to verify that we really can create of this type.
 		D3DDISPLAYMODE displayMode;
-		win32_d3d9_state.m_d3d->GetAdapterDisplayMode(0, &displayMode);
+		w32_d3d9_state.m_d3d->GetAdapterDisplayMode(0, &displayMode);
 		D3DPRESENT_PARAMETERS pp;
 		ZeroMemory(&pp, sizeof(D3DPRESENT_PARAMETERS));
 		pp.BackBufferWidth = 1;
@@ -248,9 +248,9 @@ static ::HRESULT __enumerate_devices(win32_d3d9_enum_adapter_info_t* pAdapterInf
 		pp.BackBufferCount = 1;
 		pp.SwapEffect = D3DSWAPEFFECT_COPY;
 		pp.Windowed = TRUE;
-		pp.hDeviceWindow = win32_d3d9_state.m_hwnd.focus;
+		pp.hDeviceWindow = w32_d3d9_state.m_hwnd.focus;
 		IDirect3DDevice9* pDevice;
-		if (FAILED(hr = win32_d3d9_state.m_d3d->CreateDevice(pAdapterInfo->adapter_ordinal, pDeviceInfo->device_type, win32_d3d9_state.m_hwnd.focus, D3DCREATE_HARDWARE_VERTEXPROCESSING, &pp, &pDevice)))
+		if (FAILED(hr = w32_d3d9_state.m_d3d->CreateDevice(pAdapterInfo->adapter_ordinal, pDeviceInfo->device_type, w32_d3d9_state.m_hwnd.focus, D3DCREATE_HARDWARE_VERTEXPROCESSING, &pp, &pDevice)))
 		{
 			if (hr == D3DERR_NOTAVAILABLE)
 			{
@@ -278,14 +278,14 @@ static ::HRESULT __enumerate_devices(win32_d3d9_enum_adapter_info_t* pAdapterInf
 	return S_OK;
 }
 
-static const win32_d3d9_enum_device_info_t* __get_device_info(const UINT AdapterOrdinal, const D3DDEVTYPE DeviceType, const win32_d3d9_enumeration_t& e)
+static const w32_d3d9_enum_device_info_t* __get_device_info(const UINT AdapterOrdinal, const D3DDEVTYPE DeviceType, const w32_d3d9_enumeration_t& e)
 {
-	const win32_d3d9_enum_adapter_info_t* pAdapterInfo = win32_d3d9_get_adapter_info(AdapterOrdinal, e);
+	const w32_d3d9_enum_adapter_info_t* pAdapterInfo = w32_d3d9_get_adapter_info(AdapterOrdinal, e);
 	if (pAdapterInfo)
 	{
 		for (uint32_t iDeviceInfo = 0; iDeviceInfo < pAdapterInfo->device_info_list.size(); ++iDeviceInfo)
 		{
-			win32_d3d9_enum_device_info_t* pDeviceInfo = pAdapterInfo->device_info_list[iDeviceInfo];
+			w32_d3d9_enum_device_info_t* pDeviceInfo = pAdapterInfo->device_info_list[iDeviceInfo];
 			if (pDeviceInfo->device_type == DeviceType)
 				return pDeviceInfo;
 		}
@@ -294,14 +294,14 @@ static const win32_d3d9_enum_device_info_t* __get_device_info(const UINT Adapter
 	return nullptr;
 }
 
-win32_d3d9_enumeration_t* win32_d3d9_enumeration_t::instance()
+w32_d3d9_enumeration_t* w32_d3d9_enumeration_t::instance()
 {
 	// using an accessor function gives control of the construction order
-	static win32_d3d9_enumeration_t enumeration;
+	static w32_d3d9_enumeration_t enumeration;
 	return &enumeration;
 }
 
-win32_d3d9_enumeration_t::win32_d3d9_enumeration_t()
+w32_d3d9_enumeration_t::w32_d3d9_enumeration_t()
 {
 	this->require_post_pixel_shaders_blending = true;
 
@@ -356,7 +356,7 @@ win32_d3d9_enumeration_t::win32_d3d9_enumeration_t()
 	this->mixed_vp = false;
 }
 
-win32_d3d9_enumeration_t::~win32_d3d9_enumeration_t()
+w32_d3d9_enumeration_t::~w32_d3d9_enumeration_t()
 {
 	__clear_adapter_info_list(*this);
 }
@@ -364,7 +364,7 @@ win32_d3d9_enumeration_t::~win32_d3d9_enumeration_t()
 //--------------------------------------------------------------------------------------
 // Enumerates available D3D adapters, devices, modes, etc.
 //--------------------------------------------------------------------------------------
-HRESULT win32_d3d9_enumerate(win32_d3d9_enumeration_t& e)
+HRESULT w32_d3d9_enumerate(w32_d3d9_enumeration_t& e)
 {
 	__clear_adapter_info_list(e);
 	std::vector<D3DFORMAT> adapterFormatList;
@@ -377,15 +377,15 @@ HRESULT win32_d3d9_enumerate(win32_d3d9_enumeration_t& e)
 		D3DFMT_A2R10G10B10
 	};
 
-	const UINT NUM_ADAPTERS = win32_d3d9_state.m_d3d->GetAdapterCount();
+	const UINT NUM_ADAPTERS = w32_d3d9_state.m_d3d->GetAdapterCount();
 	for (UINT adapterOrdinal = 0; adapterOrdinal < NUM_ADAPTERS; ++adapterOrdinal)
 	{
-		win32_d3d9_enum_adapter_info_t* pAdapterInfo = new win32_d3d9_enum_adapter_info_t;
+		w32_d3d9_enum_adapter_info_t* pAdapterInfo = new w32_d3d9_enum_adapter_info_t;
 		if (pAdapterInfo == nullptr)
 			return E_OUTOFMEMORY;
 
 		pAdapterInfo->adapter_ordinal = adapterOrdinal;
-		win32_d3d9_state.m_d3d->GetAdapterIdentifier(adapterOrdinal, 0, &pAdapterInfo->adapter_identifier);
+		w32_d3d9_state.m_d3d->GetAdapterIdentifier(adapterOrdinal, 0, &pAdapterInfo->adapter_identifier);
 
 		// get list of all display modes on this adapter.  
 		// Also build a temporary list of all display adapter formats.
@@ -394,11 +394,11 @@ HRESULT win32_d3d9_enumerate(win32_d3d9_enumeration_t& e)
 		for (UINT iFormatList = 0; iFormatList < _countof(ALLOWED_ADAPTER_FORMAT_ARRAY); ++iFormatList)
 		{
 			D3DFORMAT allowedAdapterFormat = ALLOWED_ADAPTER_FORMAT_ARRAY[iFormatList];
-			UINT numAdapterModes = win32_d3d9_state.m_d3d->GetAdapterModeCount(adapterOrdinal, allowedAdapterFormat);
+			UINT numAdapterModes = w32_d3d9_state.m_d3d->GetAdapterModeCount(adapterOrdinal, allowedAdapterFormat);
 			for (UINT mode = 0; mode < numAdapterModes; mode++)
 			{
 				D3DDISPLAYMODE displayMode;
-				win32_d3d9_state.m_d3d->EnumAdapterModes(adapterOrdinal, allowedAdapterFormat, mode, &displayMode);
+				w32_d3d9_state.m_d3d->EnumAdapterModes(adapterOrdinal, allowedAdapterFormat, mode, &displayMode);
 
 				if (displayMode.Width < e.min_width ||
 					displayMode.Height < e.min_height ||
@@ -426,7 +426,7 @@ HRESULT win32_d3d9_enumerate(win32_d3d9_enumeration_t& e)
 
 		{
 			D3DDISPLAYMODE displayMode;
-			win32_d3d9_state.m_d3d->GetAdapterDisplayMode(adapterOrdinal, &displayMode);
+			w32_d3d9_state.m_d3d->GetAdapterDisplayMode(adapterOrdinal, &displayMode);
 			if (!vector_contains(adapterFormatList, displayMode.Format))
 				adapterFormatList.push_back(displayMode.Format);
 		}
@@ -452,11 +452,11 @@ HRESULT win32_d3d9_enumerate(win32_d3d9_enumeration_t& e)
 	bool bUniqueDesc = true;
 	for (uint32_t i = 0; i < e.adapter_info_list.size(); ++i)
 	{
-		const win32_d3d9_enum_adapter_info_t* pAdapterInfo1 = e.adapter_info_list[i];
+		const w32_d3d9_enum_adapter_info_t* pAdapterInfo1 = e.adapter_info_list[i];
 
 		for (uint32_t j = i + 1; j < e.adapter_info_list.size(); ++j)
 		{
-			const win32_d3d9_enum_adapter_info_t* pAdapterInfo2 = e.adapter_info_list[j];
+			const w32_d3d9_enum_adapter_info_t* pAdapterInfo2 = e.adapter_info_list[j];
 			if (::_stricmp(pAdapterInfo1->adapter_identifier.Description, pAdapterInfo2->adapter_identifier.Description) == 0)
 			{
 				bUniqueDesc = false;
@@ -470,7 +470,7 @@ HRESULT win32_d3d9_enumerate(win32_d3d9_enumeration_t& e)
 
 	for (uint32_t i = 0; i < e.adapter_info_list.size(); ++i)
 	{
-		win32_d3d9_enum_adapter_info_t* pAdapterInfo = e.adapter_info_list[i];
+		w32_d3d9_enum_adapter_info_t* pAdapterInfo = e.adapter_info_list[i];
 
 		::strcpy_s(pAdapterInfo->description, 100, pAdapterInfo->adapter_identifier.Description);
 
@@ -485,11 +485,11 @@ HRESULT win32_d3d9_enumerate(win32_d3d9_enumeration_t& e)
 	return S_OK;
 }
 
-const win32_d3d9_enum_adapter_info_t* win32_d3d9_get_adapter_info(const UINT AdapterOrdinal, const win32_d3d9_enumeration_t& e)
+const w32_d3d9_enum_adapter_info_t* w32_d3d9_get_adapter_info(const UINT AdapterOrdinal, const w32_d3d9_enumeration_t& e)
 {
 	for (uint32_t iAdapter = 0; iAdapter < e.adapter_info_list.size(); ++iAdapter)
 	{
-		const win32_d3d9_enum_adapter_info_t* pAdapterInfo = e.adapter_info_list[iAdapter];
+		const w32_d3d9_enum_adapter_info_t* pAdapterInfo = e.adapter_info_list[iAdapter];
 		if (pAdapterInfo->adapter_ordinal == AdapterOrdinal)
 			return pAdapterInfo;
 	}
@@ -497,14 +497,14 @@ const win32_d3d9_enum_adapter_info_t* win32_d3d9_get_adapter_info(const UINT Ada
 	return nullptr;
 }
 
-const win32_d3d9_enum_device_settings_combo_t* win32_d3d9_get_device_settings_combo(const UINT AdapterOrdinal, const D3DDEVTYPE DeviceType, const D3DFORMAT AdapterFormat, const D3DFORMAT BackBufferFormat, const BOOL Windowed, const win32_d3d9_enumeration_t& e)
+const w32_d3d9_enum_device_settings_combo_t* w32_d3d9_get_device_settings_combo(const UINT AdapterOrdinal, const D3DDEVTYPE DeviceType, const D3DFORMAT AdapterFormat, const D3DFORMAT BackBufferFormat, const BOOL Windowed, const w32_d3d9_enumeration_t& e)
 {
-	const win32_d3d9_enum_device_info_t* pDeviceInfo = __get_device_info(AdapterOrdinal, DeviceType, e);
+	const w32_d3d9_enum_device_info_t* pDeviceInfo = __get_device_info(AdapterOrdinal, DeviceType, e);
 	if (pDeviceInfo)
 	{
 		for (uint32_t iDeviceCombo = 0; iDeviceCombo < pDeviceInfo->device_settings_combo_list.size(); ++iDeviceCombo)
 		{
-			win32_d3d9_enum_device_settings_combo_t* pDeviceSettingsCombo = pDeviceInfo->device_settings_combo_list[iDeviceCombo];
+			w32_d3d9_enum_device_settings_combo_t* pDeviceSettingsCombo = pDeviceInfo->device_settings_combo_list[iDeviceCombo];
 			if (pDeviceSettingsCombo->adapter_format == AdapterFormat && pDeviceSettingsCombo->backbuffer_format == BackBufferFormat && pDeviceSettingsCombo->windowed == Windowed)
 				return pDeviceSettingsCombo;
 		}
@@ -513,12 +513,12 @@ const win32_d3d9_enum_device_settings_combo_t* win32_d3d9_get_device_settings_co
 	return nullptr;
 }
 
-win32_d3d9_enum_adapter_info_t::~win32_d3d9_enum_adapter_info_t(void)
+w32_d3d9_enum_adapter_info_t::~w32_d3d9_enum_adapter_info_t(void)
 {
 	vector_set_delete_all_and_clear(device_info_list);
 }
 
-win32_d3d9_enum_device_info_t::~win32_d3d9_enum_device_info_t(void)
+w32_d3d9_enum_device_info_t::~w32_d3d9_enum_device_info_t(void)
 {
 	vector_set_delete_all_and_clear(device_settings_combo_list);
 }

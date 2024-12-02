@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "win32_d3d9_state.h"
+#include "w32_d3d9_state.h"
 
 //--------------------------------------------------------------------------------------
 // MsgProc for DXUTDisplaySwitchingToREFWarning() dialog box
@@ -10,7 +10,7 @@ static INT_PTR CALLBACK __display_switching_to_ref_warning_proc(HWND hDlg, UINT 
 	{
 	case WM_INITDIALOG:
 		// Easier to set text here than in the DLGITEMTEMPLATE
-		::SetWindowTextA(hDlg, win32_d3d9_state.m_window_title);
+		::SetWindowTextA(hDlg, w32_d3d9_state.m_window_title);
 		::SendMessage(::GetDlgItem(hDlg, 0x100), STM_SETIMAGE, IMAGE_ICON, (LPARAM)::LoadIcon(0, IDI_QUESTION));
 		::SetDlgItemText(hDlg, 0x101, "Switching to the Direct3D reference rasterizer, a software device\nthat implements the entire Direct3D feature set, but runs very slowly.\nDo you wish to continue?");
 		::SetDlgItemText(hDlg, IDYES, "&Yes");
@@ -34,7 +34,7 @@ static INT_PTR CALLBACK __display_switching_to_ref_warning_proc(HWND hDlg, UINT 
 //--------------------------------------------------------------------------------------
 // Shared code for samples to ask user if they want to use a REF device or quit
 //--------------------------------------------------------------------------------------
-void win32_d3d9_display_switching_to_ref_warning()
+void w32_d3d9_display_switching_to_ref_warning()
 {
 	// Open the appropriate registry key
 	DWORD dwSkipWarning = 0;
@@ -67,7 +67,7 @@ void win32_d3d9_display_switching_to_ref_warning()
 		{ { WS_CHILD | WS_VISIBLE | BS_CHECKBOX,0,7,59,70,16,IDIGNORE },0xFFFF,0x0080,0,0,0 }, // checkbox
 		};
 
-		int32_t nResult = (int32_t) ::DialogBoxIndirect(win32_d3d9_state.m_hinstance, (DLGTEMPLATE*)&dtp, win32_d3d9_hwnd(), __display_switching_to_ref_warning_proc);
+		int32_t nResult = (int32_t) ::DialogBoxIndirect(w32_d3d9_state.m_hinstance, (DLGTEMPLATE*)&dtp, w32_d3d9_hwnd(), __display_switching_to_ref_warning_proc);
 
 		if ((nResult & 0x80) == 0x80) // "Don't show again" checkbox was checked
 		{
@@ -82,11 +82,11 @@ void win32_d3d9_display_switching_to_ref_warning()
 
 		// User choose not to continue
 		if ((nResult & 0x0F) == IDNO)
-			win32_d3d9_shutdown(1);
+			w32_d3d9_shutdown(1);
 	}
 }
 
-::HRESULT WINAPI win32_d3d9_trace(const char* strFile, DWORD dwLine, HRESULT hr, const char* strMsg, bool bPopMsgBox)
+::HRESULT WINAPI w32_d3d9_trace(const char* strFile, DWORD dwLine, HRESULT hr, const char* strMsg, bool bPopMsgBox)
 {
 	if (bPopMsgBox && true == false)
 		bPopMsgBox = false;
@@ -101,7 +101,7 @@ void win32_d3d9_display_switching_to_ref_warning()
 typedef HMONITOR(WINAPI* LPMONITORFROMWINDOW)(HWND, DWORD);
 typedef BOOL(WINAPI* LPGETMONITORINFO)(HMONITOR, LPMONITORINFO);
 
-BOOL win32_d3d9_get_monitor_info(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo)
+BOOL w32_d3d9_get_monitor_info(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo)
 {
 	static bool s_bInited = false;
 	static LPGETMONITORINFO s_pFnGetMonitorInfo = nullptr;
@@ -132,7 +132,7 @@ BOOL win32_d3d9_get_monitor_info(HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo)
 	return FALSE;
 }
 
-HMONITOR win32_d3d9_monitor_from_window(HWND hWnd, DWORD dwFlags)
+HMONITOR w32_d3d9_monitor_from_window(HWND hWnd, DWORD dwFlags)
 {
 	static bool s_bInited = false;
 	static LPMONITORFROMWINDOW s_pFnGetMonitorFronWindow = nullptr;

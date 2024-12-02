@@ -168,7 +168,10 @@ bool sd_fontv_load_24(sd_fontv_t& font, const char* aFileName, const bool aBlack
 	//loop all chars and set txas
 	int32_t ch = 0;
 	int32_t y = 0;
-	while (ch < SD_FONTV_NUMCHARS && y < CHARSPERHEIGHT)
+	while (
+		ch < _countof(font.characters) &&
+		y < CHARSPERHEIGHT
+		)
 	{
 		//set pos at start of line
 		int32_t pos_x = 0;
