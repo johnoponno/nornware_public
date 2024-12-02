@@ -368,6 +368,11 @@ void minyin_blit(
 	if (0 == in_copy_height || in_copy_height > in_src.height)
 		in_copy_height = in_src.height;
 
+	assert(in_dst_x >= 0);
+	assert(in_dst_x + in_copy_width <= out_bitmap.width);
+	assert(in_dst_y >= 0);
+	assert(in_dst_y + in_copy_height <= out_bitmap.height);
+
 	const uint8_t* BYTE_SRC = in_src.pixels + in_src_x + in_src_y * in_src.width;
 	uint8_t* byte_dst = out_bitmap.pixels + in_dst_x + in_dst_y * out_bitmap.width;
 

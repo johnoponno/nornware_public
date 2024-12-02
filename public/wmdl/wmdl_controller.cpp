@@ -4,7 +4,8 @@
 #include "../minyin/minyin.h"
 #include "wmdl_assets.h"
 
-#define SCROLL_ENABLE 0
+#define SCROLL_X 0
+#define SCROLL_Y 0
 
 #define SLIDER_PREPARE_SPEED 50.f
 
@@ -36,7 +37,7 @@ static int32_t __hero_view_position_x(const wmdl_model_t& in_model)
 	int32_t x = (int32_t)in_model.hero.x;
 
 	//scrolling
-	if (SCROLL_ENABLE)
+	if (SCROLL_X)
 	{
 		x -= WMDL_TILE_ASPECT * WMDL_TILES_X / 2;
 	}
@@ -66,7 +67,7 @@ static int32_t __hero_view_position_y(const wmdl_model_t& in_model)
 	int32_t y = (int32_t)in_model.hero.y;
 
 	//scrolling
-	if (SCROLL_ENABLE)
+	if (SCROLL_Y)
 	{
 		y -= WMDL_TILE_ASPECT * WMDL_TILES_Y / 2;
 	}
@@ -96,32 +97,32 @@ static void __draw_portals(
 	minyin_bitmap_t& out_canvas)
 {
 	for (
-		const wmdl_portal_t* p = in_model.level.portals;
-		p < in_model.level.portals + in_model.level.num_portals;
-		++p
+		const wmdl_portal_t* PORTAL = in_model.level.portals;
+		PORTAL < in_model.level.portals + in_model.level.num_portals;
+		++PORTAL
 		)
 	{
-		const int32_t x = (int32_t)wmdl_offset_to_world_x(p->offset) - in_vx - in_assets.portal.width / 4;
-		const int32_t y = (int32_t)wmdl_offset_to_world_y(p->offset) - in_vy - in_assets.portal.height + WMDL_TILE_ASPECT / 2;
+		const int32_t X = (int32_t)wmdl_offset_to_world_x(PORTAL->offset) - in_vx - in_assets.portal.width / 4;
+		const int32_t Y = (int32_t)wmdl_offset_to_world_y(PORTAL->offset) - in_vy - in_assets.portal.height + WMDL_TILE_ASPECT / 2;
 
 		//frame based on accessability
 		int32_t frame;
-		if (in_model.hero.fixed_servers.count < p->server_count)
+		if (in_model.hero.fixed_servers.count < PORTAL->server_count)
 			frame = 1;
 		else
 			frame = 0;
 
-		minyin_blit_key_clip(out_canvas, in_assets.key_index, in_assets.portal, x, y, WMDL_TILE_ASPECT, in_assets.portal.height, frame * in_assets.portal.width / 2, 0);
+		minyin_blit_key_clip(out_canvas, in_assets.key_index, in_assets.portal, X, Y, WMDL_TILE_ASPECT, in_assets.portal.height, frame * in_assets.portal.width / 2, 0);
 
 		//if not accessible, draw number
-		if (in_model.hero.fixed_servers.count < p->server_count)
+		if (in_model.hero.fixed_servers.count < PORTAL->server_count)
 		{
 			char slask[4];
-			::sprintf_s(slask, "%u", p->server_count);
-			if (p->server_count >= 10)
-				minyin_print(out_canvas, in_assets.key_index, in_assets.font, x + 1, y + 4, slask);
+			::sprintf_s(slask, "%u", PORTAL->server_count);
+			if (PORTAL->server_count >= 10)
+				minyin_print(out_canvas, in_assets.key_index, in_assets.font, X + 1, Y + 4, slask);
 			else
-				minyin_print(out_canvas, in_assets.key_index, in_assets.font, x + 6, y + 4, slask);
+				minyin_print(out_canvas, in_assets.key_index, in_assets.font, X + 6, Y + 4, slask);
 		}
 	}
 }
@@ -131,59 +132,78 @@ static void __draw_servers(
 	minyin_bitmap_t& out_canvas)
 {
 	//calc starting grid
-	const int32_t gx = in_vx / WMDL_TILE_ASPECT;
-	const int32_t gy = in_vy / WMDL_TILE_ASPECT;
+	const int32_t GX = in_vx / WMDL_TILE_ASPECT;
+	const int32_t GY = in_vy / WMDL_TILE_ASPECT;
 
 	//calc subtile shift
-	const int32_t sx = in_vx % WMDL_TILE_ASPECT;
-	const int32_t sy = in_vy % WMDL_TILE_ASPECT;
+	const int32_t SX = in_vx % WMDL_TILE_ASPECT;
+	const int32_t SY = in_vy % WMDL_TILE_ASPECT;
 
-	for (int32_t y = 0; y < WMDL_TILES_Y; ++y)
+	for (
+		int32_t y = 0;
+#if SCROLL_Y
+		y < WMDL_TILES_Y + 1;
+#else
+		y < WMDL_TILES_Y;
+#endif
+		++y
+		)
 	{
-		for (int32_t x = 0; x < WMDL_TILES_X; ++x)
+		for (
+			int32_t x = 0;
+#if SCROLL_X
+			x < WMDL_TILES_X + 1;
+#else
+			x < WMDL_TILES_X;
+#endif
+			++x
+			)
 		{
-			if (WMDL_LOGIC_INDEX_SERVER == wmdl_model_get_tile(in_model, gx + x, gy + y).index)
+			if (WMDL_LOGIC_INDEX_SERVER == wmdl_model_get_tile(in_model, GX + x, GY + y).index)
 			{
-				//fixed state
+				const bool FIXED = wmdl_model_is_server_fixed(in_model.world, wmdl_grid_to_offset(GX + x, GY + y), in_model.hero);
 				int32_t frame;
-				int32_t ox;
-				int32_t oy;
-				const bool FIXED = wmdl_model_is_server_fixed(in_model.world, wmdl_grid_to_offset(gx + x, gy + y), in_model.hero);
-				if (FIXED)
-				{
-					frame = 2;
-					ox = oy = 0;
-				}
-				else
-				{
-					frame = int32_t(wmdl_model_now(in_model) * 10) % 2;
-					ox = int32_t(wmdl_random_unit() * 2) - 1;
-					oy = int32_t(wmdl_random_unit() * 2) - 1;
-				}
 
-				minyin_blit(
-					out_canvas,
-					in_assets.server,
-					x * WMDL_TILE_ASPECT - sx + ox,
-					y * WMDL_TILE_ASPECT - sy - WMDL_TILE_ASPECT + oy,
-					WMDL_TILE_ASPECT,
-					in_assets.server.height,
-					frame * WMDL_TILE_ASPECT,
-					0
-				);
+				//main rep / fixed state
+				{
+					int32_t ox;
+					int32_t oy;
+					if (FIXED)
+					{
+						frame = 2;
+						ox = oy = 0;
+					}
+					else
+					{
+						frame = int32_t(wmdl_model_now(in_model) * 10) % 2;
+						ox = int32_t(wmdl_random_unit() * 2) - 1;
+						oy = int32_t(wmdl_random_unit() * 2) - 1;
+					}
+
+					minyin_blit_key_clip(
+						out_canvas,
+						in_assets.key_index,
+						in_assets.server,
+						x * WMDL_TILE_ASPECT - SX + ox,
+						y * WMDL_TILE_ASPECT - SY - WMDL_TILE_ASPECT + oy,
+						WMDL_TILE_ASPECT,
+						in_assets.server.height,
+						frame * WMDL_TILE_ASPECT,
+						0
+					);
+				}
 
 				//arcs
 				if (!FIXED)
 				{
 					frame = int32_t(wmdl_model_now(in_model) * 16) % 4;
 
-					//minyin_blit_add(
-					minyin_blit_key(
+					minyin_blit_key_clip(
 						out_canvas,
-						in_assets.key_index,
+						0,//2024-12-02: apparently this index works (since the original was additive / on black background)
 						in_assets.arcs,
-						x * WMDL_TILE_ASPECT - sx - 4,
-						y * WMDL_TILE_ASPECT - sy - WMDL_TILE_ASPECT - 4 + int32_t(wmdl_random_unit() * WMDL_TILE_ASPECT),
+						x * WMDL_TILE_ASPECT - SX - 4,
+						y * WMDL_TILE_ASPECT - SY - WMDL_TILE_ASPECT - 4 + int32_t(wmdl_random_unit() * WMDL_TILE_ASPECT),
 						32,
 						32,
 						0,
@@ -262,26 +282,26 @@ static void __draw_scorpion(
 	}
 
 	//direction
-	int32_t xOffs;
-	int32_t srcX;
+	int32_t x_offset;
+	int32_t src_x;
 	if (in_model.hero.x > in_plant.x)
 	{
-		xOffs = -11;
-		srcX = in_assets.scorpion.width / 2;
+		x_offset = -11;
+		src_x = in_assets.scorpion.width / 2;
 	}
 	else
 	{
-		xOffs = -26;
-		srcX = 0;
+		x_offset = -26;
+		src_x = 0;
 	}
 
 	minyin_blit_key_clip(
 		out_canvas,
 		in_assets.key_index,
 		in_assets.scorpion,
-		in_x + xOffs, in_y - 14,
+		in_x + x_offset, in_y - 14,
 		in_assets.scorpion.width / 2, in_assets.scorpion.height / 6,
-		srcX,
+		src_x,
 		frame * in_assets.scorpion.height / 6
 	);
 }
@@ -369,11 +389,15 @@ static uint32_t __num_broken_servers(const wmdl_model_t& in_model)
 {
 	uint32_t count = 0;
 
-	for (uint32_t o = 0; o < WMDL_WORLD_SIZE; ++o)
+	for (
+		uint32_t offset = 0;
+		offset < WMDL_WORLD_SIZE;
+		++offset
+		)
 	{
-		if (in_model.level.tiles[o].index == WMDL_LOGIC_INDEX_SERVER)
+		if (in_model.level.tiles[offset].index == WMDL_LOGIC_INDEX_SERVER)
 		{
-			if (false == wmdl_model_is_server_fixed(in_model.world, o, in_model.hero))
+			if (false == wmdl_model_is_server_fixed(in_model.world, offset, in_model.hero))
 				++count;
 		}
 	}
@@ -422,8 +446,8 @@ static void __draw_foreground(
 	const int32_t SX = wmdl_screen_x((float)in_vx);
 	const int32_t SY = wmdl_screen_y((float)in_vy);
 
-	const uint32_t index = wmdl_model_screen(in_model, SX, SY);
-	switch (index)
+	const uint32_t INDEX = wmdl_model_screen(in_model, SX, SY);
+	switch (INDEX)
 	{
 	case 1:
 		in_minyin;
@@ -507,30 +531,30 @@ static void __draw_farplane(
 	case 3:
 		minyin_blit(out_controller.canvas, in_assets.backgrounds[index], 0, 0);
 		for (
-			wmdl_snowflake_t* f = out_controller.flakes;
-			f < out_controller.flakes + _countof(out_controller.flakes);
-			++f
+			wmdl_snowflake_t* FLAKE = out_controller.flakes;
+			FLAKE < out_controller.flakes + _countof(out_controller.flakes);
+			++FLAKE
 			)
 		{
-			f->x += f->sx * WMDL_SECONDS_PER_TICK;
-			f->x += ::sinf(f->t + NOW * 5) * 16 * WMDL_SECONDS_PER_TICK;
-			f->y += f->sy * WMDL_SECONDS_PER_TICK;
+			FLAKE->x += FLAKE->sx * WMDL_SECONDS_PER_TICK;
+			FLAKE->x += ::sinf(FLAKE->t + NOW * 5) * 16 * WMDL_SECONDS_PER_TICK;
+			FLAKE->y += FLAKE->sy * WMDL_SECONDS_PER_TICK;
 
-			if (f->x < -FLAKE_FRAME_ASPECT)
+			if (FLAKE->x < -FLAKE_FRAME_ASPECT)
 			{
-				f->x = (float)out_controller.canvas.width;
+				FLAKE->x = (float)out_controller.canvas.width;
 			}
-			else if (f->x >= out_controller.canvas.width)
+			else if (FLAKE->x >= out_controller.canvas.width)
 			{
-				f->x = -FLAKE_FRAME_ASPECT;
+				FLAKE->x = -FLAKE_FRAME_ASPECT;
 			}
-			if (f->y >= out_controller.canvas.height)
+			if (FLAKE->y >= out_controller.canvas.height)
 			{
-				f->y = -FLAKE_FRAME_ASPECT;
+				FLAKE->y = -FLAKE_FRAME_ASPECT;
 			}
 
-			//minyin_blit_half_key_clip(controller.canvas, assets.flake, (int32_t)f->x, (int32_t)f->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (f->t % 3) * FLAKE_FRAME_ASPECT, f->t / 3 * FLAKE_FRAME_ASPECT);
-			minyin_blit_key_clip(out_controller.canvas, in_assets.key_index, in_assets.flake, (int32_t)f->x, (int32_t)f->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (f->t % 3) * FLAKE_FRAME_ASPECT, f->t / 3 * FLAKE_FRAME_ASPECT);
+			//minyin_blit_half_key_clip(controller.canvas, assets.flake, (int32_t)FLAKE->x, (int32_t)FLAKE->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (FLAKE->t % 3) * FLAKE_FRAME_ASPECT, FLAKE->t / 3 * FLAKE_FRAME_ASPECT);
+			minyin_blit_key_clip(out_controller.canvas, in_assets.key_index, in_assets.flake, (int32_t)FLAKE->x, (int32_t)FLAKE->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (FLAKE->t % 3) * FLAKE_FRAME_ASPECT, FLAKE->t / 3 * FLAKE_FRAME_ASPECT);
 		}
 		break;
 
@@ -548,10 +572,10 @@ static void __draw_farplane(
 					c->x = CANVAS_WIDTH;
 				bitmap_blit_add_key_clip(assets.myCloud, controller.canvas, nullptr, (int32_t)c->x, (int32_t)c->y, WIDTH, HEIGHT, (c->t % 3) * WIDTH, c->t / 3 * HEIGHT);
 			}
-		}
+	}
 #endif
 		break;
-	}
+}
 }
 
 static void __draw_hero(
@@ -624,9 +648,25 @@ static void __draw_tiles(
 	const int32_t SHIFT_X = in_vx % WMDL_TILE_ASPECT;
 	const int32_t SHIFT_Y = in_vy % WMDL_TILE_ASPECT;
 
-	for (int32_t y = 0; y < WMDL_TILES_Y; ++y)
+	for (
+		int32_t y = 0;
+#if SCROLL_Y
+		y < WMDL_TILES_Y + 1;
+#else
+		y < WMDL_TILES_Y;
+#endif
+		++y
+		)
 	{
-		for (int32_t x = 0; x < WMDL_TILES_X; ++x)
+		for (
+			int32_t x = 0;
+#if SCROLL_X
+			x < WMDL_TILES_X + 1;
+#else
+			x < WMDL_TILES_X;
+#endif
+			++x
+			)
 		{
 			const wmdl_tile_t& TILE = wmdl_model_get_tile(in_model, GRID_X + x, GRID_Y + y);
 			uint32_t index = TILE.index;
