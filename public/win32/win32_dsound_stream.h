@@ -23,10 +23,10 @@ struct win32_dsound_stream_t
 	uint32_t buffer_size;
 	uint32_t total_position;
 	uint32_t end_of_sample_position;
-	unsigned fading_eh : 1;
-	unsigned playing_eh : 1;
-	unsigned looping_eh : 1;
-	unsigned stop_pending_eh : 1;
+	uint32_t fading_eh : 1;
+	uint32_t playing_eh : 1;
+	uint32_t looping_eh : 1;
+	uint32_t stop_pending_eh : 1;
 
 private:
 

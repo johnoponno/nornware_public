@@ -1317,16 +1317,16 @@ wmdl_events_t wmdl_model_update(wmdl_model_t& out_model)
 
 		//facing
 		if (wmdl_hero_left_input(out_model.hero))
-			out_model.hero.right_bit = false;
+			out_model.hero.right_bit = 0;
 		else if (wmdl_hero_right_input(out_model.hero))
-			out_model.hero.right_bit = true;
+			out_model.hero.right_bit = 1;
 
 		//switches
 		if (WMDL_HERO_FLAGS_DOWN & out_model.hero.input)
 		{
 			const wmdl_portal_t* PORTAL = __portal_for_offset(out_model, wmdl_world_to_offset(out_model.hero.x, out_model.hero.y));
 #if 0
-			if (PORTAL && out_model.hero.fixed_servers.count >= PORTAL->server_count)
+			if (PORTAL && out_model.hero.fixed_servers.count >= PORTAL->server_count)//this is the intended code
 #else
 			if (PORTAL)//this allows passage thru portals regardless of server count
 #endif

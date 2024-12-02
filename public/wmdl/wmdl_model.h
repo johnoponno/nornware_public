@@ -150,14 +150,14 @@ struct wmdl_hero_t
 	float sy;
 	float spawn_time;
 	float whip_time;
-	unsigned right_bit : 1;
-	unsigned air_bit : 1;
+	uint32_t right_bit : 1;
+	uint32_t air_bit : 1;
 };
 
 struct wmdl_model_t
 {
-	wmdl_level_t level;
-	wmdl_tile_info_t tile_info[WMDL_MAX_TILE];	//FIXME: immutable after program startup, move out!
+	wmdl_level_t level;	//FIXME: is this immutable after program startup?
+	wmdl_tile_info_t tile_info[WMDL_MAX_TILE];	//FIXME: this IS immutable after program startup, move out!
 	wmdl_enemy_t enemy[64];
 	wmdl_hero_t hero;
 	char last_world[32];

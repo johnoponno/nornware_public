@@ -77,9 +77,9 @@ struct win32_d3d9_state_t
 	win32_d3d9_app_i* app;
 };
 
-extern ::HWND win32_d3d9_hwnd();
-extern bool win32_d3d9_is_windowed();
-extern bool win32_d3d9_is_rendering_paused();
+::HWND win32_d3d9_hwnd();
+bool win32_d3d9_is_windowed();
+bool win32_d3d9_is_rendering_paused();
 
 //2023-04-20 - these are just commented out, use if needed
 //extern vec2f_t win32_d3d9_get_backbuffer_size();

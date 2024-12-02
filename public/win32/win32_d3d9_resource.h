@@ -1,13 +1,15 @@
 #pragma once
 
-#include "Traversable.h"
-
-struct win32_d3d9_resource_t : public traversable_t<win32_d3d9_resource_t>
+struct win32_d3d9_resource_t
 {
 	virtual bool win32_d3d9_resource_on_create_device();
 	virtual bool win32_d3d9_resource_on_reset_device();
 	virtual void win32_d3d9_resource_on_destroy_device();
 	virtual void win32_d3d9_resource_on_lost_device();
+
+	virtual ~win32_d3d9_resource_t();
+
+	win32_d3d9_resource_t* _win32_d3d9_resource_next;
 
 protected:
 

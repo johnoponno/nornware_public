@@ -1,7 +1,5 @@
 #pragma once
 
-static_assert(sizeof(unsigned long) == sizeof(uint32_t), "sizeof(unsigned long) != sizeof(uint32_t)");
-
 #include "win32_dsound_util.h"
 
 struct win32_dsound_file_wave_t

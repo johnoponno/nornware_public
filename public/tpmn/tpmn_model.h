@@ -150,8 +150,8 @@ struct tpmn_hero_t
 	float sy;
 	float spawn_time;
 	float whip_time;
-	unsigned right_bit : 1;
-	unsigned air_bit : 1;
+	uint32_t right_bit : 1;
+	uint32_t air_bit : 1;
 };
 
 struct tpmn_model_t

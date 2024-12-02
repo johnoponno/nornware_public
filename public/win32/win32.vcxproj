@@ -94,7 +94,6 @@
     <ClInclude Include="win32_dxut_enum.h" />
     <ClInclude Include="win32_dxut_misc.h" />
     <ClInclude Include="win32_d3d9_includes.h" />
-    <ClInclude Include="win32_input.h" />
     <ClInclude Include="ogg.h" />
     <ClInclude Include="os_types.h" />
     <ClInclude Include="win32_d3d9_softdraw_adapter.h" />
@@ -110,7 +109,6 @@
     <ClInclude Include="win32_d3d9_state.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="win32_timer.h" />
-    <ClInclude Include="traversable.h" />
     <ClInclude Include="vorbis_file.h" />
   </ItemGroup>
   <ItemGroup>
@@ -120,7 +118,6 @@
     <ClCompile Include="win32_dxut.cpp" />
     <ClCompile Include="win32_dxut_enum.cpp" />
     <ClCompile Include="win32_dxut_misc.cpp" />
-    <ClCompile Include="win32_input.cpp" />
     <ClCompile Include="win32_d3d9_softdraw_adapter.cpp" />
     <ClCompile Include="win32_dsound.cpp" />
     <ClCompile Include="win32_dsound_channel.cpp" />

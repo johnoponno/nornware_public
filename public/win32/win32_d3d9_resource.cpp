@@ -3,31 +3,16 @@
 
 #include "win32_d3d9_state.h"
 
-TRAVERSABLE(win32_d3d9_resource_t)
+static win32_d3d9_resource_t* __first = nullptr;
 
-//callbacks
 ::HRESULT CALLBACK win32_d3d9_resource_callback_on_create_device()
 {
-	//FS_LOG("%u resources to callback", count);
-	if (win32_d3d9_resource_t::count)
+	win32_d3d9_resource_t* resource = __first;
+	while (resource)
 	{
-		//fs::log::indent();
-		win32_d3d9_resource_t* resource = win32_d3d9_resource_t::first;
-		uint32_t index = 1;
-		while (resource)
-		{
-			if (!resource->win32_d3d9_resource_on_create_device())
-			{
-				//FS_ERROR("failed for %s", resource->descriptor.buffer);
-				return E_FAIL;
-			}
-#ifdef _DEBUG
-			//FS_LOG("%u / %u: %s", index, count, resource->descriptor.buffer);
-#endif
-			resource = resource->next;
-			++index;
-		}
-		//fs::log::undent();
+		if (!resource->win32_d3d9_resource_on_create_device())
+			return E_FAIL;
+		resource = resource->_win32_d3d9_resource_next;
 	}
 
 	return S_OK;
@@ -35,26 +20,12 @@ TRAVERSABLE(win32_d3d9_resource_t)
 
 ::HRESULT CALLBACK win32_d3d9_resource_callback_on_reset_device()
 {
-	//FS_LOG("%u resources to callback", count);
-	if (win32_d3d9_resource_t::count)
+	win32_d3d9_resource_t* resource = __first;
+	while (resource)
 	{
-		//fs::log::indent();
-		win32_d3d9_resource_t* resource = win32_d3d9_resource_t::first;
-		uint32_t index = 1;
-		while (resource)
-		{
-			if (!resource->win32_d3d9_resource_on_reset_device())
-			{
-				//FS_ERROR("failed for %s", resource->descriptor.buffer);
-				return E_FAIL;
-			}
-#ifdef _DEBUG
-			//FS_LOG("%u / %u: %s", index, count, resource->descriptor.buffer);
-#endif
-			resource = resource->next;
-			++index;
-		}
-		//fs::log::undent();
+		if (!resource->win32_d3d9_resource_on_reset_device())
+			return E_FAIL;
+		resource = resource->_win32_d3d9_resource_next;
 	}
 
 	return S_OK;
@@ -62,47 +33,24 @@ TRAVERSABLE(win32_d3d9_resource_t)
 
 void CALLBACK win32_d3d9_resource_callback_on_destroy_device()
 {
-	//FS_LOG("%u resources to callback", count);
-	if (win32_d3d9_resource_t::count)
+	win32_d3d9_resource_t* resource = __first;
+	while (resource)
 	{
-		//fs::log::indent();
-		win32_d3d9_resource_t* resource = win32_d3d9_resource_t::first;
-		uint32_t index = 1;
-		while (resource)
-		{
-			resource->win32_d3d9_resource_on_destroy_device();
-#ifdef _DEBUG
-			//FS_LOG("%u / %u: %s", index, count, resource->descriptor.buffer);
-#endif
-			resource = resource->next;
-			++index;
-		}
-		//fs::log::undent();
+		resource->win32_d3d9_resource_on_destroy_device();
+		resource = resource->_win32_d3d9_resource_next;
 	}
 }
 
 void CALLBACK win32_d3d9_resource_callback_on_lost_device()
 {
-	//FS_LOG("%u resources to callback", count);
-	if (win32_d3d9_resource_t::count)
+	win32_d3d9_resource_t* resource = __first;
+	while (resource)
 	{
-		//fs::log::indent();
-		win32_d3d9_resource_t* resource = win32_d3d9_resource_t::first;
-		uint32_t index = 1;
-		while (resource)
-		{
-			resource->win32_d3d9_resource_on_lost_device();
-#ifdef _DEBUG
-			//FS_LOG("%u / %u: %s", index, count, resource->descriptor.buffer);
-#endif
-			resource = resource->next;
-			++index;
-		}
-		//fs::log::undent();
+		resource->win32_d3d9_resource_on_lost_device();
+		resource = resource->_win32_d3d9_resource_next;
 	}
 }
 
-//default implementations
 bool win32_d3d9_resource_t::win32_d3d9_resource_on_create_device()
 {
 	return true;
@@ -123,4 +71,39 @@ bool win32_d3d9_resource_t::win32_d3d9_resource_on_reset_device()
 
 win32_d3d9_resource_t::win32_d3d9_resource_t()
 {
+	if (__first)
+	{
+		win32_d3d9_resource_t* current = __first;
+		while (current->_win32_d3d9_resource_next)
+			current = current->_win32_d3d9_resource_next;
+		assert(current);
+		current->_win32_d3d9_resource_next = this;
+	}
+	else
+	{
+		__first = this;
+	}
+
+	_win32_d3d9_resource_next = nullptr;
+}
+
+win32_d3d9_resource_t::~win32_d3d9_resource_t()
+{
+	if (this == __first)
+	{
+		__first = _win32_d3d9_resource_next;
+	}
+	else
+	{
+		win32_d3d9_resource_t* previous = __first;
+		win32_d3d9_resource_t* current = previous->_win32_d3d9_resource_next;
+
+		while (current != this)
+		{
+			previous = current;
+			current = current->_win32_d3d9_resource_next;
+		}
+
+		previous->_win32_d3d9_resource_next = _win32_d3d9_resource_next;
+	}
 }

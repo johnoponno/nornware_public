@@ -557,16 +557,16 @@ void sd_bitmap_blit(const sd_bitmap_t& SRC, sd_bitmap_t& aDst, int32_t aDstX, in
 	//long
 	else
 	{
-		const unsigned long* LONGSRC;
-		const unsigned long* LONGSCANSRC;
-		unsigned long* longDst;
-		unsigned long* longScanDst;
+		const uint32_t* LONGSRC;
+		const uint32_t* LONGSCANSRC;
+		uint32_t* longDst;
+		uint32_t* longScanDst;
 
 		const int32_t LONG_SRCWIDTH = SRC.width >> 1;
 		const int32_t LONG_DSTWIDTH = aDst.width >> 1;
 		const int32_t LONG_COPYWIDTH = aCopyWidth >> 1;
-		LONGSRC = (const unsigned long*)(SRC.pixels + aSrcX + aSrcY * SRC.width);
-		longDst = (unsigned long*)(aDst.pixels + aDstX + aDstY * aDst.width);
+		LONGSRC = (uint32_t*)(SRC.pixels + aSrcX + aSrcY * SRC.width);
+		longDst = (uint32_t*)(aDst.pixels + aDstX + aDstY * aDst.width);
 
 		for (int32_t y = 0; y < aCopyHeight; ++y)
 		{
@@ -575,8 +575,8 @@ void sd_bitmap_blit(const sd_bitmap_t& SRC, sd_bitmap_t& aDst, int32_t aDstX, in
 
 			for (int32_t x = 0; x < LONG_COPYWIDTH; ++x)
 			{
-				assert(LONGSRC >= (const unsigned long*)SRC.pixels && LONGSRC < (const unsigned long*)(SRC.pixels + SRC.width * SRC.height));
-				assert(longDst >= (const unsigned long*)aDst.pixels && longDst < (const unsigned long*)(aDst.pixels + aDst.width * aDst.height));
+				assert(LONGSRC >= (uint32_t*)SRC.pixels && LONGSRC < (uint32_t*)(SRC.pixels + SRC.width * SRC.height));
+				assert(longDst >= (uint32_t*)aDst.pixels && longDst < (uint32_t*)(aDst.pixels + aDst.width * aDst.height));
 				*longDst++ = *LONGSRC++;
 			}
 
