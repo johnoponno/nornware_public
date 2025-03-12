@@ -1,11 +1,13 @@
 # changelog
-* [x] 4:30 PM 04/19/2023 - upgrade solution to Microsoft Visual Studio Community 2019 Version 16.11.24
-* [x] 4:51 PM 04/20/2023 - replace namespaces with prefixes
-* [x] 4:51 PM 04/20/2023 - dx9 -> win32
-* [x] 5:38 PM 04/20/2023 - fix mouse cursor position to work with canvas scaling
-* [x] 9:21 PM 09/06/2023 - upgrade solution to Microsoft Visual Studio Community 2022 Version 17.7.3
+* [x] 2025-03-12 - minyin / micron / paletas stuff with built in atascii support
+* [x] 2023-09-06 - upgrade solution to Microsoft Visual Studio Community 2022 Version 17.7.3
+* [x] 2023-04-20 - fix mouse cursor position to work with canvas scaling
+* [x] 2023-04-20 - dx9 -> win32
+* [x] 2023-04-20 - replace namespaces with prefixes
+* [x] 2023-04-19 - upgrade solution to Microsoft Visual Studio Community 2019 Version 16.11.24
 
 # todo
+* [ ] re-document all projects as of 2025
 * [ ] implement mouse wheel example in tpmn
 * [ ] re-implement editor
 
