@@ -1182,6 +1182,89 @@ static wmdl_app_event_t __idle_update(
 	return wmdl_app_event_t::NOTHING;
 }
 
+#if 0
+static uint32_t __prng()
+{
+	static uint32_t prng = 0;
+	prng = 1664525l * prng + 1013904223l;
+	return 0x3f800000 | (prng & 0x007fffff);
+}
+
+static void __test(
+	const wmdl_model_t& in_model,
+	micron_t& out_micron)
+{
+#if 0
+	{
+		uint8_t c;
+		int32_t y;
+		micron_canvas_atascii_print(out_micron, "\x80Hello ATASCII!?\x80", c = 128, c - 32, 64, y = 64);
+		micron_canvas_atascii_print(out_micron, "Are you a villain?", c += 16, c - 32, 64, y += 8);
+		micron_canvas_atascii_print(out_micron, "Are you a vixen?", c += 16, c - 32, 64, y += 8);
+		micron_canvas_atascii_print(out_micron, "Are you a viking valyrie?", c += 16, c - 32, 64, y += 8);
+		micron_canvas_atascii_print(out_micron, "On penicillin?", c += 16, c - 32, 64, y += 8);
+		micron_canvas_atascii_print(out_micron, "With Richard Nixon?", c += 16, c - 32, 64, y += 8);
+		micron_canvas_atascii_print(out_micron, "In a robotic fantasy?", c += 16, c - 32, 64, y += 8);
+	}
+#endif
+
+	{
+		static struct sprite_t
+		{
+			int32_t x;
+			int32_t xs;
+			int32_t y;
+			int32_t ys;
+		} sprites[256];
+		static bool init = 1;
+		if (init)
+		{
+			for (int32_t i = 0; i < _countof(sprites); ++i)
+			{
+				sprites[i].x = __prng() % (MICRON_CANVAS_WIDTH - 8);
+				sprites[i].y = __prng() % (240 - 8);
+
+				sprites[i].xs = __prng() % 3;
+				if (0 == sprites[i].xs)
+					sprites[i].xs = 1;
+				sprites[i].ys = __prng() % 3;
+				if (0 == sprites[i].ys)
+					sprites[i].ys = 1;
+			}
+			init = 0;
+		}
+		for (
+			sprite_t& s : sprites
+			)
+		{
+			s.x += s.xs;
+			if (s.x < 0)
+			{
+				s.x = 0;
+				s.xs = -s.xs;
+			}
+			else if (s.x > MICRON_CANVAS_WIDTH - 8)
+			{
+				s.x = MICRON_CANVAS_WIDTH - 8;
+				s.xs = -s.xs;
+			}
+			s.y += s.ys;
+			if (s.y < 0)
+			{
+				s.y = 0;
+				s.ys = -s.ys;
+			}
+			else if (s.y > 240 - 8)
+			{
+				s.y = 240 - 8;
+				s.ys = -s.ys;
+			}
+			micron_canvas_atascii_char_key(out_micron, 128, uint8_t(&s - sprites) + (uint8_t)in_model.tick, s.x, s.y);
+		}
+	}
+}
+#endif
+
 //public
 //public
 //public
@@ -1235,6 +1318,8 @@ wmdl_app_event_t wmdl_controller_tick(
 		__draw_text(in_assets, MICRON_CANVAS_HEIGHT - assets.font.height, str, softdraw::red, controller.canvas);
 	}
 #endif
+
+	//__test(out_model, out_micron);
 
 	return result;
 }

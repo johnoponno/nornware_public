@@ -40,7 +40,7 @@ struct micron_t
 
 	//the "down-right-now" state of the keyboard keys AND mouse keys
 	//FIXME: this is currently win32 VK_xxx codes and NOT platform agnostic!
-	//FIXME: double buffering should be inside the library
+	//FIXME: should double buffering should be inside the library?
 	struct
 	{
 		uint8_t down_current : 1;
@@ -119,6 +119,12 @@ void micron_canvas_vertical_line(
 void micron_canvas_cross(
 	micron_t& out_micron,
 	const int32_t x, const int32_t y, const int32_t aSize, const uint8_t aColor);
+void micron_canvas_atascii_print(
+	micron_t& out_micron,
+	const void* in_string, const uint8_t in_color_hi, const uint8_t in_color_lo, const int32_t in_x, const int32_t in_y);
+void micron_canvas_atascii_char_key(
+	micron_t& out_micron,
+	const uint8_t in_char, const uint8_t in_color_hi, const int32_t in_x, const int32_t in_y);
 
 //this is intended to allocate all required bitmap memory in a contiguous chunk
 //this is possible because we are loading 24-bit .tga files, calculating a best-fit palette, and then remapping these 24-bit images to 8-bit versions
@@ -182,6 +188,8 @@ void micron_print(
 void micron_print_colorize(
 	micron_t& out_micron,
 	const uint8_t in_key, const uint8_t in_key2, const micron_font_t& FONT, const uint8_t aColor, const int32_t aDstX, const int32_t aDstY, const char* message);
+
+extern uint8_t micron_atascii_bits[256 * 8];
 
 //END UTILITY INTEFACE FOR GAMES WRITTEN FOR MICRON
 //END UTILITY INTEFACE FOR GAMES WRITTEN FOR MICRON
