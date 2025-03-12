@@ -10,17 +10,16 @@
 struct tpmn_app_t : public w32_d3d9_softdraw_app_t
 {
 	//this is the main "tick" callback from the win32 / d3d9 harness
-	bool w32_d3d9_softdraw_app_tick(const micron_t& in_micron, const w32_dsound_container_t& in_sounds) override
+	bool w32_d3d9_softdraw_app_tick(const w32_dsound_container_t& in_sounds) override
 	{
 		_sound_plays.clear();
-		const char* music_request = nullptr;
 
-		if (!tpmn_game_tick(in_micron, _game, _sound_plays, music_request))
+		if (!tpmn_game_tick(_game, _sound_plays, _micron))
 			return false;
 
 		for (const uint32_t SP : _sound_plays)
 			in_sounds.play(SP, 1.f, 0.f, 1.f, nullptr);
-		w32_d3d9_softdraw_app_handle_music_request(music_request);
+		w32_d3d9_softdraw_app_handle_music_request();
 
 		return true;
 	}

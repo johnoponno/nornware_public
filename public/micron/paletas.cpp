@@ -5,10 +5,39 @@
 #include "fs.h"
 #include "sd_bitmap.h"
 
+struct paletas_color_t
+{
+	bool operator < (const paletas_color_t& in_other) const
+	{
+		if (r < in_other.r)	return true;
+		if (r > in_other.r)	return false;
+
+		// Otherwise r are equal
+		if (g < in_other.g)	return true;
+		if (g > in_other.g)	return false;
+
+		// Otherwise g are equal
+		if (b < in_other.b)	return true;
+		if (b > in_other.b)	return false;
+
+		// Otherwise all are equal
+		return false;
+	}
+
+	bool operator >= (const paletas_color_t& in_other) const
+	{
+		return !(*this < in_other);
+	}
+
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+};
+
 static int32_t __sort_r(const void* elem1, const void* elem2)
 {
-	const micron_color_t* ELEM1 = (micron_color_t*)elem1;
-	const micron_color_t* ELEM2 = (micron_color_t*)elem2;
+	const paletas_color_t* ELEM1 = (paletas_color_t*)elem1;
+	const paletas_color_t* ELEM2 = (paletas_color_t*)elem2;
 
 	if (ELEM1->r < ELEM2->r)
 		return -1;
@@ -21,8 +50,8 @@ static int32_t __sort_r(const void* elem1, const void* elem2)
 
 static int32_t __sort_g(const void* elem1, const void* elem2)
 {
-	const micron_color_t* ELEM1 = (micron_color_t*)elem1;
-	const micron_color_t* ELEM2 = (micron_color_t*)elem2;
+	const paletas_color_t* ELEM1 = (paletas_color_t*)elem1;
+	const paletas_color_t* ELEM2 = (paletas_color_t*)elem2;
 
 	if (ELEM1->g < ELEM2->g)
 		return -1;
@@ -35,8 +64,8 @@ static int32_t __sort_g(const void* elem1, const void* elem2)
 
 static int32_t __sort_b(const void* elem1, const void* elem2)
 {
-	const micron_color_t* ELEM1 = (micron_color_t*)elem1;
-	const micron_color_t* ELEM2 = (micron_color_t*)elem2;
+	const paletas_color_t* ELEM1 = (paletas_color_t*)elem1;
+	const paletas_color_t* ELEM2 = (paletas_color_t*)elem2;
 
 	if (ELEM1->b < ELEM2->b)
 		return -1;
@@ -47,7 +76,7 @@ static int32_t __sort_b(const void* elem1, const void* elem2)
 	return 0;
 }
 
-static void __sort(std::vector<micron_color_t>& out_bucket)
+static void __sort(std::vector<paletas_color_t>& out_bucket)
 {
 	int32_t low_r = INT_MAX;
 	int32_t low_g = INT_MAX;
@@ -55,7 +84,7 @@ static void __sort(std::vector<micron_color_t>& out_bucket)
 	int32_t high_r = INT_MIN;
 	int32_t high_g = INT_MIN;
 	int32_t high_b = INT_MIN;
-	for (const micron_color_t& PIXEL : out_bucket)
+	for (const paletas_color_t& PIXEL : out_bucket)
 	{
 		low_r = __min(low_r, PIXEL.r);
 		low_g = __min(low_g, PIXEL.g);
@@ -71,28 +100,28 @@ static void __sort(std::vector<micron_color_t>& out_bucket)
 	//3) sort by greatest range
 	const int32_t GREATEST = __max(RED, __max(GREEN, BLUE));
 	if (GREATEST == RED)
-		::qsort(out_bucket.data(), out_bucket.size(), sizeof(micron_color_t), __sort_r);
+		::qsort(out_bucket.data(), out_bucket.size(), sizeof(paletas_color_t), __sort_r);
 	else if (GREATEST == GREEN)
-		::qsort(out_bucket.data(), out_bucket.size(), sizeof(micron_color_t), __sort_g);
+		::qsort(out_bucket.data(), out_bucket.size(), sizeof(paletas_color_t), __sort_g);
 	else if (GREATEST == BLUE)
-		::qsort(out_bucket.data(), out_bucket.size(), sizeof(micron_color_t), __sort_b);
+		::qsort(out_bucket.data(), out_bucket.size(), sizeof(paletas_color_t), __sort_b);
 	else
 		assert(0);
 }
 
 static void __split(
-	const std::vector<micron_color_t>& in_bucket,
-	std::vector<std::vector<micron_color_t>>& out_new_buckets)
+	const std::vector<paletas_color_t>& in_bucket,
+	std::vector<std::vector<paletas_color_t>>& out_new_buckets)
 {
 	{
-		std::vector<micron_color_t> a;
+		std::vector<paletas_color_t> a;
 		for (uint32_t i = 0; i < in_bucket.size() / 2; ++i)
 			a.push_back(in_bucket[i]);
 		out_new_buckets.push_back(a);
 	}
 
 	{
-		std::vector<micron_color_t> b;
+		std::vector<paletas_color_t> b;
 		for (uint32_t i = in_bucket.size() / 2; i < in_bucket.size(); ++i)
 			b.push_back(in_bucket[i]);
 		out_new_buckets.push_back(b);
@@ -100,8 +129,8 @@ static void __split(
 }
 
 static uint32_t __nearest_palette_entry(
-	const micron_color_t* in_palette, const uint32_t in_palette_size, const micron_color_t& in_source_image_pixel,
-	std::map<micron_color_t, uint32_t>& out_cache)
+	const micron_t& in_micron, const uint32_t in_palette_size, const paletas_color_t& in_source_image_pixel,
+	std::map<paletas_color_t, uint32_t>& out_cache)
 {
 	assert(in_palette_size <= 256);
 
@@ -115,9 +144,9 @@ static uint32_t __nearest_palette_entry(
 	uint32_t npe = UINT32_MAX;
 	for (uint32_t pe = 0; pe < in_palette_size; ++pe)
 	{
-		const float R = (float)in_palette[pe].r - (float)in_source_image_pixel.r;
-		const float G = (float)in_palette[pe].g - (float)in_source_image_pixel.g;
-		const float B = (float)in_palette[pe].b - (float)in_source_image_pixel.b;
+		const float R = (float)in_micron.palette[pe].r - (float)in_source_image_pixel.r;
+		const float G = (float)in_micron.palette[pe].g - (float)in_source_image_pixel.g;
+		const float B = (float)in_micron.palette[pe].b - (float)in_source_image_pixel.b;
 		const float D = ::sqrtf(R * R + G * G + B * B);
 		if (D < nd)
 		{
@@ -190,14 +219,14 @@ bool paletas_t::calculate(
 	{
 		//get all unique pixels
 		uint32_t total_source_pixels = 0;
-		std::vector<std::vector<micron_color_t>> all_buckets;
+		std::vector<std::vector<paletas_color_t>> all_buckets;
 		{
-			std::set<micron_color_t> unique_pixels_set;
+			std::set<paletas_color_t> unique_pixels_set;
 			for (const fs_blob_t& SOURCE_IMAGE : source_images)
 			{
 				for (
-					micron_color_t* pixel = (micron_color_t*)FS_TGA_PIXELS(SOURCE_IMAGE);
-					pixel < (micron_color_t*)FS_TGA_PIXELS(SOURCE_IMAGE) + FS_TGA_HEADER(SOURCE_IMAGE)->image_spec_width * FS_TGA_HEADER(SOURCE_IMAGE)->image_spec_height;
+					paletas_color_t* pixel = (paletas_color_t*)FS_TGA_PIXELS(SOURCE_IMAGE);
+					pixel < (paletas_color_t*)FS_TGA_PIXELS(SOURCE_IMAGE) + FS_TGA_HEADER(SOURCE_IMAGE)->image_spec_width * FS_TGA_HEADER(SOURCE_IMAGE)->image_spec_height;
 					++pixel
 					)
 				{
@@ -205,8 +234,8 @@ bool paletas_t::calculate(
 					unique_pixels_set.insert(*pixel);
 				}
 			}
-			std::vector<micron_color_t> first_bucket;
-			for (const micron_color_t& UP : unique_pixels_set)
+			std::vector<paletas_color_t> first_bucket;
+			for (const paletas_color_t& UP : unique_pixels_set)
 				first_bucket.push_back(UP);
 			assert(unique_pixels_set.size() == first_bucket.size());
 			all_buckets.push_back(first_bucket);
@@ -215,14 +244,14 @@ bool paletas_t::calculate(
 		//figure out which channel has the greatest range, sort, and split until we have as many buckets as we want palette indices
 		while (all_buckets.size() < in_palette_size)
 		{
-			std::vector<std::vector<micron_color_t>> new_buckets;
-			for (std::vector<micron_color_t>& bucket : all_buckets)
+			std::vector<std::vector<paletas_color_t>> new_buckets;
+			for (std::vector<paletas_color_t>& bucket : all_buckets)
 			{
 				__sort(bucket);
 				__split(bucket, new_buckets);
 			}
 			all_buckets.clear();
-			for (const std::vector<micron_color_t>& NEW_BUCKET : new_buckets)
+			for (const std::vector<paletas_color_t>& NEW_BUCKET : new_buckets)
 				all_buckets.push_back(NEW_BUCKET);
 		}
 		assert(all_buckets.size() == in_palette_size);
@@ -234,11 +263,11 @@ bool paletas_t::calculate(
 			++bucket_index
 			)
 		{
-			const std::vector<micron_color_t>& BUCKET = all_buckets[bucket_index];
+			const std::vector<paletas_color_t>& BUCKET = all_buckets[bucket_index];
 			float r = 0;
 			float g = 0;
 			float b = 0;
-			for (const micron_color_t& PIXEL : BUCKET)
+			for (const paletas_color_t& PIXEL : BUCKET)
 			{
 				r += PIXEL.r;
 				g += PIXEL.g;
@@ -260,7 +289,7 @@ bool paletas_t::calculate(
 	{
 		uint8_t* running_memory = (uint8_t*)out_bitmap_memory.data;
 
-		std::map<micron_color_t, uint32_t> remap_cache;
+		std::map<paletas_color_t, uint32_t> remap_cache;
 		for (
 			uint32_t i = 0;
 			i < _items.size();
@@ -295,8 +324,8 @@ bool paletas_t::calculate(
 					++x
 					)
 				{
-					const micron_color_t* SOURCE_IMAGE_I_PIXEL = (micron_color_t*)FS_TGA_PIXELS(source_images[i]) + x + y * FS_TGA_HEADER(source_images[i])->image_spec_width;
-					const uint32_t NEAREST_PALETTE_ENTRY = __nearest_palette_entry(out_micron.palette, in_palette_size, *SOURCE_IMAGE_I_PIXEL, remap_cache);
+					const paletas_color_t* SOURCE_IMAGE_I_PIXEL = (paletas_color_t*)FS_TGA_PIXELS(source_images[i]) + x + y * FS_TGA_HEADER(source_images[i])->image_spec_width;
+					const uint32_t NEAREST_PALETTE_ENTRY = __nearest_palette_entry(out_micron, in_palette_size, *SOURCE_IMAGE_I_PIXEL, remap_cache);
 					assert(NEAREST_PALETTE_ENTRY < in_palette_size);
 					item.bitmap->pixels[x + (item.bitmap->height - 1 - y) * item.bitmap->width] = (uint8_t)NEAREST_PALETTE_ENTRY;
 				}

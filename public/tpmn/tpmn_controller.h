@@ -57,8 +57,8 @@ struct tpmn_controller_t
 };
 
 tpmn_app_event_t tpmn_controller_tick(
-	const micron_t& in_micron, const tpmn_assets_t& in_assets,
-	tpmn_model_t& out_model, tpmn_controller_t& out_controller, const char*& out_music_request);
+	const tpmn_assets_t& in_assets,
+	tpmn_model_t& out_model, tpmn_controller_t& out_controller, micron_t& out_micron);
 
 void tpmn_controller_on_load_new_world(tpmn_controller_t& out_controller, std::vector<uint32_t>& out_sound_plays);
 

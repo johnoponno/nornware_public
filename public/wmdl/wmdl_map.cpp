@@ -7,11 +7,11 @@ static void __map_grid(
 	const int32_t in_x, const int32_t in_y, const uint8_t in_color,
 	micron_t& out_micron)
 {
-	uint8_t* p = out_micron.canvas + (MICRON_WIDTH - WMDL_WORLD_WIDTH * 2) / 2 + 2 * in_x + (MICRON_HEIGHT - 2 * WMDL_WORLD_HEIGHT + 2 * in_y) * MICRON_WIDTH;
+	uint8_t* p = out_micron.canvas + (MICRON_CANVAS_WIDTH - WMDL_WORLD_WIDTH * 2) / 2 + 2 * in_x + (MICRON_CANVAS_HEIGHT - 2 * WMDL_WORLD_HEIGHT + 2 * in_y) * MICRON_CANVAS_WIDTH;
 	p[0] = in_color;
 	p[1] = in_color;
-	p[0 + MICRON_WIDTH] = in_color;
-	p[1 + MICRON_WIDTH] = in_color;
+	p[0 + MICRON_CANVAS_WIDTH] = in_color;
+	p[1 + MICRON_CANVAS_WIDTH] = in_color;
 }
 
 static void __map_offset(

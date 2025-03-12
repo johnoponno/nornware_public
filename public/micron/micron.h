@@ -1,35 +1,76 @@
 #pragma once
 
-#define MICRON_WIDTH 600
-#define MICRON_HEIGHT 320
-#define MICRON_KEY_ESCAPE 0x1B
+//BEGIN PUBLIC INTERFACE FOR MICRON IMPLEMENTORS
+//BEGIN PUBLIC INTERFACE FOR MICRON IMPLEMENTORS
+//BEGIN PUBLIC INTERFACE FOR MICRON IMPLEMENTORS
+//BEGIN PUBLIC INTERFACE FOR MICRON IMPLEMENTORS
 
-struct micron_color_t
-{
-	bool operator < (const micron_color_t& in_other) const;
-	bool operator >= (const micron_color_t& in_other) const;
+#define MICRON_CANVAS_WIDTH 600
+#define MICRON_CANVAS_HEIGHT 320
 
-	uint8_t r;
-	uint8_t g;
-	uint8_t b;
-};
+#define MICRON_KEY_ESCAPE 0x1B//FIXME: this is currently win32 VK_xxx codes and NOT platform agnostic!
 
 struct micron_t
 {
+	//INPUT (written by the implementing platform)
+	//INPUT (written by the implementing platform)
+	//INPUT (written by the implementing platform)
+	//INPUT (written by the implementing platform)
+
+	//the "down-right-now" state of the keyboard keys AND mouse keys
+	//FIXME: this is currently win32 VK_xxx codes and NOT platform agnostic!
+	//FIXME: double buffering should be inside the library
 	struct
 	{
 		uint8_t down_current : 1;
 		uint8_t down_last : 1;
 	} keys[256];
 
+	//the position of the mouse cursor in your local / native screen resolution
 	int32_t screen_cursor_x;
 	int32_t screen_cursor_y;
+
+	//the position of the mouse cursor on the canvas (in case you are doing funky scaling and positioning, since MICRON_CANVAS_WIDTH x MICRON_CANVAS_HEIGHT is pretty small)
 	int32_t canvas_cursor_x;
 	int32_t canvas_cursor_y;
 
-	micron_color_t palette[256];
-	uint8_t canvas[MICRON_WIDTH * MICRON_HEIGHT];
+
+
+	//OUTPUT (read by the implementing platform)
+	//OUTPUT (read by the implementing platform)
+	//OUTPUT (read by the implementing platform)
+	//OUTPUT (read by the implementing platform)
+
+	//output: 256-color 24-bit palette for mapping 8-bit canvas contents to 24-bit
+	//NOTE: this CAN change on the fly (palette animation), so be robust for that
+	struct
+	{
+		uint8_t r;
+		uint8_t g;
+		uint8_t b;
+	} palette[256];
+
+	//the actual pixels / framebuffer, CAN / WILL change on the fly
+	//the idea is to map this "somehow" to a modern graphics api (texture? / colored quads? / pixel shader?)
+	uint8_t canvas[MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT];
+
+	//the music file/track we currently want to stream
+	//it's up to the implementor to handle this (if at all) by loading and caching whatever it needs in order to stream a single music track
+	const char* music_request = nullptr;
 };
+
+//END PUBLIC INTERFACE FOR MICRON IMPLEMENTORS
+//END PUBLIC INTERFACE FOR MICRON IMPLEMENTORS
+//END PUBLIC INTERFACE FOR MICRON IMPLEMENTORS
+//END PUBLIC INTERFACE FOR MICRON IMPLEMENTORS
+
+
+
+
+//BEGIN UTILITY INTEFACE FOR GAMES WRITTEN FOR MICRON
+//BEGIN UTILITY INTEFACE FOR GAMES WRITTEN FOR MICRON
+//BEGIN UTILITY INTEFACE FOR GAMES WRITTEN FOR MICRON
+//BEGIN UTILITY INTEFACE FOR GAMES WRITTEN FOR MICRON
 
 bool micron_key_is_down(const micron_t& in_micron, const int32_t in_key);
 bool micron_key_downflank(const micron_t& in_micron, const int32_t in_key);
@@ -115,3 +156,8 @@ struct micron_sound_request_t
 	const char* asset;
 	uint32_t id;
 };
+
+//END UTILITY INTEFACE FOR GAMES WRITTEN FOR MICRON
+//END UTILITY INTEFACE FOR GAMES WRITTEN FOR MICRON
+//END UTILITY INTEFACE FOR GAMES WRITTEN FOR MICRON
+//END UTILITY INTEFACE FOR GAMES WRITTEN FOR MICRON

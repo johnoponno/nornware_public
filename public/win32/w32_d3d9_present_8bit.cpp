@@ -73,7 +73,7 @@ static void __copy_alpha(
 //public
 //public
 
-void w32_d3d9_chunky_present_2d(
+void w32_d3d9_present_8bit(
 	const uint16_t* in_palette, const uint16_t in_alpha_key,
 	const uint8_t* in_canvas_pixels, const int32_t in_canvas_width, const int32_t in_canvas_height,
 	const int32_t in_x, const int32_t in_y, const int32_t in_width, const int32_t in_height, const uint32_t in_color, const w32_d3d9_fixed_function_mode_t in_mode, const bool in_filter,

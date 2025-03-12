@@ -112,7 +112,8 @@
     <ClInclude Include="vorbis_file.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="w32_d3d9_chunky_adapter.cpp" />
+    <ClCompile Include="w32_d3d9_present_16bit.cpp" />
+    <ClCompile Include="w32_d3d9_present_8bit.cpp" />
     <ClCompile Include="w32_d3d9_app.cpp" />
     <ClCompile Include="w32_d3d9_resource.cpp" />
     <ClCompile Include="w32_dxut.cpp" />

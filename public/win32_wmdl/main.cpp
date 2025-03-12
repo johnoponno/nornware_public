@@ -13,14 +13,13 @@ struct wmdl_app_t : public w32_d3d9_chunky_app_t
 	bool w32_d3d9_chunky_app_tick(const w32_dsound_container_t& in_sounds) override
 	{
 		_sound_plays.clear();
-		const char* music_request = nullptr;
 
-		if (!wmdl_game_tick(_micron, _game, _sound_plays, music_request))
+		if (!wmdl_game_tick(_micron, _game, _sound_plays))
 			return false;
 
 		for (const uint32_t SP : _sound_plays)
 			in_sounds.play(SP, 1.f, 0.f, 1.f, nullptr);
-		w32_d3d9_chunky_app_handle_music_request(music_request);
+		w32_d3d9_chunky_app_handle_music_request();
 
 		return true;
 	}

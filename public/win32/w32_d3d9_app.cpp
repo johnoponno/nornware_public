@@ -185,7 +185,7 @@ void w32_d3d9_softdraw_app_t::w32_d3d9_app_frame_move(const double, const float)
 			--_micron.canvas_cursor_y;
 	}
 
-	if (!w32_d3d9_softdraw_app_tick(_micron, _sound_container))
+	if (!w32_d3d9_softdraw_app_tick(_sound_container))
 		w32_d3d9_shutdown(0);
 }
 
@@ -284,9 +284,12 @@ void w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_cleanup_audio()
 	_sound_engine.cleanup();
 }
 
-void w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_handle_music_request(const char* in_music_request)
+void w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_handle_music_request()
 {
-	if (_music_file != in_music_request || !_music_stream)
+	if (
+		_music_file != _micron.music_request || 
+		!_music_stream
+		)
 	{
 		if (_music_stream)
 		{
@@ -294,11 +297,11 @@ void w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_handle_music_request(const c
 			_music_stream = nullptr;
 		}
 
-		_music_stream = w32_dsound_stream_create(_sound_engine, in_music_request);
+		_music_stream = w32_dsound_stream_create(_sound_engine, _micron.music_request);
 		if (_music_stream)
 			_music_stream->play(true, 0.f, 1.f);
 
-		_music_file = in_music_request;
+		_music_file = _micron.music_request;
 	}
 
 	if (_music_stream)
@@ -394,17 +397,17 @@ void w32_d3d9_chunky_app_t::w32_d3d9_app_frame_move(const double, const float)
 
 	//figure out the cursor position on our application canvas (not the same as native screen position)
 	{
-		const canvas_layout_t LAYOUT = __canvas_layout(MICRON_WIDTH, MICRON_HEIGHT);
+		const canvas_layout_t LAYOUT = __canvas_layout(MICRON_CANVAS_WIDTH, MICRON_CANVAS_HEIGHT);
 
 		float cpx = (float)_micron.screen_cursor_x;
 		cpx -= LAYOUT.x;
 		cpx /= (float)LAYOUT.width;
-		cpx *= (float)MICRON_WIDTH;
+		cpx *= (float)MICRON_CANVAS_WIDTH;
 
 		float cpy = (float)_micron.screen_cursor_y;
 		cpy -= LAYOUT.y;
 		cpy /= (float)LAYOUT.height;
-		cpy *= (float)MICRON_HEIGHT;
+		cpy *= (float)MICRON_CANVAS_HEIGHT;
 
 		_micron.canvas_cursor_x = (int32_t)cpx;
 		_micron.canvas_cursor_y = (int32_t)cpy;
@@ -438,7 +441,7 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_app_frame_render(const double, const float)
 #endif
 
 			{
-				const canvas_layout_t LAYOUT = __canvas_layout(MICRON_WIDTH, MICRON_HEIGHT);
+				const canvas_layout_t LAYOUT = __canvas_layout(MICRON_CANVAS_WIDTH, MICRON_CANVAS_HEIGHT);
 				uint16_t sd_palette[256];
 				for (
 					uint32_t i = 0;
@@ -446,8 +449,8 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_app_frame_render(const double, const float)
 					++i
 					)
 					sd_palette[i] = sd_color_encode(_micron.palette[i].b, _micron.palette[i].g, _micron.palette[i].r);
-				w32_d3d9_chunky_present_2d(
-					sd_palette, sd_that_pink, _micron.canvas, MICRON_WIDTH, MICRON_HEIGHT,
+				w32_d3d9_present_8bit(
+					sd_palette, sd_that_pink, _micron.canvas, MICRON_CANVAS_WIDTH, MICRON_CANVAS_HEIGHT,
 					LAYOUT.x,
 					LAYOUT.y,
 					LAYOUT.width,
@@ -520,9 +523,12 @@ void w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_cleanup_audio()
 	_sound_engine.cleanup();
 }
 
-void w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_handle_music_request(const char* in_music_request)
+void w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_handle_music_request()
 {
-	if (_music_file != in_music_request || !_music_stream)
+	if (
+		_music_file != _micron.music_request || 
+		!_music_stream
+		)
 	{
 		if (_music_stream)
 		{
@@ -530,11 +536,11 @@ void w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_handle_music_request(const char*
 			_music_stream = nullptr;
 		}
 
-		_music_stream = w32_dsound_stream_create(_sound_engine, in_music_request);
+		_music_stream = w32_dsound_stream_create(_sound_engine, _micron.music_request);
 		if (_music_stream)
 			_music_stream->play(true, 0.f, 1.f);
 
-		_music_file = in_music_request;
+		_music_file = _micron.music_request;
 	}
 
 	if (_music_stream)

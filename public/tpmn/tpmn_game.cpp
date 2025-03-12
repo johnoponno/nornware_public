@@ -20,9 +20,7 @@ bool tpmn_game_init(tpmn_game_t& out_game, std::vector<micron_sound_request_t>& 
 	return true;
 }
 
-bool tpmn_game_tick(
-	const micron_t& in_micron,
-	tpmn_game_t& out_game, std::vector<uint32_t>& out_sound_plays, const char*& out_music_request)
+bool tpmn_game_tick(tpmn_game_t& out_game, std::vector<uint32_t>& out_sound_plays, micron_t& out_micron)
 {
 	{
 		//tick the simulation
@@ -134,7 +132,7 @@ bool tpmn_game_tick(
 	}
 
 	//single pass imgui, render to the canvas to be pushed to the gpu in win32_d3d9_app_frame_render()
-	switch (tpmn_controller_tick(in_micron, out_game.assets, out_game.model, out_game.controller, out_music_request))
+	switch (tpmn_controller_tick(out_game.assets, out_game.model, out_game.controller, out_micron))
 	{
 	case tpmn_app_event_t::EXIT_APPLICATION:
 		return false;

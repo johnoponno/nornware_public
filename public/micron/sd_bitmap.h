@@ -36,8 +36,8 @@ struct sd_bitmap_t
 
 private:
 
-	explicit sd_bitmap_t(const sd_bitmap_t& other);
-	void operator = (const sd_bitmap_t& other);
+	explicit sd_bitmap_t(const sd_bitmap_t& other) = delete;
+	void operator = (const sd_bitmap_t& other) = delete;
 };
 
 void sd_set_555();

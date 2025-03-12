@@ -1001,17 +1001,17 @@ static tpmn_app_event_t __idle_update(
 //public
 
 tpmn_app_event_t tpmn_controller_tick(
-	const micron_t& in_micron, const tpmn_assets_t& in_assets,
-	tpmn_model_t& out_model, tpmn_controller_t& out_controller, const char*& out_music_request)
+	const tpmn_assets_t& in_assets,
+	tpmn_model_t& out_model, tpmn_controller_t& out_controller, micron_t& out_micron)
 {
 	switch (out_model.level.music_track)
 	{
-	default:	out_music_request = "johno_Jungle_2012.ogg";	break;
-	case 1:		out_music_request = "johno_Minimal_2012.ogg";	break;
-	case 2:		out_music_request = "johno_Outspaced_Remix_2012.ogg";	break;
-	case 3:		out_music_request = "johno_Sunshower_2012.ogg";	break;
-	case 4:		out_music_request = "johno_They_Took_Their_Planet_Back_2012.ogg";	break;
-	case 5:		out_music_request = "johno_Sevens_2012.ogg";	break;
+	default:	out_micron.music_request = "johno_Jungle_2012.ogg";	break;
+	case 1:		out_micron.music_request = "johno_Minimal_2012.ogg";	break;
+	case 2:		out_micron.music_request = "johno_Outspaced_Remix_2012.ogg";	break;
+	case 3:		out_micron.music_request = "johno_Sunshower_2012.ogg";	break;
+	case 4:		out_micron.music_request = "johno_They_Took_Their_Planet_Back_2012.ogg";	break;
+	case 5:		out_micron.music_request = "johno_Sevens_2012.ogg";	break;
 	}
 
 	//tile animations
@@ -1032,9 +1032,9 @@ tpmn_app_event_t tpmn_controller_tick(
 	//this is single pass IMGUI, so input and output are intertwined
 	tpmn_app_event_t result = tpmn_app_event_t::NOTHING;
 	if (out_model.play_bit)
-		__play_update(in_micron, in_assets, out_model, out_controller);
+		__play_update(out_micron, in_assets, out_model, out_controller);
 	else
-		result = __idle_update(in_micron, in_assets, out_controller);
+		result = __idle_update(out_micron, in_assets, out_controller);
 
 #if 0
 	//display the number of dropped frames (60hz)

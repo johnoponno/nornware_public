@@ -85,28 +85,6 @@ static bool __clip(
 //public
 //public
 
-bool micron_color_t::operator < (const micron_color_t& in_other) const
-{
-	if (r < in_other.r)	return true;
-	if (r > in_other.r)	return false;
-
-	// Otherwise r are equal
-	if (g < in_other.g)	return true;
-	if (g > in_other.g)	return false;
-
-	// Otherwise g are equal
-	if (b < in_other.b)	return true;
-	if (b > in_other.b)	return false;
-
-	// Otherwise all are equal
-	return false;
-}
-
-bool micron_color_t::operator >= (const micron_color_t& in_other) const
-{
-	return !(*this < in_other);
-}
-
 micron_font_t::micron_font_t(const int32_t in_char_spacing)
 {
 	::memset(&characters, 0, sizeof(characters));
@@ -174,10 +152,10 @@ void micron_clear(
 	const uint8_t in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_clear_width, int32_t in_clear_height)
 {
 	//check defaults
-	if (!in_clear_width || in_clear_width > MICRON_WIDTH)
-		in_clear_width = MICRON_WIDTH;
-	if (!in_clear_height || in_clear_height > MICRON_HEIGHT)
-		in_clear_height = MICRON_HEIGHT;
+	if (!in_clear_width || in_clear_width > MICRON_CANVAS_WIDTH)
+		in_clear_width = MICRON_CANVAS_WIDTH;
+	if (!in_clear_height || in_clear_height > MICRON_CANVAS_HEIGHT)
+		in_clear_height = MICRON_CANVAS_HEIGHT;
 
 	//clip
 	int32_t src_x = 0;
@@ -185,13 +163,13 @@ void micron_clear(
 	if (__clip(
 
 		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
-		0, 0, MICRON_WIDTH, MICRON_HEIGHT,
+		0, 0, MICRON_CANVAS_WIDTH, MICRON_CANVAS_HEIGHT,
 		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
 
 		src_x, src_y, in_dst_x, in_dst_y, in_clear_width, in_clear_height))
 	{
 		//short clear
-		uint8_t* dst = out_micron.canvas + in_dst_x + in_dst_y * MICRON_WIDTH;
+		uint8_t* dst = out_micron.canvas + in_dst_x + in_dst_y * MICRON_CANVAS_WIDTH;
 		uint8_t* scan_dst;
 		for (int32_t y = 0; y < in_clear_height; ++y)
 		{
@@ -199,11 +177,11 @@ void micron_clear(
 
 			for (int32_t x = 0; x < in_clear_width; ++x)
 			{
-				assert(dst >= out_micron.canvas && dst < (out_micron.canvas + MICRON_WIDTH * MICRON_HEIGHT));
+				assert(dst >= out_micron.canvas && dst < (out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT));
 				*dst++ = in_color;
 			}
 
-			dst = scan_dst + MICRON_WIDTH;
+			dst = scan_dst + MICRON_CANVAS_WIDTH;
 		}
 	}
 }
@@ -221,13 +199,13 @@ void micron_h_line(
 	int32_t in_x1, int32_t in_x2, const int32_t in_y1, const uint8_t in_color)
 {
 	//clip
-	if (in_y1 < 0 || in_y1 >= MICRON_HEIGHT)
+	if (in_y1 < 0 || in_y1 >= MICRON_CANVAS_HEIGHT)
 		return;
 
 	__min_max(in_x1, in_x2);
 	in_x1 = __max(0, in_x1);
-	in_x2 = __min(MICRON_WIDTH, in_x2);
-	uint8_t* dst = out_micron.canvas + in_x1 + in_y1 * MICRON_WIDTH;
+	in_x2 = __min(MICRON_CANVAS_WIDTH, in_x2);
+	uint8_t* dst = out_micron.canvas + in_x1 + in_y1 * MICRON_CANVAS_WIDTH;
 
 	for (
 		int32_t x = in_x1;
@@ -235,7 +213,7 @@ void micron_h_line(
 		++x
 		)
 	{
-		assert(dst >= out_micron.canvas && dst < out_micron.canvas + MICRON_WIDTH * MICRON_HEIGHT);
+		assert(dst >= out_micron.canvas && dst < out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT);
 		*dst++ = in_color;
 	}
 }
@@ -245,13 +223,13 @@ void micron_v_line(
 	const int32_t in_x1, int32_t in_y1, int32_t in_y2, const uint8_t in_color)
 {
 	//clip
-	if (in_x1 < 0 || in_x1 >= MICRON_WIDTH)
+	if (in_x1 < 0 || in_x1 >= MICRON_CANVAS_WIDTH)
 		return;
 
 	__min_max(in_y1, in_y2);
 	in_y1 = __max(0, in_y1);
-	in_y2 = __min(MICRON_HEIGHT, in_y2);
-	uint8_t* dst = out_micron.canvas + in_x1 + in_y1 * MICRON_WIDTH;
+	in_y2 = __min(MICRON_CANVAS_HEIGHT, in_y2);
+	uint8_t* dst = out_micron.canvas + in_x1 + in_y1 * MICRON_CANVAS_WIDTH;
 
 	for (
 		int32_t y = in_y1;
@@ -259,9 +237,9 @@ void micron_v_line(
 		++y
 		)
 	{
-		assert(dst >= out_micron.canvas && dst < out_micron.canvas + MICRON_WIDTH * MICRON_HEIGHT);
+		assert(dst >= out_micron.canvas && dst < out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT);
 		*dst = in_color;
-		dst += MICRON_WIDTH;
+		dst += MICRON_CANVAS_WIDTH;
 	}
 }
 
@@ -275,12 +253,12 @@ void micron_blit(
 		in_copy_height = in_src.height;
 
 	assert(in_dst_x >= 0);
-	assert(in_dst_x + in_copy_width <= MICRON_WIDTH);
+	assert(in_dst_x + in_copy_width <= MICRON_CANVAS_WIDTH);
 	assert(in_dst_y >= 0);
-	assert(in_dst_y + in_copy_height <= MICRON_HEIGHT);
+	assert(in_dst_y + in_copy_height <= MICRON_CANVAS_HEIGHT);
 
 	const uint8_t* BYTE_SRC = in_src.pixels + in_src_x + in_src_y * in_src.width;
-	uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * MICRON_WIDTH;
+	uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * MICRON_CANVAS_WIDTH;
 
 	for (
 		int32_t y = 0;
@@ -298,14 +276,14 @@ void micron_blit(
 			)
 		{
 			assert(BYTE_SRC >= in_src.pixels && BYTE_SRC < (in_src.pixels + in_src.width * in_src.height));
-			assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + MICRON_WIDTH * MICRON_HEIGHT));
+			assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT));
 			*byte_dst = *BYTE_SRC;
 			++byte_dst;
 			++BYTE_SRC;
 		}
 
 		BYTE_SRC = BYTE_SCAN_SRC + in_src.width;
-		byte_dst = byte_scan_dst + MICRON_WIDTH;
+		byte_dst = byte_scan_dst + MICRON_CANVAS_WIDTH;
 	}
 }
 
@@ -319,7 +297,7 @@ void micron_blit_key(
 		in_copy_height = in_src.height;
 
 	const uint8_t* BYTE_SRC = in_src.pixels + in_src_x + in_src_y * in_src.width;
-	uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * MICRON_WIDTH;
+	uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * MICRON_CANVAS_WIDTH;
 
 	for (
 		int32_t y = 0;
@@ -337,7 +315,7 @@ void micron_blit_key(
 			)
 		{
 			assert(BYTE_SRC >= in_src.pixels && BYTE_SRC < (in_src.pixels + in_src.width * in_src.height));
-			assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + MICRON_WIDTH * MICRON_HEIGHT));
+			assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT));
 			if (in_key != *BYTE_SRC)
 				*byte_dst = *BYTE_SRC;
 			++byte_dst;
@@ -345,7 +323,7 @@ void micron_blit_key(
 		}
 
 		BYTE_SRC = BYTE_SCAN_SRC + in_src.width;
-		byte_dst = byte_scan_dst + MICRON_WIDTH;
+		byte_dst = byte_scan_dst + MICRON_CANVAS_WIDTH;
 	}
 }
 
@@ -361,7 +339,7 @@ void micron_blit_key_clip(
 	if (__clip(
 
 		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
-		0, 0, MICRON_WIDTH, MICRON_HEIGHT,
+		0, 0, MICRON_CANVAS_WIDTH, MICRON_CANVAS_HEIGHT,
 		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
 
 		in_src_x, in_src_y, in_dst_x, in_dst_y, in_copy_width, in_copy_height))
@@ -380,7 +358,7 @@ void micron_blit_key2_colorize(
 		in_copy_height = in_src.height;
 
 	const uint8_t* BYTE_SRC = in_src.pixels + in_src_x + in_src_y * in_src.width;
-	uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * MICRON_WIDTH;
+	uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * MICRON_CANVAS_WIDTH;
 
 	for (
 		int32_t y = 0;
@@ -398,7 +376,7 @@ void micron_blit_key2_colorize(
 			)
 		{
 			assert(BYTE_SRC >= in_src.pixels && BYTE_SRC < (in_src.pixels + in_src.width * in_src.height));
-			assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + MICRON_WIDTH * MICRON_HEIGHT));
+			assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT));
 			if (in_key != *BYTE_SRC)
 			{
 				if (in_key2 != *BYTE_SRC)
@@ -411,7 +389,7 @@ void micron_blit_key2_colorize(
 		}
 
 		BYTE_SRC = BYTE_SCAN_SRC + in_src.width;
-		byte_dst = byte_scan_dst + MICRON_WIDTH;
+		byte_dst = byte_scan_dst + MICRON_CANVAS_WIDTH;
 	}
 }
 
@@ -427,7 +405,7 @@ void micron_blit_key2_colorize_clip(
 	if (__clip(
 
 		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
-		0, 0, MICRON_WIDTH, MICRON_HEIGHT,
+		0, 0, MICRON_CANVAS_WIDTH, MICRON_CANVAS_HEIGHT,
 		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
 
 		in_src_x, in_src_y, in_dst_x, in_dst_y, in_copy_width, in_copy_height))

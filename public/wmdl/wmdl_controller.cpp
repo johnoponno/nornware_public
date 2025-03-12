@@ -51,8 +51,8 @@ static int32_t __hero_view_position_x(const wmdl_model_t& in_model)
 	if (x < 0)
 		x = 0;
 #if 0
-	else if (x > (WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - MICRON_WIDTH))
-		x = WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - MICRON_WIDTH;
+	else if (x > (WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - MICRON_CANVAS_WIDTH))
+		x = WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - MICRON_CANVAS_WIDTH;
 #else
 	else if (x > (WMDL_WORLD_WIDTH - WMDL_TILES_X) * WMDL_TILE_ASPECT)
 		x = (WMDL_WORLD_WIDTH - WMDL_TILES_X) * WMDL_TILE_ASPECT;
@@ -81,8 +81,8 @@ static int32_t __hero_view_position_y(const wmdl_model_t& in_model)
 	if (y < 0)
 		y = 0;
 #if 0
-	else if (y > (WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - MICRON_HEIGHT))
-		y = WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - MICRON_HEIGHT;
+	else if (y > (WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - MICRON_CANVAS_HEIGHT))
+		y = WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - MICRON_CANVAS_HEIGHT;
 #else
 	else if (y > (WMDL_WORLD_HEIGHT - WMDL_TILES_Y) * WMDL_TILE_ASPECT)
 		y = (WMDL_WORLD_HEIGHT - WMDL_TILES_Y) * WMDL_TILE_ASPECT;
@@ -435,7 +435,7 @@ static void __draw_text(
 	const wmdl_assets_t& in_assets, const int in_dst_y, const char* in_string, const uint8_t in_color,
 	micron_t& out_micron)
 {
-	micron_print_colorize(out_micron, in_assets.key_index, in_assets.text_edge_index, in_assets.font, in_color, (MICRON_WIDTH - micron_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
+	micron_print_colorize(out_micron, in_assets.key_index, in_assets.text_edge_index, in_assets.font, in_color, (MICRON_CANVAS_WIDTH - micron_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
 }
 
 static void __draw_foreground(
@@ -460,7 +460,7 @@ static void __draw_foreground(
 
 		int32_t y;
 
-		__draw_text(in_assets, y = MICRON_HEIGHT + int32_t((wmdl_model_now(in_model) - out_controller.credits_start_time) * -16.), "Congratulations!", WMDL_TITLE_COLOR, out_micron);
+		__draw_text(in_assets, y = MICRON_CANVAS_HEIGHT + int32_t((wmdl_model_now(in_model) - out_controller.credits_start_time) * -16.), "Congratulations!", WMDL_TITLE_COLOR, out_micron);
 		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "You made it to the end of the game!", WMDL_TEXT_COLOR, out_micron);
 		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "We wanted to put an epic boss fight", WMDL_TEXT_COLOR, out_micron);
 		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "here, but we couldn't quite", WMDL_TEXT_COLOR, out_micron);
@@ -541,13 +541,13 @@ static void __draw_farplane(
 
 			if (FLAKE->x < -FLAKE_FRAME_ASPECT)
 			{
-				FLAKE->x = (float)MICRON_WIDTH;
+				FLAKE->x = (float)MICRON_CANVAS_WIDTH;
 			}
-			else if (FLAKE->x >= MICRON_WIDTH)
+			else if (FLAKE->x >= MICRON_CANVAS_WIDTH)
 			{
 				FLAKE->x = -FLAKE_FRAME_ASPECT;
 			}
-			if (FLAKE->y >= MICRON_HEIGHT)
+			if (FLAKE->y >= MICRON_CANVAS_HEIGHT)
 			{
 				FLAKE->y = -FLAKE_FRAME_ASPECT;
 			}
@@ -735,7 +735,7 @@ static void __draw_deaths(
 		const int32_t SX = int32_t(death->x - in_vx);
 		const int32_t SY = int32_t(death->y - in_vy);
 
-		if (SX >= (-death->w / 2) && SY >= (-death->h / 2) && SX < (MICRON_WIDTH + death->w / 2) && SY < (MICRON_HEIGHT + death->h / 2))
+		if (SX >= (-death->w / 2) && SY >= (-death->h / 2) && SX < (MICRON_CANVAS_WIDTH + death->w / 2) && SY < (MICRON_CANVAS_HEIGHT + death->h / 2))
 		{
 			micron_blit_key_clip(
 				out_micron,
@@ -983,7 +983,7 @@ static void __play_update(
 	//play menu up?
 	if (out_controller.play_menu)
 	{
-		//		__draw_text(in_assets, MICRON_HEIGHT / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
+		//		__draw_text(in_assets, MICRON_CANVAS_HEIGHT / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (micron_key_downflank(in_micron, MICRON_KEY_ESCAPE))
 		{
 			in_model.play_bit = 0;
@@ -991,7 +991,7 @@ static void __play_update(
 			out_controller.play_menu = false;
 		}
 
-		//		__draw_text(in_assets, MICRON_HEIGHT / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
+		//		__draw_text(in_assets, MICRON_CANVAS_HEIGHT / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (micron_key_downflank(in_micron, 'R'))
 		{
 			out_controller.play_menu = false;
@@ -1100,14 +1100,14 @@ static void __play_update(
 				++i
 				)
 			{
-				micron_blit_key(out_micron, in_assets.key_index, in_assets.gui_server_broken, MICRON_WIDTH - i * 14 - 20, 0);
+				micron_blit_key(out_micron, in_assets.key_index, in_assets.gui_server_broken, MICRON_CANVAS_WIDTH - i * 14 - 20, 0);
 			}
 		}
 
 		if (out_controller.play_menu)
 		{
-			__draw_text(in_assets, MICRON_HEIGHT / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_micron);
-			__draw_text(in_assets, MICRON_HEIGHT / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_micron);
+			__draw_text(in_assets, MICRON_CANVAS_HEIGHT / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_micron);
+			__draw_text(in_assets, MICRON_CANVAS_HEIGHT / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_micron);
 		}
 
 		/*
@@ -1128,11 +1128,11 @@ static wmdl_app_event_t __idle_update(
 		static uint32_t src_offset = 0;
 		const uint8_t* src = (uint8_t*)in_assets.bitmap_memory.data + src_offset;
 		uint8_t* dst = out_micron.canvas;
-		while (dst < out_micron.canvas + MICRON_WIDTH * MICRON_HEIGHT)
+		while (dst < out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT)
 		{
 			*dst++ = *src++;
 		}
-		src_offset += MICRON_WIDTH;
+		src_offset += MICRON_CANVAS_WIDTH;
 	}
 #endif
 
@@ -1147,7 +1147,7 @@ static wmdl_app_event_t __idle_update(
 			{
 				for (int32_t x = 0; x < CELL; ++x)
 				{
-					out_micron.canvas[(CELL * (i % 16) + x) + (CELL * (i / 16) + y) * MICRON_WIDTH] = (uint8_t)i;
+					out_micron.canvas[(CELL * (i % 16) + x) + (CELL * (i / 16) + y) * MICRON_CANVAS_WIDTH] = (uint8_t)i;
 				}
 			}
 		}
@@ -1189,16 +1189,16 @@ static wmdl_app_event_t __idle_update(
 
 wmdl_app_event_t wmdl_controller_tick(
 	const wmdl_assets_t& in_assets,
-	wmdl_model_t& out_model, wmdl_controller_t& out_controller, micron_t& out_micron, const char*& out_music_request)
+	wmdl_model_t& out_model, wmdl_controller_t& out_controller, micron_t& out_micron)
 {
 	switch (out_model.level.music_track)
 	{
-	default:	out_music_request = "johno_Jungle_2012.ogg";	break;
-	case 1:		out_music_request = "johno_Minimal_2012.ogg";	break;
-	case 2:		out_music_request = "johno_Outspaced_Remix_2012.ogg";	break;
-	case 3:		out_music_request = "johno_Sunshower_2012.ogg";	break;
-	case 4:		out_music_request = "johno_They_Took_Their_Planet_Back_2012.ogg";	break;
-	case 5:		out_music_request = "johno_Sevens_2012.ogg";	break;
+	default:	out_micron.music_request = "johno_Jungle_2012.ogg";	break;
+	case 1:		out_micron.music_request = "johno_Minimal_2012.ogg";	break;
+	case 2:		out_micron.music_request = "johno_Outspaced_Remix_2012.ogg";	break;
+	case 3:		out_micron.music_request = "johno_Sunshower_2012.ogg";	break;
+	case 4:		out_micron.music_request = "johno_They_Took_Their_Planet_Back_2012.ogg";	break;
+	case 5:		out_micron.music_request = "johno_Sevens_2012.ogg";	break;
 	}
 
 	//tile animations
@@ -1232,7 +1232,7 @@ wmdl_app_event_t wmdl_controller_tick(
 	{
 		char str[16];
 		::sprintf_s(str, "%u", dx9::state.app->_frame_drops);
-		__draw_text(in_assets, MICRON_HEIGHT - assets.font.height, str, softdraw::red, controller.canvas);
+		__draw_text(in_assets, MICRON_CANVAS_HEIGHT - assets.font.height, str, softdraw::red, controller.canvas);
 	}
 #endif
 
@@ -1252,8 +1252,8 @@ void wmdl_controller_on_load_new_world(wmdl_controller_t& out_controller, std::v
 		++flake
 		)
 	{
-		flake->x = wmdl_random_unit() * MICRON_WIDTH;
-		flake->y = wmdl_random_unit() * MICRON_HEIGHT;
+		flake->x = wmdl_random_unit() * MICRON_CANVAS_WIDTH;
+		flake->y = wmdl_random_unit() * MICRON_CANVAS_HEIGHT;
 		flake->sx = wmdl_random_unit() * 50 - 25;
 		flake->sy = wmdl_random_unit() * 75 + 25;
 		flake->t = uint32_t(wmdl_random_unit() * 6);

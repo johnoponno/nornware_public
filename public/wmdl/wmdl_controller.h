@@ -53,7 +53,7 @@ struct wmdl_controller_t
 
 wmdl_app_event_t wmdl_controller_tick(
 	const wmdl_assets_t& in_assets,
-	wmdl_model_t& out_model, wmdl_controller_t& out_controller, micron_t& out_micron, const char*& out_music_request);
+	wmdl_model_t& out_model, wmdl_controller_t& out_controller, micron_t& out_micron);
 
 void wmdl_controller_on_load_new_world(wmdl_controller_t& out_controller, std::vector<uint32_t>& out_sound_plays);
 
