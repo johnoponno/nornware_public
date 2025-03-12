@@ -926,10 +926,12 @@ bool sd_bitmap_load_24(const char* aFileName, sd_bitmap_t& bm)
 	}
 
 	bool result = false;
-	fs_tga_image_t image{};
-	if (fs_tga_read_24(aFileName, image))
-		result = sd_bitmap_import_flip_vertical_swap_r_b(image.header->image_spec_width, image.header->image_spec_height, (sd_color24_t*)image.pixels, bm);
-	delete[] image.memory;
+	fs_blob_t image = fs_tga_read_24(aFileName);
+	if (image.data)
+	{
+		result = sd_bitmap_import_flip_vertical_swap_r_b(FS_TGA_HEADER(image)->image_spec_width, FS_TGA_HEADER(image)->image_spec_height, (sd_color24_t*)FS_TGA_PIXELS(image), bm);
+		delete[] image.data;
+	}
 	return result;
 }
 
