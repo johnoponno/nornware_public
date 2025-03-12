@@ -1123,6 +1123,19 @@ static wmdl_app_event_t __idle_update(
 	const wmdl_assets_t& in_assets,
 	micron_t& out_micron)
 {
+#if 0
+	{
+		static uint32_t src_offset = 0;
+		const uint8_t* src = (uint8_t*)in_assets.bitmap_memory.data + src_offset;
+		uint8_t* dst = out_micron.canvas;
+		while (dst < out_micron.canvas + MICRON_WIDTH * MICRON_HEIGHT)
+		{
+			*dst++ = *src++;
+		}
+		src_offset += MICRON_WIDTH;
+	}
+#endif
+
 	micron_blit(out_micron, in_assets.idle, 0, 0);
 
 #if 1
