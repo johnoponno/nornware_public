@@ -3,12 +3,12 @@
 
 #include "../micron/micron.h"
 
-bool tpmn_game_init(tpmn_game_t& out_game, std::vector<micron_sound_request_t>& out_sounds)
+bool tpmn_game_init(micron_t& out_micron, tpmn_game_t& out_game)
 {
 	if (!tpmn_model_init(out_game.model))
 		return false;
 
-	if (!tpmn_assets_init(out_game.assets, out_sounds))
+	if (!tpmn_assets_init(out_micron, out_game.assets))
 		return false;
 
 	for (uint32_t i = 0; i < TPMN_MAX_TILE; ++i)
@@ -20,7 +20,7 @@ bool tpmn_game_init(tpmn_game_t& out_game, std::vector<micron_sound_request_t>& 
 	return true;
 }
 
-bool tpmn_game_tick(tpmn_game_t& out_game, micron_t& out_micron)
+bool tpmn_game_tick(micron_t& out_micron, tpmn_game_t& out_game)
 {
 	{
 		//tick the simulation

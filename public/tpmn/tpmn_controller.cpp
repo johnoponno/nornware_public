@@ -1006,12 +1006,12 @@ tpmn_app_event_t tpmn_controller_tick(
 {
 	switch (out_model.level.music_track)
 	{
-	default:	out_micron.music_request = "johno_Jungle_2012.ogg";	break;
-	case 1:		out_micron.music_request = "johno_Minimal_2012.ogg";	break;
-	case 2:		out_micron.music_request = "johno_Outspaced_Remix_2012.ogg";	break;
-	case 3:		out_micron.music_request = "johno_Sunshower_2012.ogg";	break;
-	case 4:		out_micron.music_request = "johno_They_Took_Their_Planet_Back_2012.ogg";	break;
-	case 5:		out_micron.music_request = "johno_Sevens_2012.ogg";	break;
+	default:	out_micron.music = "johno_Jungle_2012.ogg";	break;
+	case 1:		out_micron.music = "johno_Minimal_2012.ogg";	break;
+	case 2:		out_micron.music = "johno_Outspaced_Remix_2012.ogg";	break;
+	case 3:		out_micron.music = "johno_Sunshower_2012.ogg";	break;
+	case 4:		out_micron.music = "johno_They_Took_Their_Planet_Back_2012.ogg";	break;
+	case 5:		out_micron.music = "johno_Sevens_2012.ogg";	break;
 	}
 
 	//tile animations

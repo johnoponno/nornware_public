@@ -67,7 +67,7 @@
 
 #define BITMAP(a, b) if(!sd_bitmap_load_24(a, b)) return false;
 
-bool tpmn_assets_init(tpmn_assets_t& out_assets, std::vector<micron_sound_request_t>& out_sounds)
+bool tpmn_assets_init(micron_t& out_micron, tpmn_assets_t& out_assets)
 {
 	//common info
 	{
@@ -122,31 +122,31 @@ bool tpmn_assets_init(tpmn_assets_t& out_assets, std::vector<micron_sound_reques
 	out_assets.font.char_spacing = -1;
 
 	//request sounds
-	out_sounds.push_back({ ASSET_SPAWN, TPMN_SND_SPAWN });
-	out_sounds.push_back({ ASSET_FIXSERVER, TPMN_SND_FIXSERVER });
-	out_sounds.push_back({ ASSET_HEROWHIP, TPMN_SND_HEROWHIP });
-	out_sounds.push_back({ ASSET_HEROJUMP01, TPMN_SND_HEROJUMP01 });
-	out_sounds.push_back({ ASSET_HEROJUMP02, TPMN_SND_HEROJUMP02 });
-	out_sounds.push_back({ ASSET_HEROJUMP03, TPMN_SND_HEROJUMP03 });
-	out_sounds.push_back({ ASSET_HEROJUMP04, TPMN_SND_HEROJUMP04 });
-	out_sounds.push_back({ ASSET_HEROJUMP05, TPMN_SND_HEROJUMP05 });
-	out_sounds.push_back({ ASSET_HEROLAND01, TPMN_SND_HEROLAND01 });
-	out_sounds.push_back({ ASSET_HEROLAND02, TPMN_SND_HEROLAND02 });
-	out_sounds.push_back({ ASSET_HEROLAND03, TPMN_SND_HEROLAND03 });
-	out_sounds.push_back({ ASSET_HEROLAND04, TPMN_SND_HEROLAND04 });
-	out_sounds.push_back({ ASSET_HERODIE01, TPMN_SND_HERODIE01 });
-	out_sounds.push_back({ ASSET_HERODIE02, TPMN_SND_HERODIE02 });
-	out_sounds.push_back({ ASSET_HERODIE03, TPMN_SND_HERODIE03 });
-	out_sounds.push_back({ ASSET_CHECKPOINT, TPMN_SND_CHECKPOINT });
-	out_sounds.push_back({ ASSET_SND_SPIKYGREEN, TPMN_SND_SPIKYGREEN });
-	out_sounds.push_back({ ASSET_SND_BLUEBLOB, TPMN_SND_BLUEBLOB });
-	out_sounds.push_back({ ASSET_SND_BROWNBLOB, TPMN_SND_BROWNBLOB });
-	out_sounds.push_back({ ASSET_SND_PLANT, TPMN_SND_PLANT });
-	out_sounds.push_back({ ASSET_SND_SCORPION, TPMN_SND_SCORPION });
-	out_sounds.push_back({ ASSET_SLIDERDEATH, TPMN_SND_SLIDERDEATH });
-	out_sounds.push_back({ ASSET_BATFLEE, TPMN_SND_BATFLEE });
-	out_sounds.push_back({ ASSET_KEY, TPMN_SND_KEY });
-	out_sounds.push_back({ ASSET_SLIDER, TPMN_SND_SLIDER });
+	out_micron.sound_loads.push_back({ ASSET_SPAWN, TPMN_SND_SPAWN });
+	out_micron.sound_loads.push_back({ ASSET_FIXSERVER, TPMN_SND_FIXSERVER });
+	out_micron.sound_loads.push_back({ ASSET_HEROWHIP, TPMN_SND_HEROWHIP });
+	out_micron.sound_loads.push_back({ ASSET_HEROJUMP01, TPMN_SND_HEROJUMP01 });
+	out_micron.sound_loads.push_back({ ASSET_HEROJUMP02, TPMN_SND_HEROJUMP02 });
+	out_micron.sound_loads.push_back({ ASSET_HEROJUMP03, TPMN_SND_HEROJUMP03 });
+	out_micron.sound_loads.push_back({ ASSET_HEROJUMP04, TPMN_SND_HEROJUMP04 });
+	out_micron.sound_loads.push_back({ ASSET_HEROJUMP05, TPMN_SND_HEROJUMP05 });
+	out_micron.sound_loads.push_back({ ASSET_HEROLAND01, TPMN_SND_HEROLAND01 });
+	out_micron.sound_loads.push_back({ ASSET_HEROLAND02, TPMN_SND_HEROLAND02 });
+	out_micron.sound_loads.push_back({ ASSET_HEROLAND03, TPMN_SND_HEROLAND03 });
+	out_micron.sound_loads.push_back({ ASSET_HEROLAND04, TPMN_SND_HEROLAND04 });
+	out_micron.sound_loads.push_back({ ASSET_HERODIE01, TPMN_SND_HERODIE01 });
+	out_micron.sound_loads.push_back({ ASSET_HERODIE02, TPMN_SND_HERODIE02 });
+	out_micron.sound_loads.push_back({ ASSET_HERODIE03, TPMN_SND_HERODIE03 });
+	out_micron.sound_loads.push_back({ ASSET_CHECKPOINT, TPMN_SND_CHECKPOINT });
+	out_micron.sound_loads.push_back({ ASSET_SND_SPIKYGREEN, TPMN_SND_SPIKYGREEN });
+	out_micron.sound_loads.push_back({ ASSET_SND_BLUEBLOB, TPMN_SND_BLUEBLOB });
+	out_micron.sound_loads.push_back({ ASSET_SND_BROWNBLOB, TPMN_SND_BROWNBLOB });
+	out_micron.sound_loads.push_back({ ASSET_SND_PLANT, TPMN_SND_PLANT });
+	out_micron.sound_loads.push_back({ ASSET_SND_SCORPION, TPMN_SND_SCORPION });
+	out_micron.sound_loads.push_back({ ASSET_SLIDERDEATH, TPMN_SND_SLIDERDEATH });
+	out_micron.sound_loads.push_back({ ASSET_BATFLEE, TPMN_SND_BATFLEE });
+	out_micron.sound_loads.push_back({ ASSET_KEY, TPMN_SND_KEY });
+	out_micron.sound_loads.push_back({ ASSET_SLIDER, TPMN_SND_SLIDER });
 
 	return true;
 }

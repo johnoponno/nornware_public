@@ -12,7 +12,7 @@ struct tpmn_app_t : public w32_d3d9_softdraw_app_t
 	//this is the main "tick" callback from the win32 / d3d9 harness
 	bool w32_d3d9_softdraw_app_tick(const w32_dsound_container_t& in_sounds) override
 	{
-		if (!tpmn_game_tick(_game, _micron))
+		if (!tpmn_game_tick(_micron, _game))
 			return false;
 
 		for (const uint32_t SP : _micron.sound_plays)
@@ -47,20 +47,17 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 {
 	//win32 / d3d9 init (title, windowed?, window width, window height)
 #if 1
-	if (!__app.init("Twisted Pair Man Nightmare (c) 2012-2024 nornware AB", true, ::GetSystemMetrics(SM_CXSCREEN) * 3 / 4, ::GetSystemMetrics(SM_CYSCREEN) * 3 / 4))
+	if (!__app.init("Twisted Pair Man Nightmare (c) 2012-2025 nornware AB", true, ::GetSystemMetrics(SM_CXSCREEN) * 3 / 4, ::GetSystemMetrics(SM_CYSCREEN) * 3 / 4))
 #else
-	if (!__app.init("Twisted Pair Man Nightmare (c) 2012-2024 nornware AB", false, 0, 0))
+	if (!__app.init("Twisted Pair Man Nightmare (c) 2012-2025 nornware AB", false, 0, 0))
 #endif
 		return -1;
 
 	//application-specific init
-	{
-		std::vector<micron_sound_request_t> sound_requests;
-		if (!tpmn_game_init(__app._game, sound_requests))
-			return -1;
-		if (!__app.w32_d3d9_softdraw_app_init_audio(sound_requests))
-			return -1;
-	}
+	if (!tpmn_game_init(__app._micron, __app._game))
+		return -1;
+	if (!__app.w32_d3d9_softdraw_app_init_audio())
+		return -1;
 
 	//enter main loop
 	w32_d3d9_main_loop(&__app);

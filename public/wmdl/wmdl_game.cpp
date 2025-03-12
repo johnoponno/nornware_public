@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "wmdl_game.h"
 
-bool wmdl_game_init(micron_t& out_micron, wmdl_game_t& out_game, std::vector<micron_sound_request_t>& out_sounds)
+bool wmdl_game_init(micron_t& out_micron, wmdl_game_t& out_game)
 {
 	if (!wmdl_model_init(out_game.model))
 		return false;
 
-	if (!wmdl_assets_init(out_micron, out_game.assets, out_sounds))
+	if (!wmdl_assets_init(out_micron, out_game.assets))
 		return false;
 
 	//setup default animation data

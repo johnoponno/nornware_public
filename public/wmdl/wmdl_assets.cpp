@@ -62,7 +62,7 @@
 #define BITMAP(a, b) if(!sd_bitmap_load_24(a, b)) return false;
 #define BITMAP8(a, b) if(!minyin_bitmap_load_8(b, a)) return false;
 
-bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vector<micron_sound_request_t>& out_sounds)
+bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets)
 {
 	//load animation info
 	{
@@ -143,31 +143,31 @@ bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vect
 	out_assets.font.char_spacing = -1;
 
 	//request sounds from the implementation
-	out_sounds.push_back({ ASSET_SPAWN, WMDL_SND_SPAWN });
-	out_sounds.push_back({ ASSET_FIXSERVER, WMDL_SND_FIXSERVER });
-	out_sounds.push_back({ ASSET_HEROWHIP, WMDL_SND_HEROWHIP });
-	out_sounds.push_back({ ASSET_HEROJUMP01, WMDL_SND_HEROJUMP01 });
-	out_sounds.push_back({ ASSET_HEROJUMP02, WMDL_SND_HEROJUMP02 });
-	out_sounds.push_back({ ASSET_HEROJUMP03, WMDL_SND_HEROJUMP03 });
-	out_sounds.push_back({ ASSET_HEROJUMP04, WMDL_SND_HEROJUMP04 });
-	out_sounds.push_back({ ASSET_HEROJUMP05, WMDL_SND_HEROJUMP05 });
-	out_sounds.push_back({ ASSET_HEROLAND01, WMDL_SND_HEROLAND01 });
-	out_sounds.push_back({ ASSET_HEROLAND02, WMDL_SND_HEROLAND02 });
-	out_sounds.push_back({ ASSET_HEROLAND03, WMDL_SND_HEROLAND03 });
-	out_sounds.push_back({ ASSET_HEROLAND04, WMDL_SND_HEROLAND04 });
-	out_sounds.push_back({ ASSET_HERODIE01, WMDL_SND_HERODIE01 });
-	out_sounds.push_back({ ASSET_HERODIE02, WMDL_SND_HERODIE02 });
-	out_sounds.push_back({ ASSET_HERODIE03, WMDL_SND_HERODIE03 });
-	out_sounds.push_back({ ASSET_CHECKPOINT, WMDL_SND_CHECKPOINT });
-	out_sounds.push_back({ ASSET_SND_SPIKYGREEN, WMDL_SND_SPIKYGREEN });
-	out_sounds.push_back({ ASSET_SND_BLUEBLOB, WMDL_SND_BLUEBLOB });
-	out_sounds.push_back({ ASSET_SND_BROWNBLOB, WMDL_SND_BROWNBLOB });
-	out_sounds.push_back({ ASSET_SND_PLANT, WMDL_SND_PLANT });
-	out_sounds.push_back({ ASSET_SND_SCORPION, WMDL_SND_SCORPION });
-	out_sounds.push_back({ ASSET_SLIDERDEATH, WMDL_SND_SLIDERDEATH });
-	out_sounds.push_back({ ASSET_BATFLEE, WMDL_SND_BATFLEE });
-	out_sounds.push_back({ ASSET_KEY, WMDL_SND_KEY });
-	out_sounds.push_back({ ASSET_SLIDER, WMDL_SND_SLIDER });
+	out_micron.sound_loads.push_back({ ASSET_SPAWN, WMDL_SND_SPAWN });
+	out_micron.sound_loads.push_back({ ASSET_FIXSERVER, WMDL_SND_FIXSERVER });
+	out_micron.sound_loads.push_back({ ASSET_HEROWHIP, WMDL_SND_HEROWHIP });
+	out_micron.sound_loads.push_back({ ASSET_HEROJUMP01, WMDL_SND_HEROJUMP01 });
+	out_micron.sound_loads.push_back({ ASSET_HEROJUMP02, WMDL_SND_HEROJUMP02 });
+	out_micron.sound_loads.push_back({ ASSET_HEROJUMP03, WMDL_SND_HEROJUMP03 });
+	out_micron.sound_loads.push_back({ ASSET_HEROJUMP04, WMDL_SND_HEROJUMP04 });
+	out_micron.sound_loads.push_back({ ASSET_HEROJUMP05, WMDL_SND_HEROJUMP05 });
+	out_micron.sound_loads.push_back({ ASSET_HEROLAND01, WMDL_SND_HEROLAND01 });
+	out_micron.sound_loads.push_back({ ASSET_HEROLAND02, WMDL_SND_HEROLAND02 });
+	out_micron.sound_loads.push_back({ ASSET_HEROLAND03, WMDL_SND_HEROLAND03 });
+	out_micron.sound_loads.push_back({ ASSET_HEROLAND04, WMDL_SND_HEROLAND04 });
+	out_micron.sound_loads.push_back({ ASSET_HERODIE01, WMDL_SND_HERODIE01 });
+	out_micron.sound_loads.push_back({ ASSET_HERODIE02, WMDL_SND_HERODIE02 });
+	out_micron.sound_loads.push_back({ ASSET_HERODIE03, WMDL_SND_HERODIE03 });
+	out_micron.sound_loads.push_back({ ASSET_CHECKPOINT, WMDL_SND_CHECKPOINT });
+	out_micron.sound_loads.push_back({ ASSET_SND_SPIKYGREEN, WMDL_SND_SPIKYGREEN });
+	out_micron.sound_loads.push_back({ ASSET_SND_BLUEBLOB, WMDL_SND_BLUEBLOB });
+	out_micron.sound_loads.push_back({ ASSET_SND_BROWNBLOB, WMDL_SND_BROWNBLOB });
+	out_micron.sound_loads.push_back({ ASSET_SND_PLANT, WMDL_SND_PLANT });
+	out_micron.sound_loads.push_back({ ASSET_SND_SCORPION, WMDL_SND_SCORPION });
+	out_micron.sound_loads.push_back({ ASSET_SLIDERDEATH, WMDL_SND_SLIDERDEATH });
+	out_micron.sound_loads.push_back({ ASSET_BATFLEE, WMDL_SND_BATFLEE });
+	out_micron.sound_loads.push_back({ ASSET_KEY, WMDL_SND_KEY });
+	out_micron.sound_loads.push_back({ ASSET_SLIDER, WMDL_SND_SLIDER });
 
 	return true;
 }

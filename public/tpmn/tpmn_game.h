@@ -11,5 +11,5 @@ struct tpmn_game_t
 	tpmn_controller_t controller;
 };
 
-bool tpmn_game_init(tpmn_game_t& out_game, std::vector<micron_sound_request_t>& out_sounds);
-bool tpmn_game_tick(tpmn_game_t& out_game, micron_t& out_micron);
+bool tpmn_game_init(micron_t& out_micron, tpmn_game_t& out_game);
+bool tpmn_game_tick(micron_t& out_micron, tpmn_game_t& out_game);

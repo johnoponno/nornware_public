@@ -147,7 +147,7 @@ bool minyin_bitmap_load_8(
 }
 #endif
 
-void micron_clear(
+void micron_canvas_clear(
 	micron_t& out_micron,
 	const uint8_t in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_clear_width, int32_t in_clear_height)
 {
@@ -186,15 +186,15 @@ void micron_clear(
 	}
 }
 
-void micron_cross(
+void micron_canvas_cross(
 	micron_t& out_micron,
 	const int32_t in_x, const int32_t in_y, const int32_t in_size, const uint8_t in_color)
 {
-	micron_h_line(out_micron, in_x - in_size / 2, in_x + in_size / 2 + 1, in_y, in_color);
-	micron_v_line(out_micron, in_x, in_y - in_size / 2, in_y + in_size / 2 + 1, in_color);
+	micron_canvas_horizontal_line(out_micron, in_x - in_size / 2, in_x + in_size / 2 + 1, in_y, in_color);
+	micron_canvas_vertical_line(out_micron, in_x, in_y - in_size / 2, in_y + in_size / 2 + 1, in_color);
 }
 
-void micron_h_line(
+void micron_canvas_horizontal_line(
 	micron_t& out_micron,
 	int32_t in_x1, int32_t in_x2, const int32_t in_y1, const uint8_t in_color)
 {
@@ -218,7 +218,7 @@ void micron_h_line(
 	}
 }
 
-void micron_v_line(
+void micron_canvas_vertical_line(
 	micron_t& out_micron,
 	const int32_t in_x1, int32_t in_y1, int32_t in_y2, const uint8_t in_color)
 {

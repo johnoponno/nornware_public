@@ -4,7 +4,7 @@
 #include "../micron/sd_fontv.h"
 #include "tpmn_model.h"
 
-struct micron_sound_request_t;
+struct micron_t;
 
 #define TPMN_TITLE_COLOR 0xffff
 #define TPMN_TEXT_COLOR 0xc7bf
@@ -72,4 +72,4 @@ struct tpmn_assets_t
 	uint32_t anim_target[TPMN_MAX_TILE];
 };
 
-bool tpmn_assets_init(tpmn_assets_t& out_assets, std::vector<micron_sound_request_t>& out_sounds);
+bool tpmn_assets_init(micron_t& out_micron, tpmn_assets_t& out_assets);

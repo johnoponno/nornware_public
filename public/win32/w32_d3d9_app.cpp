@@ -258,7 +258,7 @@ w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_t(const float in_seconds_per_fixe
 	_music_stream = nullptr;
 }
 
-bool w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_init_audio(const std::vector<micron_sound_request_t>& in_sound_requests)
+bool w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_init_audio()
 {
 	if (!_sound_engine.init(w32_d3d9_hwnd()))
 		return false;
@@ -266,11 +266,12 @@ bool w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_init_audio(const std::vector
 	if (!_sound_container.init())
 		return false;
 
-	for (const micron_sound_request_t& SR : in_sound_requests)
+	for (const micron_t::sound_load_t& SR : _micron.sound_loads)
 	{
 		if (!_sound_container.add_sound(_sound_engine, SR.asset, SR.id, 1))
 			return false;
 	}
+	_micron.sound_loads.clear();
 
 	return true;
 }
@@ -287,7 +288,7 @@ void w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_cleanup_audio()
 void w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_handle_music_request()
 {
 	if (
-		_music_file != _micron.music_request || 
+		_music_file != _micron.music || 
 		!_music_stream
 		)
 	{
@@ -297,11 +298,11 @@ void w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_handle_music_request()
 			_music_stream = nullptr;
 		}
 
-		_music_stream = w32_dsound_stream_create(_sound_engine, _micron.music_request);
+		_music_stream = w32_dsound_stream_create(_sound_engine, _micron.music);
 		if (_music_stream)
 			_music_stream->play(true, 0.f, 1.f);
 
-		_music_file = _micron.music_request;
+		_music_file = _micron.music;
 	}
 
 	if (_music_stream)
@@ -497,7 +498,7 @@ w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_t(const float in_seconds_per_fixed_ti
 	_music_stream = nullptr;
 }
 
-bool w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_init_audio(const std::vector<micron_sound_request_t>& in_sound_requests)
+bool w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_init_audio()
 {
 	if (!_sound_engine.init(w32_d3d9_hwnd()))
 		return false;
@@ -505,11 +506,12 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_init_audio(const std::vector<mic
 	if (!_sound_container.init())
 		return false;
 
-	for (const micron_sound_request_t& SR : in_sound_requests)
+	for (const micron_t::sound_load_t& SR : _micron.sound_loads)
 	{
 		if (!_sound_container.add_sound(_sound_engine, SR.asset, SR.id, 1))
 			return false;
 	}
+	_micron.sound_loads.clear();
 
 	return true;
 }
@@ -526,7 +528,7 @@ void w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_cleanup_audio()
 void w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_handle_music_request()
 {
 	if (
-		_music_file != _micron.music_request || 
+		_music_file != _micron.music || 
 		!_music_stream
 		)
 	{
@@ -536,11 +538,11 @@ void w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_handle_music_request()
 			_music_stream = nullptr;
 		}
 
-		_music_stream = w32_dsound_stream_create(_sound_engine, _micron.music_request);
+		_music_stream = w32_dsound_stream_create(_sound_engine, _micron.music);
 		if (_music_stream)
 			_music_stream->play(true, 0.f, 1.f);
 
-		_music_file = _micron.music_request;
+		_music_file = _micron.music;
 	}
 
 	if (_music_stream)
