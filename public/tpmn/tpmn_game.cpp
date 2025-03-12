@@ -3,7 +3,7 @@
 
 //#include "../../win32/win32_dsound_stream.h"
 
-bool tpmn_game_init(tpmn_game_t& out_game, std::vector<minyin_sound_request_t>& out_sounds)
+bool tpmn_game_init(tpmn_game_t& out_game, std::vector<micron_sound_request_t>& out_sounds)
 {
 	if (!tpmn_model_init(out_game.model))
 		return false;

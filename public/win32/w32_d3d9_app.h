@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../minyin/minyin.h"
 #include "../minyin/micron.h"
 #include "w32_d3d9_softdraw_adapter.h"
 #include "w32_dsound_engine.h"
@@ -60,7 +59,7 @@ struct w32_d3d9_softdraw_app_t : public w32_d3d9_app_i
 	bool w32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const override;
 
 	explicit w32_d3d9_softdraw_app_t(const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas, const uint32_t in_num_sounds);
-	bool w32_d3d9_softdraw_app_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests);
+	bool w32_d3d9_softdraw_app_init_audio(const std::vector<micron_sound_request_t>& in_sound_requests);
 	void w32_d3d9_softdraw_app_cleanup_audio();
 	void w32_d3d9_softdraw_app_handle_music_request(const char* in_music_request);
 	virtual bool w32_d3d9_softdraw_app_tick(const micron_t& in_micron, const w32_dsound_container_t& in_sounds) = 0;
@@ -90,7 +89,7 @@ struct w32_d3d9_chunky_app_t : public w32_d3d9_app_i
 	bool w32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const override;
 
 	explicit w32_d3d9_chunky_app_t(const float in_seconds_per_fixed_tick, const uint32_t in_num_sounds);
-	bool w32_d3d9_chunky_app_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests);
+	bool w32_d3d9_chunky_app_init_audio(const std::vector<micron_sound_request_t>& in_sound_requests);
 	void w32_d3d9_chunky_app_cleanup_audio();
 	void w32_d3d9_chunky_app_handle_music_request(const char* in_music_request);
 	virtual bool w32_d3d9_chunky_app_tick(const w32_dsound_container_t& in_sounds) = 0;

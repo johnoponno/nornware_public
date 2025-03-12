@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "wmdl_controller.h"
 
-#include "../minyin/minyin.h"
 #include "wmdl_assets.h"
 
 #define SCROLL_X 0

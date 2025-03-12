@@ -258,7 +258,7 @@ w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_t(const float in_seconds_per_fixe
 	_music_stream = nullptr;
 }
 
-bool w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests)
+bool w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_init_audio(const std::vector<micron_sound_request_t>& in_sound_requests)
 {
 	if (!_sound_engine.init(w32_d3d9_hwnd()))
 		return false;
@@ -266,7 +266,7 @@ bool w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_init_audio(const std::vector
 	if (!_sound_container.init())
 		return false;
 
-	for (const minyin_sound_request_t& SR : in_sound_requests)
+	for (const micron_sound_request_t& SR : in_sound_requests)
 	{
 		if (!_sound_container.add_sound(_sound_engine, SR.asset, SR.id, 1))
 			return false;
@@ -494,7 +494,7 @@ w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_t(const float in_seconds_per_fixed_ti
 	_music_stream = nullptr;
 }
 
-bool w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests)
+bool w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_init_audio(const std::vector<micron_sound_request_t>& in_sound_requests)
 {
 	if (!_sound_engine.init(w32_d3d9_hwnd()))
 		return false;
@@ -502,7 +502,7 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_init_audio(const std::vector<min
 	if (!_sound_container.init())
 		return false;
 
-	for (const minyin_sound_request_t& SR : in_sound_requests)
+	for (const micron_sound_request_t& SR : in_sound_requests)
 	{
 		if (!_sound_container.add_sound(_sound_engine, SR.asset, SR.id, 1))
 			return false;

@@ -59,7 +59,7 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 
 	//application-specific init
 	{
-		std::vector<minyin_sound_request_t> sound_requests;
+		std::vector<micron_sound_request_t> sound_requests;
 		if (!wmdl_game_init(__app._micron, __app._game, sound_requests))
 			return -1;
 		if (!__app.w32_d3d9_chunky_app_init_audio(sound_requests))

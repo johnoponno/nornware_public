@@ -2,7 +2,6 @@
 #include "wmdl_assets.h"
 
 #include "../minyin/fs.h"
-#include "../minyin/minyin.h"
 #include "../minyin/paletas.h"
 
 #define ASSET_BG00 "bg00.tga"
@@ -63,7 +62,7 @@
 #define BITMAP(a, b) if(!sd_bitmap_load_24(a, b)) return false;
 #define BITMAP8(a, b) if(!minyin_bitmap_load_8(b, a)) return false;
 
-bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vector<minyin_sound_request_t>& out_sounds)
+bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vector<micron_sound_request_t>& out_sounds)
 {
 	//common info
 	{

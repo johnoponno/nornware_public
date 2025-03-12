@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "tpmn_controller.h"
 
-#include "../minyin/minyin.h"
 #include "../minyin/micron.h"
 #include "tpmn_assets.h"
 

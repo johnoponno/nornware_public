@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "paletas.h"
 
-#include "minyin.h"
 #include "micron.h"
 #include "fs.h"
 #include "sd_bitmap.h"

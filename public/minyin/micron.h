@@ -106,3 +106,9 @@ void minyin_print(
 void minyin_print_colorize(
 	micron_t& out_micron,
 	const uint8_t in_key, const uint8_t in_key2, const micron_font_t& FONT, const uint8_t aColor, const int32_t aDstX, const int32_t aDstY, const char* message);
+
+struct micron_sound_request_t
+{
+	const char* asset;
+	uint32_t id;
+};

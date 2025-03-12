@@ -1,10 +1,8 @@
 #pragma once
 
-#include "../minyin/minyin.h"
+
 #include "../minyin/micron.h"
 #include "wmdl_model.h"
-
-struct minyin_sound_request_t;
 
 #define WMDL_TITLE_COLOR 255
 #define WMDL_TEXT_COLOR 223
@@ -76,4 +74,4 @@ struct wmdl_assets_t
 	uint8_t text_edge_index;
 };
 
-bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vector<minyin_sound_request_t>& out_sounds);
+bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vector<micron_sound_request_t>& out_sounds);

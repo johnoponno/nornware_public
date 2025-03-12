@@ -79,7 +79,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="micron.h" />
-    <ClInclude Include="minyin.h" />
     <ClInclude Include="paletas.h" />
     <ClInclude Include="sd_bitmap.h" />
     <ClInclude Include="sd_fontv.h" />

@@ -2,7 +2,7 @@
 #include "tpmn_assets.h"
 
 #include "../minyin/fs.h"
-#include "../minyin/minyin.h"
+#include "../minyin/micron.h"
 
 #define ASSET_BG00 "bg00.tga"
 #define ASSET_BG01 "bg01.tga"
@@ -67,7 +67,7 @@
 
 #define BITMAP(a, b) if(!sd_bitmap_load_24(a, b)) return false;
 
-bool tpmn_assets_init(tpmn_assets_t& out_assets, std::vector<minyin_sound_request_t>& out_sounds)
+bool tpmn_assets_init(tpmn_assets_t& out_assets, std::vector<micron_sound_request_t>& out_sounds)
 {
 	//common info
 	{

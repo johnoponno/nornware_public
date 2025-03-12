@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include "../minyin/minyin.h"
 #include "../minyin/micron.h"
 #include "wmdl_model.h"
 
