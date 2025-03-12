@@ -80,10 +80,50 @@ static bool __clip(
 	return out_height > 0;
 }
 
+static void __bitmap_relinquish(micron_bitmap_t& out)
+{
+	const uint32_t SIZE = out.width * out.height;
+	if (SIZE)
+	{
+		assert(out.width && out.height && out.pixels && (uint32_t)(out.width * out.height) == SIZE);
+		delete[] out.pixels;
+		out.pixels = nullptr;
+	}
+	else
+	{
+		assert(!out.width && !out.height && !out.pixels);
+	}
+
+	out.width = 0;
+	out.height = 0;
+}
+
 //public
 //public
 //public
 //public
+
+bool micron_color_t::operator < (const micron_color_t& in_other) const
+{
+	if (r < in_other.r)	return true;
+	if (r > in_other.r)	return false;
+
+	// Otherwise r are equal
+	if (g < in_other.g)	return true;
+	if (g > in_other.g)	return false;
+
+	// Otherwise g are equal
+	if (b < in_other.b)	return true;
+	if (b > in_other.b)	return false;
+
+	// Otherwise all are equal
+	return false;
+}
+
+bool micron_color_t::operator >= (const micron_color_t& in_other) const
+{
+	return !(*this < in_other);
+}
 
 micron_bitmap_t::micron_bitmap_t()
 {
@@ -94,7 +134,7 @@ micron_bitmap_t::micron_bitmap_t()
 
 micron_bitmap_t::~micron_bitmap_t()
 {
-	minyin_bitmap_relinquish(*this);
+	__bitmap_relinquish(*this);
 }
 
 micron_font_t::micron_font_t(const int32_t in_char_spacing)
@@ -110,7 +150,7 @@ bool minyin_bitmap_init(
 	const int32_t in_width, const int32_t in_height)
 {
 	//cleanup
-	minyin_bitmap_relinquish(out);
+	__bitmap_relinquish(out);
 
 	//get new memory
 	assert(!out.pixels);
@@ -179,25 +219,7 @@ bool minyin_bitmap_load_8(
 }
 #endif
 
-void minyin_bitmap_relinquish(micron_bitmap_t& out)
-{
-	const uint32_t SIZE = out.width * out.height;
-	if (SIZE)
-	{
-		assert(out.width && out.height && out.pixels && (uint32_t)(out.width * out.height) == SIZE);
-		delete[] out.pixels;
-		out.pixels = nullptr;
-	}
-	else
-	{
-		assert(!out.width && !out.height && !out.pixels);
-	}
-
-	out.width = 0;
-	out.height = 0;
-}
-
-void minyin_clear(
+void micron_clear(
 	micron_t& out_micron,
 	const uint8_t in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_clear_width, int32_t in_clear_height)
 {
@@ -236,15 +258,15 @@ void minyin_clear(
 	}
 }
 
-void minyin_cross(
+void micron_cross(
 	micron_t& out_micron,
 	const int32_t in_x, const int32_t in_y, const int32_t in_size, const uint8_t in_color)
 {
-	minyin_h_line(out_micron, in_x - in_size / 2, in_x + in_size / 2 + 1, in_y, in_color);
-	minyin_v_line(out_micron, in_x, in_y - in_size / 2, in_y + in_size / 2 + 1, in_color);
+	micron_h_line(out_micron, in_x - in_size / 2, in_x + in_size / 2 + 1, in_y, in_color);
+	micron_v_line(out_micron, in_x, in_y - in_size / 2, in_y + in_size / 2 + 1, in_color);
 }
 
-void minyin_h_line(
+void micron_h_line(
 	micron_t& out_micron,
 	int32_t in_x1, int32_t in_x2, const int32_t in_y1, const uint8_t in_color)
 {
@@ -268,7 +290,7 @@ void minyin_h_line(
 	}
 }
 
-void minyin_v_line(
+void micron_v_line(
 	micron_t& out_micron,
 	const int32_t in_x1, int32_t in_y1, int32_t in_y2, const uint8_t in_color)
 {
@@ -293,7 +315,7 @@ void minyin_v_line(
 	}
 }
 
-void minyin_blit(
+void micron_blit(
 	micron_t& out_micron,
 	const micron_bitmap_t& in_src, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
 {
@@ -337,7 +359,7 @@ void minyin_blit(
 	}
 }
 
-void minyin_blit_key(
+void micron_blit_key(
 	micron_t& out_micron,
 	const uint8_t in_key, const micron_bitmap_t& in_src, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
 {
@@ -377,7 +399,7 @@ void minyin_blit_key(
 	}
 }
 
-void minyin_blit_key_clip(
+void micron_blit_key_clip(
 	micron_t& out_micron,
 	const uint8_t in_key, const micron_bitmap_t& in_src, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
 {
@@ -394,11 +416,11 @@ void minyin_blit_key_clip(
 
 		in_src_x, in_src_y, in_dst_x, in_dst_y, in_copy_width, in_copy_height))
 	{
-		minyin_blit_key(out_micron, in_key, in_src, in_dst_x, in_dst_y, in_copy_width, in_copy_height, in_src_x, in_src_y);
+		micron_blit_key(out_micron, in_key, in_src, in_dst_x, in_dst_y, in_copy_width, in_copy_height, in_src_x, in_src_y);
 	}
 }
 
-void minyin_blit_key2_colorize(
+void micron_blit_key2_colorize(
 	micron_t& out_micron,
 	const uint8_t in_key, const uint8_t in_key2, const micron_bitmap_t& in_src, const uint8_t in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
 {
@@ -443,7 +465,7 @@ void minyin_blit_key2_colorize(
 	}
 }
 
-void minyin_blit_key2_colorize_clip(
+void micron_blit_key2_colorize_clip(
 	micron_t& out_micron,
 	const uint8_t in_key, const uint8_t in_key2, const micron_bitmap_t& in_src, const uint8_t in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
 {
@@ -460,13 +482,17 @@ void minyin_blit_key2_colorize_clip(
 
 		in_src_x, in_src_y, in_dst_x, in_dst_y, in_copy_width, in_copy_height))
 	{
-		minyin_blit_key2_colorize(out_micron, in_key, in_key2, in_src, in_color, in_dst_x, in_dst_y, in_copy_width, in_copy_height, in_src_x, in_src_y);
+		micron_blit_key2_colorize(out_micron, in_key, in_key2, in_src, in_color, in_dst_x, in_dst_y, in_copy_width, in_copy_height, in_src_x, in_src_y);
 	}
 }
 
-bool minyin_font_init(micron_font_t& out_font, const uint8_t in_key)
+bool micron_font_init(micron_font_t& out_font, const uint8_t in_key)
 {
-	if (!out_font.rep.pixels || !out_font.rep.width || !out_font.rep.height)
+	if (
+		!out_font.rep.pixels ||
+		!out_font.rep.width ||
+		!out_font.rep.height
+		)
 		return false;
 
 	out_font.height = out_font.rep.height / CHARSPERHEIGHT;
@@ -555,7 +581,7 @@ bool minyin_font_init(micron_font_t& out_font, const uint8_t in_key)
 	return true;
 }
 
-int32_t minyin_font_string_width(const micron_font_t& f, const char* aString)
+int32_t micron_font_string_width(const micron_font_t& f, const char* aString)
 {
 	int32_t length = (int32_t)::strlen(aString);
 	int32_t result = 0;
@@ -587,7 +613,7 @@ int32_t minyin_font_string_width(const micron_font_t& f, const char* aString)
 	return result;
 }
 
-void minyin_print(
+void micron_print(
 	micron_t& out_micron,
 	const uint8_t in_key, const micron_font_t& in_font, const int32_t in_dst_x, const int32_t in_dst_y, const char* in_message)
 {
@@ -622,18 +648,21 @@ void minyin_print(
 			y += in_font.height;
 		}
 		//printable chars
-		else if (ch >= CHARBEGIN && ch <= CHAREND)
+		else if (
+			ch >= CHARBEGIN &&
+			ch <= CHAREND
+			)
 		{
 			ch -= CHARBEGIN;
 
-			minyin_blit_key_clip(out_micron, in_key, in_font.rep, x, y, in_font.characters[ch].w, in_font.characters[ch].h, in_font.characters[ch].s, in_font.characters[ch].t);
+			micron_blit_key_clip(out_micron, in_key, in_font.rep, x, y, in_font.characters[ch].w, in_font.characters[ch].h, in_font.characters[ch].s, in_font.characters[ch].t);
 
 			x += in_font.characters[ch].w + in_font.char_spacing;
 		}
 	}
 }
 
-void minyin_print_colorize(
+void micron_print_colorize(
 	micron_t& out_micron,
 	const uint8_t in_key, const uint8_t in_key2, const micron_font_t& in_font, const uint8_t in_color, const int32_t in_dst_x, const int32_t in_dst_y, const char* in_message)
 {
@@ -668,11 +697,14 @@ void minyin_print_colorize(
 			y += in_font.height;
 		}
 		//printable chars
-		else if (ch >= CHARBEGIN && ch <= CHAREND)
+		else if (
+			ch >= CHARBEGIN &&
+			ch <= CHAREND
+			)
 		{
 			ch -= CHARBEGIN;
 
-			minyin_blit_key2_colorize_clip(out_micron, in_key, in_key2, in_font.rep, in_color, x, y, in_font.characters[ch].w, in_font.characters[ch].h, in_font.characters[ch].s, in_font.characters[ch].t);
+			micron_blit_key2_colorize_clip(out_micron, in_key, in_key2, in_font.rep, in_color, x, y, in_font.characters[ch].w, in_font.characters[ch].h, in_font.characters[ch].s, in_font.characters[ch].t);
 
 			x += in_font.characters[ch].w + in_font.char_spacing;
 		}

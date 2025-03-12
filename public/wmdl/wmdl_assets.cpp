@@ -64,7 +64,7 @@
 
 bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vector<micron_sound_request_t>& out_sounds)
 {
-	//common info
+	//load animation info
 	{
 		const fs_blob_t CONTENTS = fs_file_contents(ASSET_COMMON_INFO);
 		const bool RESULT = CONTENTS.data && sizeof(out_assets.anim_target) == CONTENTS.size;
@@ -85,47 +85,51 @@ bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vect
 			return false;
 	}
 
-	//bitmaps
+	//import bitmaps and calculate am 8-bit target palette
 	{
 		paletas_t p;
-		paletas_item(ASSET_BG00, out_assets.backgrounds[0], p);
-		paletas_item(ASSET_BG01, out_assets.backgrounds[1], p);
-		paletas_item(ASSET_BG02, out_assets.backgrounds[2], p);
-		paletas_item(ASSET_BG03, out_assets.backgrounds[3], p);
-		paletas_item(ASSET_BG04, out_assets.backgrounds[4], p);
-		paletas_item(ASSET_BG05, out_assets.backgrounds[5], p);
-		paletas_item(ASSET_BG06, out_assets.backgrounds[6], p);
-		paletas_item(ASSET_PORTAL, out_assets.portal, p);
-		paletas_item(ASSET_SERVER, out_assets.server, p);
-		paletas_item(ASSET_ARCS, out_assets.arcs, p);
-		paletas_item(ASSET_SPIKYGREEN, out_assets.spikygreen, p);
-		paletas_item(ASSET_BLUEBLOB, out_assets.blueblob, p);
-		paletas_item(ASSET_BROWNBLOB, out_assets.brownblob, p);
-		paletas_item(ASSET_PENGUIN, out_assets.penguin, p);
-		paletas_item(ASSET_PLANT, out_assets.plant, p);
-		paletas_item(ASSET_SCORPION, out_assets.scorpion, p);
-		paletas_item(ASSET_FIREDUDE, out_assets.firedude, p);
-		paletas_item(ASSET_BAT, out_assets.bat, p);
-		paletas_item(ASSET_GUISERVERFIXED, out_assets.gui_server_fixed, p);
-		paletas_item(ASSET_GUISERVERBROKEN, out_assets.gui_server_broken, p);
-		paletas_item(ASSET_IDLE, out_assets.idle, p);
-		paletas_item(ASSET_TILES, out_assets.tiles, p);
-		paletas_item(ASSET_HERO, out_assets.hero, p);
-		paletas_item(ASSET_WHIP, out_assets.whip, p);
-		paletas_item(ASSET_FLAKE, out_assets.flake, p);
-		paletas_item(ASSET_FONT, out_assets.font.rep, p);
-		if (!paletas_calculate(256, p, (pixel_t*)out_micron.palette))
+		p.item(ASSET_BG00, out_assets.backgrounds[0]);
+		p.item(ASSET_BG01, out_assets.backgrounds[1]);
+		p.item(ASSET_BG02, out_assets.backgrounds[2]);
+		p.item(ASSET_BG03, out_assets.backgrounds[3]);
+		p.item(ASSET_BG04, out_assets.backgrounds[4]);
+		p.item(ASSET_BG05, out_assets.backgrounds[5]);
+		p.item(ASSET_BG06, out_assets.backgrounds[6]);
+		p.item(ASSET_PORTAL, out_assets.portal);
+		p.item(ASSET_SERVER, out_assets.server);
+		p.item(ASSET_ARCS, out_assets.arcs);
+		p.item(ASSET_SPIKYGREEN, out_assets.spikygreen);
+		p.item(ASSET_BLUEBLOB, out_assets.blueblob);
+		p.item(ASSET_BROWNBLOB, out_assets.brownblob);
+		p.item(ASSET_PENGUIN, out_assets.penguin);
+		p.item(ASSET_PLANT, out_assets.plant);
+		p.item(ASSET_SCORPION, out_assets.scorpion);
+		p.item(ASSET_FIREDUDE, out_assets.firedude);
+		p.item(ASSET_BAT, out_assets.bat);
+		p.item(ASSET_GUISERVERFIXED, out_assets.gui_server_fixed);
+		p.item(ASSET_GUISERVERBROKEN, out_assets.gui_server_broken);
+		p.item(ASSET_IDLE, out_assets.idle);
+		p.item(ASSET_TILES, out_assets.tiles);
+		p.item(ASSET_HERO, out_assets.hero);
+		p.item(ASSET_WHIP, out_assets.whip);
+		p.item(ASSET_FLAKE, out_assets.flake);
+		p.item(ASSET_FONT, out_assets.font.rep);
+		if (!p.calculate(256, out_micron.palette))
 			return false;
+
+		//cache the key index (for transparent blitting) based on knowledge of the input assets (top left corner of hero image is "that pink")
 		out_assets.key_index = out_assets.hero.pixels[0];
+
+		//the same goes for the text edge index
 		out_assets.text_edge_index = out_assets.font.rep.pixels[0];
 	}
 
-	//font
-	if (!minyin_font_init(out_assets.font, out_assets.key_index))
+	//setup font character tables, spacing, etc
+	if (!micron_font_init(out_assets.font, out_assets.key_index))
 		return false;
 	out_assets.font.char_spacing = -1;
 
-	//request sounds
+	//request sounds from the implementation
 	out_sounds.push_back({ ASSET_SPAWN, WMDL_SND_SPAWN });
 	out_sounds.push_back({ ASSET_FIXSERVER, WMDL_SND_FIXSERVER });
 	out_sounds.push_back({ ASSET_HEROWHIP, WMDL_SND_HEROWHIP });

@@ -111,7 +111,7 @@ static void __draw_portals(
 		else
 			frame = 0;
 
-		minyin_blit_key_clip(out_micron, in_assets.key_index, in_assets.portal, X, Y, WMDL_TILE_ASPECT, in_assets.portal.height, frame * in_assets.portal.width / 2, 0);
+		micron_blit_key_clip(out_micron, in_assets.key_index, in_assets.portal, X, Y, WMDL_TILE_ASPECT, in_assets.portal.height, frame * in_assets.portal.width / 2, 0);
 
 		//if not accessible, draw number
 		if (in_model.hero.fixed_servers.count < PORTAL->server_count)
@@ -119,9 +119,9 @@ static void __draw_portals(
 			char slask[4];
 			::sprintf_s(slask, "%u", PORTAL->server_count);
 			if (PORTAL->server_count >= 10)
-				minyin_print(out_micron, in_assets.key_index, in_assets.font, X + 1, Y + 4, slask);
+				micron_print(out_micron, in_assets.key_index, in_assets.font, X + 1, Y + 4, slask);
 			else
-				minyin_print(out_micron, in_assets.key_index, in_assets.font, X + 6, Y + 4, slask);
+				micron_print(out_micron, in_assets.key_index, in_assets.font, X + 6, Y + 4, slask);
 		}
 	}
 }
@@ -179,7 +179,7 @@ static void __draw_servers(
 						oy = int32_t(wmdl_random_unit() * 2) - 1;
 					}
 
-					minyin_blit_key_clip(
+					micron_blit_key_clip(
 						out_micron,
 						in_assets.key_index,
 						in_assets.server,
@@ -197,7 +197,7 @@ static void __draw_servers(
 				{
 					frame = int32_t(wmdl_model_now(in_model) * 16) % 4;
 
-					minyin_blit_key_clip(
+					micron_blit_key_clip(
 						out_micron,
 						0,//2024-12-02: apparently this index works (since the original was additive / on black background)
 						in_assets.arcs,
@@ -224,7 +224,7 @@ static void __draw_tile(
 	{
 		const int32_t SRC_X = (in_tile % TILES_ON_SOURCE_X) * WMDL_TILE_ASPECT;
 		const int32_t SRC_Y = in_tile / TILES_ON_SOURCE_X * WMDL_TILE_ASPECT;
-		minyin_blit_key_clip(
+		micron_blit_key_clip(
 			out_micron,
 			in_assets.key_index,
 			in_assets.tiles,
@@ -236,7 +236,7 @@ static void __draw_tile(
 	}
 	else
 	{
-		minyin_clear(out_micron, 255, in_x, in_y, WMDL_TILE_ASPECT, WMDL_TILE_ASPECT);
+		micron_clear(out_micron, 255, in_x, in_y, WMDL_TILE_ASPECT, WMDL_TILE_ASPECT);
 	}
 }
 
@@ -294,7 +294,7 @@ static void __draw_scorpion(
 		src_x = 0;
 	}
 
-	minyin_blit_key_clip(
+	micron_blit_key_clip(
 		out_micron,
 		in_assets.key_index,
 		in_assets.scorpion,
@@ -435,7 +435,7 @@ static void __draw_text(
 	const wmdl_assets_t& in_assets, const int in_dst_y, const char* in_string, const uint8_t in_color,
 	micron_t& out_micron)
 {
-	minyin_print_colorize(out_micron, in_assets.key_index, in_assets.text_edge_index, in_assets.font, in_color, (MICRON_WIDTH - minyin_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
+	micron_print_colorize(out_micron, in_assets.key_index, in_assets.text_edge_index, in_assets.font, in_color, (MICRON_WIDTH - micron_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
 }
 
 static void __draw_foreground(
@@ -518,17 +518,17 @@ static void __draw_farplane(
 	switch (index)
 	{
 	default:
-		minyin_blit(out_micron, in_assets.backgrounds[index], 0, 0);
+		micron_blit(out_micron, in_assets.backgrounds[index], 0, 0);
 		break;
 
 	case 1:
-		minyin_blit(out_micron, in_assets.backgrounds[index], 0, 0);
+		micron_blit(out_micron, in_assets.backgrounds[index], 0, 0);
 		//in_micron;
 		//__draw_dust_pass(in_micron, false, now, 100, 20, assets.dust_far, controller.canvas);
 		break;
 
 	case 3:
-		minyin_blit(out_micron, in_assets.backgrounds[index], 0, 0);
+		micron_blit(out_micron, in_assets.backgrounds[index], 0, 0);
 		for (
 			wmdl_snowflake_t* FLAKE = out_controller.flakes;
 			FLAKE < out_controller.flakes + _countof(out_controller.flakes);
@@ -553,12 +553,12 @@ static void __draw_farplane(
 			}
 
 			//minyin_blit_half_key_clip(controller.canvas, assets.flake, (int32_t)FLAKE->x, (int32_t)FLAKE->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (FLAKE->t % 3) * FLAKE_FRAME_ASPECT, FLAKE->t / 3 * FLAKE_FRAME_ASPECT);
-			minyin_blit_key_clip(out_micron, in_assets.key_index, in_assets.flake, (int32_t)FLAKE->x, (int32_t)FLAKE->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (FLAKE->t % 3) * FLAKE_FRAME_ASPECT, FLAKE->t / 3 * FLAKE_FRAME_ASPECT);
+			micron_blit_key_clip(out_micron, in_assets.key_index, in_assets.flake, (int32_t)FLAKE->x, (int32_t)FLAKE->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (FLAKE->t % 3) * FLAKE_FRAME_ASPECT, FLAKE->t / 3 * FLAKE_FRAME_ASPECT);
 		}
 		break;
 
 	case 5:
-		minyin_blit(out_micron, in_assets.backgrounds[index], 0, 0);
+		micron_blit(out_micron, in_assets.backgrounds[index], 0, 0);
 #if 0
 		{
 			const int32_t WIDTH = assets.myCloud.width / 3;
@@ -609,7 +609,7 @@ static void __draw_hero(
 	}
 
 	//blit
-	minyin_blit_key_clip(
+	micron_blit_key_clip(
 		out_micron,
 		in_assets.key_index,
 		in_assets.hero,
@@ -621,7 +621,7 @@ static void __draw_hero(
 	//whip
 	if (state == HS_WHIP)
 	{
-		minyin_blit_key_clip(
+		micron_blit_key_clip(
 			out_micron,
 			in_assets.key_index,
 			in_assets.whip,
@@ -737,7 +737,7 @@ static void __draw_deaths(
 
 		if (SX >= (-death->w / 2) && SY >= (-death->h / 2) && SX < (MICRON_WIDTH + death->w / 2) && SY < (MICRON_HEIGHT + death->h / 2))
 		{
-			minyin_blit_key_clip(
+			micron_blit_key_clip(
 				out_micron,
 				in_assets.key_index,
 				*death->bm,
@@ -790,7 +790,7 @@ static void __draw_enemies(
 		case WMDL_LOGIC_INDEX_SPIKYGREEN:
 			if (NOW > ENEMY->spawn_time)
 			{
-				minyin_blit_key_clip(
+				micron_blit_key_clip(
 					out_micron,
 					in_assets.key_index,
 					in_assets.spikygreen,
@@ -806,7 +806,7 @@ static void __draw_enemies(
 
 		case WMDL_LOGIC_INDEX_BLUEBLOB:
 			if (NOW > ENEMY->spawn_time)
-				minyin_blit_key_clip(
+				micron_blit_key_clip(
 					out_micron,
 					in_assets.key_index,
 					in_assets.blueblob,
@@ -821,7 +821,7 @@ static void __draw_enemies(
 
 		case WMDL_LOGIC_INDEX_BROWNBLOB:
 			if (NOW > ENEMY->spawn_time)
-				minyin_blit_key_clip(
+				micron_blit_key_clip(
 					out_micron,
 					in_assets.key_index,
 					in_assets.brownblob,
@@ -868,7 +868,7 @@ static void __draw_enemies(
 					x_offset = -22;
 					src_x = 0;
 				}
-				minyin_blit_key_clip(
+				micron_blit_key_clip(
 					out_micron,
 					in_assets.key_index,
 					in_assets.plant,
@@ -890,7 +890,7 @@ static void __draw_enemies(
 		case WMDL_LOGIC_INDEX_PENGUIN:
 			if (NOW > ENEMY->spawn_time)
 			{
-				minyin_blit_key_clip(
+				micron_blit_key_clip(
 					out_micron,
 					in_assets.key_index,
 					in_assets.penguin,
@@ -905,7 +905,7 @@ static void __draw_enemies(
 			break;
 
 		case WMDL_LOGIC_INDEX_FIREDUDE:
-			minyin_blit_key_clip(
+			micron_blit_key_clip(
 				out_micron,
 				in_assets.key_index,
 				in_assets.firedude,
@@ -929,7 +929,7 @@ static void __draw_enemies(
 			if (ENEMY->scared)
 				frame += 3;
 
-			minyin_blit_key_clip(
+			micron_blit_key_clip(
 				out_micron,
 				in_assets.key_index,
 				in_assets.bat,
@@ -1073,14 +1073,14 @@ static void __play_update(
 		//draw gui
 		{
 			//total servers fixed
-			minyin_blit_key(out_micron, in_assets.key_index, in_assets.gui_server_fixed, 0, 0);
+			micron_blit_key(out_micron, in_assets.key_index, in_assets.gui_server_fixed, 0, 0);
 			{
 				char slask[4];
 				::sprintf_s(slask, "%u", in_model.hero.fixed_servers.count);
 				if (in_model.hero.fixed_servers.count < 10)
-					minyin_print(out_micron, in_assets.key_index, in_assets.font, 6, 6, slask);
+					micron_print(out_micron, in_assets.key_index, in_assets.font, 6, 6, slask);
 				else
-					minyin_print(out_micron, in_assets.key_index, in_assets.font, 1, 6, slask);
+					micron_print(out_micron, in_assets.key_index, in_assets.font, 1, 6, slask);
 			}
 
 			//keys gui
@@ -1100,7 +1100,7 @@ static void __play_update(
 				++i
 				)
 			{
-				minyin_blit_key(out_micron, in_assets.key_index, in_assets.gui_server_broken, MICRON_WIDTH - i * 14 - 20, 0);
+				micron_blit_key(out_micron, in_assets.key_index, in_assets.gui_server_broken, MICRON_WIDTH - i * 14 - 20, 0);
 			}
 		}
 
@@ -1123,7 +1123,7 @@ static wmdl_app_event_t __idle_update(
 	const wmdl_assets_t& in_assets,
 	micron_t& out_micron)
 {
-	minyin_blit(out_micron, in_assets.idle, 0, 0);
+	micron_blit(out_micron, in_assets.idle, 0, 0);
 
 #if 1
 	{//show palette
@@ -1163,7 +1163,7 @@ static wmdl_app_event_t __idle_update(
 
 	//cursor test
 #if 1
-	minyin_cross(out_micron, out_micron.canvas_cursor_x, out_micron.canvas_cursor_y, 8, 0xff);
+	micron_cross(out_micron, out_micron.canvas_cursor_x, out_micron.canvas_cursor_y, 8, 0xff);
 #endif
 
 	return wmdl_app_event_t::NOTHING;
