@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../minyin/minyin.h"
+#include "../minyin/micron.h"
 #include "w32_d3d9_softdraw_adapter.h"
 #include "w32_dsound_engine.h"
 #include "w32_dsound_container.h"
@@ -62,7 +63,7 @@ struct w32_d3d9_softdraw_app_t : public w32_d3d9_app_i
 	bool w32_d3d9_softdraw_app_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests);
 	void w32_d3d9_softdraw_app_cleanup_audio();
 	void w32_d3d9_softdraw_app_handle_music_request(const char* in_music_request);
-	virtual bool w32_d3d9_softdraw_app_tick(const minyin_input_t& in_input, const w32_dsound_container_t& in_sounds) = 0;
+	virtual bool w32_d3d9_softdraw_app_tick(const micron_t& in_micron, const w32_dsound_container_t& in_sounds) = 0;
 
 private:
 
@@ -73,7 +74,7 @@ private:
 	w32_dsound_container_t _sound_container;
 	const char* _music_file;
 	w32_dsound_stream_t* _music_stream;
-	minyin_input_t _input;
+	micron_t _micron;
 };
 
 //simplified / fixed tick version (8 bit palettized graphics)
@@ -88,20 +89,21 @@ struct w32_d3d9_chunky_app_t : public w32_d3d9_app_i
 	float w32_d3d9_app_seconds_per_fixed_tick() const override;
 	bool w32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const override;
 
-	explicit w32_d3d9_chunky_app_t(const float in_seconds_per_fixed_tick, const minyin_bitmap_t& in_canvas, const uint32_t in_num_sounds);
+	explicit w32_d3d9_chunky_app_t(const float in_seconds_per_fixed_tick, const uint32_t in_num_sounds);
 	bool w32_d3d9_chunky_app_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests);
 	void w32_d3d9_chunky_app_cleanup_audio();
 	void w32_d3d9_chunky_app_handle_music_request(const char* in_music_request);
-	virtual bool w32_d3d9_chunky_app_tick(const minyin_input_t& in_input, const w32_dsound_container_t& in_sounds) = 0;
+	virtual bool w32_d3d9_chunky_app_tick(
+		const w32_dsound_container_t& in_sounds,
+		micron_t& out_micron) = 0;
 
 private:
 
 	const float SECONDS_PER_FIXED_TICK;
-	const minyin_bitmap_t& REF_CANVAS;
 	w32_d3d9_softdraw_adapter_t _video_adapter;
 	w32_dsound_engine_t _sound_engine;
 	w32_dsound_container_t _sound_container;
 	const char* _music_file;
 	w32_dsound_stream_t* _music_stream;
-	minyin_input_t _input;
+	micron_t _micron;
 };

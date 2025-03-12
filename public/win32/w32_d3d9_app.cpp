@@ -133,12 +133,12 @@ void w32_d3d9_softdraw_app_t::w32_d3d9_app_frame_move(const double, const float)
 	{
 		for (
 			uint32_t key = 0;
-			key < _countof(_input.keys);
+			key < _countof(_micron.keys);
 			++key
 			)
 		{
-			_input.keys[key].down_last = _input.keys[key].down_current;
-			_input.keys[key].down_current = 0 != ::GetAsyncKeyState(key);
+			_micron.keys[key].down_last = _micron.keys[key].down_current;
+			_micron.keys[key].down_current = 0 != ::GetAsyncKeyState(key);
 		}
 
 		{
@@ -148,8 +148,8 @@ void w32_d3d9_softdraw_app_t::w32_d3d9_app_frame_move(const double, const float)
 
 			//__state.cursor_movement_x = cursor_position.x - __state.cursor_pos_x;
 			//__state.cursor_movement_y = cursor_position.y - __state.cursor_pos_y;
-			_input.screen_cursor_x = cursor_position.x;
-			_input.screen_cursor_y = cursor_position.y;
+			_micron.screen_cursor_x = cursor_position.x;
+			_micron.screen_cursor_y = cursor_position.y;
 		}
 
 		/*
@@ -165,27 +165,27 @@ void w32_d3d9_softdraw_app_t::w32_d3d9_app_frame_move(const double, const float)
 	{
 		const canvas_layout_t LAYOUT = __canvas_layout(REF_CANVAS.width, REF_CANVAS.height);
 
-		float cpx = (float)_input.screen_cursor_x;
+		float cpx = (float)_micron.screen_cursor_x;
 		cpx -= LAYOUT.x;
 		cpx /= (float)LAYOUT.width;
 		cpx *= (float)REF_CANVAS.width;
 
-		float cpy = (float)_input.screen_cursor_y;
+		float cpy = (float)_micron.screen_cursor_y;
 		cpy -= LAYOUT.y;
 		cpy /= (float)LAYOUT.height;
 		cpy *= (float)REF_CANVAS.height;
 
-		_input.canvas_cursor_x = (int32_t)cpx;
-		_input.canvas_cursor_y = (int32_t)cpy;
+		_micron.canvas_cursor_x = (int32_t)cpx;
+		_micron.canvas_cursor_y = (int32_t)cpy;
 
 		if (cpx < 0.f)
-			--_input.canvas_cursor_x;
+			--_micron.canvas_cursor_x;
 
 		if (cpy < 0.f)
-			--_input.canvas_cursor_y;
+			--_micron.canvas_cursor_y;
 	}
 
-	if (!w32_d3d9_softdraw_app_tick(_input, _sound_container))
+	if (!w32_d3d9_softdraw_app_tick(_micron, _sound_container))
 		w32_d3d9_shutdown(0);
 }
 
@@ -206,7 +206,7 @@ bool w32_d3d9_softdraw_app_t::w32_d3d9_app_frame_render(const double, const floa
 			VERIFY(w32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET, __clear_color(this), 1.f, 0));
 #endif
 
-			{ 
+			{
 				const canvas_layout_t LAYOUT = __canvas_layout(REF_CANVAS.width, REF_CANVAS.height);
 
 				w32_d3d9_softdraw_present_2d(
@@ -364,12 +364,12 @@ void w32_d3d9_chunky_app_t::w32_d3d9_app_frame_move(const double, const float)
 	{
 		for (
 			uint32_t key = 0;
-			key < _countof(_input.keys);
+			key < _countof(_micron.keys);
 			++key
 			)
 		{
-			_input.keys[key].down_last = _input.keys[key].down_current;
-			_input.keys[key].down_current = 0 != ::GetAsyncKeyState(key);
+			_micron.keys[key].down_last = _micron.keys[key].down_current;
+			_micron.keys[key].down_current = 0 != ::GetAsyncKeyState(key);
 		}
 
 		{
@@ -379,8 +379,8 @@ void w32_d3d9_chunky_app_t::w32_d3d9_app_frame_move(const double, const float)
 
 			//__state.cursor_movement_x = cursor_position.x - __state.cursor_pos_x;
 			//__state.cursor_movement_y = cursor_position.y - __state.cursor_pos_y;
-			_input.screen_cursor_x = cursor_position.x;
-			_input.screen_cursor_y = cursor_position.y;
+			_micron.screen_cursor_x = cursor_position.x;
+			_micron.screen_cursor_y = cursor_position.y;
 		}
 
 		/*
@@ -394,29 +394,29 @@ void w32_d3d9_chunky_app_t::w32_d3d9_app_frame_move(const double, const float)
 
 	//figure out the cursor position on our application canvas (not the same as native screen position)
 	{
-		const canvas_layout_t LAYOUT = __canvas_layout(REF_CANVAS.width, REF_CANVAS.height);
+		const canvas_layout_t LAYOUT = __canvas_layout(MICRON_WIDTH, MICRON_HEIGHT);
 
-		float cpx = (float)_input.screen_cursor_x;
+		float cpx = (float)_micron.screen_cursor_x;
 		cpx -= LAYOUT.x;
 		cpx /= (float)LAYOUT.width;
-		cpx *= (float)REF_CANVAS.width;
+		cpx *= (float)MICRON_WIDTH;
 
-		float cpy = (float)_input.screen_cursor_y;
+		float cpy = (float)_micron.screen_cursor_y;
 		cpy -= LAYOUT.y;
 		cpy /= (float)LAYOUT.height;
-		cpy *= (float)REF_CANVAS.height;
+		cpy *= (float)MICRON_HEIGHT;
 
-		_input.canvas_cursor_x = (int32_t)cpx;
-		_input.canvas_cursor_y = (int32_t)cpy;
+		_micron.canvas_cursor_x = (int32_t)cpx;
+		_micron.canvas_cursor_y = (int32_t)cpy;
 
 		if (cpx < 0.f)
-			--_input.canvas_cursor_x;
+			--_micron.canvas_cursor_x;
 
 		if (cpy < 0.f)
-			--_input.canvas_cursor_y;
+			--_micron.canvas_cursor_y;
 	}
 
-	if (!w32_d3d9_chunky_app_tick(_input, _sound_container))
+	if (!w32_d3d9_chunky_app_tick(_sound_container, _micron))
 		w32_d3d9_shutdown(0);
 }
 
@@ -438,10 +438,10 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_app_frame_render(const double, const float)
 #endif
 
 			{
-				const canvas_layout_t LAYOUT = __canvas_layout(REF_CANVAS.width, REF_CANVAS.height);
+				const canvas_layout_t LAYOUT = __canvas_layout(MICRON_WIDTH, MICRON_HEIGHT);
 
 				w32_d3d9_chunky_present_2d(
-					REF_CANVAS,
+					minyin_palette, sd_that_pink, _micron.canvas, MICRON_WIDTH, MICRON_HEIGHT,
 					LAYOUT.x,
 					LAYOUT.y,
 					LAYOUT.width,
@@ -479,9 +479,8 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& 
 	return true;
 }
 
-w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_t(const float in_seconds_per_fixed_tick, const minyin_bitmap_t& in_canvas, const uint32_t in_num_sounds)
+w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_t(const float in_seconds_per_fixed_tick, const uint32_t in_num_sounds)
 	:SECONDS_PER_FIXED_TICK(in_seconds_per_fixed_tick)
-	, REF_CANVAS(in_canvas)
 	, _video_adapter(false)
 	, _sound_container(in_num_sounds)
 {

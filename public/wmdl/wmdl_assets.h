@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../minyin/minyin.h"
+#include "../minyin/micron.h"
 #include "wmdl_model.h"
 
 struct minyin_sound_request_t;
@@ -42,32 +43,32 @@ enum
 
 struct wmdl_assets_t
 {
-	minyin_bitmap_t backgrounds[7];
+	micron_bitmap_t backgrounds[7];
 
-	minyin_bitmap_t portal;
-	minyin_bitmap_t server;
-	minyin_bitmap_t arcs;
-	minyin_bitmap_t spikygreen;
-	minyin_bitmap_t blueblob;
-	minyin_bitmap_t brownblob;
-	minyin_bitmap_t penguin;
-	minyin_bitmap_t plant;
-	minyin_bitmap_t scorpion;
-	minyin_bitmap_t firedude;
-	minyin_bitmap_t bat;
-	minyin_bitmap_t gui_server_fixed;
-	minyin_bitmap_t gui_server_broken;
-	minyin_bitmap_t idle;
+	micron_bitmap_t portal;
+	micron_bitmap_t server;
+	micron_bitmap_t arcs;
+	micron_bitmap_t spikygreen;
+	micron_bitmap_t blueblob;
+	micron_bitmap_t brownblob;
+	micron_bitmap_t penguin;
+	micron_bitmap_t plant;
+	micron_bitmap_t scorpion;
+	micron_bitmap_t firedude;
+	micron_bitmap_t bat;
+	micron_bitmap_t gui_server_fixed;
+	micron_bitmap_t gui_server_broken;
+	micron_bitmap_t idle;
 
-	minyin_bitmap_t tiles;
-	minyin_bitmap_t hero;
-	minyin_bitmap_t whip;
+	micron_bitmap_t tiles;
+	micron_bitmap_t hero;
+	micron_bitmap_t whip;
 
 	//sd_bitmap_t dust_far;
 	//sd_bitmap_t dust_near;
-	minyin_bitmap_t flake;
+	micron_bitmap_t flake;
 
-	minyin_font_t font;
+	micron_font_t font;
 
 	uint32_t anim_target[WMDL_MAX_TILE];
 

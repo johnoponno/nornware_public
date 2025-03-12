@@ -12,6 +12,4 @@ struct wmdl_game_t
 };
 
 bool wmdl_game_init(wmdl_game_t& out_game, std::vector<minyin_sound_request_t>& out_sounds);
-bool wmdl_game_tick(
-	const minyin_input_t& in_minyin,
-	wmdl_game_t& out_game, std::vector<uint32_t>& out_sound_plays, const char*& out_music_request);
+bool wmdl_game_tick(micron_t& out_micron, wmdl_game_t& out_game, std::vector<uint32_t>& out_sound_plays, const char*& out_music_request);

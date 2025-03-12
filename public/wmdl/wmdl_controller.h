@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../minyin/minyin.h"
+#include "../minyin/micron.h"
 #include "wmdl_model.h"
 
 struct wmdl_assets_t;
@@ -29,7 +30,7 @@ struct wmdl_snowflake_t
 
 struct wmdl_death_t
 {
-	const minyin_bitmap_t* bm;
+	const micron_bitmap_t* bm;
 	float x;
 	float y;
 	float s;
@@ -49,15 +50,14 @@ struct wmdl_controller_t
 	uint32_t num_deaths;
 	float tile_anim_tick;
 	float credits_start_time;
-	minyin_bitmap_t canvas;
 };
 
 wmdl_app_event_t wmdl_controller_tick(
-	const minyin_input_t& in_minyin, const wmdl_assets_t& in_assets,
-	wmdl_model_t& out_model, wmdl_controller_t& out_controller, const char*& out_music_request);
+	const wmdl_assets_t& in_assets,
+	wmdl_model_t& out_model, wmdl_controller_t& out_controller, micron_t& out_micron, const char*& out_music_request);
 
 void wmdl_controller_on_load_new_world(wmdl_controller_t& out_controller, std::vector<uint32_t>& out_sound_plays);
 
 void wmdl_controller_death_create(
-	const minyin_bitmap_t* aBitmap, const float aX, const float aY, const int32_t aWidth, const int32_t aHeight, const int32_t aSrcX, const int32_t aSrcY,
+	const micron_bitmap_t* aBitmap, const float aX, const float aY, const int32_t aWidth, const int32_t aHeight, const int32_t aSrcX, const int32_t aSrcY,
 	wmdl_controller_t& controller);

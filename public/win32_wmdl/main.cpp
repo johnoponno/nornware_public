@@ -7,15 +7,17 @@
 //--------------------------------------------------------------------------------------
 // specific game implementation - we want 8 bit / palettized pixels
 //--------------------------------------------------------------------------------------
-struct tpmn_app_t : public w32_d3d9_chunky_app_t
+struct wmdl_app_t : public w32_d3d9_chunky_app_t
 {
 	//this is the main "tick" callback from the win32 / d3d9 harness
-	bool w32_d3d9_chunky_app_tick(const minyin_input_t& in_input, const w32_dsound_container_t& in_sounds) override
+	bool w32_d3d9_chunky_app_tick(
+		const w32_dsound_container_t& in_sounds,
+		micron_t& out_micron) override
 	{
 		_sound_plays.clear();
 		const char* music_request = nullptr;
 
-		if (!wmdl_game_tick(in_input, _game, _sound_plays, music_request))
+		if (!wmdl_game_tick(out_micron, _game, _sound_plays, music_request))
 			return false;
 
 		for (const uint32_t SP : _sound_plays)
@@ -26,8 +28,8 @@ struct tpmn_app_t : public w32_d3d9_chunky_app_t
 	}
 
 	//we pass our time-per-tick (1 / fps) and our framebuffer to be rendered
-	explicit tpmn_app_t()
-		:w32_d3d9_chunky_app_t(WMDL_SECONDS_PER_TICK, _game.controller.canvas, WMDL_NUM_SOUNDS)
+	explicit wmdl_app_t()
+		:w32_d3d9_chunky_app_t(WMDL_SECONDS_PER_TICK, WMDL_NUM_SOUNDS)
 	{
 	}
 
@@ -41,7 +43,7 @@ struct tpmn_app_t : public w32_d3d9_chunky_app_t
 //--------------------------------------------------------------------------------------
 // local variables
 //--------------------------------------------------------------------------------------
-static tpmn_app_t __app;
+static wmdl_app_t __app;
 
 //--------------------------------------------------------------------------------------
 // Entry point to the program. Initializes everything and goes into a message processing 

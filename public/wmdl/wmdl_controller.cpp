@@ -30,7 +30,7 @@
 
 void wmdl_map(
 	const wmdl_model_t& in_model,
-	minyin_bitmap_t& out_canvas);
+	micron_t& out_micron);
 
 static int32_t __hero_view_position_x(const wmdl_model_t& in_model)
 {
@@ -52,8 +52,8 @@ static int32_t __hero_view_position_x(const wmdl_model_t& in_model)
 	if (x < 0)
 		x = 0;
 #if 0
-	else if (x > (WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - out_controller.canvas.width))
-		x = WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - out_controller.canvas.width;
+	else if (x > (WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - MICRON_WIDTH))
+		x = WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - MICRON_WIDTH;
 #else
 	else if (x > (WMDL_WORLD_WIDTH - WMDL_TILES_X) * WMDL_TILE_ASPECT)
 		x = (WMDL_WORLD_WIDTH - WMDL_TILES_X) * WMDL_TILE_ASPECT;
@@ -82,8 +82,8 @@ static int32_t __hero_view_position_y(const wmdl_model_t& in_model)
 	if (y < 0)
 		y = 0;
 #if 0
-	else if (y > (WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - out_controller.canvas.height))
-		y = WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - out_controller.canvas.height;
+	else if (y > (WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - MICRON_HEIGHT))
+		y = WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - MICRON_HEIGHT;
 #else
 	else if (y > (WMDL_WORLD_HEIGHT - WMDL_TILES_Y) * WMDL_TILE_ASPECT)
 		y = (WMDL_WORLD_HEIGHT - WMDL_TILES_Y) * WMDL_TILE_ASPECT;
@@ -94,7 +94,7 @@ static int32_t __hero_view_position_y(const wmdl_model_t& in_model)
 
 static void __draw_portals(
 	const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
-	minyin_bitmap_t& out_canvas)
+	micron_t& out_micron)
 {
 	for (
 		const wmdl_portal_t* PORTAL = in_model.level.portals;
@@ -112,7 +112,7 @@ static void __draw_portals(
 		else
 			frame = 0;
 
-		minyin_blit_key_clip(out_canvas, in_assets.key_index, in_assets.portal, X, Y, WMDL_TILE_ASPECT, in_assets.portal.height, frame * in_assets.portal.width / 2, 0);
+		minyin_blit_key_clip(out_micron, in_assets.key_index, in_assets.portal, X, Y, WMDL_TILE_ASPECT, in_assets.portal.height, frame * in_assets.portal.width / 2, 0);
 
 		//if not accessible, draw number
 		if (in_model.hero.fixed_servers.count < PORTAL->server_count)
@@ -120,16 +120,16 @@ static void __draw_portals(
 			char slask[4];
 			::sprintf_s(slask, "%u", PORTAL->server_count);
 			if (PORTAL->server_count >= 10)
-				minyin_print(out_canvas, in_assets.key_index, in_assets.font, X + 1, Y + 4, slask);
+				minyin_print(out_micron, in_assets.key_index, in_assets.font, X + 1, Y + 4, slask);
 			else
-				minyin_print(out_canvas, in_assets.key_index, in_assets.font, X + 6, Y + 4, slask);
+				minyin_print(out_micron, in_assets.key_index, in_assets.font, X + 6, Y + 4, slask);
 		}
 	}
 }
 
 static void __draw_servers(
 	const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
-	minyin_bitmap_t& out_canvas)
+	micron_t& out_micron)
 {
 	//calc starting grid
 	const int32_t GX = in_vx / WMDL_TILE_ASPECT;
@@ -181,7 +181,7 @@ static void __draw_servers(
 					}
 
 					minyin_blit_key_clip(
-						out_canvas,
+						out_micron,
 						in_assets.key_index,
 						in_assets.server,
 						x * WMDL_TILE_ASPECT - SX + ox,
@@ -199,7 +199,7 @@ static void __draw_servers(
 					frame = int32_t(wmdl_model_now(in_model) * 16) % 4;
 
 					minyin_blit_key_clip(
-						out_canvas,
+						out_micron,
 						0,//2024-12-02: apparently this index works (since the original was additive / on black background)
 						in_assets.arcs,
 						x * WMDL_TILE_ASPECT - SX - 4,
@@ -217,7 +217,7 @@ static void __draw_servers(
 
 static void __draw_tile(
 	const wmdl_assets_t& in_assets, const int32_t in_x, const int32_t in_y, const uint32_t in_tile,
-	minyin_bitmap_t& out_canvas)
+	micron_t& out_micron)
 {
 	const int32_t TILES_ON_SOURCE_X = in_assets.tiles.width / WMDL_TILE_ASPECT;
 	const int32_t TILES_ON_SOURCE_Y = in_assets.tiles.height / WMDL_TILE_ASPECT;
@@ -226,7 +226,7 @@ static void __draw_tile(
 		const int32_t SRC_X = (in_tile % TILES_ON_SOURCE_X) * WMDL_TILE_ASPECT;
 		const int32_t SRC_Y = in_tile / TILES_ON_SOURCE_X * WMDL_TILE_ASPECT;
 		minyin_blit_key_clip(
-			out_canvas,
+			out_micron,
 			in_assets.key_index,
 			in_assets.tiles,
 			in_x, in_y,
@@ -237,7 +237,7 @@ static void __draw_tile(
 	}
 	else
 	{
-		minyin_clear(out_canvas, 255, in_x, in_y, WMDL_TILE_ASPECT, WMDL_TILE_ASPECT);
+		minyin_clear(out_micron, 255, in_x, in_y, WMDL_TILE_ASPECT, WMDL_TILE_ASPECT);
 	}
 }
 
@@ -258,7 +258,7 @@ static uint32_t __plant_state(const wmdl_hero_t& in_hero, const wmdl_enemy_t& in
 
 static void __draw_scorpion(
 	const wmdl_model_t& in_model, const wmdl_enemy_t& in_plant, const wmdl_assets_t& in_assets, const int32_t in_x, const int32_t in_y,
-	minyin_bitmap_t& out_canvas)
+	micron_t& out_micron)
 {
 	int32_t frame;
 	switch (__plant_state(in_model.hero, in_plant))
@@ -296,7 +296,7 @@ static void __draw_scorpion(
 	}
 
 	minyin_blit_key_clip(
-		out_canvas,
+		out_micron,
 		in_assets.key_index,
 		in_assets.scorpion,
 		in_x + x_offset, in_y - 14,
@@ -407,41 +407,41 @@ static uint32_t __num_broken_servers(const wmdl_model_t& in_model)
 
 /*
 static void __draw_dust_pass(
-	const minyin_t& in_minyin, const bool add, const float now, const float speed_x, const float speed_y, const sd_bitmap_t& bitmap,
-	minyin_bitmap_t& out_canvas)
+	const minyin_t& in_micron, const bool add, const float now, const float speed_x, const float speed_y, const sd_bitmap_t& bitmap,
+	minyin_bitmap_t& out_micron)
 {
-	if (in_minyin.key_is_down('P'))
+	if (in_micron.key_is_down('P'))
 		return;
 
 	const int32_t X = int32_t(now * speed_x) % bitmap.width;
 	const int32_t Y = int32_t(now * speed_y) % bitmap.height;
 	if (add)
 	{
-		minyin_blit_add_key_clip(out_canvas, bitmap, -X, -Y);
-		minyin_blit_add_key_clip(out_canvas, bitmap, bitmap.width - X, -Y);
-		minyin_blit_add_key_clip(out_canvas, bitmap, -X, bitmap.height - Y);
-		minyin_blit_add_key_clip(out_canvas, bitmap, bitmap.width - X, bitmap.height - Y);
+		minyin_blit_add_key_clip(out_micron, bitmap, -X, -Y);
+		minyin_blit_add_key_clip(out_micron, bitmap, bitmap.width - X, -Y);
+		minyin_blit_add_key_clip(out_micron, bitmap, -X, bitmap.height - Y);
+		minyin_blit_add_key_clip(out_micron, bitmap, bitmap.width - X, bitmap.height - Y);
 	}
 	else
 	{
-		minyin_blit_half_key_clip(out_canvas, bitmap, -X, -Y);
-		minyin_blit_half_key_clip(out_canvas, bitmap, bitmap.width - X, -Y);
-		minyin_blit_half_key_clip(out_canvas, bitmap, -X, bitmap.height - Y);
-		minyin_blit_half_key_clip(out_canvas, bitmap, bitmap.width - X, bitmap.height - Y);
+		minyin_blit_half_key_clip(out_micron, bitmap, -X, -Y);
+		minyin_blit_half_key_clip(out_micron, bitmap, bitmap.width - X, -Y);
+		minyin_blit_half_key_clip(out_micron, bitmap, -X, bitmap.height - Y);
+		minyin_blit_half_key_clip(out_micron, bitmap, bitmap.width - X, bitmap.height - Y);
 	}
 }
 */
 
 static void __draw_text(
 	const wmdl_assets_t& in_assets, const int in_dst_y, const char* in_string, const uint8_t in_color,
-	minyin_bitmap_t& out_canvas)
+	micron_t& out_micron)
 {
-	minyin_print_colorize(out_canvas, in_assets.key_index, in_assets.text_edge_index, in_assets.font, in_color, (out_canvas.width - minyin_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
+	minyin_print_colorize(out_micron, in_assets.key_index, in_assets.text_edge_index, in_assets.font, in_color, (MICRON_WIDTH - minyin_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
 }
 
 static void __draw_foreground(
-	const minyin_input_t& in_minyin, const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
-	wmdl_controller_t& out_controller)
+	const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
+	wmdl_controller_t& out_controller, micron_t& out_micron)
 {
 	const int32_t SX = wmdl_screen_x((float)in_vx);
 	const int32_t SY = wmdl_screen_y((float)in_vy);
@@ -450,8 +450,8 @@ static void __draw_foreground(
 	switch (INDEX)
 	{
 	case 1:
-		in_minyin;
-		//__draw_dust_pass(in_minyin, true, wmdl_model_now(model), 400, 50, assets.dust_near, controller.canvas);
+		//in_micron;
+		//__draw_dust_pass(in_micron, true, wmdl_model_now(model), 400, 50, assets.dust_near, controller.canvas);
 		break;
 
 	case 7:
@@ -461,36 +461,36 @@ static void __draw_foreground(
 
 		int32_t y;
 
-		__draw_text(in_assets, y = out_controller.canvas.height + int32_t((wmdl_model_now(in_model) - out_controller.credits_start_time) * -16.), "Congratulations!", WMDL_TITLE_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "You made it to the end of the game!", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "We wanted to put an epic boss fight", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "here, but we couldn't quite", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "find the time.", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y = MICRON_HEIGHT + int32_t((wmdl_model_now(in_model) - out_controller.credits_start_time) * -16.), "Congratulations!", WMDL_TITLE_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "You made it to the end of the game!", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "We wanted to put an epic boss fight", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "here, but we couldn't quite", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "find the time.", WMDL_TEXT_COLOR, out_micron);
 
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Feel free to explore the game", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "world further, or play it again,", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "or whatever you like!", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Feel free to explore the game", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "world further, or play it again,", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "or whatever you like!", WMDL_TEXT_COLOR, out_micron);
 
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "If you're interested in playing", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "with the level editor,", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "or playing with the code base,", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "or have any other questions", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "or comments, please contact:", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "If you're interested in playing", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "with the level editor,", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "or playing with the code base,", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "or have any other questions", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "or comments, please contact:", WMDL_TEXT_COLOR, out_micron);
 
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "contact@nornware.com", WMDL_TITLE_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "contact@nornware.com", WMDL_TITLE_COLOR, out_micron);
 
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Thanks for playing!", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Thanks for playing!", WMDL_TEXT_COLOR, out_micron);
 
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 4, "Whip Man Danger Land", WMDL_TITLE_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012-2024 nornware AB", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 4, "Whip Man Danger Land", WMDL_TITLE_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012-2024 nornware AB", WMDL_TEXT_COLOR, out_micron);
 
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Art / Design", WMDL_TITLE_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Saga Velander", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Michael Awakim Manaz", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Mats Persson", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Art / Design", WMDL_TITLE_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Saga Velander", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Michael Awakim Manaz", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Mats Persson", WMDL_TEXT_COLOR, out_micron);
 
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Code / Music / Sound", WMDL_TITLE_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Johannes 'johno' Norneby", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Code / Music / Sound", WMDL_TITLE_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Johannes 'johno' Norneby", WMDL_TEXT_COLOR, out_micron);
 
 		if (y < -32)
 			out_controller.credits_start_time = wmdl_model_now(in_model);
@@ -500,8 +500,8 @@ static void __draw_foreground(
 }
 
 static void __draw_farplane(
-	const minyin_input_t& in_minyin, const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
-	wmdl_controller_t& out_controller)
+	const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
+	wmdl_controller_t& out_controller, micron_t& out_micron)
 {
 	const float NOW = wmdl_model_now(in_model);
 
@@ -519,17 +519,17 @@ static void __draw_farplane(
 	switch (index)
 	{
 	default:
-		minyin_blit(out_controller.canvas, in_assets.backgrounds[index], 0, 0);
+		minyin_blit(out_micron, in_assets.backgrounds[index], 0, 0);
 		break;
 
 	case 1:
-		minyin_blit(out_controller.canvas, in_assets.backgrounds[index], 0, 0);
-		in_minyin;
-		//__draw_dust_pass(in_minyin, false, now, 100, 20, assets.dust_far, controller.canvas);
+		minyin_blit(out_micron, in_assets.backgrounds[index], 0, 0);
+		//in_micron;
+		//__draw_dust_pass(in_micron, false, now, 100, 20, assets.dust_far, controller.canvas);
 		break;
 
 	case 3:
-		minyin_blit(out_controller.canvas, in_assets.backgrounds[index], 0, 0);
+		minyin_blit(out_micron, in_assets.backgrounds[index], 0, 0);
 		for (
 			wmdl_snowflake_t* FLAKE = out_controller.flakes;
 			FLAKE < out_controller.flakes + _countof(out_controller.flakes);
@@ -542,24 +542,24 @@ static void __draw_farplane(
 
 			if (FLAKE->x < -FLAKE_FRAME_ASPECT)
 			{
-				FLAKE->x = (float)out_controller.canvas.width;
+				FLAKE->x = (float)MICRON_WIDTH;
 			}
-			else if (FLAKE->x >= out_controller.canvas.width)
+			else if (FLAKE->x >= MICRON_WIDTH)
 			{
 				FLAKE->x = -FLAKE_FRAME_ASPECT;
 			}
-			if (FLAKE->y >= out_controller.canvas.height)
+			if (FLAKE->y >= MICRON_HEIGHT)
 			{
 				FLAKE->y = -FLAKE_FRAME_ASPECT;
 			}
 
 			//minyin_blit_half_key_clip(controller.canvas, assets.flake, (int32_t)FLAKE->x, (int32_t)FLAKE->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (FLAKE->t % 3) * FLAKE_FRAME_ASPECT, FLAKE->t / 3 * FLAKE_FRAME_ASPECT);
-			minyin_blit_key_clip(out_controller.canvas, in_assets.key_index, in_assets.flake, (int32_t)FLAKE->x, (int32_t)FLAKE->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (FLAKE->t % 3) * FLAKE_FRAME_ASPECT, FLAKE->t / 3 * FLAKE_FRAME_ASPECT);
+			minyin_blit_key_clip(out_micron, in_assets.key_index, in_assets.flake, (int32_t)FLAKE->x, (int32_t)FLAKE->y, FLAKE_FRAME_ASPECT, FLAKE_FRAME_ASPECT, (FLAKE->t % 3) * FLAKE_FRAME_ASPECT, FLAKE->t / 3 * FLAKE_FRAME_ASPECT);
 		}
 		break;
 
 	case 5:
-		minyin_blit(out_controller.canvas, in_assets.backgrounds[index], 0, 0);
+		minyin_blit(out_micron, in_assets.backgrounds[index], 0, 0);
 #if 0
 		{
 			const int32_t WIDTH = assets.myCloud.width / 3;
@@ -572,15 +572,15 @@ static void __draw_farplane(
 					c->x = CANVAS_WIDTH;
 				bitmap_blit_add_key_clip(assets.myCloud, controller.canvas, nullptr, (int32_t)c->x, (int32_t)c->y, WIDTH, HEIGHT, (c->t % 3) * WIDTH, c->t / 3 * HEIGHT);
 			}
-	}
+		}
 #endif
 		break;
-}
+	}
 }
 
 static void __draw_hero(
 	const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
-	minyin_bitmap_t& out_canvas)
+	micron_t& out_micron)
 {
 	//figure out state / frame
 	int32_t state;
@@ -611,7 +611,7 @@ static void __draw_hero(
 
 	//blit
 	minyin_blit_key_clip(
-		out_canvas,
+		out_micron,
 		in_assets.key_index,
 		in_assets.hero,
 		int32_t(in_model.hero.x - in_vx - WMDL_HERO_WIDTH / 2), int32_t(in_model.hero.y - in_vy - WMDL_HERO_HEIGHT / 2),
@@ -623,7 +623,7 @@ static void __draw_hero(
 	if (state == HS_WHIP)
 	{
 		minyin_blit_key_clip(
-			out_canvas,
+			out_micron,
 			in_assets.key_index,
 			in_assets.whip,
 			int32_t(wmdl_hero_whip_min_x(in_model.hero) - in_vx),
@@ -638,7 +638,7 @@ static void __draw_hero(
 
 static void __draw_tiles(
 	const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy, const bool in_replace,
-	wmdl_controller_t& out_controller)
+	wmdl_controller_t& out_controller, micron_t& out_micron)
 {
 	//calc starting grid
 	const int32_t GRID_X = in_vx / WMDL_TILE_ASPECT;
@@ -717,14 +717,14 @@ static void __draw_tiles(
 			//animated
 			assert(index < WMDL_MAX_TILE);
 			if (WMDL_LOGIC_INDEX_AIR != index)
-				__draw_tile(in_assets, x * WMDL_TILE_ASPECT - SHIFT_X, y * WMDL_TILE_ASPECT - SHIFT_Y, out_controller.current_tiles[index], out_controller.canvas);
+				__draw_tile(in_assets, x * WMDL_TILE_ASPECT - SHIFT_X, y * WMDL_TILE_ASPECT - SHIFT_Y, out_controller.current_tiles[index], out_micron);
 		}
 	}
 }
 
 static void __draw_deaths(
 	const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
-	wmdl_controller_t& out_controller)
+	wmdl_controller_t& out_controller, micron_t& out_micron)
 {
 	wmdl_death_t* death = out_controller.deaths;
 	while (death < out_controller.deaths + out_controller.num_deaths)
@@ -736,10 +736,10 @@ static void __draw_deaths(
 		const int32_t SX = int32_t(death->x - in_vx);
 		const int32_t SY = int32_t(death->y - in_vy);
 
-		if (SX >= (-death->w / 2) && SY >= (-death->h / 2) && SX < (out_controller.canvas.width + death->w / 2) && SY < (out_controller.canvas.height + death->h / 2))
+		if (SX >= (-death->w / 2) && SY >= (-death->h / 2) && SX < (MICRON_WIDTH + death->w / 2) && SY < (MICRON_HEIGHT + death->h / 2))
 		{
 			minyin_blit_key_clip(
-				out_controller.canvas,
+				out_micron,
 				in_assets.key_index,
 				*death->bm,
 				int32_t(death->x - in_vx - death->w / 2),
@@ -764,7 +764,7 @@ static void __draw_deaths(
 
 static void __draw_enemies(
 	const wmdl_model_t& in_model, const wmdl_assets_t& in_assets, const int32_t in_vx, const int32_t in_vy,
-	minyin_bitmap_t& out_canvas)
+	micron_t& out_micron)
 {
 	const float NOW = wmdl_model_now(in_model);
 	const int32_t spikygreen_num_frames = in_assets.spikygreen.height / in_assets.spikygreen.width;
@@ -792,7 +792,7 @@ static void __draw_enemies(
 			if (NOW > ENEMY->spawn_time)
 			{
 				minyin_blit_key_clip(
-					out_canvas,
+					out_micron,
 					in_assets.key_index,
 					in_assets.spikygreen,
 					int32_t(ENEMY->x - in_vx - in_assets.spikygreen.width / 2),
@@ -808,7 +808,7 @@ static void __draw_enemies(
 		case WMDL_LOGIC_INDEX_BLUEBLOB:
 			if (NOW > ENEMY->spawn_time)
 				minyin_blit_key_clip(
-					out_canvas,
+					out_micron,
 					in_assets.key_index,
 					in_assets.blueblob,
 					int32_t(ENEMY->x - in_vx - WMDL_BLOB_FRAME_ASPECT / 2),
@@ -823,7 +823,7 @@ static void __draw_enemies(
 		case WMDL_LOGIC_INDEX_BROWNBLOB:
 			if (NOW > ENEMY->spawn_time)
 				minyin_blit_key_clip(
-					out_canvas,
+					out_micron,
 					in_assets.key_index,
 					in_assets.brownblob,
 					int32_t(ENEMY->x - in_vx - WMDL_BLOB_FRAME_ASPECT / 2),
@@ -870,7 +870,7 @@ static void __draw_enemies(
 					src_x = 0;
 				}
 				minyin_blit_key_clip(
-					out_canvas,
+					out_micron,
 					in_assets.key_index,
 					in_assets.plant,
 					int32_t(ENEMY->x - in_vx) + x_offset,
@@ -885,14 +885,14 @@ static void __draw_enemies(
 
 		case WMDL_LOGIC_INDEX_SCORPION:
 			if (NOW > ENEMY->spawn_time)
-				__draw_scorpion(in_model, *ENEMY, in_assets, int32_t(ENEMY->x - in_vx), int32_t(ENEMY->y - in_vy), out_canvas);
+				__draw_scorpion(in_model, *ENEMY, in_assets, int32_t(ENEMY->x - in_vx), int32_t(ENEMY->y - in_vy), out_micron);
 			break;
 
 		case WMDL_LOGIC_INDEX_PENGUIN:
 			if (NOW > ENEMY->spawn_time)
 			{
 				minyin_blit_key_clip(
-					out_canvas,
+					out_micron,
 					in_assets.key_index,
 					in_assets.penguin,
 					int32_t(ENEMY->x - in_vx - in_assets.penguin.width / 4),
@@ -907,7 +907,7 @@ static void __draw_enemies(
 
 		case WMDL_LOGIC_INDEX_FIREDUDE:
 			minyin_blit_key_clip(
-				out_canvas,
+				out_micron,
 				in_assets.key_index,
 				in_assets.firedude,
 				int32_t(ENEMY->x - in_vx - FIREDUDE_FRAME_ASPECT / 2),
@@ -931,7 +931,7 @@ static void __draw_enemies(
 				frame += 3;
 
 			minyin_blit_key_clip(
-				out_canvas,
+				out_micron,
 				in_assets.key_index,
 				in_assets.bat,
 				int32_t(ENEMY->x - in_vx - in_assets.bat.width / 2),
@@ -956,7 +956,7 @@ static void __draw_enemies(
 						int32_t(ENEMY->x - in_vx - WMDL_TILE_ASPECT / 2),
 						int32_t(ENEMY->y - in_vy - WMDL_TILE_ASPECT / 2),
 						ENEMY->type,
-						out_canvas
+						out_micron
 					);
 					break;
 
@@ -966,7 +966,7 @@ static void __draw_enemies(
 						int32_t(ENEMY->x - in_vx - WMDL_TILE_ASPECT / 2 + wmdl_random_unit() * 2 - 1),
 						int32_t(ENEMY->y - in_vy - WMDL_TILE_ASPECT / 2 + wmdl_random_unit() * 2 - 1),
 						ENEMY->type,
-						out_canvas
+						out_micron
 					);
 					break;
 				}
@@ -978,22 +978,22 @@ static void __draw_enemies(
 
 
 static void __play_update(
-	const minyin_input_t& in_minyin, const wmdl_assets_t& in_assets, wmdl_model_t& in_model,
-	wmdl_controller_t& out_controller)
+	const micron_t& in_micron, const wmdl_assets_t& in_assets, wmdl_model_t& in_model,
+	wmdl_controller_t& out_controller, micron_t& out_micron)
 {
 	//play menu up?
 	if (out_controller.play_menu)
 	{
-		//		__draw_text(in_assets, out_controller.canvas.height / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
-		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
+		//		__draw_text(in_assets, MICRON_HEIGHT / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
+		if (micron_key_downflank(in_micron, MICRON_KEY_ESCAPE))
 		{
 			in_model.play_bit = 0;
 
 			out_controller.play_menu = false;
 		}
 
-		//		__draw_text(in_assets, out_controller.canvas.height / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
-		if (minyin_key_downflank(in_minyin, 'R'))
+		//		__draw_text(in_assets, MICRON_HEIGHT / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
+		if (micron_key_downflank(in_micron, 'R'))
 		{
 			out_controller.play_menu = false;
 		}
@@ -1001,14 +1001,14 @@ static void __play_update(
 	//play menu not up
 	else
 	{
-		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
+		if (micron_key_downflank(in_micron, MICRON_KEY_ESCAPE))
 		{
 			out_controller.play_menu = true;
 		}
 		else
 		{
 			/*
-			if (minyin_key_downflank(in_minyin, 'N'))
+			if (micron_key_downflank(in_micron, 'N'))
 				wmdl_tune_new ^= 1;
 				*/
 
@@ -1017,19 +1017,19 @@ static void __play_update(
 			//hero movement
 			if (in_model.hero.spawn_time < 0.f)
 			{
-				if (minyin_key_downflank(in_minyin, 'S'))
+				if (micron_key_downflank(in_micron, 'S'))
 					input |= WMDL_HERO_FLAGS_DOWN;
 
-				if (minyin_key_is_down(in_minyin, 'A'))
+				if (micron_key_is_down(in_micron, 'A'))
 					input |= WMDL_HERO_FLAGS_LEFT;
 
-				if (minyin_key_is_down(in_minyin, 'D'))
+				if (micron_key_is_down(in_micron, 'D'))
 					input |= WMDL_HERO_FLAGS_RIGHT;
 
-				if (minyin_key_is_down(in_minyin, 'K'))
+				if (micron_key_is_down(in_micron, 'K'))
 					input |= WMDL_HERO_FLAGS_JUMP;
 
-				if (minyin_key_downflank(in_minyin, 'J'))
+				if (micron_key_downflank(in_micron, 'J'))
 					input |= WMDL_HERO_FLAGS_WHIP;
 			}
 
@@ -1042,17 +1042,17 @@ static void __play_update(
 		const int32_t VPX = __hero_view_position_x(in_model);
 		const int32_t VPY = __hero_view_position_y(in_model);
 
-		__draw_farplane(in_minyin, in_model, in_assets, VPX, VPY, out_controller);
-		__draw_tiles(in_model, in_assets, VPX, VPY, true, out_controller);
-		__draw_portals(in_model, in_assets, VPX, VPY, out_controller.canvas);
-		__draw_servers(in_model, in_assets, VPX, VPY, out_controller.canvas);
-		__draw_enemies(in_model, in_assets, VPX, VPY, out_controller.canvas);
-		__draw_deaths(in_assets, VPX, VPY, out_controller);
+		__draw_farplane(in_model, in_assets, VPX, VPY, out_controller, out_micron);
+		__draw_tiles(in_model, in_assets, VPX, VPY, true, out_controller, out_micron);
+		__draw_portals(in_model, in_assets, VPX, VPY, out_micron);
+		__draw_servers(in_model, in_assets, VPX, VPY, out_micron);
+		__draw_enemies(in_model, in_assets, VPX, VPY, out_micron);
+		__draw_deaths(in_assets, VPX, VPY, out_controller, out_micron);
 
 		if (in_model.hero.spawn_time < 0.f)
-			__draw_hero(in_model, in_assets, VPX, VPY, out_controller.canvas);
+			__draw_hero(in_model, in_assets, VPX, VPY, out_micron);
 
-		__draw_foreground(in_minyin, in_model, in_assets, VPX, VPY, out_controller);
+		__draw_foreground(in_model, in_assets, VPX, VPY, out_controller, out_micron);
 
 		//draw infos
 		{
@@ -1063,35 +1063,35 @@ static void __play_update(
 
 				s = __draw_text(INFO->id, 0);
 				if (s)
-					__draw_text(in_assets, 0, s, WMDL_PROMPT_COLOR, out_controller.canvas);
+					__draw_text(in_assets, 0, s, WMDL_PROMPT_COLOR, out_micron);
 
 				s = __draw_text(INFO->id, 1);
 				if (s)
-					__draw_text(in_assets, in_assets.font.height, s, WMDL_PROMPT_COLOR, out_controller.canvas);
+					__draw_text(in_assets, in_assets.font.height, s, WMDL_PROMPT_COLOR, out_micron);
 			}
 		}
 
 		//draw gui
 		{
 			//total servers fixed
-			minyin_blit_key(out_controller.canvas, in_assets.key_index, in_assets.gui_server_fixed, 0, 0);
+			minyin_blit_key(out_micron, in_assets.key_index, in_assets.gui_server_fixed, 0, 0);
 			{
 				char slask[4];
 				::sprintf_s(slask, "%u", in_model.hero.fixed_servers.count);
 				if (in_model.hero.fixed_servers.count < 10)
-					minyin_print(out_controller.canvas, in_assets.key_index, in_assets.font, 6, 6, slask);
+					minyin_print(out_micron, in_assets.key_index, in_assets.font, 6, 6, slask);
 				else
-					minyin_print(out_controller.canvas, in_assets.key_index, in_assets.font, 1, 6, slask);
+					minyin_print(out_micron, in_assets.key_index, in_assets.font, 1, 6, slask);
 			}
 
 			//keys gui
 			int32_t x = WMDL_TILE_ASPECT;
 			if (in_model.hero.keys & WMDL_HERO_KEYBITS_0)
-				__draw_tile(in_assets, x, 0, WMDL_LOGIC_INDEX_KEY0, out_controller.canvas);
+				__draw_tile(in_assets, x, 0, WMDL_LOGIC_INDEX_KEY0, out_micron);
 			if (in_model.hero.keys & WMDL_HERO_KEYBITS_1)
-				__draw_tile(in_assets, x += WMDL_TILE_ASPECT, 0, WMDL_LOGIC_INDEX_KEY1, out_controller.canvas);
+				__draw_tile(in_assets, x += WMDL_TILE_ASPECT, 0, WMDL_LOGIC_INDEX_KEY1, out_micron);
 			if (in_model.hero.keys & WMDL_HERO_KEYBITS_2)
-				__draw_tile(in_assets, x += WMDL_TILE_ASPECT, 0, WMDL_LOGIC_INDEX_KEY2, out_controller.canvas);
+				__draw_tile(in_assets, x += WMDL_TILE_ASPECT, 0, WMDL_LOGIC_INDEX_KEY2, out_micron);
 
 			//servers to fix (in current level)
 			const uint32_t NUM_BROKEN_SERVERS = __num_broken_servers(in_model);
@@ -1101,14 +1101,14 @@ static void __play_update(
 				++i
 				)
 			{
-				minyin_blit_key(out_controller.canvas, in_assets.key_index, in_assets.gui_server_broken, out_controller.canvas.width - i * 14 - 20, 0);
+				minyin_blit_key(out_micron, in_assets.key_index, in_assets.gui_server_broken, MICRON_WIDTH - i * 14 - 20, 0);
 			}
 		}
 
 		if (out_controller.play_menu)
 		{
-			__draw_text(in_assets, out_controller.canvas.height / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
-			__draw_text(in_assets, out_controller.canvas.height / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
+			__draw_text(in_assets, MICRON_HEIGHT / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_micron);
+			__draw_text(in_assets, MICRON_HEIGHT / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_micron);
 		}
 
 		/*
@@ -1116,15 +1116,15 @@ static void __play_update(
 			out_controller.canvas.pixels[0] = 255;
 			*/
 
-		wmdl_map(in_model, out_controller.canvas);
+		wmdl_map(in_model, out_micron);
 	}//output
 }
 
 static wmdl_app_event_t __idle_update(
-	const minyin_input_t& in_minyin, const wmdl_assets_t& in_assets,
-	wmdl_controller_t& out_controller)
+	const wmdl_assets_t& in_assets,
+	micron_t& out_micron)
 {
-	minyin_blit(out_controller.canvas, in_assets.idle, 0, 0);
+	minyin_blit(out_micron, in_assets.idle, 0, 0);
 
 #if 1
 	{//show palette
@@ -1135,7 +1135,7 @@ static wmdl_app_event_t __idle_update(
 			{
 				for (int32_t x = 0; x < CELL; ++x)
 				{
-					out_controller.canvas.pixels[(CELL * (i % 16) + x) + (CELL * (i / 16) + y) * out_controller.canvas.width] = (uint8_t)i;
+					out_micron.canvas[(CELL * (i % 16) + x) + (CELL * (i / 16) + y) * MICRON_WIDTH] = (uint8_t)i;
 				}
 			}
 		}
@@ -1145,26 +1145,26 @@ static wmdl_app_event_t __idle_update(
 	{
 		int32_t y;
 
-		__draw_text(in_assets, y = 8, "Whip Man Danger Land", WMDL_TITLE_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012-2024 nornware AB", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Talent", WMDL_TITLE_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Saga Velander", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Michael Awakim Manaz", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Mats Persson", WMDL_TEXT_COLOR, out_controller.canvas);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Johannes 'johno' Norneby", WMDL_TEXT_COLOR, out_controller.canvas);
+		__draw_text(in_assets, y = 8, "Whip Man Danger Land", WMDL_TITLE_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012-2024 nornware AB", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Talent", WMDL_TITLE_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Saga Velander", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Michael Awakim Manaz", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Mats Persson", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Johannes 'johno' Norneby", WMDL_TEXT_COLOR, out_micron);
 
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 4, "P = Play", WMDL_PROMPT_COLOR, out_controller.canvas);
-		if (minyin_key_downflank(in_minyin, 'P'))
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 4, "P = Play", WMDL_PROMPT_COLOR, out_micron);
+		if (micron_key_downflank(out_micron, 'P'))
 			return wmdl_app_event_t::START_NEW_GAME;
 
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
-		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "ESC = Quit", WMDL_PROMPT_COLOR, out_micron);
+		if (micron_key_downflank(out_micron, MICRON_KEY_ESCAPE))
 			return wmdl_app_event_t::EXIT_APPLICATION;
 	}
 
 	//cursor test
 #if 1
-	minyin_cross(out_controller.canvas, in_minyin.canvas_cursor_x, in_minyin.canvas_cursor_y, 8, 0xff);
+	minyin_cross(out_micron, out_micron.canvas_cursor_x, out_micron.canvas_cursor_y, 8, 0xff);
 #endif
 
 	return wmdl_app_event_t::NOTHING;
@@ -1176,8 +1176,8 @@ static wmdl_app_event_t __idle_update(
 //public
 
 wmdl_app_event_t wmdl_controller_tick(
-	const minyin_input_t& in_minyin, const wmdl_assets_t& in_assets,
-	wmdl_model_t& out_model, wmdl_controller_t& out_controller, const char*& out_music_request)
+	const wmdl_assets_t& in_assets,
+	wmdl_model_t& out_model, wmdl_controller_t& out_controller, micron_t& out_micron, const char*& out_music_request)
 {
 	switch (out_model.level.music_track)
 	{
@@ -1211,17 +1211,17 @@ wmdl_app_event_t wmdl_controller_tick(
 	//this is single pass IMGUI, so input and output are intertwined
 	wmdl_app_event_t result = wmdl_app_event_t::NOTHING;
 	if (out_model.play_bit)
-		__play_update(in_minyin, in_assets, out_model, out_controller);
+		__play_update(out_micron, in_assets, out_model, out_controller, out_micron);
 	else
-		result = __idle_update(in_minyin, in_assets, out_controller);
+		result = __idle_update(in_assets, out_micron);
 
 #if 0
 	//display the number of dropped frames (60hz)
 	{
 		char str[16];
 		::sprintf_s(str, "%u", dx9::state.app->_frame_drops);
-		__draw_text(in_assets, out_controller.canvas.height - assets.font.height, str, softdraw::red, controller.canvas);
-}
+		__draw_text(in_assets, MICRON_HEIGHT - assets.font.height, str, softdraw::red, controller.canvas);
+	}
 #endif
 
 	return result;
@@ -1240,8 +1240,8 @@ void wmdl_controller_on_load_new_world(wmdl_controller_t& out_controller, std::v
 		++flake
 		)
 	{
-		flake->x = wmdl_random_unit() * out_controller.canvas.width;
-		flake->y = wmdl_random_unit() * out_controller.canvas.height;
+		flake->x = wmdl_random_unit() * MICRON_WIDTH;
+		flake->y = wmdl_random_unit() * MICRON_HEIGHT;
 		flake->sx = wmdl_random_unit() * 50 - 25;
 		flake->sy = wmdl_random_unit() * 75 + 25;
 		flake->t = uint32_t(wmdl_random_unit() * 6);
@@ -1249,7 +1249,7 @@ void wmdl_controller_on_load_new_world(wmdl_controller_t& out_controller, std::v
 }
 
 void wmdl_controller_death_create(
-	const minyin_bitmap_t* in_bitmap, const float in_x, const float in_y, const int32_t in_width, const int32_t in_height, const int32_t in_src_x, const int32_t in_src_y,
+	const micron_bitmap_t* in_bitmap, const float in_x, const float in_y, const int32_t in_width, const int32_t in_height, const int32_t in_src_x, const int32_t in_src_y,
 	wmdl_controller_t& out_controller)
 {
 	assert(out_controller.num_deaths < _countof(out_controller.deaths));

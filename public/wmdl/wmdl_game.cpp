@@ -12,15 +12,15 @@ bool wmdl_game_init(wmdl_game_t& out_game, std::vector<minyin_sound_request_t>& 
 	for (uint32_t i = 0; i < WMDL_MAX_TILE; ++i)
 		out_game.controller.current_tiles[i] = i;
 
+	/*
 	if (!minyin_bitmap_init(out_game.controller.canvas, 600, 320))
 		return false;
+		*/
 
 	return true;
 }
 
-bool wmdl_game_tick(
-	const minyin_input_t& in_minyin,
-	wmdl_game_t& out_game, std::vector<uint32_t>& out_sound_plays, const char*& out_music_request)
+bool wmdl_game_tick(micron_t& out_micron, wmdl_game_t& out_game, std::vector<uint32_t>& out_sound_plays, const char*& out_music_request)
 {
 	{
 		//tick the simulation
@@ -132,7 +132,7 @@ bool wmdl_game_tick(
 	}
 
 	//single pass imgui, render to the canvas to be pushed to the gpu in win32_d3d9_app_frame_render()
-	switch (wmdl_controller_tick(in_minyin, out_game.assets, out_game.model, out_game.controller, out_music_request))
+	switch (wmdl_controller_tick(out_game.assets, out_game.model, out_game.controller, out_micron, out_music_request))
 	{
 	case wmdl_app_event_t::EXIT_APPLICATION:
 		return false;

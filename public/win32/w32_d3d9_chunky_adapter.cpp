@@ -1,61 +1,67 @@
 #include "stdafx.h"
 #include "w32_d3d9_softdraw_adapter.h"
 
-#include "../minyin/minyin.h"
-#include "../minyin/sd_bitmap.h"
+//#include "../minyin/minyin.h"
+//#include "../minyin/sd_bitmap.h"
 #include "w32_d3d9_state.h"
 
-static void __copy(const minyin_bitmap_t& in_canvas, const ::D3DLOCKED_RECT& in_rect)
+static void __copy(
+	const uint16_t* in_palette,
+	const uint8_t* in_canvas_pixels, const int32_t in_canvas_width, const int32_t in_canvas_height, 
+	const ::D3DLOCKED_RECT& in_rect)
 {
 	const uint32_t PITCH = in_rect.Pitch / sizeof(uint16_t);
 	uint16_t* dst_start = (uint16_t*)in_rect.pBits;
 
 	for (
 		int32_t y = 0; 
-		y < in_canvas.height; 
+		y < in_canvas_height; 
 		++y
 		)
 	{
-		const uint8_t* SRC = in_canvas.pixels + y * in_canvas.width;
+		const uint8_t* SRC = in_canvas_pixels + y * in_canvas_width;
 		uint16_t* dst = dst_start + y * PITCH;
 
 		for (
 			int32_t x = 0;
-			x < in_canvas.width;
+			x < in_canvas_width;
 			++x
 			)
 		{
-			*dst = minyin_palette[*SRC];
+			*dst = in_palette[*SRC];
 			++SRC;
 			++dst;
 		}
 	}
 }
 
-static void __copy_alpha(const minyin_bitmap_t& in_canvas, const ::D3DLOCKED_RECT& in_rect)
+static void __copy_alpha(
+	const uint16_t* in_palette, const uint16_t in_key,
+	const uint8_t* in_canvas_pixels, const int32_t in_canvas_width, const int32_t in_canvas_height,
+	const ::D3DLOCKED_RECT& in_rect)
 {
 	const uint32_t PITCH = in_rect.Pitch / sizeof(uint16_t);
 	uint16_t* dst_start = (uint16_t*)in_rect.pBits;
 
 	for (
 		int32_t y = 0; 
-		y < in_canvas.height; 
+		y < in_canvas_height; 
 		++y
 		)
 	{
-		const uint8_t* SRC = in_canvas.pixels + y * in_canvas.width;
+		const uint8_t* SRC = in_canvas_pixels + y * in_canvas_width;
 		uint16_t* dst = dst_start + y * PITCH;
 
 		for (
 			int32_t x = 0;
-			x < in_canvas.width;
+			x < in_canvas_width;
 			++x
 			)
 		{
-			if (minyin_palette[*SRC] != sd_that_pink)
-				*dst = 0x8000 | minyin_palette[*SRC];	//alpha bit 15
+			if (in_palette[*SRC] != in_key)
+				*dst = 0x8000 | in_palette[*SRC];	//alpha bit 15
 			else
-				*dst = minyin_palette[*SRC];
+				*dst = in_palette[*SRC];
 			++SRC;
 			++dst;
 		}
@@ -68,7 +74,9 @@ static void __copy_alpha(const minyin_bitmap_t& in_canvas, const ::D3DLOCKED_REC
 //public
 
 void w32_d3d9_chunky_present_2d(
-	const minyin_bitmap_t& in_canvas, const int32_t in_x, const int32_t in_y, const int32_t in_width, const int32_t in_height, const uint32_t in_color, const w32_d3d9_fixed_function_mode_t in_mode, const bool in_filter,
+	const uint16_t* in_palette, const uint16_t in_alpha_key,
+	const uint8_t* in_canvas_pixels, const int32_t in_canvas_width, const int32_t in_canvas_height,
+	const int32_t in_x, const int32_t in_y, const int32_t in_width, const int32_t in_height, const uint32_t in_color, const w32_d3d9_fixed_function_mode_t in_mode, const bool in_filter,
 	w32_d3d9_softdraw_adapter_t& out_adapter)
 {
 	::HRESULT hr;
@@ -76,8 +84,8 @@ void w32_d3d9_chunky_present_2d(
 	//make sure the texture is created and big enough for the incoming canvas
 	if (
 		!out_adapter.texture ||
-		out_adapter.texture_aspect < (uint32_t)in_canvas.width ||
-		out_adapter.texture_aspect < (uint32_t)in_canvas.height
+		out_adapter.texture_aspect < (uint32_t)in_canvas_width ||
+		out_adapter.texture_aspect < (uint32_t)in_canvas_height
 		)
 	{
 		//release any previous texture (in order to support incoming canvases of varying sizes we just use the biggest one we've seen)
@@ -86,8 +94,8 @@ void w32_d3d9_chunky_present_2d(
 		//we want in_adapter power of 2 aspect texture
 		out_adapter.texture_aspect = 1;
 		while (
-			out_adapter.texture_aspect < (uint32_t)in_canvas.width ||
-			out_adapter.texture_aspect < (uint32_t)in_canvas.height
+			out_adapter.texture_aspect < (uint32_t)in_canvas_width ||
+			out_adapter.texture_aspect < (uint32_t)in_canvas_height
 			)
 		{
 			out_adapter.texture_aspect *= 2;
@@ -113,9 +121,9 @@ void w32_d3d9_chunky_present_2d(
 		if (SUCCEEDED(out_adapter.texture->LockRect(0, &locked_rect, nullptr, D3DLOCK_DISCARD)))
 		{
 			if (out_adapter.ALPHA)
-				__copy_alpha(in_canvas, locked_rect);
+				__copy_alpha(in_palette, in_alpha_key, in_canvas_pixels, in_canvas_width, in_canvas_height, locked_rect);
 			else
-				__copy(in_canvas, locked_rect);
+				__copy(in_palette, in_canvas_pixels, in_canvas_width, in_canvas_height, locked_rect);
 			out_adapter.texture->UnlockRect(0);
 		}
 	}
@@ -141,8 +149,8 @@ void w32_d3d9_chunky_present_2d(
 			const float YF = (float)in_y;
 			const float WIDTH = (float)in_width - .5f;
 			const float HEIGHT = (float)in_height - .5f;
-			const float U_MAX = (float)in_canvas.width / (float)out_adapter.texture_aspect;
-			const float V_MAX = (float)in_canvas.height / (float)out_adapter.texture_aspect;
+			const float U_MAX = (float)in_canvas_width / (float)out_adapter.texture_aspect;
+			const float V_MAX = (float)in_canvas_height / (float)out_adapter.texture_aspect;
 			const struct
 			{
 				float x;

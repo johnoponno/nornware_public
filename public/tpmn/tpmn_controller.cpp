@@ -2,6 +2,7 @@
 #include "tpmn_controller.h"
 
 #include "../minyin/minyin.h"
+#include "../minyin/micron.h"
 #include "tpmn_assets.h"
 
 #define SCROLL_ENABLE false
@@ -368,10 +369,10 @@ static uint32_t __num_broken_servers(const tpmn_model_t& model)
 }
 
 static void __draw_dust_pass(
-	const minyin_input_t& in_minyin, const bool add, const float now, const float speed_x, const float speed_y, const sd_bitmap_t& bitmap,
+	const micron_t& in_micron, const bool add, const float now, const float speed_x, const float speed_y, const sd_bitmap_t& bitmap,
 	sd_bitmap_t& canvas)
 {
-	if (minyin_key_is_down(in_minyin, 'P'))
+	if (micron_key_is_down(in_micron, 'P'))
 		return;
 
 	const int32_t X = int32_t(now * speed_x) % bitmap.width;
@@ -400,7 +401,7 @@ static void __text(
 }
 
 static void __draw_foreground(
-	const minyin_input_t& in_minyin, const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy,
+	const micron_t& in_micron, const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy,
 	tpmn_controller_t& controller)
 {
 	const int32_t SX = tpmn_screen_x((float)vx);
@@ -410,7 +411,7 @@ static void __draw_foreground(
 	switch (index)
 	{
 	case 1:
-		__draw_dust_pass(in_minyin, true, tpmn_model_now(model), 400, 50, assets.dust_near, controller.canvas);
+		__draw_dust_pass(in_micron, true, tpmn_model_now(model), 400, 50, assets.dust_near, controller.canvas);
 		break;
 
 	case 7:
@@ -458,7 +459,7 @@ static void __draw_foreground(
 }
 
 static void __draw_farplane(
-	const minyin_input_t& in_minyin, const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy,
+	const micron_t& in_micron, const tpmn_model_t& model, const tpmn_assets_t& assets, const int32_t vx, const int32_t vy,
 	tpmn_controller_t& controller)
 {
 	const float now = tpmn_model_now(model);
@@ -482,7 +483,7 @@ static void __draw_farplane(
 
 	case 1:
 		sd_bitmap_blit(assets.backgrounds[index], controller.canvas, 0, 0);
-		__draw_dust_pass(in_minyin, false, now, 100, 20, assets.dust_far, controller.canvas);
+		__draw_dust_pass(in_micron, false, now, 100, 20, assets.dust_far, controller.canvas);
 		break;
 
 	case 3:
@@ -831,14 +832,14 @@ static void __draw_enemies(
 }
 
 static void __play_update(
-	const minyin_input_t& in_minyin, const tpmn_assets_t& assets, tpmn_model_t& model,
+	const micron_t& in_micron, const tpmn_assets_t& assets, tpmn_model_t& model,
 	tpmn_controller_t& c)
 {
 	//play menu up?
 	if (c.play_menu)
 	{
 		__text(assets, TPMN_CANVAS_HEIGHT / 3, "ESC = Quit", sd_white, c.canvas);
-		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
+		if (micron_key_downflank(in_micron, MICRON_KEY_ESCAPE))
 		{
 			model.play_bit = 0;
 
@@ -846,7 +847,7 @@ static void __play_update(
 		}
 
 		__text(assets, TPMN_CANVAS_HEIGHT / 3 * 2, "R = Resume", sd_white, c.canvas);
-		if (minyin_key_downflank(in_minyin, 'R'))
+		if (micron_key_downflank(in_micron, 'R'))
 		{
 			c.play_menu = false;
 		}
@@ -854,7 +855,7 @@ static void __play_update(
 	//play menu not up
 	else
 	{
-		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
+		if (micron_key_downflank(in_micron, MICRON_KEY_ESCAPE))
 		{
 			c.play_menu = true;
 		}
@@ -865,19 +866,19 @@ static void __play_update(
 			//hero movement
 			if (model.hero.spawn_time < 0.f)
 			{
-				if (minyin_key_downflank(in_minyin, 'S'))
+				if (micron_key_downflank(in_micron, 'S'))
 					input |= TPMN_HERO_FLAGS_DOWN;
 
-				if (minyin_key_is_down(in_minyin, 'A'))
+				if (micron_key_is_down(in_micron, 'A'))
 					input |= TPMN_HERO_FLAGS_LEFT;
 
-				if (minyin_key_is_down(in_minyin, 'D'))
+				if (micron_key_is_down(in_micron, 'D'))
 					input |= TPMN_HERO_FLAGS_RIGHT;
 
-				if (minyin_key_is_down(in_minyin, 'K'))
+				if (micron_key_is_down(in_micron, 'K'))
 					input |= TPMN_HERO_FLAGS_JUMP;
 
-				if (minyin_key_downflank(in_minyin, 'J'))
+				if (micron_key_downflank(in_micron, 'J'))
 					input |= TPMN_HERO_FLAGS_WHIP;
 			}
 
@@ -891,7 +892,7 @@ static void __play_update(
 		const int32_t VPX = __hero_view_position_x(model);
 		const int32_t VPY = __hero_view_position_y(model);
 
-		__draw_farplane(in_minyin, model, assets, VPX, VPY, c);
+		__draw_farplane(in_micron, model, assets, VPX, VPY, c);
 		__draw_tiles(model, assets, VPX, VPY, true, c);
 		__draw_portals(model, assets, VPX, VPY, c.canvas);
 		__draw_servers(model, assets, VPX, VPY, c.canvas);
@@ -901,7 +902,7 @@ static void __play_update(
 		if (model.hero.spawn_time < 0.f)
 			__draw_hero(model, assets, VPX, VPY, c.canvas);
 
-		__draw_foreground(in_minyin, model, assets, VPX, VPY, c);
+		__draw_foreground(in_micron, model, assets, VPX, VPY, c);
 
 		//drawInfos();
 		{
@@ -957,7 +958,7 @@ static void __play_update(
 }
 
 static tpmn_app_event_t __idle_update(
-	const minyin_input_t& in_minyin, const tpmn_assets_t& assets,
+	const micron_t& in_micron, const tpmn_assets_t& assets,
 	tpmn_controller_t& controller)
 {
 #if 0
@@ -979,16 +980,16 @@ static tpmn_app_event_t __idle_update(
 		__text(assets, y += TPMN_TEXT_SPACING, "Johannes 'johno' Norneby", TPMN_TEXT_COLOR, controller.canvas);
 
 		__text(assets, y += TPMN_TEXT_SPACING * 4, "P = Play", sd_green, controller.canvas);
-		if (minyin_key_downflank(in_minyin, 'P'))
+		if (micron_key_downflank(in_micron, 'P'))
 			return tpmn_app_event_t::START_NEW_GAME;
 
 		__text(assets, y += TPMN_TEXT_SPACING, "ESC = Quit", sd_green, controller.canvas);
-		if (minyin_key_downflank(in_minyin, MINYIN_KEY_ESCAPE))
+		if (micron_key_downflank(in_micron, MICRON_KEY_ESCAPE))
 			return tpmn_app_event_t::EXIT_APPLICATION;
 	}
 
 #if 1
-	sd_bitmap_cross(controller.canvas, in_minyin.canvas_cursor_x, in_minyin.canvas_cursor_y, 8, 0xffff);
+	sd_bitmap_cross(controller.canvas, in_micron.canvas_cursor_x, in_micron.canvas_cursor_y, 8, 0xffff);
 #endif
 
 	return tpmn_app_event_t::NOTHING;
@@ -1001,7 +1002,7 @@ static tpmn_app_event_t __idle_update(
 //public
 
 tpmn_app_event_t tpmn_controller_tick(
-	const minyin_input_t& in_minyin, const tpmn_assets_t& in_assets,
+	const micron_t& in_micron, const tpmn_assets_t& in_assets,
 	tpmn_model_t& out_model, tpmn_controller_t& out_controller, const char*& out_music_request)
 {
 	switch (out_model.level.music_track)
@@ -1032,9 +1033,9 @@ tpmn_app_event_t tpmn_controller_tick(
 	//this is single pass IMGUI, so input and output are intertwined
 	tpmn_app_event_t result = tpmn_app_event_t::NOTHING;
 	if (out_model.play_bit)
-		__play_update(in_minyin, in_assets, out_model, out_controller);
+		__play_update(in_micron, in_assets, out_model, out_controller);
 	else
-		result = __idle_update(in_minyin, in_assets, out_controller);
+		result = __idle_update(in_micron, in_assets, out_controller);
 
 #if 0
 	//display the number of dropped frames (60hz)

@@ -2,6 +2,7 @@
 #include "paletas.h"
 
 #include "minyin.h"
+#include "micron.h"
 #include "fs.h"
 #include "sd_bitmap.h"
 
@@ -144,16 +145,38 @@ static uint32_t __nearest_palette_entry(
 //public
 //public
 
+bool pixel_t::operator < (const pixel_t& in_other) const
+{
+	if (r < in_other.r)	return true;
+	if (r > in_other.r)	return false;
+
+	// Otherwise r are equal
+	if (g < in_other.g)	return true;
+	if (g > in_other.g)	return false;
+
+	// Otherwise g are equal
+	if (b < in_other.b)	return true;
+	if (b > in_other.b)	return false;
+
+	// Otherwise all are equal
+	return false;
+}
+
+bool pixel_t::operator >= (const pixel_t& in_other) const
+{
+	return !(*this < in_other);
+}
+
 void paletas_item(
 	const char* in_file,
-	minyin_bitmap_t& out_bitmap, paletas_t& out_paletas)
+	micron_bitmap_t& out_bitmap, paletas_t& out_paletas)
 {
 	out_paletas.items.push_back({ in_file, &out_bitmap });
 }
 
 bool paletas_calculate(
 	const uint32_t in_palette_size,
-	paletas_t& out_paletas)
+	paletas_t& out_paletas, pixel_t* out_palette)
 {
 	assert(in_palette_size <= 256);
 
@@ -167,7 +190,7 @@ bool paletas_calculate(
 		source_images.push_back(source_image);
 	}
 
-	pixel_t palette[256]{};
+	::memset(out_palette, 0, sizeof(pixel_t) * 256);
 	{
 		//get all unique pixels
 		uint32_t total_source_pixels = 0;
@@ -227,9 +250,9 @@ bool paletas_calculate(
 			assert(r >= 0 && r < 256);
 			assert(g >= 0 && g < 256);
 			assert(b >= 0 && b < 256);
-			palette[bucket_index].r = (uint8_t)r;
-			palette[bucket_index].g = (uint8_t)g;
-			palette[bucket_index].b = (uint8_t)b;
+			out_palette[bucket_index].r = (uint8_t)r;
+			out_palette[bucket_index].g = (uint8_t)g;
+			out_palette[bucket_index].b = (uint8_t)b;
 		}
 	}
 
@@ -255,7 +278,7 @@ bool paletas_calculate(
 				for (int32_t x = 0; x < source_images[i].header->image_spec_width; ++x)
 				{
 					const pixel_t* SOURCE_IMAGE_I_PIXEL = (pixel_t*)source_images[i].pixels + x + y * source_images[i].header->image_spec_width;
-					const uint32_t NEAREST_PALETTE_ENTRY = __nearest_palette_entry(palette, in_palette_size, *SOURCE_IMAGE_I_PIXEL, remap_cache);
+					const uint32_t NEAREST_PALETTE_ENTRY = __nearest_palette_entry(out_palette, in_palette_size, *SOURCE_IMAGE_I_PIXEL, remap_cache);
 					assert(NEAREST_PALETTE_ENTRY < in_palette_size);
 					item.bitmap->pixels[x + (item.bitmap->height - 1 - y) * item.bitmap->width] = (uint8_t)NEAREST_PALETTE_ENTRY;
 				}
@@ -264,8 +287,12 @@ bool paletas_calculate(
 	}
 
 	//output final palette (sd format)
-	for (uint32_t i = 0; i < in_palette_size; ++i)
-		minyin_palette[i] = sd_color_encode(palette[i].b, palette[i].g, palette[i].r);
+	for (
+		uint32_t i = 0;
+		i < in_palette_size;
+		++i
+		)
+		minyin_palette[i] = sd_color_encode(out_palette[i].b, out_palette[i].g, out_palette[i].r);
 
 	//cleanup loaded source images
 	for (fs_tga_image_t& source_image : source_images)

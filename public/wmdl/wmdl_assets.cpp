@@ -115,8 +115,11 @@ bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_reques
 		paletas_item(ASSET_WHIP, out_assets.whip, p);
 		paletas_item(ASSET_FLAKE, out_assets.flake, p);
 		paletas_item(ASSET_FONT, out_assets.font.rep, p);
-		if (!paletas_calculate(256, p))
-			return false;
+		{
+			pixel_t palette[256];
+			if (!paletas_calculate(256, p, palette))
+				return false;
+		}
 		out_assets.key_index = out_assets.hero.pixels[0];
 		out_assets.text_edge_index = out_assets.font.rep.pixels[0];
 	}
