@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "w32_dsound_file_wave.h"
 
-#include "../minyin/fs.h"
+#include "../micron/fs.h"
 
 static void __destroy(w32_dsound_file_wave_t& fws)
 {

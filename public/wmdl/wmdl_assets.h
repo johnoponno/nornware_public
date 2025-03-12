@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../minyin/micron.h"
+#include "../micron/micron.h"
 #include "wmdl_model.h"
 
 #define WMDL_TITLE_COLOR 255

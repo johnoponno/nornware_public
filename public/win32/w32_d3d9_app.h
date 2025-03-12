@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../minyin/micron.h"
+#include "../micron/micron.h"
 #include "w32_d3d9_softdraw_adapter.h"
 #include "w32_dsound_engine.h"
 #include "w32_dsound_container.h"

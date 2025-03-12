@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "w32_d3d9_app.h"
 
-#include "../minyin/sd_bitmap.h"
+#include "../micron/sd_bitmap.h"
 #include "w32_d3d9_state.h"
 #include "w32_d3d9_softdraw_adapter.h"
 #include "w32_dsound_stream.h"

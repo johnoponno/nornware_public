@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "tpmn_controller.h"
 
-#include "../minyin/micron.h"
+#include "../micron/micron.h"
 #include "tpmn_assets.h"
 
 #define SCROLL_ENABLE false

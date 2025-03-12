@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "../minyin/micron.h"
+#include "../micron/micron.h"
 #include "wmdl_model.h"
 
 static void __map_grid(

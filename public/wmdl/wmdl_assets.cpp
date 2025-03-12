@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "wmdl_assets.h"
 
-#include "../minyin/fs.h"
-#include "../minyin/paletas.h"
+#include "../micron/fs.h"
+#include "../micron/paletas.h"
 
 #define ASSET_BG00 "bg00.tga"
 #define ASSET_BG01 "bg01.tga"

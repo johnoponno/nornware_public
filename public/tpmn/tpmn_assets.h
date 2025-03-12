@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../minyin/sd_bitmap.h"
-#include "../minyin/sd_fontv.h"
+#include "../micron/sd_bitmap.h"
+#include "../micron/sd_fontv.h"
 #include "tpmn_model.h"
 
 struct micron_sound_request_t;

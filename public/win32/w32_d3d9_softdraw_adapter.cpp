@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "w32_d3d9_softdraw_adapter.h"
 
-#include "../minyin/sd_bitmap.h"
+#include "../micron/sd_bitmap.h"
 #include "w32_d3d9_state.h"
 
 static void __copy(const sd_bitmap_t& in_canvas, const ::D3DLOCKED_RECT& in_rect)
