@@ -416,7 +416,7 @@ void w32_d3d9_chunky_app_t::w32_d3d9_app_frame_move(const double, const float)
 			--_micron.canvas_cursor_y;
 	}
 
-	if (!w32_d3d9_chunky_app_tick(_sound_container, _micron))
+	if (!w32_d3d9_chunky_app_tick(_sound_container))
 		w32_d3d9_shutdown(0);
 }
 
@@ -439,9 +439,15 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_app_frame_render(const double, const float)
 
 			{
 				const canvas_layout_t LAYOUT = __canvas_layout(MICRON_WIDTH, MICRON_HEIGHT);
-
+				uint16_t sd_palette[256];
+				for (
+					uint32_t i = 0;
+					i < 256;
+					++i
+					)
+					sd_palette[i] = sd_color_encode(_micron.palette[i].b, _micron.palette[i].g, _micron.palette[i].r);
 				w32_d3d9_chunky_present_2d(
-					minyin_palette, sd_that_pink, _micron.canvas, MICRON_WIDTH, MICRON_HEIGHT,
+					sd_palette, sd_that_pink, _micron.canvas, MICRON_WIDTH, MICRON_HEIGHT,
 					LAYOUT.x,
 					LAYOUT.y,
 					LAYOUT.width,

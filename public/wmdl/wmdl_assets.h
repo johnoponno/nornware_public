@@ -76,4 +76,4 @@ struct wmdl_assets_t
 	uint8_t text_edge_index;
 };
 
-bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_request_t>& out_sounds);
+bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vector<minyin_sound_request_t>& out_sounds);

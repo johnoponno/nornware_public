@@ -93,9 +93,9 @@ struct w32_d3d9_chunky_app_t : public w32_d3d9_app_i
 	bool w32_d3d9_chunky_app_init_audio(const std::vector<minyin_sound_request_t>& in_sound_requests);
 	void w32_d3d9_chunky_app_cleanup_audio();
 	void w32_d3d9_chunky_app_handle_music_request(const char* in_music_request);
-	virtual bool w32_d3d9_chunky_app_tick(
-		const w32_dsound_container_t& in_sounds,
-		micron_t& out_micron) = 0;
+	virtual bool w32_d3d9_chunky_app_tick(const w32_dsound_container_t& in_sounds) = 0;
+
+	micron_t _micron;
 
 private:
 
@@ -105,5 +105,4 @@ private:
 	w32_dsound_container_t _sound_container;
 	const char* _music_file;
 	w32_dsound_stream_t* _music_stream;
-	micron_t _micron;
 };

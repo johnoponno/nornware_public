@@ -88,7 +88,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="micron.cpp" />
-    <ClCompile Include="minyin.cpp" />
     <ClCompile Include="paletas.cpp" />
     <ClCompile Include="sd_bitmap.cpp" />
     <ClCompile Include="sd_fontv.cpp" />

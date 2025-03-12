@@ -286,6 +286,7 @@ bool paletas_calculate(
 		}
 	}
 
+	/*
 	//output final palette (sd format)
 	for (
 		uint32_t i = 0;
@@ -293,6 +294,7 @@ bool paletas_calculate(
 		++i
 		)
 		minyin_palette[i] = sd_color_encode(out_palette[i].b, out_palette[i].g, out_palette[i].r);
+		*/
 
 	//cleanup loaded source images
 	for (fs_tga_image_t& source_image : source_images)

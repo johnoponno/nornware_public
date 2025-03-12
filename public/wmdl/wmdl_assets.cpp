@@ -63,7 +63,7 @@
 #define BITMAP(a, b) if(!sd_bitmap_load_24(a, b)) return false;
 #define BITMAP8(a, b) if(!minyin_bitmap_load_8(b, a)) return false;
 
-bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_request_t>& out_sounds)
+bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vector<minyin_sound_request_t>& out_sounds)
 {
 	//common info
 	{
@@ -115,11 +115,8 @@ bool wmdl_assets_init(wmdl_assets_t& out_assets, std::vector<minyin_sound_reques
 		paletas_item(ASSET_WHIP, out_assets.whip, p);
 		paletas_item(ASSET_FLAKE, out_assets.flake, p);
 		paletas_item(ASSET_FONT, out_assets.font.rep, p);
-		{
-			pixel_t palette[256];
-			if (!paletas_calculate(256, p, palette))
-				return false;
-		}
+		if (!paletas_calculate(256, p, (pixel_t*)out_micron.palette))
+			return false;
 		out_assets.key_index = out_assets.hero.pixels[0];
 		out_assets.text_edge_index = out_assets.font.rep.pixels[0];
 	}

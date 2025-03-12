@@ -10,14 +10,12 @@
 struct wmdl_app_t : public w32_d3d9_chunky_app_t
 {
 	//this is the main "tick" callback from the win32 / d3d9 harness
-	bool w32_d3d9_chunky_app_tick(
-		const w32_dsound_container_t& in_sounds,
-		micron_t& out_micron) override
+	bool w32_d3d9_chunky_app_tick(const w32_dsound_container_t& in_sounds) override
 	{
 		_sound_plays.clear();
 		const char* music_request = nullptr;
 
-		if (!wmdl_game_tick(out_micron, _game, _sound_plays, music_request))
+		if (!wmdl_game_tick(_micron, _game, _sound_plays, music_request))
 			return false;
 
 		for (const uint32_t SP : _sound_plays)
@@ -62,7 +60,7 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	//application-specific init
 	{
 		std::vector<minyin_sound_request_t> sound_requests;
-		if (!wmdl_game_init(__app._game, sound_requests))
+		if (!wmdl_game_init(__app._micron, __app._game, sound_requests))
 			return -1;
 		if (!__app.w32_d3d9_chunky_app_init_audio(sound_requests))
 			return -1;
