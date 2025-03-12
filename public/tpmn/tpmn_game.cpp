@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "tpmn_game.h"
 
-//#include "../../win32/win32_dsound_stream.h"
+#include "../micron/micron.h"
 
 bool tpmn_game_init(tpmn_game_t& out_game, std::vector<micron_sound_request_t>& out_sounds)
 {
@@ -20,7 +20,7 @@ bool tpmn_game_init(tpmn_game_t& out_game, std::vector<micron_sound_request_t>& 
 	return true;
 }
 
-bool tpmn_game_tick(tpmn_game_t& out_game, std::vector<uint32_t>& out_sound_plays, micron_t& out_micron)
+bool tpmn_game_tick(tpmn_game_t& out_game, micron_t& out_micron)
 {
 	{
 		//tick the simulation
@@ -30,25 +30,25 @@ bool tpmn_game_tick(tpmn_game_t& out_game, std::vector<uint32_t>& out_sound_play
 		if (UPDATE_RESULT.world_to_load)
 		{
 			if (tpmn_model_load_world(UPDATE_RESULT.world_to_load, false, out_game.model))
-				tpmn_controller_on_load_new_world(out_game.controller, out_sound_plays);
+				tpmn_controller_on_load_new_world(out_game.controller, out_micron);
 		}
 		//otherwise potentially "do effects"
 		else
 		{
 			if (TPMN_EVENT_BIT_HERO_WHIP & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(TPMN_SND_HEROWHIP);
+				out_micron.sound_plays.push_back(TPMN_SND_HEROWHIP);
 
 			if (TPMN_EVENT_BIT_HERO_JUMP & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(TPMN_SND_HEROJUMP01 + uint32_t(tpmn_random_unit() * 5));
+				out_micron.sound_plays.push_back(TPMN_SND_HEROJUMP01 + uint32_t(tpmn_random_unit() * 5));
 
 			if (TPMN_EVENT_BIT_HERO_LANDED & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(TPMN_SND_HEROLAND01 + uint32_t(tpmn_random_unit() * 4));
+				out_micron.sound_plays.push_back(TPMN_SND_HEROLAND01 + uint32_t(tpmn_random_unit() * 4));
 
 			if (TPMN_EVENT_BIT_BACK_TO_CHECKPOINT & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(TPMN_SND_SPAWN);
+				out_micron.sound_plays.push_back(TPMN_SND_SPAWN);
 
 			if (TPMN_EVENT_BIT_BAT_FLEE & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(TPMN_SND_BATFLEE);
+				out_micron.sound_plays.push_back(TPMN_SND_BATFLEE);
 
 			if (TPMN_EVENT_BIT_HERO_DIE & UPDATE_RESULT.bits)
 			{
@@ -59,24 +59,24 @@ bool tpmn_game_tick(tpmn_game_t& out_game, std::vector<uint32_t>& out_sound_play
 					out_game.model.hero.right_bit ? TPMN_HERO_WIDTH * 2 : 0, 5 * TPMN_HERO_HEIGHT,
 					out_game.controller
 				);
-				out_sound_plays.push_back(TPMN_SND_HERODIE01 + uint32_t(tpmn_random_unit() * 3));
+				out_micron.sound_plays.push_back(TPMN_SND_HERODIE01 + uint32_t(tpmn_random_unit() * 3));
 			}
 
 			if (TPMN_EVENT_BIT_FIXED_SERVER & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(TPMN_SND_FIXSERVER);
+				out_micron.sound_plays.push_back(TPMN_SND_FIXSERVER);
 
 			if (TPMN_EVENT_BIT_CHECKPOINT & UPDATE_RESULT.bits)
 			{
 				const uint32_t offset = tpmn_world_to_offset(out_game.model.hero.x, out_game.model.hero.y);
 				if (offset != out_game.controller.last_checkpoint)
 				{
-					out_sound_plays.push_back(TPMN_SND_CHECKPOINT);
+					out_micron.sound_plays.push_back(TPMN_SND_CHECKPOINT);
 					out_game.controller.last_checkpoint = offset;
 				}
 			}
 
 			if (TPMN_EVENT_BIT_KEY & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(TPMN_SND_KEY);
+				out_micron.sound_plays.push_back(TPMN_SND_KEY);
 
 			if (TPMN_EVENT_BIT_ROLLER_DIE & UPDATE_RESULT.bits)
 			{
@@ -84,17 +84,17 @@ bool tpmn_game_tick(tpmn_game_t& out_game, std::vector<uint32_t>& out_sound_play
 				{
 				case TPMN_LOGIC_INDEX_SPIKYGREEN:
 					tpmn_controller_death_create(&out_game.assets.spikygreen, UPDATE_RESULT.roller_x, UPDATE_RESULT.roller_y, out_game.assets.spikygreen.width, out_game.assets.spikygreen.width, 0, 0, out_game.controller);
-					out_sound_plays.push_back(TPMN_SND_SPIKYGREEN);
+					out_micron.sound_plays.push_back(TPMN_SND_SPIKYGREEN);
 					break;
 
 				case TPMN_LOGIC_INDEX_BLUEBLOB:
 					tpmn_controller_death_create(&out_game.assets.blueblob, UPDATE_RESULT.roller_x, UPDATE_RESULT.roller_y, TPMN_BLOB_FRAME_ASPECT, TPMN_BLOB_FRAME_ASPECT, 0, 0, out_game.controller);
-					out_sound_plays.push_back(TPMN_SND_BLUEBLOB);
+					out_micron.sound_plays.push_back(TPMN_SND_BLUEBLOB);
 					break;
 
 				case TPMN_LOGIC_INDEX_BROWNBLOB:
 					tpmn_controller_death_create(&out_game.assets.brownblob, UPDATE_RESULT.roller_x, UPDATE_RESULT.roller_y, TPMN_BLOB_FRAME_ASPECT, TPMN_BLOB_FRAME_ASPECT, 0, 0, out_game.controller);
-					out_sound_plays.push_back(TPMN_SND_BROWNBLOB);
+					out_micron.sound_plays.push_back(TPMN_SND_BROWNBLOB);
 					break;
 				}
 			}
@@ -105,12 +105,12 @@ bool tpmn_game_tick(tpmn_game_t& out_game, std::vector<uint32_t>& out_sound_play
 				{
 				case TPMN_LOGIC_INDEX_PLANT:
 					tpmn_controller_death_create(&out_game.assets.plant, UPDATE_RESULT.plant_x, UPDATE_RESULT.plant_y, TPMN_PLANT_FRAME_ASPECT, TPMN_PLANT_FRAME_ASPECT, 0, 0, out_game.controller);
-					out_sound_plays.push_back(TPMN_SND_PLANT);
+					out_micron.sound_plays.push_back(TPMN_SND_PLANT);
 					break;
 
 				case TPMN_LOGIC_INDEX_SCORPION:
 					tpmn_controller_death_create(&out_game.assets.scorpion, UPDATE_RESULT.plant_x, UPDATE_RESULT.plant_y, out_game.assets.scorpion.width / 2, out_game.assets.scorpion.height / 6, 0, out_game.assets.scorpion.height / 6 * 4, out_game.controller);
-					out_sound_plays.push_back(TPMN_SND_SCORPION);
+					out_micron.sound_plays.push_back(TPMN_SND_SCORPION);
 					break;
 				}
 			}
@@ -123,11 +123,11 @@ bool tpmn_game_tick(tpmn_game_t& out_game, std::vector<uint32_t>& out_sound_play
 					out_game.assets.penguin.width / 2, out_game.assets.penguin.height / 2,
 					UPDATE_RESULT.slider_speed > 0 ? out_game.assets.penguin.width / 2 : 0, 0, out_game.controller
 				);
-				out_sound_plays.push_back(TPMN_SND_SLIDERDEATH);
+				out_micron.sound_plays.push_back(TPMN_SND_SLIDERDEATH);
 			}
 
 			if (TPMN_EVENT_BIT_SLIDER_IMPULSE & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(TPMN_SND_SLIDER);
+				out_micron.sound_plays.push_back(TPMN_SND_SLIDER);
 		}
 	}
 
@@ -139,7 +139,7 @@ bool tpmn_game_tick(tpmn_game_t& out_game, std::vector<uint32_t>& out_sound_play
 
 	case tpmn_app_event_t::START_NEW_GAME:
 		if (tpmn_model_load_world("hubb.tpmn", true, out_game.model))
-			tpmn_controller_on_load_new_world(out_game.controller, out_sound_plays);
+			tpmn_controller_on_load_new_world(out_game.controller, out_micron);
 		break;
 	}
 

@@ -12,13 +12,13 @@ struct wmdl_app_t : public w32_d3d9_chunky_app_t
 	//this is the main "tick" callback from the win32 / d3d9 harness
 	bool w32_d3d9_chunky_app_tick(const w32_dsound_container_t& in_sounds) override
 	{
-		_sound_plays.clear();
-
-		if (!wmdl_game_tick(_micron, _game, _sound_plays))
+		if (!wmdl_game_tick(_micron, _game))
 			return false;
 
-		for (const uint32_t SP : _sound_plays)
+		for (const uint32_t SP : _micron.sound_plays)
 			in_sounds.play(SP, 1.f, 0.f, 1.f, nullptr);
+		_micron.sound_plays.clear();
+
 		w32_d3d9_chunky_app_handle_music_request();
 
 		return true;
@@ -32,9 +32,6 @@ struct wmdl_app_t : public w32_d3d9_chunky_app_t
 
 	//this is our actual game (platform agnostic) that only depends on minyin (which is platform agnostic)
 	wmdl_game_t _game;
-
-	//this is kept around so as to not thrash the heap
-	std::vector<uint32_t> _sound_plays;
 };
 
 //--------------------------------------------------------------------------------------

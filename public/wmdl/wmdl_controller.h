@@ -55,7 +55,7 @@ wmdl_app_event_t wmdl_controller_tick(
 	const wmdl_assets_t& in_assets,
 	wmdl_model_t& out_model, wmdl_controller_t& out_controller, micron_t& out_micron);
 
-void wmdl_controller_on_load_new_world(wmdl_controller_t& out_controller, std::vector<uint32_t>& out_sound_plays);
+void wmdl_controller_on_load_new_world(wmdl_controller_t& out_controller, micron_t& out_micron);
 
 void wmdl_controller_death_create(
 	const micron_bitmap_t* aBitmap, const float aX, const float aY, const int32_t aWidth, const int32_t aHeight, const int32_t aSrcX, const int32_t aSrcY,

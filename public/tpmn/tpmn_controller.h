@@ -60,7 +60,7 @@ tpmn_app_event_t tpmn_controller_tick(
 	const tpmn_assets_t& in_assets,
 	tpmn_model_t& out_model, tpmn_controller_t& out_controller, micron_t& out_micron);
 
-void tpmn_controller_on_load_new_world(tpmn_controller_t& out_controller, std::vector<uint32_t>& out_sound_plays);
+void tpmn_controller_on_load_new_world(tpmn_controller_t& out_controller, micron_t& out_micron);
 
 void tpmn_controller_death_create(
 	const sd_bitmap_t* aBitmap, const float aX, const float aY, const int32_t aWidth, const int32_t aHeight, const int32_t aSrcX, const int32_t aSrcY,

@@ -56,7 +56,10 @@ struct micron_t
 
 	//the music file/track we currently want to stream
 	//it's up to the implementor to handle this (if at all) by loading and caching whatever it needs in order to stream a single music track
-	const char* music_request = nullptr;
+	const char* music_request;
+
+	//this gets written by the game each tick -> each id is the request to play a sound sample
+	std::vector<uint32_t> sound_plays;
 };
 
 //END PUBLIC INTERFACE FOR MICRON IMPLEMENTORS

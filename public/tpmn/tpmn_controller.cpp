@@ -1048,10 +1048,9 @@ tpmn_app_event_t tpmn_controller_tick(
 	return result;
 }
 
-void tpmn_controller_on_load_new_world(tpmn_controller_t& out_controller, std::vector<uint32_t>& out_sound_plays)
+void tpmn_controller_on_load_new_world(tpmn_controller_t& out_controller, micron_t& out_micron)
 {
-	//tpmn_sound_play(in_assets, TPMN_SND_SPAWN);
-	out_sound_plays.push_back(TPMN_SND_SPAWN);
+	out_micron.sound_plays.push_back(TPMN_SND_SPAWN);
 
 	out_controller.play_menu = false;
 

@@ -20,7 +20,7 @@ bool wmdl_game_init(micron_t& out_micron, wmdl_game_t& out_game, std::vector<mic
 	return true;
 }
 
-bool wmdl_game_tick(micron_t& out_micron, wmdl_game_t& out_game, std::vector<uint32_t>& out_sound_plays)
+bool wmdl_game_tick(micron_t& out_micron, wmdl_game_t& out_game)
 {
 	{
 		//tick the simulation
@@ -30,25 +30,25 @@ bool wmdl_game_tick(micron_t& out_micron, wmdl_game_t& out_game, std::vector<uin
 		if (UPDATE_RESULT.world_to_load)
 		{
 			if (wmdl_model_load_world(UPDATE_RESULT.world_to_load, false, out_game.model))
-				wmdl_controller_on_load_new_world(out_game.controller, out_sound_plays);
+				wmdl_controller_on_load_new_world(out_game.controller, out_micron);
 		}
 		//otherwise potentially "do effects"
 		else
 		{
 			if (WMDL_EVENT_BIT_HERO_WHIP & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(WMDL_SND_HEROWHIP);
+				out_micron.sound_plays.push_back(WMDL_SND_HEROWHIP);
 
 			if (WMDL_EVENT_BIT_HERO_JUMP & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(WMDL_SND_HEROJUMP01 + uint32_t(wmdl_random_unit() * 5));
+				out_micron.sound_plays.push_back(WMDL_SND_HEROJUMP01 + uint32_t(wmdl_random_unit() * 5));
 
 			if (WMDL_EVENT_BIT_HERO_LANDED & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(WMDL_SND_HEROLAND01 + uint32_t(wmdl_random_unit() * 4));
+				out_micron.sound_plays.push_back(WMDL_SND_HEROLAND01 + uint32_t(wmdl_random_unit() * 4));
 
 			if (WMDL_EVENT_BIT_BACK_TO_CHECKPOINT & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(WMDL_SND_SPAWN);
+				out_micron.sound_plays.push_back(WMDL_SND_SPAWN);
 
 			if (WMDL_EVENT_BIT_BAT_FLEE & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(WMDL_SND_BATFLEE);
+				out_micron.sound_plays.push_back(WMDL_SND_BATFLEE);
 
 			if (WMDL_EVENT_BIT_HERO_DIE & UPDATE_RESULT.bits)
 			{
@@ -59,24 +59,24 @@ bool wmdl_game_tick(micron_t& out_micron, wmdl_game_t& out_game, std::vector<uin
 					out_game.model.hero.right_bit ? WMDL_HERO_WIDTH * 2 : 0, 5 * WMDL_HERO_HEIGHT,
 					out_game.controller
 				);
-				out_sound_plays.push_back(WMDL_SND_HERODIE01 + uint32_t(wmdl_random_unit() * 3));
+				out_micron.sound_plays.push_back(WMDL_SND_HERODIE01 + uint32_t(wmdl_random_unit() * 3));
 			}
 
 			if (WMDL_EVENT_BIT_FIXED_SERVER & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(WMDL_SND_FIXSERVER);
+				out_micron.sound_plays.push_back(WMDL_SND_FIXSERVER);
 
 			if (WMDL_EVENT_BIT_CHECKPOINT & UPDATE_RESULT.bits)
 			{
 				const uint32_t offset = wmdl_world_to_offset(out_game.model.hero.x, out_game.model.hero.y);
 				if (offset != out_game.controller.last_checkpoint)
 				{
-					out_sound_plays.push_back(WMDL_SND_CHECKPOINT);
+					out_micron.sound_plays.push_back(WMDL_SND_CHECKPOINT);
 					out_game.controller.last_checkpoint = offset;
 				}
 			}
 
 			if (WMDL_EVENT_BIT_KEY & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(WMDL_SND_KEY);
+				out_micron.sound_plays.push_back(WMDL_SND_KEY);
 
 			if (WMDL_EVENT_BIT_ROLLER_DIE & UPDATE_RESULT.bits)
 			{
@@ -84,17 +84,17 @@ bool wmdl_game_tick(micron_t& out_micron, wmdl_game_t& out_game, std::vector<uin
 				{
 				case WMDL_LOGIC_INDEX_SPIKYGREEN:
 					wmdl_controller_death_create(&out_game.assets.spikygreen, UPDATE_RESULT.roller_x, UPDATE_RESULT.roller_y, out_game.assets.spikygreen.width, out_game.assets.spikygreen.width, 0, 0, out_game.controller);
-					out_sound_plays.push_back(WMDL_SND_SPIKYGREEN);
+					out_micron.sound_plays.push_back(WMDL_SND_SPIKYGREEN);
 					break;
 
 				case WMDL_LOGIC_INDEX_BLUEBLOB:
 					wmdl_controller_death_create(&out_game.assets.blueblob, UPDATE_RESULT.roller_x, UPDATE_RESULT.roller_y, WMDL_BLOB_FRAME_ASPECT, WMDL_BLOB_FRAME_ASPECT, 0, 0, out_game.controller);
-					out_sound_plays.push_back(WMDL_SND_BLUEBLOB);
+					out_micron.sound_plays.push_back(WMDL_SND_BLUEBLOB);
 					break;
 
 				case WMDL_LOGIC_INDEX_BROWNBLOB:
 					wmdl_controller_death_create(&out_game.assets.brownblob, UPDATE_RESULT.roller_x, UPDATE_RESULT.roller_y, WMDL_BLOB_FRAME_ASPECT, WMDL_BLOB_FRAME_ASPECT, 0, 0, out_game.controller);
-					out_sound_plays.push_back(WMDL_SND_BROWNBLOB);
+					out_micron.sound_plays.push_back(WMDL_SND_BROWNBLOB);
 					break;
 				}
 			}
@@ -105,12 +105,12 @@ bool wmdl_game_tick(micron_t& out_micron, wmdl_game_t& out_game, std::vector<uin
 				{
 				case WMDL_LOGIC_INDEX_PLANT:
 					wmdl_controller_death_create(&out_game.assets.plant, UPDATE_RESULT.plant_x, UPDATE_RESULT.plant_y, WMDL_PLANT_FRAME_ASPECT, WMDL_PLANT_FRAME_ASPECT, 0, 0, out_game.controller);
-					out_sound_plays.push_back(WMDL_SND_PLANT);
+					out_micron.sound_plays.push_back(WMDL_SND_PLANT);
 					break;
 
 				case WMDL_LOGIC_INDEX_SCORPION:
 					wmdl_controller_death_create(&out_game.assets.scorpion, UPDATE_RESULT.plant_x, UPDATE_RESULT.plant_y, out_game.assets.scorpion.width / 2, out_game.assets.scorpion.height / 6, 0, out_game.assets.scorpion.height / 6 * 4, out_game.controller);
-					out_sound_plays.push_back(WMDL_SND_SCORPION);
+					out_micron.sound_plays.push_back(WMDL_SND_SCORPION);
 					break;
 				}
 			}
@@ -123,11 +123,11 @@ bool wmdl_game_tick(micron_t& out_micron, wmdl_game_t& out_game, std::vector<uin
 					out_game.assets.penguin.width / 2, out_game.assets.penguin.height / 2,
 					UPDATE_RESULT.slider_speed > 0 ? out_game.assets.penguin.width / 2 : 0, 0, out_game.controller
 				);
-				out_sound_plays.push_back(WMDL_SND_SLIDERDEATH);
+				out_micron.sound_plays.push_back(WMDL_SND_SLIDERDEATH);
 			}
 
 			if (WMDL_EVENT_BIT_SLIDER_IMPULSE & UPDATE_RESULT.bits)
-				out_sound_plays.push_back(WMDL_SND_SLIDER);
+				out_micron.sound_plays.push_back(WMDL_SND_SLIDER);
 		}
 	}
 
@@ -139,7 +139,7 @@ bool wmdl_game_tick(micron_t& out_micron, wmdl_game_t& out_game, std::vector<uin
 
 	case wmdl_app_event_t::START_NEW_GAME:
 		if (wmdl_model_load_world("hubb.tpmn", true, out_game.model))
-			wmdl_controller_on_load_new_world(out_game.controller, out_sound_plays);
+			wmdl_controller_on_load_new_world(out_game.controller, out_micron);
 		break;
 	}
 

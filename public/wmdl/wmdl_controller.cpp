@@ -1239,10 +1239,9 @@ wmdl_app_event_t wmdl_controller_tick(
 	return result;
 }
 
-void wmdl_controller_on_load_new_world(wmdl_controller_t& out_controller, std::vector<uint32_t>& out_sound_plays)
+void wmdl_controller_on_load_new_world(wmdl_controller_t& out_controller, micron_t& out_micron)
 {
-	//wmdl_sound_play(in_assets, WMDL_SND_SPAWN);
-	out_sound_plays.push_back(WMDL_SND_SPAWN);
+	out_micron.sound_plays.push_back(WMDL_SND_SPAWN);
 
 	out_controller.play_menu = false;
 
