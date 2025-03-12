@@ -80,24 +80,6 @@ static bool __clip(
 	return out_height > 0;
 }
 
-static void __bitmap_relinquish(micron_bitmap_t& out)
-{
-	const uint32_t SIZE = out.width * out.height;
-	if (SIZE)
-	{
-		assert(out.width && out.height && out.pixels && (uint32_t)(out.width * out.height) == SIZE);
-		delete[] out.pixels;
-		out.pixels = nullptr;
-	}
-	else
-	{
-		assert(!out.width && !out.height && !out.pixels);
-	}
-
-	out.width = 0;
-	out.height = 0;
-}
-
 //public
 //public
 //public
@@ -125,44 +107,12 @@ bool micron_color_t::operator >= (const micron_color_t& in_other) const
 	return !(*this < in_other);
 }
 
-micron_bitmap_t::micron_bitmap_t()
-{
-	pixels = nullptr;
-	width = 0;
-	height = 0;
-}
-
-micron_bitmap_t::~micron_bitmap_t()
-{
-	__bitmap_relinquish(*this);
-}
-
 micron_font_t::micron_font_t(const int32_t in_char_spacing)
 {
 	::memset(&characters, 0, sizeof(characters));
 	height = 0;
 	char_spacing = in_char_spacing;
 	space_width = 0;
-}
-
-bool minyin_bitmap_init(
-	micron_bitmap_t& out,
-	const int32_t in_width, const int32_t in_height)
-{
-	//cleanup
-	__bitmap_relinquish(out);
-
-	//get new memory
-	assert(!out.pixels);
-	out.pixels = new uint8_t[in_width * in_height];
-	if (!out.pixels)
-		return false;
-
-	//store new settings
-	out.width = in_width;
-	out.height = in_height;
-
-	return true;
 }
 
 #if 0

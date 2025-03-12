@@ -9,13 +9,13 @@ bool wmdl_game_init(micron_t& out_micron, wmdl_game_t& out_game, std::vector<mic
 	if (!wmdl_assets_init(out_micron, out_game.assets, out_sounds))
 		return false;
 
-	for (uint32_t i = 0; i < WMDL_MAX_TILE; ++i)
+	//setup default animation data
+	for (
+		uint32_t i = 0;
+		i < WMDL_MAX_TILE;
+		++i
+		)
 		out_game.controller.current_tiles[i] = i;
-
-	/*
-	if (!minyin_bitmap_init(out_game.controller.canvas, 600, 320))
-		return false;
-		*/
 
 	return true;
 }
@@ -144,4 +144,9 @@ bool wmdl_game_tick(micron_t& out_micron, wmdl_game_t& out_game, std::vector<uin
 	}
 
 	return true;
+}
+
+void wmdl_game_shutdown(wmdl_game_t& out_game)
+{
+	wmdl_assets_cleanup(out_game.assets);
 }

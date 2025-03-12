@@ -13,3 +13,4 @@ struct wmdl_game_t
 
 bool wmdl_game_init(micron_t& out_micron, wmdl_game_t& out_game, std::vector<micron_sound_request_t>& out_sounds);
 bool wmdl_game_tick(micron_t& out_micron, wmdl_game_t& out_game, std::vector<uint32_t>& out_sound_plays, const char*& out_music_request);
+void wmdl_game_shutdown(wmdl_game_t& out_game);

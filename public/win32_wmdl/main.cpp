@@ -70,7 +70,7 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	w32_d3d9_main_loop(&__app);
 
 	//application-specific shutdown?
-	//wmdl_game_shutdown(__app._game);
+	wmdl_game_shutdown(__app._game);
 
 	//cleanup internal win32 / d3d9 / dsound stuff
 	__app.w32_d3d9_chunky_app_cleanup_audio();

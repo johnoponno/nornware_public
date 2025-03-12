@@ -88,6 +88,8 @@ bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vect
 	//import bitmaps and calculate am 8-bit target palette
 	{
 		paletas_t p;
+
+		//list all the incoming 24-bit .tga files, and their corresponding target (bitmaps for our convenience)
 		p.item(ASSET_BG00, out_assets.backgrounds[0]);
 		p.item(ASSET_BG01, out_assets.backgrounds[1]);
 		p.item(ASSET_BG02, out_assets.backgrounds[2]);
@@ -114,7 +116,18 @@ bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vect
 		p.item(ASSET_WHIP, out_assets.whip);
 		p.item(ASSET_FLAKE, out_assets.flake);
 		p.item(ASSET_FONT, out_assets.font.rep);
-		if (!p.calculate(256, out_micron.palette))
+
+		//1) allocate contigous memory for all bitmaps specified above
+		//2) calculate a palette (best-fit) based on the source data
+		//3) assign memory to all output bitmaps
+		//4) remap input 24-bit pixels to output 8-bit pixels
+
+		//NOTE: it is possible to calculate to less than 256 colors if desired (for artistic effect)
+
+		//NOTE: it would theoretically be possible to cache the outputs (palette and contiguous memory) and avoid the source files altogether
+		//this would load much faster BUT would require information about what order (and size) the bitmaps are in order to reconstruct the current
+		//runtime micron_bitmap_t objects
+		if (!p.calculate(256, out_micron, out_assets.bitmap_memory))
 			return false;
 
 		//cache the key index (for transparent blitting) based on knowledge of the input assets (top left corner of hero image is "that pink")
@@ -157,4 +170,9 @@ bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vect
 	out_sounds.push_back({ ASSET_SLIDER, WMDL_SND_SLIDER });
 
 	return true;
+}
+
+void wmdl_assets_cleanup(wmdl_assets_t& out_assets)
+{
+	delete[] out_assets.bitmap_memory.data;
 }

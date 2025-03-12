@@ -147,7 +147,7 @@ void paletas_t::item(
 
 bool paletas_t::calculate(
 	const uint32_t in_palette_size,
-	micron_color_t* out_palette_256)
+	micron_t& out_micron, micron_bitmap_memory_t& out_bitmap_memory)
 {
 	assert(in_palette_size <= 256);
 
@@ -161,8 +161,30 @@ bool paletas_t::calculate(
 		source_images.push_back(source_image);
 	}
 
+	//figure out how much memory ALL the output 8-bit bitmaps would require (including width and height info)
+	uint32_t total_bitmap_memory_size = 0;
+	{
+		for (
+			uint32_t i = 0;
+			i < _items.size();
+			++i
+			)
+		{
+			total_bitmap_memory_size += sizeof(uint8_t) * FS_TGA_HEADER(source_images[i])->image_spec_width * FS_TGA_HEADER(source_images[i])->image_spec_height;
+		}
+		assert(!out_bitmap_memory.data);
+		out_bitmap_memory.data = new uint8_t[total_bitmap_memory_size];
+		if (!out_bitmap_memory.data)
+		{
+			//cleanup loaded source images
+			for (fs_blob_t& source_image : source_images)
+				delete[] source_image.data;
+			return false;	//failed to allocate contiguout bitmap memory
+		}
+	}
+
 	//clear the palette (max size)
-	::memset(out_palette_256, 0, sizeof(micron_color_t) * 256);
+	::memset(out_micron.palette, 0, sizeof(out_micron.palette));
 
 	//calculate the final palette
 	{
@@ -228,14 +250,16 @@ bool paletas_t::calculate(
 			assert(r >= 0 && r < 256);
 			assert(g >= 0 && g < 256);
 			assert(b >= 0 && b < 256);
-			out_palette_256[bucket_index].r = (uint8_t)r;
-			out_palette_256[bucket_index].g = (uint8_t)g;
-			out_palette_256[bucket_index].b = (uint8_t)b;
+			out_micron.palette[bucket_index].r = (uint8_t)r;
+			out_micron.palette[bucket_index].g = (uint8_t)g;
+			out_micron.palette[bucket_index].b = (uint8_t)b;
 		}
 	}
 
 	//create all the palettize bitmaps by remapping all pixels to the final palette of averaged colors (use the nearest color)
 	{
+		uint8_t* running_memory = (uint8_t*)out_bitmap_memory.data;
+
 		std::map<micron_color_t, uint32_t> remap_cache;
 		for (
 			uint32_t i = 0;
@@ -245,22 +269,34 @@ bool paletas_t::calculate(
 		{
 			paletas_t::item_t& item = _items[i];
 
+			//copy width
 			assert(!item.bitmap->width);
 			item.bitmap->width = FS_TGA_HEADER(source_images[i])->image_spec_width;
 
+			//copy height
 			assert(!item.bitmap->height);
 			item.bitmap->height = FS_TGA_HEADER(source_images[i])->image_spec_height;
 
+			//pixel memory comes from the previous allocated contigous chunk
 			assert(!item.bitmap->pixels);
-			item.bitmap->pixels = new uint8_t[item.bitmap->width * item.bitmap->height];
-			assert(item.bitmap->pixels);
+			assert(running_memory <= (uint8_t*)out_bitmap_memory.data + total_bitmap_memory_size - sizeof(uint8_t) * item.bitmap->width * item.bitmap->height);
+			item.bitmap->pixels = running_memory;
+			running_memory += sizeof(uint8_t) * item.bitmap->width * item.bitmap->height;
 
-			for (int32_t y = 0; y < FS_TGA_HEADER(source_images[i])->image_spec_height; ++y)
+			for (
+				int32_t y = 0;
+				y < FS_TGA_HEADER(source_images[i])->image_spec_height;
+				++y
+				)
 			{
-				for (int32_t x = 0; x < FS_TGA_HEADER(source_images[i])->image_spec_width; ++x)
+				for (
+					int32_t x = 0;
+					x < FS_TGA_HEADER(source_images[i])->image_spec_width;
+					++x
+					)
 				{
 					const micron_color_t* SOURCE_IMAGE_I_PIXEL = (micron_color_t*)FS_TGA_PIXELS(source_images[i]) + x + y * FS_TGA_HEADER(source_images[i])->image_spec_width;
-					const uint32_t NEAREST_PALETTE_ENTRY = __nearest_palette_entry(out_palette_256, in_palette_size, *SOURCE_IMAGE_I_PIXEL, remap_cache);
+					const uint32_t NEAREST_PALETTE_ENTRY = __nearest_palette_entry(out_micron.palette, in_palette_size, *SOURCE_IMAGE_I_PIXEL, remap_cache);
 					assert(NEAREST_PALETTE_ENTRY < in_palette_size);
 					item.bitmap->pixels[x + (item.bitmap->height - 1 - y) * item.bitmap->width] = (uint8_t)NEAREST_PALETTE_ENTRY;
 				}

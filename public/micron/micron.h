@@ -47,19 +47,19 @@ void micron_cross(
 	micron_t& out_micron,
 	const int32_t x, const int32_t y, const int32_t aSize, const uint8_t aColor);
 
+//this is intended to allocate all required bitmap memory in a contiguous chunk
+//this is possible because we are loading 24-bit .tga files, calculating a best-fit palette, and then remapping these 24-bit images to 8-bit versions
+//see paletas_t for the loading and remapping process
+struct micron_bitmap_memory_t
+{
+	void* data;
+};
+
 struct micron_bitmap_t
 {
-	explicit micron_bitmap_t();
-	~micron_bitmap_t();
-
-	uint8_t* pixels;
-	int32_t width;
-	int32_t height;
-
-private:
-
-	explicit micron_bitmap_t(const micron_bitmap_t& in_other) = delete;
-	void operator = (const micron_bitmap_t& in_other) = delete;
+	uint8_t* pixels;//this is memory from the contiguous chunk in micron_bitmap_memory_t
+	uint16_t width;
+	uint16_t height;
 };
 
 void micron_blit(

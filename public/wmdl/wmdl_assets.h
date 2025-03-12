@@ -41,6 +41,8 @@ enum
 
 struct wmdl_assets_t
 {
+	micron_bitmap_memory_t bitmap_memory;
+
 	micron_bitmap_t backgrounds[7];
 
 	micron_bitmap_t portal;
@@ -62,8 +64,6 @@ struct wmdl_assets_t
 	micron_bitmap_t hero;
 	micron_bitmap_t whip;
 
-	//sd_bitmap_t dust_far;
-	//sd_bitmap_t dust_near;
 	micron_bitmap_t flake;
 
 	micron_font_t font;
@@ -75,3 +75,4 @@ struct wmdl_assets_t
 };
 
 bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets, std::vector<micron_sound_request_t>& out_sounds);
+void wmdl_assets_cleanup(wmdl_assets_t& out_assets);

@@ -1,7 +1,8 @@
 #pragma once
 
 struct micron_bitmap_t;
-struct micron_color_t;
+struct micron_bitmap_memory_t;
+struct micron_t;
 
 struct paletas_t
 {
@@ -10,7 +11,7 @@ struct paletas_t
 		micron_bitmap_t& out_bitmap);
 	bool calculate(
 		const uint32_t in_palette_size,
-		micron_color_t* out_palette_256);
+		micron_t& out_micron, micron_bitmap_memory_t& out_bitmap_memory);
 
 private:
 
