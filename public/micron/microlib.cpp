@@ -1,5 +1,7 @@
 #include "stdafx.h"
-#include "micron.h"
+#include "microlib.h"
+
+#include "../micron.h"
 
 #define CHARSPERHEIGHT 6
 #define CHARBEGIN 33
@@ -152,9 +154,15 @@ void micron_canvas_clear(
 	const uint8_t in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_clear_width, int32_t in_clear_height)
 {
 	//check defaults
-	if (!in_clear_width || in_clear_width > MICRON_CANVAS_WIDTH)
+	if (
+		!in_clear_width || 
+		in_clear_width > MICRON_CANVAS_WIDTH
+		)
 		in_clear_width = MICRON_CANVAS_WIDTH;
-	if (!in_clear_height || in_clear_height > MICRON_CANVAS_HEIGHT)
+	if (
+		!in_clear_height || 
+		in_clear_height > MICRON_CANVAS_HEIGHT
+		)
 		in_clear_height = MICRON_CANVAS_HEIGHT;
 
 	//clip
@@ -698,7 +706,7 @@ bool micron_key_downflank(const micron_t& in_micron, const int32_t in_key)
 	return false;
 }
 
-uint8_t micron_atascii_bits[256 * 8] =
+const uint8_t micron_atascii_bits[256 * 8] =
 {
 	0xff,0x93,0x01,0x01,0x83,0xc7,0xef,0xff,
 	0xe7,0xe7,0xe7,0x07,0x07,0xe7,0xe7,0xe7,

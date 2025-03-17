@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "wmdl_controller.h"
 
+#include "../micron.h"
 #include "wmdl_assets.h"
 
 #define SCROLL_X 0

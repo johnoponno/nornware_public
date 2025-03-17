@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "tpmn_game.h"
 
-#include "../micron/micron.h"
+#include "../micron.h"
 
 bool tpmn_game_init(micron_t& out_micron, tpmn_game_t& out_game)
 {

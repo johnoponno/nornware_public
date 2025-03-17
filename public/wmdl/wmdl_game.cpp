@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "wmdl_game.h"
 
+#include "../micron.h"
+
 bool wmdl_game_init(micron_t& out_micron, wmdl_game_t& out_game)
 {
 	if (!wmdl_model_init(out_game.model))

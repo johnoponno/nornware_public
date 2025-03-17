@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../micron/micron.h"
+#include "../micron/microlib.h"
 #include "wmdl_model.h"
 
 struct wmdl_assets_t;

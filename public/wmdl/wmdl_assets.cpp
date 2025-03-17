@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "wmdl_assets.h"
 
+#include "../micron.h"
 #include "../micron/fs.h"
 #include "../micron/paletas.h"
 

@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "tpmn_assets.h"
 
+#include "../micron.h"
 #include "../micron/fs.h"
-#include "../micron/micron.h"
 
 #define ASSET_BG00 "bg00.tga"
 #define ASSET_BG01 "bg01.tga"
