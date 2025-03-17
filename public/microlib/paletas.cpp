@@ -242,6 +242,16 @@ bool paletas_t::calculate(
 			all_buckets.push_back(first_bucket);
 		}
 
+		//CRITICAL! we cannot map to a LARGER palette size than the number of unique pixels
+		assert(1 == all_buckets.size());
+		if (all_buckets[0].size() < in_palette_size)
+		{
+			for (fs_blob_t& source_image : source_images)
+				delete[] source_image.data;
+			delete[] out_bitmap_memory.data;
+			return false;
+		}
+
 		//figure out which channel has the greatest range, sort, and split until we have as many buckets as we want palette indices
 		while (all_buckets.size() < in_palette_size)
 		{

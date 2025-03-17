@@ -67,11 +67,18 @@ void micron_canvas_atascii_print(
 void micron_canvas_atascii_char_key(
 	micron_t& out_micron,
 	const uint8_t in_char, const uint8_t in_color_hi, const int32_t in_x, const int32_t in_y);
+void micron_canvas_visualize_palette(
+	micron_t& out_micron,
+	const int32_t in_magnification);
 
 //bitmaps
 void micron_blit(
 	micron_t& out_micron,
 	const micron_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
+void micron_blit_clip(
+	micron_t& out_micron,
+	const micron_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
+
 void micron_blit_key(
 	micron_t& out_micron,
 	const uint8_t in_key, const micron_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);

@@ -1,10 +1,5 @@
 #pragma once
 
-//FIXME: this is util stuff for games implementing on micron, shouldn't be publicly visible to an implementor
-//FIXME: this is util stuff for games implementing on micron, shouldn't be publicly visible to an implementor
-//FIXME: this is util stuff for games implementing on micron, shouldn't be publicly visible to an implementor
-//FIXME: this is util stuff for games implementing on micron, shouldn't be publicly visible to an implementor
-
 struct fs_blob_t
 {
 	void* data;

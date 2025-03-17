@@ -288,6 +288,22 @@ void micron_canvas_atascii_char_key(
 	}
 }
 
+void micron_canvas_visualize_palette(
+	micron_t& out_micron,
+	const int32_t in_magnification)
+{
+	for (uint32_t i = 0; i < 256; ++i)
+	{
+		for (int32_t y = 0; y < in_magnification; ++y)
+		{
+			for (int32_t x = 0; x < in_magnification; ++x)
+			{
+				out_micron.canvas[(in_magnification * (i % 16) + x) + (in_magnification * (i / 16) + y) * out_micron.canvas_width] = (uint8_t)i;
+			}
+		}
+	}
+}
+
 void micron_blit(
 	micron_t& out_micron,
 	const micron_bitmap_t& in_src, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
@@ -329,6 +345,27 @@ void micron_blit(
 
 		BYTE_SRC = BYTE_SCAN_SRC + in_src.width;
 		byte_dst = byte_scan_dst + out_micron.canvas_width;
+	}
+}
+
+void micron_blit_clip(
+	micron_t& out_micron,
+	const micron_bitmap_t& in_src, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
+{
+	if (0 == in_copy_width || in_copy_width > in_src.width)
+		in_copy_width = in_src.width;
+	if (0 == in_copy_height || in_copy_height > in_src.height)
+		in_copy_height = in_src.height;
+
+	if (__clip(
+
+		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
+		0, 0, out_micron.canvas_width, out_micron.canvas_height,
+		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
+
+		in_src_x, in_src_y, in_dst_x, in_dst_y, in_copy_width, in_copy_height))
+	{
+		micron_blit(out_micron, in_src, in_dst_x, in_dst_y, in_copy_width, in_copy_height, in_src_x, in_src_y);
 	}
 }
 

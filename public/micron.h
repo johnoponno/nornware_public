@@ -17,6 +17,7 @@ BASE CONTRACT: Getting the 8-bit framebuffer / canvas to the screen "somehow" us
 BASE CONTRACT: Supplying screen and canvas mouse cursor coordinates.
 BASE CONTRACT: Mapping platform-specific "key-is-down-right-now" state to the micron key constants (including mouse buttons).
 
+OPTIONAL: Gamepad support.
 OPTIONAL: Music streaming support.
 OPTIONAL: Sound sample playback support.
 
@@ -42,6 +43,16 @@ struct micron_t
 		uint8_t down_current : 1;
 		uint8_t down_last : 1;
 	} keys[256];
+
+	//gamepad state (modeled after xinput)
+	struct
+	{
+		float left_stick_x;
+		uint8_t button_a : 1;
+		uint8_t button_b : 1;
+		uint8_t button_x : 1;
+		uint8_t button_y : 1;
+	} pads[4];
 
 	//the position of the mouse cursor in your local / native screen resolution
 	int32_t screen_cursor_x;
@@ -70,8 +81,8 @@ struct micron_t
 	//the actual pixels / framebuffer, CAN / WILL change on the fly
 	//the idea is to map this "somehow" to a modern graphics api (texture? / colored quads? / pixel shader?)
 	uint8_t canvas[640 * 360];//max resolution, arbitrary, but basically a wide-screen (16:9) version of 640x480
-	int32_t canvas_width;//these are signed ints for good interop with various blit functions
-	int32_t canvas_height;//these are signed ints for good interop with various blit functions
+	int32_t canvas_width;//expected to be set by the game, are signed ints for good interop with various blit functions
+	int32_t canvas_height;//expected to be set by the game, are signed ints for good interop with various blit functions
 
 	//the music file/track we currently want to stream
 	//it's up to the implementor to handle this (if at all) by loading and caching whatever it needs in order to stream a single music track
