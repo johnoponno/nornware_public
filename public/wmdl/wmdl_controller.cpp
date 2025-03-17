@@ -4,6 +4,8 @@
 #include "../micron.h"
 #include "wmdl_assets.h"
 
+#define ATASCII_TEST 0
+
 #define SCROLL_X 0
 #define SCROLL_Y 0
 
@@ -52,8 +54,8 @@ static int32_t __hero_view_position_x(const wmdl_model_t& in_model)
 	if (x < 0)
 		x = 0;
 #if 0
-	else if (x > (WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - MICRON_CANVAS_WIDTH))
-		x = WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - MICRON_CANVAS_WIDTH;
+	else if (x > (WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - out_micron.canvas_width))
+		x = WMDL_WORLD_WIDTH * WMDL_TILE_ASPECT - out_micron.canvas_width;
 #else
 	else if (x > (WMDL_WORLD_WIDTH - WMDL_TILES_X) * WMDL_TILE_ASPECT)
 		x = (WMDL_WORLD_WIDTH - WMDL_TILES_X) * WMDL_TILE_ASPECT;
@@ -82,8 +84,8 @@ static int32_t __hero_view_position_y(const wmdl_model_t& in_model)
 	if (y < 0)
 		y = 0;
 #if 0
-	else if (y > (WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - MICRON_CANVAS_HEIGHT))
-		y = WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - MICRON_CANVAS_HEIGHT;
+	else if (y > (WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - out_micron.canvas_height))
+		y = WMDL_WORLD_HEIGHT * WMDL_TILE_ASPECT - out_micron.canvas_height;
 #else
 	else if (y > (WMDL_WORLD_HEIGHT - WMDL_TILES_Y) * WMDL_TILE_ASPECT)
 		y = (WMDL_WORLD_HEIGHT - WMDL_TILES_Y) * WMDL_TILE_ASPECT;
@@ -436,7 +438,7 @@ static void __draw_text(
 	const wmdl_assets_t& in_assets, const int in_dst_y, const char* in_string, const uint8_t in_color,
 	micron_t& out_micron)
 {
-	micron_print_colorize(out_micron, in_assets.key_index, in_assets.text_edge_index, in_assets.font, in_color, (MICRON_CANVAS_WIDTH - micron_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
+	micron_print_colorize(out_micron, in_assets.key_index, in_assets.text_edge_index, in_assets.font, in_color, (out_micron.canvas_width - micron_font_string_width(in_assets.font, in_string)) / 2, in_dst_y, in_string);
 }
 
 static void __draw_foreground(
@@ -461,7 +463,7 @@ static void __draw_foreground(
 
 		int32_t y;
 
-		__draw_text(in_assets, y = MICRON_CANVAS_HEIGHT + int32_t((wmdl_model_now(in_model) - out_controller.credits_start_time) * -16.), "Congratulations!", WMDL_TITLE_COLOR, out_micron);
+		__draw_text(in_assets, y = out_micron.canvas_height + int32_t((wmdl_model_now(in_model) - out_controller.credits_start_time) * -16.), "Congratulations!", WMDL_TITLE_COLOR, out_micron);
 		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "You made it to the end of the game!", WMDL_TEXT_COLOR, out_micron);
 		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "We wanted to put an epic boss fight", WMDL_TEXT_COLOR, out_micron);
 		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "here, but we couldn't quite", WMDL_TEXT_COLOR, out_micron);
@@ -542,13 +544,13 @@ static void __draw_farplane(
 
 			if (FLAKE->x < -FLAKE_FRAME_ASPECT)
 			{
-				FLAKE->x = (float)MICRON_CANVAS_WIDTH;
+				FLAKE->x = (float)out_micron.canvas_width;
 			}
-			else if (FLAKE->x >= MICRON_CANVAS_WIDTH)
+			else if (FLAKE->x >= out_micron.canvas_width)
 			{
 				FLAKE->x = -FLAKE_FRAME_ASPECT;
 			}
-			if (FLAKE->y >= MICRON_CANVAS_HEIGHT)
+			if (FLAKE->y >= out_micron.canvas_height)
 			{
 				FLAKE->y = -FLAKE_FRAME_ASPECT;
 			}
@@ -736,7 +738,7 @@ static void __draw_deaths(
 		const int32_t SX = int32_t(death->x - in_vx);
 		const int32_t SY = int32_t(death->y - in_vy);
 
-		if (SX >= (-death->w / 2) && SY >= (-death->h / 2) && SX < (MICRON_CANVAS_WIDTH + death->w / 2) && SY < (MICRON_CANVAS_HEIGHT + death->h / 2))
+		if (SX >= (-death->w / 2) && SY >= (-death->h / 2) && SX < (out_micron.canvas_width + death->w / 2) && SY < (out_micron.canvas_height + death->h / 2))
 		{
 			micron_blit_key_clip(
 				out_micron,
@@ -984,7 +986,6 @@ static void __play_update(
 	//play menu up?
 	if (out_controller.play_menu)
 	{
-		//		__draw_text(in_assets, MICRON_CANVAS_HEIGHT / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (micron_key_downflank(in_micron, MICRON_KEY_ESCAPE))
 		{
 			in_model.play_bit = 0;
@@ -992,7 +993,6 @@ static void __play_update(
 			out_controller.play_menu = false;
 		}
 
-		//		__draw_text(in_assets, MICRON_CANVAS_HEIGHT / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_controller.canvas);
 		if (micron_key_downflank(in_micron, 'R'))
 		{
 			out_controller.play_menu = false;
@@ -1007,11 +1007,6 @@ static void __play_update(
 		}
 		else
 		{
-			/*
-			if (micron_key_downflank(in_micron, 'N'))
-				wmdl_tune_new ^= 1;
-				*/
-
 			uint32_t input = 0;
 
 			//hero movement
@@ -1101,20 +1096,15 @@ static void __play_update(
 				++i
 				)
 			{
-				micron_blit_key(out_micron, in_assets.key_index, in_assets.gui_server_broken, MICRON_CANVAS_WIDTH - i * 14 - 20, 0);
+				micron_blit_key(out_micron, in_assets.key_index, in_assets.gui_server_broken, out_micron.canvas_width - i * 14 - 20, 0);
 			}
 		}
 
 		if (out_controller.play_menu)
 		{
-			__draw_text(in_assets, MICRON_CANVAS_HEIGHT / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_micron);
-			__draw_text(in_assets, MICRON_CANVAS_HEIGHT / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_micron);
+			__draw_text(in_assets, out_micron.canvas_height / 3, "ESC = Quit", WMDL_PROMPT_COLOR, out_micron);
+			__draw_text(in_assets, out_micron.canvas_height / 3 * 2, "R = Resume", WMDL_PROMPT_COLOR, out_micron);
 		}
-
-		/*
-		if (wmdl_tune_new)
-			out_controller.canvas.pixels[0] = 255;
-			*/
 
 		wmdl_map(in_model, out_micron);
 	}//output
@@ -1129,17 +1119,17 @@ static wmdl_app_event_t __idle_update(
 		static uint32_t src_offset = 0;
 		const uint8_t* src = (uint8_t*)in_assets.bitmap_memory.data + src_offset;
 		uint8_t* dst = out_micron.canvas;
-		while (dst < out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT)
+		while (dst < out_micron.canvas + out_micron.canvas_width * out_micron.canvas_height)
 		{
 			*dst++ = *src++;
 		}
-		src_offset += MICRON_CANVAS_WIDTH;
+		src_offset += out_micron.canvas_width;
 	}
 #endif
 
 	micron_blit(out_micron, in_assets.idle, 0, 0);
 
-#if 1
+#if 0
 	{//show palette
 		constexpr int32_t CELL = 4;
 		for (uint32_t i = 0; i < 256; ++i)
@@ -1148,7 +1138,7 @@ static wmdl_app_event_t __idle_update(
 			{
 				for (int32_t x = 0; x < CELL; ++x)
 				{
-					out_micron.canvas[(CELL * (i % 16) + x) + (CELL * (i / 16) + y) * MICRON_CANVAS_WIDTH] = (uint8_t)i;
+					out_micron.canvas[(CELL * (i % 16) + x) + (CELL * (i / 16) + y) * out_micron.canvas_width] = (uint8_t)i;
 				}
 			}
 		}
@@ -1159,7 +1149,7 @@ static wmdl_app_event_t __idle_update(
 		int32_t y;
 
 		__draw_text(in_assets, y = 8, "Whip Man Danger Land", WMDL_TITLE_COLOR, out_micron);
-		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012-2024 nornware AB", WMDL_TEXT_COLOR, out_micron);
+		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "(c)2012-2025 nornware AB", WMDL_TEXT_COLOR, out_micron);
 		__draw_text(in_assets, y += WMDL_TEXT_SPACING * 2, "Talent", WMDL_TITLE_COLOR, out_micron);
 		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Saga Velander", WMDL_TEXT_COLOR, out_micron);
 		__draw_text(in_assets, y += WMDL_TEXT_SPACING, "Michael Awakim Manaz", WMDL_TEXT_COLOR, out_micron);
@@ -1183,7 +1173,7 @@ static wmdl_app_event_t __idle_update(
 	return wmdl_app_event_t::NOTHING;
 }
 
-#if 0
+#if ATASCII_TEST
 static uint32_t __prng()
 {
 	static uint32_t prng = 0;
@@ -1191,23 +1181,33 @@ static uint32_t __prng()
 	return 0x3f800000 | (prng & 0x007fffff);
 }
 
-static void __test(
+static void __atascii_test(
 	const wmdl_model_t& in_model,
 	micron_t& out_micron)
 {
 #if 0
 	{
 		uint8_t c;
+		int32_t x;
 		int32_t y;
-		micron_canvas_atascii_print(out_micron, "\x80Hello ATASCII!?\x80", c = 128, c - 32, 64, y = 64);
-		micron_canvas_atascii_print(out_micron, "Are you a villain?", c += 16, c - 32, 64, y += 8);
-		micron_canvas_atascii_print(out_micron, "Are you a vixen?", c += 16, c - 32, 64, y += 8);
-		micron_canvas_atascii_print(out_micron, "Are you a viking valyrie?", c += 16, c - 32, 64, y += 8);
-		micron_canvas_atascii_print(out_micron, "On penicillin?", c += 16, c - 32, 64, y += 8);
-		micron_canvas_atascii_print(out_micron, "With Richard Nixon?", c += 16, c - 32, 64, y += 8);
-		micron_canvas_atascii_print(out_micron, "In a robotic fantasy?", c += 16, c - 32, 64, y += 8);
+		micron_canvas_atascii_print(out_micron, "\x80Hello ATASCII!?\x80", c = 128, c - 32, x = 32, y = 128);
+		micron_canvas_atascii_print(out_micron, "Are you a villain?", c += 16, c - 32, x, y += 8);
+		micron_canvas_atascii_print(out_micron, "Are you a vixen?", c += 16, c - 32, x, y += 8);
+		micron_canvas_atascii_print(out_micron, "Are you a viking valyrie?", c += 16, c - 32, x, y += 8);
+		micron_canvas_atascii_print(out_micron, "On penicillin?", c += 16, c - 32, x, y += 8);
+		//micron_canvas_atascii_print(out_micron, "With Richard Nixon?", c += 16, c - 32, x, y += 8);
+		micron_canvas_atascii_print(out_micron, "In a robotic fantasy?", c += 16, c - 32, x, y += 8);
 	}
 #endif
+
+	//all chars
+	for (int32_t y = 0; y < 16; ++y)
+	{
+		for (int32_t x = 0; x < 16; ++x)
+		{
+			micron_canvas_atascii_char_key(out_micron, uint8_t(x + y * 16), 255, x * 8, y * 8);
+		}
+	}
 
 	{
 		static struct sprite_t
@@ -1222,7 +1222,7 @@ static void __test(
 		{
 			for (int32_t i = 0; i < _countof(sprites); ++i)
 			{
-				sprites[i].x = __prng() % (MICRON_CANVAS_WIDTH - 8);
+				sprites[i].x = __prng() % (out_micron.canvas_width - 8);
 				sprites[i].y = __prng() % (240 - 8);
 
 				sprites[i].xs = __prng() % 3;
@@ -1244,9 +1244,9 @@ static void __test(
 				s.x = 0;
 				s.xs = -s.xs;
 			}
-			else if (s.x > MICRON_CANVAS_WIDTH - 8)
+			else if (s.x > out_micron.canvas_width - 8)
 			{
-				s.x = MICRON_CANVAS_WIDTH - 8;
+				s.x = out_micron.canvas_width - 8;
 				s.xs = -s.xs;
 			}
 			s.y += s.ys;
@@ -1311,16 +1311,9 @@ wmdl_app_event_t wmdl_controller_tick(
 	else
 		result = __idle_update(in_assets, out_micron);
 
-#if 0
-	//display the number of dropped frames (60hz)
-	{
-		char str[16];
-		::sprintf_s(str, "%u", dx9::state.app->_frame_drops);
-		__draw_text(in_assets, MICRON_CANVAS_HEIGHT - assets.font.height, str, softdraw::red, controller.canvas);
-	}
+#if ATASCII_TEST
+	__atascii_test(out_model, out_micron);
 #endif
-
-	//__test(out_model, out_micron);
 
 	return result;
 }
@@ -1337,8 +1330,8 @@ void wmdl_controller_on_load_new_world(wmdl_controller_t& out_controller, micron
 		++flake
 		)
 	{
-		flake->x = wmdl_random_unit() * MICRON_CANVAS_WIDTH;
-		flake->y = wmdl_random_unit() * MICRON_CANVAS_HEIGHT;
+		flake->x = wmdl_random_unit() * out_micron.canvas_width;
+		flake->y = wmdl_random_unit() * out_micron.canvas_height;
 		flake->sx = wmdl_random_unit() * 50 - 25;
 		flake->sy = wmdl_random_unit() * 75 + 25;
 		flake->t = uint32_t(wmdl_random_unit() * 6);

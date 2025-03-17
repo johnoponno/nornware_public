@@ -5,6 +5,9 @@
 
 bool wmdl_game_init(micron_t& out_micron, wmdl_game_t& out_game)
 {
+	out_micron.canvas_width = 600;
+	out_micron.canvas_height = 320;
+
 	if (!wmdl_model_init(out_game.model))
 		return false;
 

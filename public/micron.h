@@ -5,10 +5,6 @@
 //BEGIN PUBLIC INTERFACE FOR MICRON IMPLEMENTORS
 //BEGIN PUBLIC INTERFACE FOR MICRON IMPLEMENTORS
 
-//FIXME: this is game specific!
-#define MICRON_CANVAS_WIDTH 600
-#define MICRON_CANVAS_HEIGHT 320
-
 //FIXME: this is currently win32 VK_xxx codes and NOT platform agnostic!
 #define MICRON_KEY_ESCAPE 0x1B
 
@@ -73,7 +69,9 @@ struct micron_t
 
 	//the actual pixels / framebuffer, CAN / WILL change on the fly
 	//the idea is to map this "somehow" to a modern graphics api (texture? / colored quads? / pixel shader?)
-	uint8_t canvas[MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT];
+	uint8_t canvas[640 * 360];//max resolution, arbitrary, but basically a wide-screen (16:9) version of 640x480
+	int32_t canvas_width;//these are signed ints for good interop with various blit functions
+	int32_t canvas_height;//these are signed ints for good interop with various blit functions
 
 	//the music file/track we currently want to stream
 	//it's up to the implementor to handle this (if at all) by loading and caching whatever it needs in order to stream a single music track

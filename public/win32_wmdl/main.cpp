@@ -15,6 +15,14 @@ struct wmdl_app_t : public w32_d3d9_chunky_app_t
 		if (!wmdl_game_tick(_micron, _game))
 			return false;
 
+#if 0
+		{//display the number of dropped frames (60hz)
+			char slask[16];
+			::sprintf_s(slask, "%u", w32_d3d9_state.app->_w32_d3d9_app_frame_drops);
+			micron_canvas_atascii_print(_micron, slask, 255, 0, _micron.canvas_width / 2, _micron.canvas_height - 8);
+		}//display the number of dropped frames (60hz)
+#endif
+
 		for (const uint32_t SP : _micron.sound_plays)
 			in_sounds.play(SP, 1.f, 0.f, 1.f, nullptr);
 		_micron.sound_plays.clear();

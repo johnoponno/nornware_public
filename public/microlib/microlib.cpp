@@ -156,14 +156,14 @@ void micron_canvas_clear(
 	//check defaults
 	if (
 		!in_clear_width || 
-		in_clear_width > MICRON_CANVAS_WIDTH
+		in_clear_width > out_micron.canvas_width
 		)
-		in_clear_width = MICRON_CANVAS_WIDTH;
+		in_clear_width = out_micron.canvas_width;
 	if (
 		!in_clear_height || 
-		in_clear_height > MICRON_CANVAS_HEIGHT
+		in_clear_height > out_micron.canvas_height
 		)
-		in_clear_height = MICRON_CANVAS_HEIGHT;
+		in_clear_height = out_micron.canvas_height;
 
 	//clip
 	int32_t src_x = 0;
@@ -171,13 +171,13 @@ void micron_canvas_clear(
 	if (__clip(
 
 		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
-		0, 0, MICRON_CANVAS_WIDTH, MICRON_CANVAS_HEIGHT,
+		0, 0, out_micron.canvas_width, out_micron.canvas_height,
 		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
 
 		src_x, src_y, in_dst_x, in_dst_y, in_clear_width, in_clear_height))
 	{
 		//short clear
-		uint8_t* dst = out_micron.canvas + in_dst_x + in_dst_y * MICRON_CANVAS_WIDTH;
+		uint8_t* dst = out_micron.canvas + in_dst_x + in_dst_y * out_micron.canvas_width;
 		uint8_t* scan_dst;
 		for (int32_t y = 0; y < in_clear_height; ++y)
 		{
@@ -185,11 +185,11 @@ void micron_canvas_clear(
 
 			for (int32_t x = 0; x < in_clear_width; ++x)
 			{
-				assert(dst >= out_micron.canvas && dst < (out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT));
+				assert(dst >= out_micron.canvas && dst < (out_micron.canvas + out_micron.canvas_width * out_micron.canvas_height));
 				*dst++ = in_color;
 			}
 
-			dst = scan_dst + MICRON_CANVAS_WIDTH;
+			dst = scan_dst + out_micron.canvas_width;
 		}
 	}
 }
@@ -207,13 +207,13 @@ void micron_canvas_horizontal_line(
 	int32_t in_x1, int32_t in_x2, const int32_t in_y1, const uint8_t in_color)
 {
 	//clip
-	if (in_y1 < 0 || in_y1 >= MICRON_CANVAS_HEIGHT)
+	if (in_y1 < 0 || in_y1 >= out_micron.canvas_height)
 		return;
 
 	__min_max(in_x1, in_x2);
 	in_x1 = __max(0, in_x1);
-	in_x2 = __min(MICRON_CANVAS_WIDTH, in_x2);
-	uint8_t* dst = out_micron.canvas + in_x1 + in_y1 * MICRON_CANVAS_WIDTH;
+	in_x2 = __min(out_micron.canvas_width, in_x2);
+	uint8_t* dst = out_micron.canvas + in_x1 + in_y1 * out_micron.canvas_width;
 
 	for (
 		int32_t x = in_x1;
@@ -221,7 +221,7 @@ void micron_canvas_horizontal_line(
 		++x
 		)
 	{
-		assert(dst >= out_micron.canvas && dst < out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT);
+		assert(dst >= out_micron.canvas && dst < out_micron.canvas + out_micron.canvas_width * out_micron.canvas_height);
 		*dst++ = in_color;
 	}
 }
@@ -231,13 +231,13 @@ void micron_canvas_vertical_line(
 	const int32_t in_x1, int32_t in_y1, int32_t in_y2, const uint8_t in_color)
 {
 	//clip
-	if (in_x1 < 0 || in_x1 >= MICRON_CANVAS_WIDTH)
+	if (in_x1 < 0 || in_x1 >= out_micron.canvas_width)
 		return;
 
 	__min_max(in_y1, in_y2);
 	in_y1 = __max(0, in_y1);
-	in_y2 = __min(MICRON_CANVAS_HEIGHT, in_y2);
-	uint8_t* dst = out_micron.canvas + in_x1 + in_y1 * MICRON_CANVAS_WIDTH;
+	in_y2 = __min(out_micron.canvas_height, in_y2);
+	uint8_t* dst = out_micron.canvas + in_x1 + in_y1 * out_micron.canvas_width;
 
 	for (
 		int32_t y = in_y1;
@@ -245,9 +245,9 @@ void micron_canvas_vertical_line(
 		++y
 		)
 	{
-		assert(dst >= out_micron.canvas && dst < out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT);
+		assert(dst >= out_micron.canvas && dst < out_micron.canvas + out_micron.canvas_width * out_micron.canvas_height);
 		*dst = in_color;
-		dst += MICRON_CANVAS_WIDTH;
+		dst += out_micron.canvas_width;
 	}
 }
 
@@ -264,9 +264,9 @@ void micron_canvas_atascii_print(
 			for (int32_t bit_x = 0; bit_x < 8; ++bit_x)
 			{
 				if (micron_atascii_bits[*c * 8 + bit_y] & (1 << bit_x))
-					out_micron.canvas[x + bit_x + (in_y + bit_y) * MICRON_CANVAS_WIDTH] = in_color_hi;
+					out_micron.canvas[x + bit_x + (in_y + bit_y) * out_micron.canvas_width] = in_color_hi;
 				else
-					out_micron.canvas[x + bit_x + (in_y + bit_y) * MICRON_CANVAS_WIDTH] = in_color_lo;
+					out_micron.canvas[x + bit_x + (in_y + bit_y) * out_micron.canvas_width] = in_color_lo;
 			}
 		}
 		x += 8;
@@ -283,7 +283,7 @@ void micron_canvas_atascii_char_key(
 		for (int32_t bit_x = 0; bit_x < 8; ++bit_x)
 		{
 			if (micron_atascii_bits[in_char * 8 + bit_y] & (1 << bit_x))
-				out_micron.canvas[in_x + bit_x + (in_y + bit_y) * MICRON_CANVAS_WIDTH] = in_color_hi;
+				out_micron.canvas[in_x + bit_x + (in_y + bit_y) * out_micron.canvas_width] = in_color_hi;
 		}
 	}
 }
@@ -298,12 +298,12 @@ void micron_blit(
 		in_copy_height = in_src.height;
 
 	assert(in_dst_x >= 0);
-	assert(in_dst_x + in_copy_width <= MICRON_CANVAS_WIDTH);
+	assert(in_dst_x + in_copy_width <= out_micron.canvas_width);
 	assert(in_dst_y >= 0);
-	assert(in_dst_y + in_copy_height <= MICRON_CANVAS_HEIGHT);
+	assert(in_dst_y + in_copy_height <= out_micron.canvas_height);
 
 	const uint8_t* BYTE_SRC = in_src.pixels + in_src_x + in_src_y * in_src.width;
-	uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * MICRON_CANVAS_WIDTH;
+	uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * out_micron.canvas_width;
 
 	for (
 		int32_t y = 0;
@@ -321,14 +321,14 @@ void micron_blit(
 			)
 		{
 			assert(BYTE_SRC >= in_src.pixels && BYTE_SRC < (in_src.pixels + in_src.width * in_src.height));
-			assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT));
+			assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + out_micron.canvas_width * out_micron.canvas_height));
 			*byte_dst = *BYTE_SRC;
 			++byte_dst;
 			++BYTE_SRC;
 		}
 
 		BYTE_SRC = BYTE_SCAN_SRC + in_src.width;
-		byte_dst = byte_scan_dst + MICRON_CANVAS_WIDTH;
+		byte_dst = byte_scan_dst + out_micron.canvas_width;
 	}
 }
 
@@ -342,7 +342,7 @@ void micron_blit_key(
 		in_copy_height = in_src.height;
 
 	const uint8_t* BYTE_SRC = in_src.pixels + in_src_x + in_src_y * in_src.width;
-	uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * MICRON_CANVAS_WIDTH;
+	uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * out_micron.canvas_width;
 
 	for (
 		int32_t y = 0;
@@ -360,7 +360,7 @@ void micron_blit_key(
 			)
 		{
 			assert(BYTE_SRC >= in_src.pixels && BYTE_SRC < (in_src.pixels + in_src.width * in_src.height));
-			assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT));
+			assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + out_micron.canvas_width * out_micron.canvas_height));
 			if (in_key != *BYTE_SRC)
 				*byte_dst = *BYTE_SRC;
 			++byte_dst;
@@ -368,7 +368,7 @@ void micron_blit_key(
 		}
 
 		BYTE_SRC = BYTE_SCAN_SRC + in_src.width;
-		byte_dst = byte_scan_dst + MICRON_CANVAS_WIDTH;
+		byte_dst = byte_scan_dst + out_micron.canvas_width;
 	}
 }
 
@@ -384,7 +384,7 @@ void micron_blit_key_clip(
 	if (__clip(
 
 		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
-		0, 0, MICRON_CANVAS_WIDTH, MICRON_CANVAS_HEIGHT,
+		0, 0, out_micron.canvas_width, out_micron.canvas_height,
 		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
 
 		in_src_x, in_src_y, in_dst_x, in_dst_y, in_copy_width, in_copy_height))
@@ -403,7 +403,7 @@ void micron_blit_key2_colorize(
 		in_copy_height = in_src.height;
 
 	const uint8_t* BYTE_SRC = in_src.pixels + in_src_x + in_src_y * in_src.width;
-	uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * MICRON_CANVAS_WIDTH;
+	uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * out_micron.canvas_width;
 
 	for (
 		int32_t y = 0;
@@ -421,7 +421,7 @@ void micron_blit_key2_colorize(
 			)
 		{
 			assert(BYTE_SRC >= in_src.pixels && BYTE_SRC < (in_src.pixels + in_src.width * in_src.height));
-			assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + MICRON_CANVAS_WIDTH * MICRON_CANVAS_HEIGHT));
+			assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + out_micron.canvas_width * out_micron.canvas_height));
 			if (in_key != *BYTE_SRC)
 			{
 				if (in_key2 != *BYTE_SRC)
@@ -434,7 +434,7 @@ void micron_blit_key2_colorize(
 		}
 
 		BYTE_SRC = BYTE_SCAN_SRC + in_src.width;
-		byte_dst = byte_scan_dst + MICRON_CANVAS_WIDTH;
+		byte_dst = byte_scan_dst + out_micron.canvas_width;
 	}
 }
 
@@ -450,7 +450,7 @@ void micron_blit_key2_colorize_clip(
 	if (__clip(
 
 		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
-		0, 0, MICRON_CANVAS_WIDTH, MICRON_CANVAS_HEIGHT,
+		0, 0, out_micron.canvas_width, out_micron.canvas_height,
 		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
 
 		in_src_x, in_src_y, in_dst_x, in_dst_y, in_copy_width, in_copy_height))

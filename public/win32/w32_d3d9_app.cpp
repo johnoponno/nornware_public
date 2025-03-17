@@ -398,17 +398,17 @@ void w32_d3d9_chunky_app_t::w32_d3d9_app_frame_move(const double, const float)
 
 	//figure out the cursor position on our application canvas (not the same as native screen position)
 	{
-		const canvas_layout_t LAYOUT = __canvas_layout(MICRON_CANVAS_WIDTH, MICRON_CANVAS_HEIGHT);
+		const canvas_layout_t LAYOUT = __canvas_layout(_micron.canvas_width, _micron.canvas_height);
 
 		float cpx = (float)_micron.screen_cursor_x;
 		cpx -= LAYOUT.x;
 		cpx /= (float)LAYOUT.width;
-		cpx *= (float)MICRON_CANVAS_WIDTH;
+		cpx *= (float)_micron.canvas_width;
 
 		float cpy = (float)_micron.screen_cursor_y;
 		cpy -= LAYOUT.y;
 		cpy /= (float)LAYOUT.height;
-		cpy *= (float)MICRON_CANVAS_HEIGHT;
+		cpy *= (float)_micron.canvas_height;
 
 		_micron.canvas_cursor_x = (int32_t)cpx;
 		_micron.canvas_cursor_y = (int32_t)cpy;
@@ -442,7 +442,7 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_app_frame_render(const double, const float)
 #endif
 
 			{
-				const canvas_layout_t LAYOUT = __canvas_layout(MICRON_CANVAS_WIDTH, MICRON_CANVAS_HEIGHT);
+				const canvas_layout_t LAYOUT = __canvas_layout(_micron.canvas_width, _micron.canvas_height);
 				uint16_t sd_palette[256];
 				for (
 					uint32_t i = 0;
@@ -451,7 +451,7 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_app_frame_render(const double, const float)
 					)
 					sd_palette[i] = sd_color_encode(_micron.palette[i].b, _micron.palette[i].g, _micron.palette[i].r);
 				w32_d3d9_present_8bit(
-					sd_palette, sd_that_pink, _micron.canvas, MICRON_CANVAS_WIDTH, MICRON_CANVAS_HEIGHT,
+					sd_palette, sd_that_pink, _micron.canvas, _micron.canvas_width, _micron.canvas_height,
 					LAYOUT.x,
 					LAYOUT.y,
 					LAYOUT.width,
