@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../micron/microlib.h"
+#include "../microlib/microlib.h"
 #include "wmdl_model.h"
 
 #define WMDL_TITLE_COLOR 255

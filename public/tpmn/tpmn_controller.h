@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../micron/sd_bitmap.h"
+#include "../microlib/sd_bitmap.h"
 #include "tpmn_model.h"
 
 struct micron_t;

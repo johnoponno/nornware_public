@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../micron/sd_bitmap.h"
-#include "../micron/sd_fontv.h"
+#include "../microlib/sd_bitmap.h"
+#include "../microlib/sd_fontv.h"
 #include "tpmn_model.h"
 
 struct micron_t;

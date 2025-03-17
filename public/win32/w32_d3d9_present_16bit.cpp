@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "w32_d3d9_softdraw_adapter.h"
 
-#include "../micron/sd_bitmap.h"
+#include "../microlib/sd_bitmap.h"
 #include "w32_d3d9_state.h"
 
 static void __copy(const sd_bitmap_t& in_canvas, const ::D3DLOCKED_RECT& in_rect)
@@ -9,7 +9,11 @@ static void __copy(const sd_bitmap_t& in_canvas, const ::D3DLOCKED_RECT& in_rect
 	const uint32_t PITCH = in_rect.Pitch / sizeof(uint16_t);
 	uint16_t* dst_start = (uint16_t*)in_rect.pBits;
 
-	for (int32_t y = 0; y < in_canvas.height; ++y)
+	for (
+		int32_t y = 0; 
+		y < in_canvas.height; 
+		++y
+		)
 	{
 		int32_t x = in_canvas.width;
 		uint16_t* dst = dst_start + y * PITCH;

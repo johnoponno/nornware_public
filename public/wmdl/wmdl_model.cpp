@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "wmdl_model.h"
 
-#include "../micron/fs.h"
+#include "../microlib/fs.h"
 
 #define ASSET_COMMON_INFO "model.common"
 

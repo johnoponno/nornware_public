@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "w32_d3d9_softdraw_adapter.h"
 
-#include "../micron/sd_bitmap.h"
+#include "../microlib/sd_bitmap.h"
 #include "w32_d3d9_state.h"
 
 //public

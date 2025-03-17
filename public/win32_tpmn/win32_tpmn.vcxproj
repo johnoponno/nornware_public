@@ -112,7 +112,7 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\micron\micron.vcxproj">
+    <ProjectReference Include="..\microlib\microlib.vcxproj">
       <Project>{58c160c4-27d2-462a-b7d5-e7a1b99a7bfe}</Project>
     </ProjectReference>
     <ProjectReference Include="..\tpmn\tpmn.vcxproj">
