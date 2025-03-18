@@ -242,6 +242,7 @@ bool paletas_t::calculate(
 		}
 
 		//CRITICAL! we cannot map to a LARGER palette size than the number of unique pixels
+		//FIXME: use another codepath to handle that case
 		assert(1 == all_buckets.size());
 		if (all_buckets[0].size() < in_palette_size)
 		{

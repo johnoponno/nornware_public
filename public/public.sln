@@ -20,6 +20,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win32_grafxkid", "win32_gra
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "grafxkid", "grafxkid\grafxkid.vcxproj", "{0F45540B-EA53-4C62-BA17-CF8D93522DAA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "plax", "plax\plax.vcxproj", "{710067F0-E965-4FED-B748-6D05DFBD8DE7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "win32_plax", "win32_plax\win32_plax.vcxproj", "{06DBCA14-BC08-4F03-8337-7ACA6B01FBBC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -50,6 +54,14 @@ Global
 		{0F45540B-EA53-4C62-BA17-CF8D93522DAA}.Debug|x86.Build.0 = Debug|Win32
 		{0F45540B-EA53-4C62-BA17-CF8D93522DAA}.Release|x86.ActiveCfg = Release|Win32
 		{0F45540B-EA53-4C62-BA17-CF8D93522DAA}.Release|x86.Build.0 = Release|Win32
+		{710067F0-E965-4FED-B748-6D05DFBD8DE7}.Debug|x86.ActiveCfg = Debug|Win32
+		{710067F0-E965-4FED-B748-6D05DFBD8DE7}.Debug|x86.Build.0 = Debug|Win32
+		{710067F0-E965-4FED-B748-6D05DFBD8DE7}.Release|x86.ActiveCfg = Release|Win32
+		{710067F0-E965-4FED-B748-6D05DFBD8DE7}.Release|x86.Build.0 = Release|Win32
+		{06DBCA14-BC08-4F03-8337-7ACA6B01FBBC}.Debug|x86.ActiveCfg = Debug|Win32
+		{06DBCA14-BC08-4F03-8337-7ACA6B01FBBC}.Debug|x86.Build.0 = Debug|Win32
+		{06DBCA14-BC08-4F03-8337-7ACA6B01FBBC}.Release|x86.ActiveCfg = Release|Win32
+		{06DBCA14-BC08-4F03-8337-7ACA6B01FBBC}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
