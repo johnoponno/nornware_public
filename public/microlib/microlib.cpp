@@ -430,6 +430,80 @@ void micron_blit_key_clip(
 	}
 }
 
+static void __h_mirror_modify_src_x(
+	const int32_t in_original_copy_width, const int32_t in_current_copy_width, const int32_t in_original_src_x,
+	int32_t& out_src_x)
+{
+	//right clip / no clip
+	if (in_original_src_x == out_src_x)
+	{
+		out_src_x += in_original_copy_width - 1;
+	}
+	//left clip
+	else
+	{
+		const int32_t DIFF = in_original_copy_width - in_current_copy_width;
+		out_src_x += in_original_copy_width - DIFF - DIFF - 1;
+	}
+}
+
+void micron_blit_key_clip_horizontal_mirror(
+	micron_t& out_micron,
+	const uint8_t in_key, const micron_bitmap_t& in_src, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)
+{
+	if (0 == in_copy_width || in_copy_width > in_src.width)
+		in_copy_width = in_src.width;
+	if (0 == in_copy_height || in_copy_height > in_src.height)
+		in_copy_height = in_src.height;
+
+	const int32_t ORIGINAL_SRC_X = in_src_x;
+	const int32_t ORIGINAL_COPY_WIDTH = in_copy_width;
+	if (__clip(
+
+		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
+		0, 0, out_micron.canvas_width, out_micron.canvas_height,
+		//these are legacy, but here in case you would want to clip to some other rect than the whole bitmap
+
+		in_src_x, in_src_y, in_dst_x, in_dst_y, in_copy_width, in_copy_height))
+	{
+		assert(in_src_x >= 0 && in_src_x < in_src.width);
+		assert(in_src_y >= 0 && in_src_y < in_src.height);
+
+		//we are flipping
+		__h_mirror_modify_src_x(ORIGINAL_COPY_WIDTH, in_copy_width, ORIGINAL_SRC_X, in_src_x);
+
+		//short copy (since key keying)
+		const uint8_t* BYTE_SRC = in_src.pixels + in_src_x + in_src_y * in_src.width;
+		uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * out_micron.canvas_width;
+
+		for (
+			int32_t y = 0;
+			y < in_copy_height;
+			++y
+			)
+		{
+			const uint8_t* BYTE_SCAN_SRC = BYTE_SRC;
+			uint8_t* byte_scan_dst = byte_dst;
+
+			for (
+				int32_t x = 0;
+				x < in_copy_width;
+				++x
+				)
+			{
+				assert(BYTE_SRC >= in_src.pixels && BYTE_SRC < (in_src.pixels + in_src.width + in_src.height * in_src.width));
+				if (*BYTE_SRC != in_key)
+					*byte_dst = *BYTE_SRC;
+				--BYTE_SRC;
+				++byte_dst;
+			}
+
+			BYTE_SRC = BYTE_SCAN_SRC + in_src.width;
+			byte_dst = byte_scan_dst + out_micron.canvas_width;
+		}
+	}
+}
+
 void micron_blit_key2_colorize(
 	micron_t& out_micron,
 	const uint8_t in_key, const uint8_t in_key2, const micron_bitmap_t& in_src, const uint8_t in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width, int32_t in_copy_height, int32_t in_src_x, int32_t in_src_y)

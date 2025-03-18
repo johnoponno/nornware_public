@@ -85,6 +85,9 @@ void micron_blit_key(
 void micron_blit_key_clip(
 	micron_t& out_micron,
 	const uint8_t in_key, const micron_bitmap_t& SRC, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);
+void micron_blit_key_clip_horizontal_mirror(
+	micron_t& out_micron,
+	const uint8_t in_key, const micron_bitmap_t& in_src, int32_t in_dst_x, int32_t in_dst_y, int32_t in_copy_width = 0, int32_t in_copy_height = 0, int32_t in_src_x = 0, int32_t in_src_y = 0);
 void micron_blit_key2_colorize(
 	micron_t& out_micron,
 	const uint8_t in_key, const uint8_t in_key2, const micron_bitmap_t& SRC, const uint8_t aColor, int32_t aDstX, int32_t aDstY, int32_t aCopyWidth = 0, int32_t aCopyHeight = 0, int32_t aSrcX = 0, int32_t aSrcY = 0);

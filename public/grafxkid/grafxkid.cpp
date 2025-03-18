@@ -479,11 +479,9 @@ bool grafxkid_tick(micron_t& out_micron, grafxkid_t& out_game)
 			if (out_game.mu_hero_speed_y)
 			{
 				tile = TILE_HERO_JUMP;
-				/*
 				if (out_game.mu_hero_left)
-					micron_blit_key_clip_horizontal_mirror(out_micron, out_game.gfx, X, Y, TILE_ASPECT, TILE_ASPECT, (tile % SRC_TILES_X) * TILE_ASPECT, (tile / SRC_TILES_X) * TILE_ASPECT);
+					micron_blit_key_clip_horizontal_mirror(out_micron, COLOR_KEY, out_game.gfx, X, Y, TILE_ASPECT, TILE_ASPECT, (tile % SRC_TILES_X) * TILE_ASPECT, (tile / SRC_TILES_X) * TILE_ASPECT);
 				else
-				*/
 					__blit_tile(out_game, tile, X, Y, out_micron);
 			}
 			else
@@ -502,11 +500,9 @@ bool grafxkid_tick(micron_t& out_micron, grafxkid_t& out_game)
 					tile = TILE_HERO_RUN[(out_game.mu_tick / 3) % _countof(TILE_HERO_RUN)];
 					break;
 				}
-				/*
 				if (out_game.mu_hero_left)
-					canvas.blit_key_clip_horizontal_mirror(im.gfx, nullptr, sd_operation_t::SET, X, Y, TILE_ASPECT, TILE_ASPECT, (tile % SRC_TILES_X) * TILE_ASPECT, (tile / SRC_TILES_X) * TILE_ASPECT);
+					micron_blit_key_clip_horizontal_mirror(out_micron, COLOR_KEY, out_game.gfx, X, Y, TILE_ASPECT, TILE_ASPECT, (tile % SRC_TILES_X) * TILE_ASPECT, (tile / SRC_TILES_X) * TILE_ASPECT);
 				else
-				*/
 					__blit_tile(out_game, tile, X, Y, out_micron);
 			}
 		}
