@@ -1,8 +1,14 @@
 #include "stdafx.h"
 #include "w32_d3d9_softdraw_adapter.h"
 
-#include "../microlib/sd_bitmap.h"
 #include "w32_d3d9_state.h"
+
+struct
+{
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+} __rgb_shift{}, __rgb_bits{};
 
 //public
 //public
@@ -23,9 +29,23 @@ w32_d3d9_softdraw_adapter_t::w32_d3d9_softdraw_adapter_t(const uint32_t in_alpha
 	//this sets up color encoding to match the texture format we will be using
 	//NOTE: only really applicable for 16bit use (the color conversion stuff is global, hence these functions_
 	if (in_alpha)
-		sd_set_555();
+	{
+		__rgb_shift = { 10, 5, 0 };
+		__rgb_bits = { 5, 5, 5 };
+	}
 	else
-		sd_set_565();
+	{
+		__rgb_shift = { 11, 5, 0 };
+		__rgb_bits = { 5, 6, 5 };
+	}
+}
+
+uint16_t w32_d3d9_softdraw_adapter_t::color_encode(const uint8_t aR, const uint8_t aG, const uint8_t aB) const
+{
+	return
+		((aR >> (8 - __rgb_bits.r)) << __rgb_shift.r) |
+		((aG >> (8 - __rgb_bits.g)) << __rgb_shift.g) |
+		((aB >> (8 - __rgb_bits.b)) << __rgb_shift.b);
 }
 
 ::IDirect3DStateBlock9* w32_d3d9_state_block_begin(const w32_d3d9_fixed_function_mode_t in_mode, const ::DWORD in_cull, const ::DWORD in_fvf, const bool in_filter, ::IDirect3DTexture9* in_texture)

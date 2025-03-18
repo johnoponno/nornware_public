@@ -23,6 +23,7 @@ struct w32_d3d9_softdraw_adapter_t : public w32_d3d9_resource_t
 	void w32_d3d9_resource_on_destroy_device() override;
 
 	explicit w32_d3d9_softdraw_adapter_t(const uint32_t in_alpha);
+	uint16_t color_encode(const uint8_t aR, const uint8_t aG, const uint8_t aB) const;
 
 	const uint32_t ALPHA;
 	uint32_t texture_aspect;

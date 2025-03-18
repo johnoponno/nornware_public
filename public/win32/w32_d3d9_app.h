@@ -63,26 +63,6 @@ struct w32_d3d9_micron_guts_t
 	micron_t _micron;
 };
 
-
-//simplified / fixed tick version (16 bit softdraw graphics)
-struct w32_d3d9_softdraw_app_t : public w32_d3d9_app_i
-{
-	bool w32_d3d9_app_modify_device_settings(const ::D3DCAPS9& caps, w32_d3d9_device_settings_t& device_settings) override;
-	::LRESULT w32_d3d9_app_msg_proc(const HWND window, const UINT message, const WPARAM wparam, const LPARAM lparam, bool* no_further_processing) override;
-	void w32_d3d9_app_frame_move(const double now, const float elapsed) override;
-	bool w32_d3d9_app_frame_render(const double now, const float elapsed) override;
-
-	bool w32_d3d9_app_is_fixed_tick_rate() const override;
-	float w32_d3d9_app_seconds_per_fixed_tick() const override;
-	bool w32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const override;
-
-	explicit w32_d3d9_softdraw_app_t(const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas, const uint32_t in_num_sounds);
-	virtual bool w32_d3d9_softdraw_app_tick(const w32_dsound_container_t& in_sounds) = 0;
-
-	const sd_bitmap_t& REF_CANVAS;
-	w32_d3d9_micron_guts_t _guts;
-};
-
 //simplified / fixed tick version (8 bit palettized graphics)
 struct w32_d3d9_chunky_app_t : public w32_d3d9_app_i
 {

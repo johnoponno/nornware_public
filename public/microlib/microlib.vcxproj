@@ -80,16 +80,12 @@
   <ItemGroup>
     <ClInclude Include="microlib.h" />
     <ClInclude Include="paletas.h" />
-    <ClInclude Include="sd_bitmap.h" />
-    <ClInclude Include="sd_fontv.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="fs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="microlib.cpp" />
     <ClCompile Include="paletas.cpp" />
-    <ClCompile Include="sd_bitmap.cpp" />
-    <ClCompile Include="sd_fontv.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

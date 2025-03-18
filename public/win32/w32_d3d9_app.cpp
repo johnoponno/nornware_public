@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "w32_d3d9_app.h"
 
-#include "../microlib/sd_bitmap.h"
 #include "w32_d3d9_state.h"
 #include "w32_d3d9_softdraw_adapter.h"
 #include "w32_dsound_stream.h"
@@ -78,6 +77,7 @@ bool w32_d3d9_app_i::init(const char* in_title, const bool in_windowed, const in
 //guts
 //guts
 //guts
+
 w32_d3d9_micron_guts_t::w32_d3d9_micron_guts_t(const float in_seconds_per_fixed_tick, const uint32_t in_num_sounds)
 	:SECONDS_PER_FIXED_TICK(in_seconds_per_fixed_tick)
 	, _video_adapter(false)
@@ -199,132 +199,6 @@ void w32_d3d9_micron_guts_t::frame_move()
 	}
 }
 
-//softdraw
-//softdraw
-//softdraw
-//softdraw
-
-bool w32_d3d9_softdraw_app_t::w32_d3d9_app_modify_device_settings(
-	const ::D3DCAPS9& in_caps,
-	w32_d3d9_device_settings_t& out_device_settings)
-{
-	// If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW 
-	// then switch to SWVP.
-	if ((in_caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) == 0 ||
-		in_caps.VertexShaderVersion < D3DVS_VERSION(1, 1))
-	{
-		out_device_settings.behavior_flags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
-	}
-
-	// Debugging vertex shaders requires either REF or software vertex processing 
-	// and debugging pixel shaders requires REF.  
-#ifdef DEBUG_VS
-	if (device_settings->DeviceType != D3DDEVTYPE_REF)
-	{
-		out_device_settings->BehaviorFlags &= ~D3DCREATE_HARDWARE_VERTEXPROCESSING;
-		out_device_settings->BehaviorFlags &= ~D3DCREATE_PUREDEVICE;
-		out_device_settings->BehaviorFlags |= D3DCREATE_SOFTWARE_VERTEXPROCESSING;
-	}
-#endif
-#ifdef DEBUG_PS
-	out_device_settings->DeviceType = D3DDEVTYPE_REF;
-#endif
-	// For the first device created if its a REF device, optionally display a warning dialog box
-	static bool s_bFirstTime = true;
-	if (s_bFirstTime)
-	{
-		s_bFirstTime = false;
-		if (D3DDEVTYPE_REF == out_device_settings.device_type)
-			w32_d3d9_display_switching_to_ref_warning();
-	}
-
-	out_device_settings.present_parameters.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;	//no vsync
-
-	return true;
-}
-
-::LRESULT w32_d3d9_softdraw_app_t::w32_d3d9_app_msg_proc(const HWND, const UINT, const WPARAM, const LPARAM, bool*)
-{
-	return 0;
-}
-
-void w32_d3d9_softdraw_app_t::w32_d3d9_app_frame_move(const double, const float)
-{
-	//if not foreground, don't run
-	if (!w32_d3d9_state.m_active)
-		return;
-
-	_guts.frame_move();
-
-	if (!w32_d3d9_softdraw_app_tick(_guts._sound_container))
-		w32_d3d9_shutdown(0);
-}
-
-bool w32_d3d9_softdraw_app_t::w32_d3d9_app_frame_render(const double, const float)
-{
-	if (w32_d3d9_state.m_active)
-	{
-		::HRESULT hr;
-
-		// Render the scene
-		if (SUCCEEDED(w32_d3d9_state.m_d3d_device->BeginScene()))
-		{
-#if 0
-			// Clear the render target and the zbuffer
-			VERIFY(w32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, __clear_color(this), 1.f, 0));
-#else
-			//2024-12-02: we aren't using the z-buffer, but we want to see dropped frames (cleared in red)
-			VERIFY(w32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET, __clear_color(this), 1.f, 0));
-#endif
-
-			{
-				const canvas_layout_t LAYOUT = __canvas_layout(REF_CANVAS.width, REF_CANVAS.height);
-
-				w32_d3d9_softdraw_present_2d(
-					REF_CANVAS,
-					LAYOUT.x,
-					LAYOUT.y,
-					LAYOUT.width,
-					LAYOUT.height,
-					UINT32_MAX,
-					w32_d3d9_fixed_function_mode_t::SET,
-					false,
-					_guts._video_adapter
-				);
-			}
-
-			VERIFY(w32_d3d9_state.m_d3d_device->EndScene());
-		}
-	}
-
-	return w32_d3d9_state.m_active;
-}
-
-bool w32_d3d9_softdraw_app_t::w32_d3d9_app_is_fixed_tick_rate() const
-{
-	return true;
-}
-
-float w32_d3d9_softdraw_app_t::w32_d3d9_app_seconds_per_fixed_tick() const
-{
-	return _guts.SECONDS_PER_FIXED_TICK;
-}
-
-bool w32_d3d9_softdraw_app_t::w32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const
-{
-	caps;
-	adapter_format;
-	back_buffer_format;
-	windowed;
-	return true;
-}
-
-w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_t(const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas, const uint32_t in_num_sounds)
-	:_guts(in_seconds_per_fixed_tick, in_num_sounds)
-	, REF_CANVAS(in_canvas)
-{
-}
-
 //chunky
 //chunky
 //chunky
@@ -411,9 +285,9 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_app_frame_render(const double, const float)
 					i < 256;
 					++i
 					)
-					sd_palette[i] = sd_color_encode(_guts._micron.palette[i].b, _guts._micron.palette[i].g, _guts._micron.palette[i].r);
+					sd_palette[i] = _guts._video_adapter.color_encode(_guts._micron.palette[i].b, _guts._micron.palette[i].g, _guts._micron.palette[i].r);
 				w32_d3d9_present_8bit(
-					sd_palette, sd_that_pink, _guts._micron.canvas, _guts._micron.canvas_width, _guts._micron.canvas_height,
+					sd_palette, _guts._video_adapter.color_encode(255, 0, 255), _guts._micron.canvas, _guts._micron.canvas_width, _guts._micron.canvas_height,
 					LAYOUT.x,
 					LAYOUT.y,
 					LAYOUT.width,

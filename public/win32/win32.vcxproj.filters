@@ -51,9 +51,6 @@
     <ClCompile Include="w32_d3d9_present_8bit.cpp">
       <Filter>d3d9</Filter>
     </ClCompile>
-    <ClCompile Include="w32_d3d9_present_16bit.cpp">
-      <Filter>d3d9</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />

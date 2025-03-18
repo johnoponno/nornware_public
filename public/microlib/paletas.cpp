@@ -4,7 +4,6 @@
 #include "../micron.h"
 #include "microlib.h"
 #include "fs.h"
-#include "sd_bitmap.h"
 
 struct paletas_color_t
 {
