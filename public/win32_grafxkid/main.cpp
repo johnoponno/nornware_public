@@ -12,7 +12,7 @@ struct wmdl_app_t : public w32_d3d9_chunky_app_t
 	//this is the main "tick" callback from the win32 / d3d9 harness
 	bool w32_d3d9_chunky_app_tick(const w32_dsound_container_t& in_sounds) override
 	{
-		if (!grafxkid_tick(_micron, _game))
+		if (!grafxkid_tick(_guts._micron, _game))
 			return false;
 
 #if 0
@@ -23,11 +23,11 @@ struct wmdl_app_t : public w32_d3d9_chunky_app_t
 		}//display the number of dropped frames (60hz)
 #endif
 
-		for (const uint32_t SP : _micron.sound_plays)
+		for (const uint32_t SP : _guts._micron.sound_plays)
 			in_sounds.play(SP, 1.f, 0.f, 1.f, nullptr);
-		_micron.sound_plays.clear();
+		_guts._micron.sound_plays.clear();
 
-		w32_d3d9_chunky_app_handle_music_request();
+		_guts.handle_music_request(_w32_d3d9_app_frame_moves);
 
 		return true;
 	}
@@ -62,7 +62,7 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 		return -1;
 
 	//application-specific init
-	if (!grafxkid_init(__app._micron, __app._game))
+	if (!grafxkid_init(__app._guts._micron, __app._game))
 		return -1;
 	/*
 	if (!__app.w32_d3d9_chunky_app_init_audio())
@@ -76,7 +76,7 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 	grafxkid_shutdown(__app._game);
 
 	//cleanup internal win32 / d3d9 / dsound stuff
-	__app.w32_d3d9_chunky_app_cleanup_audio();
+	__app._guts.cleanup_audio();
 
 	//return internal exit code
 	return w32_d3d9_state.m_exit_code;

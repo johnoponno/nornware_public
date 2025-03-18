@@ -74,6 +74,131 @@ bool w32_d3d9_app_i::init(const char* in_title, const bool in_windowed, const in
 	return true;
 }
 
+//guts
+//guts
+//guts
+//guts
+w32_d3d9_micron_guts_t::w32_d3d9_micron_guts_t(const float in_seconds_per_fixed_tick, const uint32_t in_num_sounds)
+	:SECONDS_PER_FIXED_TICK(in_seconds_per_fixed_tick)
+	, _video_adapter(false)
+	, _sound_container(in_num_sounds)
+{
+	_music_file = nullptr;
+	_music_stream = nullptr;
+}
+
+bool w32_d3d9_micron_guts_t::init_audio()
+{
+	if (!_sound_engine.init(w32_d3d9_hwnd()))
+		return false;
+
+	if (!_sound_container.init())
+		return false;
+
+	for (const micron_t::sound_load_t& SR : _micron.sound_loads)
+	{
+		if (!_sound_container.add_sound(_sound_engine, SR.asset, SR.id, 1))
+			return false;
+	}
+	_micron.sound_loads.clear();
+
+	return true;
+}
+
+void w32_d3d9_micron_guts_t::handle_music_request(const uint32_t in_frame_moves)
+{
+	if (
+		_music_file != _micron.music ||
+		!_music_stream
+		)
+	{
+		if (_music_stream)
+		{
+			delete _music_stream;
+			_music_stream = nullptr;
+		}
+
+		_music_stream = w32_dsound_stream_create(_sound_engine, _micron.music);
+		if (_music_stream)
+			_music_stream->play(true, 0.f, 1.f);
+
+		_music_file = _micron.music;
+	}
+
+	if (_music_stream)
+		_music_stream->update(in_frame_moves * SECONDS_PER_FIXED_TICK, 1.f);
+}
+
+void w32_d3d9_micron_guts_t::cleanup_audio()
+{
+	_music_file = nullptr;
+	delete _music_stream;
+	_music_stream = nullptr;
+	_sound_container.cleanup();
+	_sound_engine.cleanup();
+}
+
+void w32_d3d9_micron_guts_t::frame_move()
+{
+	//sample input from the os and cache it
+	{
+		for (
+			uint32_t key = 0;
+			key < _countof(_micron.keys);
+			++key
+			)
+		{
+			_micron.keys[key].down_last = _micron.keys[key].down_current;
+			_micron.keys[key].down_current = 0 != ::GetAsyncKeyState(key);
+		}
+
+		{
+			::POINT cursor_position;
+			::GetCursorPos(&cursor_position);
+			::ScreenToClient(w32_d3d9_hwnd(), &cursor_position);
+
+			//__state.cursor_movement_x = cursor_position.x - __state.cursor_pos_x;
+			//__state.cursor_movement_y = cursor_position.y - __state.cursor_pos_y;
+			_micron.screen_cursor_x = cursor_position.x;
+			_micron.screen_cursor_y = cursor_position.y;
+		}
+
+		/*
+		if (__state.mouse_wheel.event_consumed)
+		{
+			__state.mouse_wheel.delta = 0;
+			__state.mouse_wheel.event_consumed = false;
+		}
+		*/
+	}
+
+	//figure out the cursor position on our application canvas (not the same as native screen position)
+	{
+		assert(_micron.canvas_width);
+		assert(_micron.canvas_height);
+		const canvas_layout_t LAYOUT = __canvas_layout(_micron.canvas_width, _micron.canvas_height);
+
+		float cpx = (float)_micron.screen_cursor_x;
+		cpx -= LAYOUT.x;
+		cpx /= (float)LAYOUT.width;
+		cpx *= (float)_micron.canvas_width;
+
+		float cpy = (float)_micron.screen_cursor_y;
+		cpy -= LAYOUT.y;
+		cpy /= (float)LAYOUT.height;
+		cpy *= (float)_micron.canvas_height;
+
+		_micron.canvas_cursor_x = (int32_t)cpx;
+		_micron.canvas_cursor_y = (int32_t)cpy;
+
+		if (cpx < 0.f)
+			--_micron.canvas_cursor_x;
+
+		if (cpy < 0.f)
+			--_micron.canvas_cursor_y;
+	}
+}
+
 //softdraw
 //softdraw
 //softdraw
@@ -129,63 +254,9 @@ void w32_d3d9_softdraw_app_t::w32_d3d9_app_frame_move(const double, const float)
 	if (!w32_d3d9_state.m_active)
 		return;
 
-	//sample input from the os and cache it
-	{
-		for (
-			uint32_t key = 0;
-			key < _countof(_micron.keys);
-			++key
-			)
-		{
-			_micron.keys[key].down_last = _micron.keys[key].down_current;
-			_micron.keys[key].down_current = 0 != ::GetAsyncKeyState(key);
-		}
+	_guts.frame_move();
 
-		{
-			::POINT cursor_position;
-			::GetCursorPos(&cursor_position);
-			::ScreenToClient(w32_d3d9_hwnd(), &cursor_position);
-
-			//__state.cursor_movement_x = cursor_position.x - __state.cursor_pos_x;
-			//__state.cursor_movement_y = cursor_position.y - __state.cursor_pos_y;
-			_micron.screen_cursor_x = cursor_position.x;
-			_micron.screen_cursor_y = cursor_position.y;
-		}
-
-		/*
-		if (__state.mouse_wheel.event_consumed)
-		{
-			__state.mouse_wheel.delta = 0;
-			__state.mouse_wheel.event_consumed = false;
-		}
-		*/
-	}
-
-	//figure out the cursor position on our application canvas (not the same as native screen position)
-	{
-		const canvas_layout_t LAYOUT = __canvas_layout(REF_CANVAS.width, REF_CANVAS.height);
-
-		float cpx = (float)_micron.screen_cursor_x;
-		cpx -= LAYOUT.x;
-		cpx /= (float)LAYOUT.width;
-		cpx *= (float)REF_CANVAS.width;
-
-		float cpy = (float)_micron.screen_cursor_y;
-		cpy -= LAYOUT.y;
-		cpy /= (float)LAYOUT.height;
-		cpy *= (float)REF_CANVAS.height;
-
-		_micron.canvas_cursor_x = (int32_t)cpx;
-		_micron.canvas_cursor_y = (int32_t)cpy;
-
-		if (cpx < 0.f)
-			--_micron.canvas_cursor_x;
-
-		if (cpy < 0.f)
-			--_micron.canvas_cursor_y;
-	}
-
-	if (!w32_d3d9_softdraw_app_tick(_sound_container))
+	if (!w32_d3d9_softdraw_app_tick(_guts._sound_container))
 		w32_d3d9_shutdown(0);
 }
 
@@ -202,7 +273,7 @@ bool w32_d3d9_softdraw_app_t::w32_d3d9_app_frame_render(const double, const floa
 			// Clear the render target and the zbuffer
 			VERIFY(w32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, __clear_color(this), 1.f, 0));
 #else
-			//2024-12-02: we aren't using the z-buffer, but we wan't to see dropped frames (cleared in red)
+			//2024-12-02: we aren't using the z-buffer, but we want to see dropped frames (cleared in red)
 			VERIFY(w32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET, __clear_color(this), 1.f, 0));
 #endif
 
@@ -218,7 +289,7 @@ bool w32_d3d9_softdraw_app_t::w32_d3d9_app_frame_render(const double, const floa
 					UINT32_MAX,
 					w32_d3d9_fixed_function_mode_t::SET,
 					false,
-					_video_adapter
+					_guts._video_adapter
 				);
 			}
 
@@ -236,7 +307,7 @@ bool w32_d3d9_softdraw_app_t::w32_d3d9_app_is_fixed_tick_rate() const
 
 float w32_d3d9_softdraw_app_t::w32_d3d9_app_seconds_per_fixed_tick() const
 {
-	return SECONDS_PER_FIXED_TICK;
+	return _guts.SECONDS_PER_FIXED_TICK;
 }
 
 bool w32_d3d9_softdraw_app_t::w32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const
@@ -249,64 +320,9 @@ bool w32_d3d9_softdraw_app_t::w32_d3d9_app_is_device_acceptable(const ::D3DCAPS9
 }
 
 w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_t(const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas, const uint32_t in_num_sounds)
-	:SECONDS_PER_FIXED_TICK(in_seconds_per_fixed_tick)
+	:_guts(in_seconds_per_fixed_tick, in_num_sounds)
 	, REF_CANVAS(in_canvas)
-	, _video_adapter(false)
-	, _sound_container(in_num_sounds)
 {
-	_music_file = nullptr;
-	_music_stream = nullptr;
-}
-
-bool w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_init_audio()
-{
-	if (!_sound_engine.init(w32_d3d9_hwnd()))
-		return false;
-
-	if (!_sound_container.init())
-		return false;
-
-	for (const micron_t::sound_load_t& SR : _micron.sound_loads)
-	{
-		if (!_sound_container.add_sound(_sound_engine, SR.asset, SR.id, 1))
-			return false;
-	}
-	_micron.sound_loads.clear();
-
-	return true;
-}
-
-void w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_cleanup_audio()
-{
-	_music_file = nullptr;
-	delete _music_stream;
-	_music_stream = nullptr;
-	_sound_container.cleanup();
-	_sound_engine.cleanup();
-}
-
-void w32_d3d9_softdraw_app_t::w32_d3d9_softdraw_app_handle_music_request()
-{
-	if (
-		_music_file != _micron.music || 
-		!_music_stream
-		)
-	{
-		if (_music_stream)
-		{
-			delete _music_stream;
-			_music_stream = nullptr;
-		}
-
-		_music_stream = w32_dsound_stream_create(_sound_engine, _micron.music);
-		if (_music_stream)
-			_music_stream->play(true, 0.f, 1.f);
-
-		_music_file = _micron.music;
-	}
-
-	if (_music_stream)
-		_music_stream->update(_w32_d3d9_app_frame_moves * SECONDS_PER_FIXED_TICK, 1.f);
 }
 
 //chunky
@@ -364,63 +380,9 @@ void w32_d3d9_chunky_app_t::w32_d3d9_app_frame_move(const double, const float)
 	if (!w32_d3d9_state.m_active)
 		return;
 
-	//sample input from the os and cache it
-	{
-		for (
-			uint32_t key = 0;
-			key < _countof(_micron.keys);
-			++key
-			)
-		{
-			_micron.keys[key].down_last = _micron.keys[key].down_current;
-			_micron.keys[key].down_current = 0 != ::GetAsyncKeyState(key);
-		}
+	_guts.frame_move();
 
-		{
-			::POINT cursor_position;
-			::GetCursorPos(&cursor_position);
-			::ScreenToClient(w32_d3d9_hwnd(), &cursor_position);
-
-			//__state.cursor_movement_x = cursor_position.x - __state.cursor_pos_x;
-			//__state.cursor_movement_y = cursor_position.y - __state.cursor_pos_y;
-			_micron.screen_cursor_x = cursor_position.x;
-			_micron.screen_cursor_y = cursor_position.y;
-		}
-
-		/*
-		if (__state.mouse_wheel.event_consumed)
-		{
-			__state.mouse_wheel.delta = 0;
-			__state.mouse_wheel.event_consumed = false;
-		}
-		*/
-	}
-
-	//figure out the cursor position on our application canvas (not the same as native screen position)
-	{
-		const canvas_layout_t LAYOUT = __canvas_layout(_micron.canvas_width, _micron.canvas_height);
-
-		float cpx = (float)_micron.screen_cursor_x;
-		cpx -= LAYOUT.x;
-		cpx /= (float)LAYOUT.width;
-		cpx *= (float)_micron.canvas_width;
-
-		float cpy = (float)_micron.screen_cursor_y;
-		cpy -= LAYOUT.y;
-		cpy /= (float)LAYOUT.height;
-		cpy *= (float)_micron.canvas_height;
-
-		_micron.canvas_cursor_x = (int32_t)cpx;
-		_micron.canvas_cursor_y = (int32_t)cpy;
-
-		if (cpx < 0.f)
-			--_micron.canvas_cursor_x;
-
-		if (cpy < 0.f)
-			--_micron.canvas_cursor_y;
-	}
-
-	if (!w32_d3d9_chunky_app_tick(_sound_container))
+	if (!w32_d3d9_chunky_app_tick(_guts._sound_container))
 		w32_d3d9_shutdown(0);
 }
 
@@ -437,21 +399,21 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_app_frame_render(const double, const float)
 			// Clear the render target and the zbuffer
 			VERIFY(w32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, __clear_color(this), 1.f, 0));
 #else
-			//2024-12-02: we aren't using the z-buffer, but we wan't to see dropped frames (cleared in red)
+			//2024-12-02: we aren't using the z-buffer, but we want to see dropped frames (cleared in red)
 			VERIFY(w32_d3d9_state.m_d3d_device->Clear(0, nullptr, D3DCLEAR_TARGET, __clear_color(this), 1.f, 0));
 #endif
 
 			{
-				const canvas_layout_t LAYOUT = __canvas_layout(_micron.canvas_width, _micron.canvas_height);
+				const canvas_layout_t LAYOUT = __canvas_layout(_guts._micron.canvas_width, _guts._micron.canvas_height);
 				uint16_t sd_palette[256];
 				for (
 					uint32_t i = 0;
 					i < 256;
 					++i
 					)
-					sd_palette[i] = sd_color_encode(_micron.palette[i].b, _micron.palette[i].g, _micron.palette[i].r);
+					sd_palette[i] = sd_color_encode(_guts._micron.palette[i].b, _guts._micron.palette[i].g, _guts._micron.palette[i].r);
 				w32_d3d9_present_8bit(
-					sd_palette, sd_that_pink, _micron.canvas, _micron.canvas_width, _micron.canvas_height,
+					sd_palette, sd_that_pink, _guts._micron.canvas, _guts._micron.canvas_width, _guts._micron.canvas_height,
 					LAYOUT.x,
 					LAYOUT.y,
 					LAYOUT.width,
@@ -459,7 +421,7 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_app_frame_render(const double, const float)
 					UINT32_MAX,
 					w32_d3d9_fixed_function_mode_t::SET,
 					false,
-					_video_adapter
+					_guts._video_adapter
 				);
 			}
 
@@ -477,7 +439,7 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_app_is_fixed_tick_rate() const
 
 float w32_d3d9_chunky_app_t::w32_d3d9_app_seconds_per_fixed_tick() const
 {
-	return SECONDS_PER_FIXED_TICK;
+	return _guts.SECONDS_PER_FIXED_TICK;
 }
 
 bool w32_d3d9_chunky_app_t::w32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const
@@ -490,61 +452,6 @@ bool w32_d3d9_chunky_app_t::w32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& 
 }
 
 w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_t(const float in_seconds_per_fixed_tick, const uint32_t in_num_sounds)
-	:SECONDS_PER_FIXED_TICK(in_seconds_per_fixed_tick)
-	, _video_adapter(false)
-	, _sound_container(in_num_sounds)
+	:_guts(in_seconds_per_fixed_tick, in_num_sounds)
 {
-	_music_file = nullptr;
-	_music_stream = nullptr;
-}
-
-bool w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_init_audio()
-{
-	if (!_sound_engine.init(w32_d3d9_hwnd()))
-		return false;
-
-	if (!_sound_container.init())
-		return false;
-
-	for (const micron_t::sound_load_t& SR : _micron.sound_loads)
-	{
-		if (!_sound_container.add_sound(_sound_engine, SR.asset, SR.id, 1))
-			return false;
-	}
-	_micron.sound_loads.clear();
-
-	return true;
-}
-
-void w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_cleanup_audio()
-{
-	_music_file = nullptr;
-	delete _music_stream;
-	_music_stream = nullptr;
-	_sound_container.cleanup();
-	_sound_engine.cleanup();
-}
-
-void w32_d3d9_chunky_app_t::w32_d3d9_chunky_app_handle_music_request()
-{
-	if (
-		_music_file != _micron.music || 
-		!_music_stream
-		)
-	{
-		if (_music_stream)
-		{
-			delete _music_stream;
-			_music_stream = nullptr;
-		}
-
-		_music_stream = w32_dsound_stream_create(_sound_engine, _micron.music);
-		if (_music_stream)
-			_music_stream->play(true, 0.f, 1.f);
-
-		_music_file = _micron.music;
-	}
-
-	if (_music_stream)
-		_music_stream->update(_w32_d3d9_app_frame_moves * SECONDS_PER_FIXED_TICK, 1.f);
 }

@@ -46,6 +46,24 @@ protected:
 	}
 };
 
+struct w32_d3d9_micron_guts_t
+{
+	explicit w32_d3d9_micron_guts_t(const float in_seconds_per_fixed_tick, const uint32_t in_num_sounds);
+	bool init_audio();
+	void handle_music_request(const uint32_t in_frame_moves);
+	void frame_move();
+	void cleanup_audio();
+
+	const float SECONDS_PER_FIXED_TICK;
+	w32_d3d9_softdraw_adapter_t _video_adapter;
+	w32_dsound_engine_t _sound_engine;
+	w32_dsound_container_t _sound_container;
+	const char* _music_file;
+	w32_dsound_stream_t* _music_stream;
+	micron_t _micron;
+};
+
+
 //simplified / fixed tick version (16 bit softdraw graphics)
 struct w32_d3d9_softdraw_app_t : public w32_d3d9_app_i
 {
@@ -59,22 +77,10 @@ struct w32_d3d9_softdraw_app_t : public w32_d3d9_app_i
 	bool w32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const override;
 
 	explicit w32_d3d9_softdraw_app_t(const float in_seconds_per_fixed_tick, const sd_bitmap_t& in_canvas, const uint32_t in_num_sounds);
-	bool w32_d3d9_softdraw_app_init_audio();
-	void w32_d3d9_softdraw_app_cleanup_audio();
-	void w32_d3d9_softdraw_app_handle_music_request();
 	virtual bool w32_d3d9_softdraw_app_tick(const w32_dsound_container_t& in_sounds) = 0;
 
-	micron_t _micron;
-
-private:
-
-	const float SECONDS_PER_FIXED_TICK;
 	const sd_bitmap_t& REF_CANVAS;
-	w32_d3d9_softdraw_adapter_t _video_adapter;
-	w32_dsound_engine_t _sound_engine;
-	w32_dsound_container_t _sound_container;
-	const char* _music_file;
-	w32_dsound_stream_t* _music_stream;
+	w32_d3d9_micron_guts_t _guts;
 };
 
 //simplified / fixed tick version (8 bit palettized graphics)
@@ -90,19 +96,7 @@ struct w32_d3d9_chunky_app_t : public w32_d3d9_app_i
 	bool w32_d3d9_app_is_device_acceptable(const ::D3DCAPS9& caps, const ::D3DFORMAT adapter_format, const ::D3DFORMAT back_buffer_format, const bool windowed) const override;
 
 	explicit w32_d3d9_chunky_app_t(const float in_seconds_per_fixed_tick, const uint32_t in_num_sounds);
-	bool w32_d3d9_chunky_app_init_audio();
-	void w32_d3d9_chunky_app_cleanup_audio();
-	void w32_d3d9_chunky_app_handle_music_request();
 	virtual bool w32_d3d9_chunky_app_tick(const w32_dsound_container_t& in_sounds) = 0;
 
-	micron_t _micron;
-
-private:
-
-	const float SECONDS_PER_FIXED_TICK;
-	w32_d3d9_softdraw_adapter_t _video_adapter;
-	w32_dsound_engine_t _sound_engine;
-	w32_dsound_container_t _sound_container;
-	const char* _music_file;
-	w32_dsound_stream_t* _music_stream;
+	w32_d3d9_micron_guts_t _guts;
 };

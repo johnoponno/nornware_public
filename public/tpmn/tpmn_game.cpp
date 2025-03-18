@@ -11,11 +11,19 @@ bool tpmn_game_init(micron_t& out_micron, tpmn_game_t& out_game)
 	if (!tpmn_assets_init(out_micron, out_game.assets))
 		return false;
 
-	for (uint32_t i = 0; i < TPMN_MAX_TILE; ++i)
+	for (
+		uint32_t i = 0;
+		i < TPMN_MAX_TILE;
+		++i
+		)
 		out_game.controller.current_tiles[i] = i;
 
 	if (!sd_bitmap_init(TPMN_CANVAS_WIDTH, TPMN_CANVAS_HEIGHT, 0, out_game.controller.canvas))
 		return false;
+
+	//micron requires this, even if we aren't using the canvas
+	out_micron.canvas_width = TPMN_CANVAS_WIDTH;
+	out_micron.canvas_height = TPMN_CANVAS_HEIGHT;
 
 	return true;
 }
