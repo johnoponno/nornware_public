@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "c_vector.h"
 
 #if 1
 
