@@ -1,12 +1,8 @@
 #include "stdafx.h"
 
+#include "../microlib/c_math.h"
 #include "../microlib/microlib.h"
 #include "../micron.h"
-#include "c_math.h"
-//#include "../../direct3d9/d3d9_state.h"
-//#include "../../filesystem/fs_tga.h"
-//#include "../../softdraw/sd_bitmap.h"
-//#include "../../win32/w32_input.h"
 #include "m_work.h"
 #include "m_mutable.h"
 #include "vc_assets.h"

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "c_math.h"
+#include "../microlib/c_math.h"
 #include "m_mutable.h"
 #include "m_work.h"
 

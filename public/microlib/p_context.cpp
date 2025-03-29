@@ -5,7 +5,6 @@
 
 #include "../microlib/fs.h"
 #include "c_std.h"
-#include "c_vector.h"
 
 struct fs_parse_tool_t
 {

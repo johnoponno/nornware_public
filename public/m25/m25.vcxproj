@@ -78,10 +78,6 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="c_math.cpp" />
-    <ClCompile Include="c_noise_perlin.cpp" />
-    <ClCompile Include="c_prng.cpp" />
-    <ClCompile Include="c_vector.cpp" />
     <ClCompile Include="d_dev.cpp" />
     <ClCompile Include="d_edit.cpp" />
     <ClCompile Include="game.cpp" />
@@ -89,7 +85,6 @@
     <ClCompile Include="m_immutable.cpp" />
     <ClCompile Include="m_mutable.cpp" />
     <ClCompile Include="m_work.cpp" />
-    <ClCompile Include="p_context.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -102,17 +97,11 @@
     <ClCompile Include="vc_work.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="c_fixed_string.h" />
-    <ClInclude Include="c_math.h" />
-    <ClInclude Include="c_prng.h" />
-    <ClInclude Include="c_std.h" />
-    <ClInclude Include="c_vector.h" />
     <ClInclude Include="d_dev.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="m_immutable.h" />
     <ClInclude Include="m_work.h" />
     <ClInclude Include="m_mutable.h" />
-    <ClInclude Include="p_context.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="vc_assets.h" />
     <ClInclude Include="vc_fatpack.h" />

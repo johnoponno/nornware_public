@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "vc_work.h"
 
+#include "../microlib/c_math.h"
 #include "../microlib/fs.h"
 #include "../microlib/microlib.h"
+#include "../microlib/p_context.h"
 #include "../micron.h"
-#include "c_math.h"
-#include "p_context.h"
 #include "m_mutable.h"
 #include "m_work.h"
 #include "vc_assets.h"

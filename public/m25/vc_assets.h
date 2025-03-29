@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../microlib/c_fixed_string.h"
 #include "../microlib/fs.h"
-#include "c_fixed_string.h"
 #include "m_immutable.h"
 
 #define NINJA_VC_SCREEN_WIDTH 384	//24 tiles

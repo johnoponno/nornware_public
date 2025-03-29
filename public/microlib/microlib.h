@@ -107,7 +107,7 @@ void micron_print_colorize(
 	const uint8_t in_key, const uint8_t in_key2, const micron_font_t& FONT, const uint8_t aColor, const int32_t aDstX, const int32_t aDstY, const char* message);
 
 //atascii rom
-extern const uint8_t micron_atascii_bits[256 * 8];
+extern const uint8_t MICRON_ATASCII_BITS[256 * 8];
 
 //END UTILITY INTEFACE FOR GAMES WRITTEN FOR MICRON
 //END UTILITY INTEFACE FOR GAMES WRITTEN FOR MICRON

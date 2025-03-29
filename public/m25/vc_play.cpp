@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
+#include "../microlib/c_math.h"
 #include "../microlib/microlib.h"
 #include "../micron.h"
-#include "c_math.h"
 #include "m_work.h"
 #include "m_mutable.h"
 #include "vc_assets.h"

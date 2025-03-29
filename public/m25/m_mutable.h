@@ -1,7 +1,7 @@
 #pragma once
 
-#include "c_prng.h"
-#include "c_vector.h"
+#include "../microlib/c_prng.h"
+#include "../microlib/c_vector.h"
 #include "m_immutable.h"
 
 namespace m25

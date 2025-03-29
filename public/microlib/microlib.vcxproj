@@ -78,14 +78,25 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="c_fixed_string.h" />
+    <ClInclude Include="c_math.h" />
+    <ClInclude Include="c_prng.h" />
+    <ClInclude Include="c_std.h" />
+    <ClInclude Include="c_vector.h" />
     <ClInclude Include="microlib.h" />
     <ClInclude Include="paletas.h" />
+    <ClInclude Include="p_context.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="fs.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="c_math.cpp" />
+    <ClCompile Include="c_noise_perlin.cpp" />
+    <ClCompile Include="c_prng.cpp" />
+    <ClCompile Include="c_vector.cpp" />
     <ClCompile Include="microlib.cpp" />
     <ClCompile Include="paletas.cpp" />
+    <ClCompile Include="p_context.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

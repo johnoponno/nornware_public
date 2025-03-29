@@ -270,7 +270,7 @@ void micron_canvas_atascii_print(
 		{
 			for (int32_t bit_x = 0; bit_x < 8; ++bit_x)
 			{
-				if (micron_atascii_bits[*c * 8 + bit_y] & (1 << bit_x))
+				if (MICRON_ATASCII_BITS[*c * 8 + bit_y] & (1 << bit_x))
 					out_micron.canvas[x + bit_x + (in_y + bit_y) * out_micron.canvas_width] = in_color_hi;
 				else
 					out_micron.canvas[x + bit_x + (in_y + bit_y) * out_micron.canvas_width] = in_color_lo;
@@ -289,7 +289,7 @@ void micron_canvas_atascii_char_key(
 	{
 		for (int32_t bit_x = 0; bit_x < 8; ++bit_x)
 		{
-			if (micron_atascii_bits[in_char * 8 + bit_y] & (1 << bit_x))
+			if (MICRON_ATASCII_BITS[in_char * 8 + bit_y] & (1 << bit_x))
 				out_micron.canvas[in_x + bit_x + (in_y + bit_y) * out_micron.canvas_width] = in_color_hi;
 		}
 	}
@@ -836,7 +836,7 @@ bool micron_key_downflank(const micron_t& in_micron, const int32_t in_key)
 	return false;
 }
 
-const uint8_t micron_atascii_bits[256 * 8] =
+const uint8_t MICRON_ATASCII_BITS[256 * 8] =
 {
 	0xff,0x93,0x01,0x01,0x83,0xc7,0xef,0xff,
 	0xe7,0xe7,0xe7,0x07,0x07,0xe7,0xe7,0xe7,

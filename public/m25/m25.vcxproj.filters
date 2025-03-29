@@ -14,21 +14,6 @@
     <ClCompile Include="vc_work.cpp" />
     <ClCompile Include="d_dev.cpp" />
     <ClCompile Include="game.cpp" />
-    <ClCompile Include="c_math.cpp">
-      <Filter>lib</Filter>
-    </ClCompile>
-    <ClCompile Include="c_prng.cpp">
-      <Filter>lib</Filter>
-    </ClCompile>
-    <ClCompile Include="c_vector.cpp">
-      <Filter>lib</Filter>
-    </ClCompile>
-    <ClCompile Include="p_context.cpp">
-      <Filter>lib</Filter>
-    </ClCompile>
-    <ClCompile Include="c_noise_perlin.cpp">
-      <Filter>lib</Filter>
-    </ClCompile>
     <ClCompile Include="d_edit.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -42,28 +27,5 @@
     <ClInclude Include="vc_work.h" />
     <ClInclude Include="d_dev.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="c_fixed_string.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="c_math.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="c_prng.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="c_std.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="c_vector.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="p_context.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="lib">
-      <UniqueIdentifier>{b2df0331-bc19-41a0-835a-c2302bf4d356}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 </Project>

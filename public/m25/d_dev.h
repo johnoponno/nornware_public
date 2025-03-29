@@ -1,7 +1,7 @@
 #pragma once
 
-#include "c_fixed_string.h"
-#include "c_vector.h"
+#include "../microlib/c_fixed_string.h"
+#include "../microlib/c_vector.h"
 
 struct micron_t;
 
