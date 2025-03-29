@@ -26,9 +26,6 @@
     <ClCompile Include="p_context.cpp">
       <Filter>lib</Filter>
     </ClCompile>
-    <ClCompile Include="p_util.cpp">
-      <Filter>lib</Filter>
-    </ClCompile>
     <ClCompile Include="c_noise_perlin.cpp">
       <Filter>lib</Filter>
     </ClCompile>
@@ -61,9 +58,6 @@
       <Filter>lib</Filter>
     </ClInclude>
     <ClInclude Include="p_context.h">
-      <Filter>lib</Filter>
-    </ClInclude>
-    <ClInclude Include="p_util.h">
       <Filter>lib</Filter>
     </ClInclude>
   </ItemGroup>

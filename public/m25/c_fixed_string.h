@@ -69,42 +69,6 @@ struct c_fixed_string_t
 	char buffer[SIZE];
 };
 
-template <const uint32_t SIZE>
-struct c_string_memory_t
-{
-	explicit c_string_memory_t()
-	{
-		wipe();
-	}
-
-	void wipe()
-	{
-		::memset(_buffer, 0, sizeof(_buffer));
-		_cursor = _buffer;
-	}
-
-	const char* format(const char* in_format, ...)
-	{
-		const char* PRE_CURSOR = _cursor;
-
-		{
-			::va_list args;
-			va_start(args, in_format);
-			::vsprintf_s(_cursor, SIZE - (_cursor - _buffer), in_format, args);
-			va_end(args);
-		}
-
-		while (*_cursor)
-			++_cursor;
-		++_cursor;
-
-		return PRE_CURSOR;
-	}
-
-	char _buffer[SIZE];
-	char* _cursor;
-};
-
 using c_path_t = c_fixed_string_t<256>;	//almost MAX_PATH (260)
 
 #define C_STR(string, value) 	string.format("%s %s", #value, value)
@@ -120,4 +84,3 @@ using c_path_t = c_fixed_string_t<256>;	//almost MAX_PATH (260)
 #define C_XZI(string, value) 	string.format("%s %d %d", #value, value.x, value.z)
 #define C_V3F(string, value) 	string.format("%s %f %f %f", #value, value.x, value.y, value.z)
 #define C_V3I(string, value) 	string.format("%s %d %d %d", #value, value.x, value.y, value.z)
-//#define C_V4F(string, value) 	string.format("%s %f %f %f %f", #value, value.x, value.y, value.z, value.w)
