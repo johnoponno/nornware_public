@@ -536,15 +536,8 @@ namespace m25
 		//assert(0 == fx.used);
 		assert(0 == gui_num_text);
 
-		prng = c_xorshift128_t::make(0);
+		prng = c_xorshift128_t::make();
 	}
-
-	/*
-	vc_fatpack_t::~vc_fatpack_t()
-	{
-		delete[] canvas.pixels;
-	}
-	*/
 
 	vc_fx_t* vc_fatpack_t::fx_acquire()
 	{

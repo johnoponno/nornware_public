@@ -33,7 +33,7 @@ namespace m25
 		if (NINJA_VC_GUI_LEFT & vc_gui_big_text(in_micron, in_micron.canvas_width / 2, MENU_Y, -1, "New Game", out_fatpack))
 		{
 			m_restart(in_tick, m_mode_t::PLAY, in_im, out_m_mu);
-			out_fatpack.prng = c_xorshift128_t::make(0);
+			out_fatpack.prng = c_xorshift128_t::make();
 			vc_calculate_flowers(in_im, out_m_mu, out_fatpack);
 		}
 

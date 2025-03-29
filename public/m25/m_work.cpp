@@ -398,7 +398,7 @@ namespace m25
 		const uint32_t in_tick, const m_mode_t in_mode, const m_immutable_t& in_im,
 		m_mutable_t& out_mu)
 	{
-		out_mu.prng = c_xorshift128_t::make(0);
+		out_mu.prng = c_xorshift128_t::make();
 
 		if (m_mode_t::IDLE != in_mode)
 		{
