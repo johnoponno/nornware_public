@@ -14,9 +14,6 @@
     <ClCompile Include="vc_work.cpp" />
     <ClCompile Include="d_dev.cpp" />
     <ClCompile Include="game.cpp" />
-    <ClCompile Include="c_file_writer.cpp">
-      <Filter>lib</Filter>
-    </ClCompile>
     <ClCompile Include="c_math.cpp">
       <Filter>lib</Filter>
     </ClCompile>
@@ -51,9 +48,6 @@
     <ClInclude Include="vc_work.h" />
     <ClInclude Include="d_dev.h" />
     <ClInclude Include="game.h" />
-    <ClInclude Include="c_file_writer.h">
-      <Filter>lib</Filter>
-    </ClInclude>
     <ClInclude Include="c_fixed_string.h">
       <Filter>lib</Filter>
     </ClInclude>

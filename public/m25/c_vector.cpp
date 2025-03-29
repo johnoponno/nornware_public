@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#if 1
+
 #include "c_math.h"
 
 #define LENGTH_2D(x, y) ::sqrtf((x) * (x) + (y) * (y))
@@ -384,3 +386,5 @@ c_vec3i_t c_floor_to_int(const c_vec3f_t& in_vector)
 
 	return i;
 }
+
+#endif

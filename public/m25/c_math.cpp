@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#if 1
+
 #include "c_math.h"
 
 static void __quaternion_multiply(
@@ -1404,4 +1407,6 @@ bool c_are_triangle_and_sphere_separated(
 
 	return false;
 }
+#endif
+
 #endif

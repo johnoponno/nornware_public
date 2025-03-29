@@ -1,15 +1,6 @@
 #pragma once
 
-/*
-#ifdef __GNUC__
-	#define DEPRECATED(func) func __attribute__ ((deprecated))
-#elif defined(_MSC_VER)
-	#define DEPRECATED(func) __declspec(deprecated) func
-#else
-	#pragma message("WARNING: You need to implement DEPRECATED for this compiler")
-	#define DEPRECATED(func) func
-#endif
-	*/
+#if 1
 
 #include "c_vector.h"
 
@@ -231,3 +222,5 @@ constexpr float C_PI = (float)3.141592653589793238;
 constexpr float C_PI2 = C_PI * 2.f;
 constexpr float C_DEGREES_TO_RADIANS = C_PI / 180.f;
 constexpr float C_RADIANS_TO_DEGREES = 180.f / C_PI;
+
+#endif

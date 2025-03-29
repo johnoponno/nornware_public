@@ -117,6 +117,8 @@ c_blob_t fs_file_contents(const char* in_file)
 		return{};
 	}
 
+	::fclose(handle);
+
 	return result;
 }
 
@@ -145,6 +147,8 @@ c_blob_t fs_file_contents_null_terminated(const char* in_file)
 		uint8_t* data = (uint8_t*)result.data;
 		data[result.size] = 0;
 	}
+
+	::fclose(handle);
 
 	return result;
 }

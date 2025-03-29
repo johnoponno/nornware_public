@@ -78,7 +78,6 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="c_file_writer.cpp" />
     <ClCompile Include="c_math.cpp" />
     <ClCompile Include="c_noise_perlin.cpp" />
     <ClCompile Include="c_prng.cpp" />
@@ -105,7 +104,6 @@
     <ClCompile Include="vc_work.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="c_file_writer.h" />
     <ClInclude Include="c_fixed_string.h" />
     <ClInclude Include="c_math.h" />
     <ClInclude Include="c_noise_perlin.h" />
