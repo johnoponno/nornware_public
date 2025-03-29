@@ -2,10 +2,10 @@
 
 #include "../win32/w32_d3d9_app.h"
 #include "../win32/w32_d3d9_state.h"
-#include "../m25/game.h"
-#include "../m25/m_immutable.h"
-#include "../m25/m_work.h"
-#include "../m25/vc_assets.h"
+#include "../mlm/game.h"
+#include "../mlm/m_immutable.h"
+#include "../mlm/m_work.h"
+#include "../mlm/vc_assets.h"
 
 //--------------------------------------------------------------------------------------
 // specific game implementation - we want 8 bit / palettized pixels
@@ -35,15 +35,15 @@ struct wmdl_app_t : public w32_d3d9_chunky_app_t
 				_game._mu.hero_air &&
 				(m_character_is_solid_left_more(_game._im, _game._mu) || m_character_is_solid_right(_game._im, _game._mu)),
 
-				m25::VC_SND_SLIDE,
-				::fabsf(_game._mu.hero_speed.y) / m25::M_CHAR_MAX_AIR_SPEED_Y,
+				mlm::VC_SND_SLIDE,
+				::fabsf(_game._mu.hero_speed.y) / mlm::M_CHAR_MAX_AIR_SPEED_Y,
 				0.f,
 				1.f,
 				nullptr
 			);
 
 			if (_game._dev._tick == _game._mu.hero_melee_tick)
-				in_sounds.play(m25::VC_SND_MELEE, 1.f, 0.f, 1.f, nullptr);
+				in_sounds.play(mlm::VC_SND_MELEE, 1.f, 0.f, 1.f, nullptr);
 		}
 
 		for (const uint32_t SP : _guts._micron.sound_plays)
@@ -57,12 +57,12 @@ struct wmdl_app_t : public w32_d3d9_chunky_app_t
 
 	//we pass our time-per-tick (1 / fps) and our framebuffer to be rendered
 	explicit wmdl_app_t()
-		:w32_d3d9_chunky_app_t(m25::M_SECONDS_PER_TICK, m25::VC_NUM_SOUNDS)
+		:w32_d3d9_chunky_app_t(mlm::M_SECONDS_PER_TICK, mlm::VC_NUM_SOUNDS)
 	{
 	}
 
 	//this is our actual game (platform agnostic) that only depends on micron (which is platform agnostic)
-	m25::game_t _game;
+	mlm::game_t _game;
 };
 
 //--------------------------------------------------------------------------------------
@@ -78,9 +78,9 @@ INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int32_t)
 {
 	//win32 / d3d9 init (title, windowed?, window width, window height)
 #if 1
-	if (!__app.init("m25 (c) 2025 nornware AB", true, ::GetSystemMetrics(SM_CXSCREEN) * 3 / 4, ::GetSystemMetrics(SM_CYSCREEN) * 3 / 4))
+	if (!__app.init("MicroLoMania (c) 2025", true, ::GetSystemMetrics(SM_CXSCREEN) * 3 / 4, ::GetSystemMetrics(SM_CYSCREEN) * 3 / 4))
 #else
-	if (!__app.init("m25 (c) 2025 nornware AB", false, 0, 0))
+	if (!__app.init("MicroLoMania (c) 2025", false, 0, 0))
 #endif
 		return -1;
 
