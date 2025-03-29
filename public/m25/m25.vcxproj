@@ -84,7 +84,6 @@
     <ClCompile Include="c_vector.cpp" />
     <ClCompile Include="d_dev.cpp" />
     <ClCompile Include="d_edit.cpp" />
-    <ClCompile Include="fs_parse_tool.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="m_character.cpp" />
     <ClCompile Include="m_immutable.cpp" />
@@ -110,7 +109,6 @@
     <ClInclude Include="c_std.h" />
     <ClInclude Include="c_vector.h" />
     <ClInclude Include="d_dev.h" />
-    <ClInclude Include="fs_parse_tool.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="m_immutable.h" />
     <ClInclude Include="m_work.h" />
