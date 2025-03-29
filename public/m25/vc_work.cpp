@@ -5,7 +5,6 @@
 #include "../microlib/microlib.h"
 #include "../micron.h"
 #include "c_math.h"
-#include "c_noise_perlin.h"
 #include "p_context.h"
 #include "m_mutable.h"
 #include "m_work.h"

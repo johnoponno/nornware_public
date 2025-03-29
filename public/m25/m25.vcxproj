@@ -106,7 +106,6 @@
   <ItemGroup>
     <ClInclude Include="c_fixed_string.h" />
     <ClInclude Include="c_math.h" />
-    <ClInclude Include="c_noise_perlin.h" />
     <ClInclude Include="c_prng.h" />
     <ClInclude Include="c_std.h" />
     <ClInclude Include="c_vector.h" />

@@ -72,9 +72,6 @@
     <ClInclude Include="p_util.h">
       <Filter>lib</Filter>
     </ClInclude>
-    <ClInclude Include="c_noise_perlin.h">
-      <Filter>lib</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="lib">
