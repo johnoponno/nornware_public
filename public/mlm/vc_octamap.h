@@ -4,15 +4,15 @@ struct c_blob_t;
 
 struct micron_t;
 
-#define NINJA_VC_OCTAFONT_HEIGHT 14
-#define NINJA_VC_OCTAFONT_SPACE_WIDTH 7
-#define NINJA_VC_OCTAFONT_CHAR_SPACING -1
-#define NINJA_VC_OCTAFONT_CHARBEGIN 33
-#define NINJA_VC_OCTAFONT_CHAREND 128
-#define NINJA_VC_OCTAFONT_NUMCHARS 95
-static_assert(NINJA_VC_OCTAFONT_NUMCHARS == NINJA_VC_OCTAFONT_CHAREND - NINJA_VC_OCTAFONT_CHARBEGIN, "wtf?");
+//#define NINJA_VC_OCTAFONT_HEIGHT 14
+//#define NINJA_VC_OCTAFONT_SPACE_WIDTH 7
+//#define NINJA_VC_OCTAFONT_CHAR_SPACING -1
+//#define NINJA_VC_OCTAFONT_CHARBEGIN 33
+//#define NINJA_VC_OCTAFONT_CHAREND 128
+//#define NINJA_VC_OCTAFONT_NUMCHARS 95
+//static_assert(NINJA_VC_OCTAFONT_NUMCHARS == NINJA_VC_OCTAFONT_CHAREND - NINJA_VC_OCTAFONT_CHARBEGIN, "wtf?");
 
-#define NINJA_VC_OCTAMAP_COLOR_KEY_INDEX 2
+#define MLM_VC_OCTAMAP_COLOR_KEY_INDEX 2
 
 namespace mlm
 {
@@ -63,6 +63,7 @@ namespace mlm
 	void vc_canvas_fill_circle(const int32_t x, const int32_t y, const int32_t aRadius, const uint8_t color, micron_t& out_micron);
 	void vc_canvas_line(const int32_t x1, const int32_t y1, const int32_t x2, const int32_t y2, const uint8_t color, micron_t& out_micron);
 
+#if 0
 	constexpr vc_octafont_character_t VC_FONT_TABLES[NINJA_VC_OCTAFONT_NUMCHARS] =
 	{
 		{ 0, 0, 7 },
@@ -161,4 +162,5 @@ namespace mlm
 		{ 172, 70, 9 },
 		{ -858993460, -858993460, -858993460 },
 	};
+#endif
 }

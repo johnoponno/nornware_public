@@ -338,39 +338,10 @@ namespace mlm
 			vc_idle_output(in_im, out_dev._tick, in_mu, in_assets, out_fatpack, out_micron);
 		}
 
-		vc_gui_draw_and_clear(in_assets, out_fatpack, out_micron);
+		vc_gui_draw_and_clear(out_fatpack, out_micron);
 		if (out_dev.show_cursor(in_mu))
 			vc_draw_cursor(out_dev._tick, in_assets, out_micron);
 
-#if CANVAS16
-		__canvas_to_bitmap(in_assets.sd_palette, out_fatpack.canvas, out_dev._canvas16);
-		if (m_game_active(in_m_mu))//16 bit output on top of 8 bit canvas
-		{
-			switch (out_dev._mode)
-			{
-			default:
-				assert(0);
-				break;
-
-			case d_mode_t::PLAY:
-				break;
-
-			case d_mode_t::MAPS:
-				break;
-
-			case d_mode_t::WORLD:
-			case d_mode_t::TILE:
-			case d_mode_t::TYPE:
-			case d_mode_t::ANIM:
-			case d_mode_t::LOGIC:
-			case d_mode_t::GFX:
-				//case d_mode_t::TERMINAL:
-			case d_mode_t::WANG:
-				d_edit_output16(in_m_im, in_cursor_position, in_m_mu, in_assets, out_hard_gui, out_fatpack, out_dev);
-				break;
-			}
-		}
-#else
 		if (m_game_active(in_mu))//port of 16 bit output to 8 bit output
 		{
 			switch (out_dev._mode)
@@ -399,7 +370,6 @@ namespace mlm
 				break;
 			}
 		}
-#endif
 
 		//gui on top
 		out_dev.d_gui_draw(out_micron);
@@ -514,17 +484,8 @@ namespace mlm
 		_assets.white = 0;
 #endif
 
-#if CANVAS16
-		if (!_dev._canvas16.init(MLM_VC_SCREEN_WIDTH, MLM_VC_SCREEN_HEIGHT, 0))
-			return false;
-#endif
-
 		//w32_xinput_poll_all_pads();
 
-#if CANVAS16
-		assert(_fatpack.canvas.width == _dev._canvas16.width);
-		assert(_fatpack.canvas.height == _dev._canvas16.height);
-#endif
 		assert(out_micron.canvas_width == MLM_VC_SCREEN_WIDTH);
 		assert(out_micron.canvas_height == MLM_VC_SCREEN_HEIGHT);
 

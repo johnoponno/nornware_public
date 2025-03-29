@@ -64,7 +64,7 @@ namespace mlm
 		int32_t _edit_origin_y;
 		uint32_t _edit_tilepage;
 		c_vec2i_t _edit_world_source;
-		uint32_t _edit_world_farplanes;
+		//uint32_t _edit_world_farplanes;
 		int32_t _edit_tiles_brush[MLM_D_BRUSH_MAX_ASPECT * MLM_D_BRUSH_MAX_ASPECT];
 		c_vec2i_t _edit_tiles_tile_drag_start;
 		int32_t _edit_tiles_brush_aspect;
@@ -82,10 +82,6 @@ namespace mlm
 		uint32_t _tick;
 		uint32_t _bit_dev : 1;
 		uint32_t _bit_maximize_size : 1;
-
-#if CANVAS16
-		sd_bitmap_t _canvas16;
-#endif
 
 		struct string_t
 		{

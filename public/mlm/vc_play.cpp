@@ -11,7 +11,7 @@
 #include "vc_octamap.h"
 
 #define CAM_LERP_SPEED 8.f
-#define ASSET_TEMP_AMBIENCE "ambience/hero_immortal.ogg"
+#define ASSET_TEMP_AMBIENCE "hero_immortal.ogg"
 
 #define ANOTHER_WORLD_RAIN_INDEX 7
 #define HEAVY_FPS 8.f

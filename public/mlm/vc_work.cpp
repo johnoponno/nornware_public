@@ -530,6 +530,7 @@ namespace mlm
 		}
 	}
 
+#if 0
 	static void __octafont_print(
 		const c_blob_t& in_font, const int32_t in_dst_x, const int32_t in_dst_y, const char* in_message,
 		micron_t& out_micron)
@@ -583,6 +584,7 @@ namespace mlm
 			}
 		}
 	}
+#endif
 
 	static bool __fx_draw(
 		const uint32_t in_paused, const uint32_t in_tick, const m_immutable_t& in_im, const c_vec2i_t& in_camera, const vc_assets_t& in_assets, const int32_t in_tiles_on_source_x,
@@ -775,6 +777,7 @@ namespace mlm
 		i->animated.bitmap = &in_bitmap;
 	}
 
+#if 0
 	static int32_t __string_width(const char* in_string)
 	{
 		const int32_t LENGTH = (int32_t)::strlen(in_string);
@@ -805,9 +808,10 @@ namespace mlm
 
 		return result;
 	}
+#endif
 
 	static const vc_text_t* __add_text(
-		const c_vec2i_t& in_position, const c_vec2i_t& in_size, const char* in_text,
+		const int32_t in_x, const int32_t in_y, const int32_t in_key, const char* in_text,
 		vc_fatpack_t& out_fatpack)
 	{
 		assert(out_fatpack.gui_num_text < _countof(out_fatpack.gui_text));
@@ -815,15 +819,19 @@ namespace mlm
 		{
 			vc_text_t* text = &out_fatpack.gui_text[out_fatpack.gui_num_text++];
 			assert(in_text && *in_text);
-			text->text = in_text;
-			text->position.x = in_position.x + (in_size.x - __string_width(in_text)) / 2;
-			text->position.y = in_position.y + (in_size.y - NINJA_VC_OCTAFONT_HEIGHT) / 2;
+			if (in_key > -1)
+				text->text.format("<%s>%s", w32_vk_name(in_key), in_text);
+			else
+				text->text = in_text;
+			text->x = in_x;
+			text->y = in_y;
 			return text;
 		}
 
 		return nullptr;
 	}
 
+	/*
 	static bool __cursor_inside(const micron_t& in_micron, const c_vec2i_t& in_position, const c_vec2i_t& in_size)
 	{
 		return
@@ -858,6 +866,7 @@ namespace mlm
 
 		return 0;
 	}
+	*/
 
 	static bool __all_bits(const uint32_t in_bits, const uint32_t in_to_test)
 	{
@@ -932,7 +941,7 @@ namespace mlm
 				++x
 				)
 			{
-				if (NINJA_VC_OCTAMAP_COLOR_KEY_INDEX == *BYTE_SRC)
+				if (MLM_VC_OCTAMAP_COLOR_KEY_INDEX == *BYTE_SRC)
 					return true;
 				++BYTE_SRC;
 			}
@@ -1506,9 +1515,7 @@ namespace mlm
 		}
 	}
 
-	void vc_gui_draw_and_clear(
-		const vc_assets_t& in_assets,
-		vc_fatpack_t& out_fatpack, micron_t& out_micron)
+	void vc_gui_draw_and_clear(vc_fatpack_t& out_fatpack, micron_t& out_micron)
 	{
 		for (
 			const vc_text_t* T = out_fatpack.gui_text;
@@ -1516,8 +1523,10 @@ namespace mlm
 			++T
 			)
 		{
-			assert(T->text && *T->text);
-			__octafont_print(in_assets.gui_big_font, T->position.x, T->position.y, T->text, out_micron);
+			assert(T->text.buffer && *T->text.buffer);
+
+			//__octafont_print(in_assets.gui_big_font, T->position.x, T->position.y, T->text, out_micron);
+			vc_canvas_atascii_print(T->x, T->y, 0, T->text.buffer, out_micron);
 		}
 
 		out_fatpack.gui_num_text = 0;
@@ -1936,10 +1945,12 @@ namespace mlm
 			in_text &&
 			*in_text
 			)
-			T = __add_text({ in_x, in_y }, { 0, 0 }, in_text, out_fatpack);
+			T = __add_text(in_x, in_y, in_key, in_text, out_fatpack);
 
 		if (T)
-			return __gui_invisible_button(in_micron, T->position.x, T->position.y, __string_width(T->text), NINJA_VC_OCTAFONT_HEIGHT, in_key);
+			//return __gui_invisible_button(in_micron, T->x, T->y, ::strlen(T->text.buffer) * 8, 8, in_key);
+			if (micron_key_upflank(in_micron, in_key))
+				return MLM_VC_GUI_LEFT;
 
 		return 0;
 	}

@@ -150,7 +150,7 @@ namespace mlm
 				++x
 				)
 			{
-				if (*BYTE_SRC != NINJA_VC_OCTAMAP_COLOR_KEY_INDEX)
+				if (*BYTE_SRC != MLM_VC_OCTAMAP_COLOR_KEY_INDEX)
 #if OCTAMAP_DEPTH_COMPLEXITY
 					if (byte_dst[0] < 255)
 						++byte_dst[0];
@@ -246,7 +246,7 @@ namespace mlm
 					)
 				{
 					assert(BYTE_SRC >= FS_TGA_PIXELS_PALETTIZED(in_src) && BYTE_SRC < (FS_TGA_PIXELS_PALETTIZED(in_src) + FS_TGA_HEADER(in_src)->image_spec_width + FS_TGA_HEADER(in_src)->image_spec_height * FS_TGA_HEADER(in_src)->image_spec_width));
-					if (*BYTE_SRC != NINJA_VC_OCTAMAP_COLOR_KEY_INDEX)
+					if (*BYTE_SRC != MLM_VC_OCTAMAP_COLOR_KEY_INDEX)
 #if OCTAMAP_DEPTH_COMPLEXITY
 						if (byte_dst[0] < 255)
 							++byte_dst[0];

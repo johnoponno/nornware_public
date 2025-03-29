@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../microlib/c_fixed_string.h"
 #include "../microlib/c_prng.h"
 #include "../microlib/c_vector.h"
 #include "m_immutable.h"
@@ -58,26 +59,10 @@ namespace mlm
 
 	struct vc_text_t
 	{
-		c_vec2i_t position;
-		const char* text;
+		c_path_t text;
+		int32_t x;
+		int32_t y;
 	};
-
-	/*
-	struct vc_canvas_t
-	{
-		void clear_set(const uint8_t& aColor, const int32_t aDstX, const int32_t aDstY, const int32_t aClearWidth, const int32_t aClearHeight);
-		void clear_stipple(const uint8_t& in_color, int32_t in_dst_x, int32_t in_dst_y, int32_t in_clear_width, int32_t in_clear_height);
-		void set_pixel(const int32_t aX, const int32_t aY, const uint8_t& aColor);
-		void h_line(int32_t in_x1, int32_t in_x2, const int32_t in_y1, const uint8_t& in_color);
-		void v_line(const int32_t in_x1, int32_t in_y1, int32_t in_y2, const uint8_t& in_color);
-		void rect(const int32_t x1, const int32_t y1, const int32_t x2, const int32_t y2, const uint8_t& aColor);
-		void atascii_print(const int32_t in_x, const int32_t in_y, const uint8_t in_color, const void* in_string);
-
-		uint8_t* pixels;
-		int32_t width;
-		int32_t height;
-	};
-	*/
 
 	struct vc_sound_play_t
 	{
@@ -119,15 +104,5 @@ namespace mlm
 		char elapsed_string[256];
 
 		c_xorshift128_t prng;
-
-		/*
-		vc_canvas_t canvas;
-
-		//requests to outside system
-		const char* request_ambience_file;
-		float request_ambience_volume;
-		std::vector<vc_sound_play_t> request_sound_plays;
-		//requests to outside system
-		*/
 	};
 }

@@ -39,9 +39,7 @@ namespace mlm
 		const m_immutable_t& in_im, const uint32_t in_tick, const m_events_t& in_events, const m_mutable_t& in_mu, const vc_assets_t& in_assets,
 		vc_fatpack_t& out_fatpack, micron_t& out_micron);
 
-	void vc_gui_draw_and_clear(
-		const vc_assets_t& in_assets,
-		vc_fatpack_t& out_fatpack, micron_t& out_micron);
+	void vc_gui_draw_and_clear(vc_fatpack_t& out_fatpack, micron_t& out_micron);
 
 	void vc_draw_hero(
 		const uint32_t in_tick, const m_immutable_t& in_im, const m_mutable_t& in_mu, const c_vec2i_t& in_camera, const vc_assets_t& in_assets,
@@ -62,7 +60,7 @@ namespace mlm
 		vc_fatpack_t& mu);
 		*/
 	void vc_calculate_flowers(
-		const m_immutable_t& m_im, const m_mutable_t& m_mu, 
+		const m_immutable_t& m_im, const m_mutable_t& m_mu,
 		vc_fatpack_t& mu);
 
 	uint32_t vc_gui_big_text(
@@ -120,4 +118,6 @@ namespace mlm
 	void vc_canvas_atascii_print(
 		const int32_t in_x, const int32_t in_y, const uint8_t in_color, const void* in_string,
 		micron_t& out_micron);
+
+	const char* w32_vk_name(const int32_t in_vk);
 }

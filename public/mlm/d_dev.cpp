@@ -8,8 +8,6 @@
 #include "vc_fatpack.h"
 #include "vc_work.h"
 
-const char* w32_vk_name(const int32_t in_vk);
-
 namespace mlm
 {
 	void vc_persist(const vc_assets_t& in_assets);
@@ -79,7 +77,7 @@ namespace mlm
 
 		assert(0 == _edit_world_source.x);
 		assert(0 == _edit_world_source.y);
-		assert(0 == _edit_world_farplanes);
+		//assert(0 == _edit_world_farplanes);
 
 		::memset(&_edit_tiles_brush, 0, sizeof(_edit_tiles_brush));
 		assert(0 == _edit_tiles_tile_drag_start.x);
