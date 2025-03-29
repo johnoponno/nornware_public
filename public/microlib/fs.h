@@ -1,12 +1,13 @@
 #pragma once
 
-struct fs_blob_t
+struct c_blob_t
 {
 	void* data;
 	uint32_t size;
 };
 
-fs_blob_t fs_file_contents(const char* in_file);
+c_blob_t fs_file_contents(const char* in_file);
+c_blob_t fs_file_contents_null_terminated(const char* in_file);
 
 #pragma pack(push, 1)
 struct fs_tga_header_t
@@ -26,7 +27,9 @@ struct fs_tga_header_t
 };
 #pragma pack(pop)
 
-fs_blob_t fs_tga_read_24(const char* in_file);	//supports RLE
+c_blob_t fs_tga_read_24(const char* in_file);	//supports RLE
 
 #define FS_TGA_HEADER(image) ((fs_tga_header_t*)(image).data)
 #define FS_TGA_PIXELS(image) ((uint8_t*)(image).data + sizeof(fs_tga_header_t))
+#define FS_TGA_PIXELS_PALETTIZED(image) ((uint8_t*)(image).data + sizeof(fs_tga_header_t) + 768)
+#define FS_TGA_PALETTE(image) ((uint8_t*)(image).data + sizeof(fs_tga_header_t))

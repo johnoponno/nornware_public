@@ -11,8 +11,8 @@ bool w32_dsound_container_t::init()
 	if (!NUM_SOUNDS)
 		return false;
 
-	sounds = new w32_dsound_t * [NUM_SOUNDS];
-	if (!sounds)
+	_sounds = new w32_dsound_t * [NUM_SOUNDS];
+	if (!_sounds)
 		return false;
 
 	for (
@@ -21,7 +21,7 @@ bool w32_dsound_container_t::init()
 		++i
 		)
 	{
-		sounds[i] = nullptr;
+		_sounds[i] = nullptr;
 	}
 
 	return true;
@@ -33,14 +33,14 @@ bool w32_dsound_container_t::add_sound(const w32_dsound_engine_t& engine, const 
 	if (engine.directsound && anId < NUM_SOUNDS && aNumChannels > 0)
 	{
 		//clear any existing...
-		if (sounds[anId])
+		if (_sounds[anId])
 		{
-			delete sounds[anId];
-			sounds[anId] = nullptr;
+			delete _sounds[anId];
+			_sounds[anId] = nullptr;
 		}
 
-		sounds[anId] = w32_dsound_t::create(aFileName, aNumChannels, *engine.directsound);
-		return sounds[anId] != nullptr;
+		_sounds[anId] = w32_dsound_t::create(aFileName, aNumChannels, *engine.directsound);
+		return _sounds[anId] != nullptr;
 	}
 
 	return true;
@@ -49,9 +49,9 @@ bool w32_dsound_container_t::add_sound(const w32_dsound_engine_t& engine, const 
 bool w32_dsound_container_t::play(const uint32_t anId, const float aVolume, const float aPan, const float aFrequency, const void* aHandle) const
 {
 	if (anId < NUM_SOUNDS &&
-		sounds[anId] &&
+		_sounds[anId] &&
 		aVolume > 0.f &&
-		sounds[anId]->play(false, aVolume, aPan, aFrequency, aHandle))
+		_sounds[anId]->play(false, aVolume, aPan, aFrequency, aHandle))
 	{
 		return true;
 	}
@@ -59,38 +59,51 @@ bool w32_dsound_container_t::play(const uint32_t anId, const float aVolume, cons
 	return false;
 }
 
+bool w32_dsound_container_t::play_looped(const bool anEnable, const uint32_t anId, const float aVolume, const float aPan, const float aFrequency, const void* aHandle) const
+{
+	assert(_sounds);
+	return
+		anId < NUM_SOUNDS &&
+		nullptr != _sounds[anId] &&
+		_sounds[anId]->play_looped(anEnable, aVolume, aPan, aFrequency, aHandle);
+}
+
 
 w32_dsound_container_t::w32_dsound_container_t(const uint32_t aNumSounds)
 	:NUM_SOUNDS(aNumSounds)
-	, sounds(nullptr)
 {
+	_sounds = nullptr;
 }
 
 #ifdef _DEBUG
 w32_dsound_container_t::~w32_dsound_container_t()
 {
-	assert(nullptr == this->sounds);
+	assert(nullptr == _sounds);
 }
 #endif
 
 void w32_dsound_container_t::cleanup()
 {
-	if (sounds)
+	if (_sounds)
 	{
 		clear();
-		delete[] sounds;
-		sounds = nullptr;
+		delete[] _sounds;
+		_sounds = nullptr;
 	}
 }
 
 void w32_dsound_container_t::clear() const
 {
-	for (uint32_t i = 0; i < NUM_SOUNDS; ++i)
+	for (
+		uint32_t i = 0;
+		i < NUM_SOUNDS;
+		++i
+		)
 	{
-		if (sounds[i])
+		if (_sounds[i])
 		{
-			delete sounds[i];
-			sounds[i] = nullptr;
+			delete _sounds[i];
+			_sounds[i] = nullptr;
 		}
 	}
 }

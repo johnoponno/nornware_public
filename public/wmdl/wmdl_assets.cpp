@@ -67,7 +67,7 @@ bool wmdl_assets_init(micron_t& out_micron, wmdl_assets_t& out_assets)
 {
 	//load animation info
 	{
-		const fs_blob_t CONTENTS = fs_file_contents(ASSET_COMMON_INFO);
+		const c_blob_t CONTENTS = fs_file_contents(ASSET_COMMON_INFO);
 		const bool RESULT = CONTENTS.data && sizeof(out_assets.anim_target) == CONTENTS.size;
 		if (RESULT)
 		{

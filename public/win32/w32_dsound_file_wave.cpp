@@ -116,7 +116,7 @@ bool w32_dsound_file_wave_t::load(const char* aFileName)
 	//cleanup
 	__destroy(*this);
 
-	fs_blob_t contents = fs_file_contents(aFileName);
+	c_blob_t contents = fs_file_contents(aFileName);
 	if (!contents.data)
 		return false;
 

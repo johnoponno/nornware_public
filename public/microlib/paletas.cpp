@@ -181,10 +181,10 @@ bool paletas_t::calculate(
 	assert(in_palette_size <= 256);
 
 	//load all source images (24 bit)
-	std::vector<fs_blob_t> source_images;
+	std::vector<c_blob_t> source_images;
 	for (const paletas_t::item_t& ITEM : _items)
 	{
-		fs_blob_t source_image = fs_tga_read_24(ITEM.file);
+		c_blob_t source_image = fs_tga_read_24(ITEM.file);
 		if (!source_image.data)
 			return false;
 		source_images.push_back(source_image);
@@ -206,7 +206,7 @@ bool paletas_t::calculate(
 		if (!out_bitmap_memory.data)
 		{
 			//cleanup loaded source images
-			for (fs_blob_t& source_image : source_images)
+			for (c_blob_t& source_image : source_images)
 				delete[] source_image.data;
 			return false;	//failed to allocate contiguout bitmap memory
 		}
@@ -222,7 +222,7 @@ bool paletas_t::calculate(
 		std::vector<std::vector<paletas_color_t>> all_buckets;
 		{
 			std::set<paletas_color_t> unique_pixels_set;
-			for (const fs_blob_t& SOURCE_IMAGE : source_images)
+			for (const c_blob_t& SOURCE_IMAGE : source_images)
 			{
 				for (
 					paletas_color_t* pixel = (paletas_color_t*)FS_TGA_PIXELS(SOURCE_IMAGE);
@@ -246,7 +246,7 @@ bool paletas_t::calculate(
 		assert(1 == all_buckets.size());
 		if (all_buckets[0].size() < in_palette_size)
 		{
-			for (fs_blob_t& source_image : source_images)
+			for (c_blob_t& source_image : source_images)
 				delete[] source_image.data;
 			delete[] out_bitmap_memory.data;
 			return false;
@@ -345,7 +345,7 @@ bool paletas_t::calculate(
 	}
 
 	//cleanup loaded source images
-	for (fs_blob_t& source_image : source_images)
+	for (c_blob_t& source_image : source_images)
 		delete[] source_image.data;
 
 	return true;

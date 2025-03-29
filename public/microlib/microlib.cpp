@@ -155,12 +155,12 @@ void micron_canvas_clear(
 {
 	//check defaults
 	if (
-		!in_clear_width || 
+		!in_clear_width ||
 		in_clear_width > out_micron.canvas_width
 		)
 		in_clear_width = out_micron.canvas_width;
 	if (
-		!in_clear_height || 
+		!in_clear_height ||
 		in_clear_height > out_micron.canvas_height
 		)
 		in_clear_height = out_micron.canvas_height;
@@ -176,14 +176,21 @@ void micron_canvas_clear(
 
 		src_x, src_y, in_dst_x, in_dst_y, in_clear_width, in_clear_height))
 	{
-		//short clear
 		uint8_t* dst = out_micron.canvas + in_dst_x + in_dst_y * out_micron.canvas_width;
 		uint8_t* scan_dst;
-		for (int32_t y = 0; y < in_clear_height; ++y)
+		for (
+			int32_t y = 0;
+			y < in_clear_height;
+			++y
+			)
 		{
 			scan_dst = dst;
 
-			for (int32_t x = 0; x < in_clear_width; ++x)
+			for (
+				int32_t x = 0;
+				x < in_clear_width;
+				++x
+				)
 			{
 				assert(dst >= out_micron.canvas && dst < (out_micron.canvas + out_micron.canvas_width * out_micron.canvas_height));
 				*dst++ = in_color;
@@ -802,6 +809,18 @@ bool micron_key_is_down(const micron_t& in_micron, const int32_t in_key)
 		in_key < _countof(in_micron.keys)
 		)
 		return in_micron.keys[in_key].down_current;
+	return false;
+}
+
+bool micron_key_upflank(const micron_t& in_micron, const int32_t in_key)
+{
+	if (
+		in_key >= 0 &&
+		in_key < _countof(in_micron.keys)
+		)
+		return
+		!in_micron.keys[in_key].down_current &&
+		in_micron.keys[in_key].down_last;
 	return false;
 }
 

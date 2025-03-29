@@ -1095,7 +1095,7 @@ bool wmdl_model_load_world(
 	::strcpy_s(out_model.last_world, out_model.world);
 	::strcpy_s(out_model.world, in_file);
 
-	fs_blob_t contents = fs_file_contents(in_file);
+	c_blob_t contents = fs_file_contents(in_file);
 	assert(contents.data);
 	iterator_t it;
 	it.it = (uint8_t*)contents.data;
@@ -1241,7 +1241,7 @@ bool wmdl_model_load_world(
 
 bool wmdl_model_init(wmdl_model_t& out_model)
 {
-	const fs_blob_t CONTENTS = fs_file_contents(ASSET_COMMON_INFO);
+	const c_blob_t CONTENTS = fs_file_contents(ASSET_COMMON_INFO);
 	const bool RESULT = CONTENTS.data && sizeof(out_model.tile_info) == CONTENTS.size;
 	if (RESULT)
 	{

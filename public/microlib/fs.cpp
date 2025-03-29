@@ -22,13 +22,13 @@ static uint32_t __total_file_size(::FILE* out_handle)
 	return result;
 }
 
-static bool __rle_decode(fs_blob_t& out)
+static bool __rle_decode(c_blob_t& out)
 {
 	//only support compressed RGB images here!
 	assert(10 == FS_TGA_HEADER(out)->image_type);
 
 	//COPY now manages the original memory (compressed)
-	const fs_blob_t COPY = out;
+	const c_blob_t COPY = out;
 
 	assert(COPY.data && COPY.size);
 	const uint32_t BYTES_PER_PIXEL = FS_TGA_HEADER(COPY)->image_spec_bpp / 8;
@@ -96,13 +96,13 @@ static bool __rle_decode(fs_blob_t& out)
 //public
 //public
 
-fs_blob_t fs_file_contents(const char* in_file)
+c_blob_t fs_file_contents(const char* in_file)
 {
 	::FILE* handle{};
 	if (0 != ::fopen_s(&handle, in_file, "rb"))
 		return {};
 
-	fs_blob_t result{};
+	c_blob_t result{};
 	result.size = __total_file_size(handle);
 	if (!result.size)
 		return{};
@@ -120,9 +120,39 @@ fs_blob_t fs_file_contents(const char* in_file)
 	return result;
 }
 
-fs_blob_t fs_tga_read_24(const char* in_file)
+c_blob_t fs_file_contents_null_terminated(const char* in_file)
 {
-	fs_blob_t result = fs_file_contents(in_file);
+	::FILE* handle{};
+	if (0 != ::fopen_s(&handle, in_file, "rb"))
+		return {};
+
+	c_blob_t result{};
+	result.size = __total_file_size(handle);
+	if (!result.size)
+		return{};
+
+	result.data = new uint8_t[result.size + 1];
+	if (!result.data)
+		return{};
+
+	if (1 != ::fread(result.data, result.size, 1, handle))
+	{
+		delete[] result.data;
+		return{};
+	}
+
+	{
+		uint8_t* data = (uint8_t*)result.data;
+		data[result.size] = 0;
+	}
+
+	return result;
+}
+
+
+c_blob_t fs_tga_read_24(const char* in_file)
+{
+	c_blob_t result = fs_file_contents(in_file);
 	if (!result.data || !result.size)
 		return {};
 

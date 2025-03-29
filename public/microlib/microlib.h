@@ -46,6 +46,7 @@ private:
 
 //keyboard / mouse keys
 bool micron_key_is_down(const micron_t& in_micron, const int32_t in_key);
+bool micron_key_upflank(const micron_t& in_micron, const int32_t in_key);
 bool micron_key_downflank(const micron_t& in_micron, const int32_t in_key);
 
 //canvas

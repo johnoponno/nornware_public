@@ -7,6 +7,29 @@
 
 //FIXME: this is currently win32 VK_xxx codes and NOT platform agnostic!
 #define MICRON_KEY_ESCAPE 0x1B
+#define MICRON_KEY_RETURN 0x0D
+#define MICRON_KEY_LMB 0x01
+#define MICRON_KEY_RMB 0x02
+#define MICRON_KEY_F1 0x70
+#define MICRON_KEY_F2 0x71
+#define MICRON_KEY_F3 0x72
+#define MICRON_KEY_F4 0x73
+#define MICRON_KEY_F5 0x74
+#define MICRON_KEY_F6 0x75
+#define MICRON_KEY_F7 0x76
+#define MICRON_KEY_F8 0x77
+#define MICRON_KEY_SHIFT 0x10
+#define MICRON_KEY_SPACE 0x20
+#define MICRON_KEY_PRIOR 0x21
+#define MICRON_KEY_NEXT 0x22
+#define MICRON_KEY_END 0x23
+#define MICRON_KEY_HOME 0x24
+#define MICRON_KEY_LEFT 0x25
+#define MICRON_KEY_UP 0x26
+#define MICRON_KEY_RIGHT 0x27
+#define MICRON_KEY_DOWN 0x28
+#define MICRON_KEY_INSERT 0x2D
+
 
 /*
 micron (c) 2025 nornware AB
