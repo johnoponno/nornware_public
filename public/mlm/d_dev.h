@@ -82,6 +82,7 @@ namespace mlm
 		uint32_t _tick;
 		uint32_t _bit_dev : 1;
 		uint32_t _bit_maximize_size : 1;
+		uint32_t _bit_do_draw_gui : 1;
 
 		struct string_t
 		{

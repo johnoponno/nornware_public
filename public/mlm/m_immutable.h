@@ -7,8 +7,13 @@
 
 #define MLM_M_MAX_TILE 1560
 
+#if 0
 #define MLM_M_CHAR_HALF_WIDTH 8
 #define MLM_M_CHAR_HALF_HEIGHT 16
+#else
+#define MLM_M_CHAR_HALF_WIDTH 4
+#define MLM_M_CHAR_HALF_HEIGHT 8
+#endif
 
 #define MLM_M_JUMPER_SPEED -350.f
 
@@ -30,12 +35,19 @@
 #define MLM_M_VISITED 1
 #define MLM_M_VISITED_CHECKPOINT 2
 
-#define MLM_M_TILE_ASPECT 16
+#define MLM_M_TILE_ASPECT 8
 
+#if 0
 #define MLM_M_WORLD_WIDTH 384
 #define MLM_M_WORLD_HEIGHT 208
 #define MLM_M_WORLD_SIZE 79872
 static_assert(MLM_M_WORLD_WIDTH* MLM_M_WORLD_HEIGHT == MLM_M_WORLD_SIZE, "wtf?");
+#else
+#define MLM_M_WORLD_WIDTH 256
+#define MLM_M_WORLD_HEIGHT 144
+#define MLM_M_WORLD_SIZE 36864
+static_assert(MLM_M_WORLD_WIDTH* MLM_M_WORLD_HEIGHT == MLM_M_WORLD_SIZE, "wtf?");
+#endif
 
 namespace mlm
 {

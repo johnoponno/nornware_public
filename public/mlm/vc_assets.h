@@ -4,8 +4,13 @@
 #include "../microlib/fs.h"
 #include "m_immutable.h"
 
+#if 0
 #define MLM_VC_SCREEN_WIDTH 384	//24 tiles
 #define MLM_VC_SCREEN_HEIGHT 208	//13 tiles
+#else
+#define MLM_VC_SCREEN_WIDTH 256
+#define MLM_VC_SCREEN_HEIGHT 144
+#endif
 
 #define MLM_VC_SOFT_BUTTON_HEIGHT 16
 
@@ -15,8 +20,13 @@
 
 #define NINJA_VC_TILE_BITS_KEY 1
 
+#if 0
 #define NINJA_VC_TILES_ON_SCREEN_X 24
 #define NINJA_VC_TILES_ON_SCREEN_Y 13
+#else
+#define NINJA_VC_TILES_ON_SCREEN_X 32
+#define NINJA_VC_TILES_ON_SCREEN_Y 18
+#endif
 
 #define NINJA_VC_TILEFLAGS_REPLACE 1
 #define NINJA_VC_TILEFLAGS_NON_PASSAGE 2
@@ -24,8 +34,8 @@
 
 #define NINJA_VC_SOUNDS_NUM_JUMPS 5
 
-#define NINJA_VC_SCREENS_IN_WORLD_X 16
-#define NINJA_VC_SCREENS_IN_WORLD_Y 16
+#define NINJA_VC_SCREENS_IN_WORLD_X 8
+#define NINJA_VC_SCREENS_IN_WORLD_Y 8
 static_assert(MLM_M_WORLD_WIDTH / NINJA_VC_TILES_ON_SCREEN_X == NINJA_VC_SCREENS_IN_WORLD_X, "wtf!?");
 static_assert(MLM_M_WORLD_HEIGHT / NINJA_VC_TILES_ON_SCREEN_Y == NINJA_VC_SCREENS_IN_WORLD_Y, "wtf!?");
 

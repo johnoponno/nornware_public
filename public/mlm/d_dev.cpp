@@ -45,15 +45,18 @@ namespace mlm
 
 	void d_dev_t::d_gui_draw(micron_t& out_micron)
 	{
-		int32_t y = 0;
-		for (const string_t& G : _strings)
+		if (_bit_do_draw_gui)
 		{
-			vc_canvas_atascii_print(0, y, G.color, G.text, out_micron);
-			y += 8;
-			if (y >= out_micron.canvas_height)
+			int32_t y = 0;
+			for (const string_t& G : _strings)
 			{
-				_strings.clear();
-				return;
+				vc_canvas_atascii_print(0, y, G.color, G.text, out_micron);
+				y += 8;
+				if (y >= out_micron.canvas_height)
+				{
+					_strings.clear();
+					return;
+				}
 			}
 		}
 		_strings.clear();
@@ -96,6 +99,8 @@ namespace mlm
 
 		assert(nullptr == _dev_ambience);
 		assert(0 == _dev_ambience_count);
+
+		_bit_do_draw_gui = 1;
 	}
 
 	d_dev_t::~d_dev_t()

@@ -16,12 +16,14 @@ struct micron_t;
 
 namespace mlm
 {
+	/*
 	struct vc_octafont_character_t
 	{
 		int32_t s;
 		int32_t t;
 		int32_t w;
 	};
+	*/
 
 	void vc_octamap_blit_key(
 		const int32_t dst_x, const int32_t dst_y,

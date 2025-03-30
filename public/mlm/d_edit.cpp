@@ -159,18 +159,18 @@ namespace mlm
 			out_dev.d_gui_text("are you sure you want");
 			out_dev.d_gui_text("to clear all animations?");
 
-			if (out_dev.d_gui_button(in_micron, -1, "Yes"))
+			if (out_dev.d_gui_button(in_micron, 'Y', "Yes"))
 			{
 				vc_tiles_clear_animations(out_assets, out_fatpack);
 				out_dev._edit_anim_pending_clear_animations = 0;
 			}
 
-			if (out_dev.d_gui_button(in_micron, -1, "No"))
+			if (out_dev.d_gui_button(in_micron, 'N', "No"))
 				out_dev._edit_anim_pending_clear_animations = 0;
 		}
 		else
 		{
-			if (out_dev.d_gui_button(in_micron, -1, "Clear All Animations"))
+			if (out_dev.d_gui_button(in_micron, 'X', "Clear All Animations"))
 				out_dev._edit_anim_pending_clear_animations = 1;
 
 			out_dev.d_gui_text("<LMB>from");

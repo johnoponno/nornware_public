@@ -56,6 +56,9 @@ namespace mlm
 			m_game_active(out_mu)
 			)
 		{
+			if (out_dev.d_gui_radio(in_micron, out_dev._bit_do_draw_gui, 'I', "Info"))
+				out_dev._bit_do_draw_gui ^= 1;
+
 			//const c_vec2i_t RENDER_SIZE = out_dev.render_size(d3d9_state.backbuffer_surface_desc.Width, d3d9_state.backbuffer_surface_desc.Height);
 
 			//mode tabs

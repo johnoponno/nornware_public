@@ -9,13 +9,6 @@
 
 #define ASSET_IDLE_MUSIC "oga_japanese_hacks.ogg"
 
-#define CREDITS_X 210
-#define SCORES_X 190
-#define DONE_X 230
-#define MAX_NAME 9
-#define NAME_INPUT_WAIT 2.f
-#define SCORES_ON_SCREEN 12
-
 namespace mlm
 {
 	static bool __main(
@@ -25,7 +18,7 @@ namespace mlm
 		int32_t x;
 		int32_t y;
 
-		vc_gui_big_text(in_micron, x = in_micron.canvas_width / 4, y = 16, -1, "MicroLoMania", out_fatpack);
+		vc_gui_big_text(in_micron, x = in_micron.canvas_width / 8, y = 16, -1, "MicroLoMania", out_fatpack);
 
 		if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, x, y += 16, 'N', "New Game", out_fatpack))
 		{
@@ -66,6 +59,7 @@ namespace mlm
 		};
 
 		{
+			const int32_t X = in_micron.canvas_width / 8;
 			int32_t y = 8;
 			for (
 				uint32_t i = 0;
@@ -75,7 +69,7 @@ namespace mlm
 			{
 				if (CREDITS[i])
 				{
-					vc_gui_big_text(in_micron, in_micron.canvas_width / 4, y, -1, CREDITS[i], out_fatpack);
+					vc_gui_big_text(in_micron, X, y, -1, CREDITS[i], out_fatpack);
 					y += 8;
 				}
 				else

@@ -571,17 +571,17 @@ namespace mlm
 
 	c_vec2f_t m_character_get_test_left(const bool in_second, const m_mutable_t& in_mu)
 	{
-		c_vec2f_t result = { in_mu.hero_position.x - MLM_M_CHAR_HALF_WIDTH, in_mu.hero_position.y - 8 };
+		c_vec2f_t result = { in_mu.hero_position.x - MLM_M_CHAR_HALF_WIDTH, in_mu.hero_position.y - MLM_M_CHAR_HALF_HEIGHT / 2 };
 		if (in_second)
-			result.y += 16;
+			result.y += MLM_M_CHAR_HALF_HEIGHT;
 		return result;
 	}
 
 	c_vec2f_t m_character_get_test_right(const bool in_second, const m_mutable_t& in_mu)
 	{
-		c_vec2f_t result = { in_mu.hero_position.x + MLM_M_CHAR_HALF_WIDTH, in_mu.hero_position.y - 8 };
+		c_vec2f_t result = { in_mu.hero_position.x + MLM_M_CHAR_HALF_WIDTH, in_mu.hero_position.y - MLM_M_CHAR_HALF_HEIGHT / 2 };
 		if (in_second)
-			result.y += 16;
+			result.y += MLM_M_CHAR_HALF_HEIGHT;
 		return result;
 	}
 }
