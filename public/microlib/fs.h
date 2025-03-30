@@ -28,8 +28,11 @@ struct fs_tga_header_t
 #pragma pack(pop)
 
 c_blob_t fs_tga_read_24(const char* in_file);	//supports RLE
+uint8_t* fs_tga_pixels_palettized(const c_blob_t& in_image);
+const uint8_t* fs_tga_src(const fs_tga_header_t* in_header, const uint8_t* in_pixels, const int32_t in_src_x, const int32_t in_src_y);
+const uint8_t* fs_tga_row_advance(const fs_tga_header_t* in_header, const uint8_t* in_scan_src);
 
 #define FS_TGA_HEADER(image) ((fs_tga_header_t*)(image).data)
 #define FS_TGA_PIXELS(image) ((uint8_t*)(image).data + sizeof(fs_tga_header_t))
-#define FS_TGA_PIXELS_PALETTIZED(image) ((uint8_t*)(image).data + sizeof(fs_tga_header_t) + 768)
+//#define FS_TGA_PIXELS_PALETTIZED(image) ((uint8_t*)(image).data + sizeof(fs_tga_header_t) + 768)
 #define FS_TGA_PALETTE(image) ((uint8_t*)(image).data + sizeof(fs_tga_header_t))

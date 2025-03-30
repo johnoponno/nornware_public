@@ -12,7 +12,7 @@ struct micron_t;
 //#define NINJA_VC_OCTAFONT_NUMCHARS 95
 //static_assert(NINJA_VC_OCTAFONT_NUMCHARS == NINJA_VC_OCTAFONT_CHAREND - NINJA_VC_OCTAFONT_CHARBEGIN, "wtf?");
 
-#define MLM_VC_OCTAMAP_COLOR_KEY_INDEX 2
+#define MLM_VC_OCTAMAP_COLOR_KEY_INDEX 15
 
 namespace mlm
 {
@@ -25,6 +25,7 @@ namespace mlm
 	};
 	*/
 
+	//assumes src
 	void vc_octamap_blit_key(
 		const int32_t dst_x, const int32_t dst_y,
 		int32_t copy_width, int32_t copy_height,

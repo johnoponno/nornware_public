@@ -913,8 +913,12 @@ namespace mlm
 	{
 		const c_vec2i_t TILE_SRC = vc_tile_src(in_tiles_on_source_x, in_tile_index);
 
+		/*
 		//we are keying and flipping in y...
-		const uint8_t* BYTE_SRC = FS_TGA_PIXELS_PALETTIZED(in_src) + TILE_SRC.x + (FS_TGA_HEADER(in_src)->image_spec_height - 1 - TILE_SRC.y) * FS_TGA_HEADER(in_src)->image_spec_width;
+		const uint8_t* BYTE_SRC = fs_tga_pixels_palettized(in_src) + TILE_SRC.x + (FS_TGA_HEADER(in_src)->image_spec_height - 1 - TILE_SRC.y) * FS_TGA_HEADER(in_src)->image_spec_width;
+		*/
+		const uint8_t* PIXELS = fs_tga_pixels_palettized(in_src);
+		const uint8_t* BYTE_SRC = fs_tga_src(FS_TGA_HEADER(in_src), PIXELS, TILE_SRC.x, TILE_SRC.y);
 		for (
 			int32_t y = 0;
 			y < MLM_M_TILE_ASPECT;
@@ -932,7 +936,10 @@ namespace mlm
 					return true;
 				++BYTE_SRC;
 			}
+			/*
 			BYTE_SRC = BYTE_SCAN_SRC - FS_TGA_HEADER(in_src)->image_spec_width;
+			*/
+			BYTE_SRC = fs_tga_row_advance(FS_TGA_HEADER(in_src), BYTE_SCAN_SRC);
 		}
 
 		return false;
@@ -1040,8 +1047,14 @@ namespace mlm
 #else
 		delete[] out_assets.tempcave.data;
 		out_assets.tempcave = {};
-		if (!__load_blob("tempcave.tga", out_assets.tempcave))
+		//if (!__load_blob("tempcave.tga", out_assets.tempcave))
+		if (!__load_blob("watercave.tga", out_assets.tempcave))
 			return false;
+		/*
+		const fs_tga_header_t* HEADER = FS_TGA_HEADER(out_assets.tempcave);
+		const uint8_t SCREEN_ORIGIN_BIT = HEADER->image_spec_descriptor & (1 << 5);
+		SCREEN_ORIGIN_BIT;
+		*/
 #endif
 
 		return true;
@@ -1515,7 +1528,7 @@ namespace mlm
 			assert(T->text.buffer && *T->text.buffer);
 
 			//__octafont_print(in_assets.gui_big_font, T->position.x, T->position.y, T->text, out_micron);
-			vc_canvas_atascii_print(T->x, T->y, 0, T->text.buffer, out_micron);
+			vc_canvas_atascii_print(T->x, T->y, 9, T->text.buffer, out_micron);
 		}
 
 		out_fatpack.gui_num_text = 0;
@@ -1656,7 +1669,7 @@ namespace mlm
 			{
 				const bool LAST_FRAME_STEP = 2 == (int32_t)out_fatpack.hero_anim;
 
-				out_fatpack.hero_anim += 15.f * M_SECONDS_PER_TICK;
+				out_fatpack.hero_anim += 12.f * M_SECONDS_PER_TICK;
 				if (out_fatpack.hero_anim >= 6)
 					out_fatpack.hero_anim = 1.f;
 
@@ -1709,13 +1722,22 @@ namespace mlm
 				input |= MLM_M_FLAGS_DOWN;
 				*/
 
-			if (micron_key_is_down(in_micron, 'A'))
+			if (
+				micron_key_is_down(in_micron, 'A') ||
+				micron_key_is_down(in_micron, MICRON_KEY_LEFT)
+				)
 				input |= MLM_M_FLAGS_LEFT;
 
-			if (micron_key_is_down(in_micron, 'D'))
+			if (
+				micron_key_is_down(in_micron, 'D') ||
+				micron_key_is_down(in_micron, MICRON_KEY_RIGHT)
+				)
 				input |= MLM_M_FLAGS_RIGHT;
 
-			if (micron_key_is_down(in_micron, 'K'))
+			if (
+				micron_key_is_down(in_micron, 'K') ||
+				micron_key_is_down(in_micron, MICRON_KEY_UP)
+				)
 				input |= MLM_M_FLAGS_JUMP;
 
 			/*

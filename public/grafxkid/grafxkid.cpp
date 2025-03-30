@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "grafxkid.h"
 
-#include "../micron.h"
+#include "../microlib/fs.h"
 #include "../microlib/paletas.h"
+#include "../micron.h"
 
 #define FASTFLOOR(x) ( ((x)>0) ? ((int32_t)x) : ((int32_t)x-1 ) )
 #define FADE(t) ( t * t * t * ( t * ( t * 6 - 15 ) + 10 ) )
@@ -208,6 +209,51 @@ static bool __input_high_jump(const micron_t& in_micron)
 		in_micron.pads[0].button_b;
 }
 
+struct fs_pcx_header_t
+{
+	uint8_t  manufacturer;				/* 0x0A: ZSoft */
+	uint8_t  version;					/* 0x02 with palette, 0x03 without palette, 0x05 24 bit pcx or paletted */
+	uint8_t  encoding;					/* 0x01: PCX RLE */
+	uint8_t  bits_per_pixel;			/* number of bits per pixel 1, 2, 4, 8 */
+	uint16_t x_min;						/* window */
+	uint16_t y_min;
+	uint16_t x_max;
+	uint16_t y_max;
+	uint16_t h_dpi;
+	uint16_t v_dpi;
+	uint8_t  colormap[48];				/* first 16 colors, R, G, B as 8 bit values */
+	uint8_t  reserved;					/* 0x00 */
+	uint8_t  number_of_planes;			/* number of planes */
+	uint16_t bytes_per_line;			/* number of bytes that represent a scanline plane == must be an even number! */
+	uint16_t palette_info;				/* 0x01 = color/bw, 0x02 = grayscale */
+	uint16_t horizontal_screen_size;	/* horizontal screen size */
+	uint16_t vertical_screen_size;		/* vertical screen size */
+	uint8_t  filler[54];				/* padding to 128 bytes */
+};
+
+/*
+static const fs_pcx_header_t* __pcx_header(const void* in_file)
+{
+	return (fs_pcx_header_t*)in_file;
+}
+
+static int32_t __pcx_width(const fs_pcx_header_t* in_header)
+{
+	return in_header->x_max - in_header->x_min + 1;
+}
+
+static int32_t __pcx_height(const fs_pcx_header_t* in_header)
+{
+	return in_header->y_max - in_header->y_min + 1;
+}
+
+//this assumes a 256 color palette at the end of the file, depends on file type
+static const uint8_t* __pcx_palette(const void* in_native, const uint32_t in_size)
+{
+	return (uint8_t*)in_native + in_size - 768;
+}
+*/
+
 //public
 //public
 //public
@@ -235,11 +281,38 @@ bool grafxkid_init(micron_t& out_micron, grafxkid_t& out_game)
 	assert(SRC_TILES_X == out_game.gfx.width / TILE_ASPECT);
 	assert(SRC_TILES_Y == out_game.gfx.height / TILE_ASPECT);
 
+#if 0
+	{
+		c_blob_t pcx = fs_file_contents("C:/Users/johno/Documents/MicroLoMania/ArtAssets/tilesetGroundAndSpikes.pcx");
+		if (pcx.data)
+		{
+			const fs_pcx_header_t* header = __pcx_header(pcx.data);
+			::memset(&out_micron.palette, 0, sizeof(out_micron.palette));
+			for (
+				uint32_t i = 0;
+				i < 16;
+				++i
+				)
+			{
+				out_micron.palette[i].r = header->colormap[i * 3 + 0];
+				out_micron.palette[i].g = header->colormap[i * 3 + 1];
+				out_micron.palette[i].b = header->colormap[i * 3 + 2];
+			}
+			delete[] pcx.data;
+		}
+	}
+#endif
+
 	return true;
 }
 
 bool grafxkid_tick(micron_t& out_micron, grafxkid_t& out_game)
 {
+	/*
+	out_micron.canvas_width = 256;
+	out_micron.canvas_height = 144;
+	*/
+
 	int32_t moving = 0;
 
 	//update
@@ -292,9 +365,9 @@ bool grafxkid_tick(micron_t& out_micron, grafxkid_t& out_game)
 			out_game.mu_hero_speed_y = 0.f;
 		}
 		if (
-			out_game.mu_hero_speed_y > 0.f && 
-			OLD_Y <= -TILE_ASPECT && 
-			out_game.mu_hero_position_y > -TILE_ASPECT && 
+			out_game.mu_hero_speed_y > 0.f &&
+			OLD_Y <= -TILE_ASPECT &&
+			out_game.mu_hero_position_y > -TILE_ASPECT &&
 			(2 & __obstacle_flags(out_game, SCREEN_TILES_X / 2))
 			)
 		{
@@ -302,9 +375,9 @@ bool grafxkid_tick(micron_t& out_micron, grafxkid_t& out_game)
 			out_game.mu_hero_speed_y = 0.f;
 		}
 		if (
-			out_game.mu_hero_speed_y > 0.f && 
-			OLD_Y <= -TILE_ASPECT * 2 && 
-			out_game.mu_hero_position_y > -TILE_ASPECT * 2 && 
+			out_game.mu_hero_speed_y > 0.f &&
+			OLD_Y <= -TILE_ASPECT * 2 &&
+			out_game.mu_hero_position_y > -TILE_ASPECT * 2 &&
 			__brick(out_game, SCREEN_TILES_X / 2)
 			)
 		{
@@ -508,7 +581,10 @@ bool grafxkid_tick(micron_t& out_micron, grafxkid_t& out_game)
 		}
 	}
 
-	//micron_canvas_visualize_palette(out_micron, 2);
+#if 1
+	//if (micron_key_is_down(out_micron, MICRON_KEY_SPACE))
+		micron_test_screen(out_micron);
+#endif
 
 	return !micron_key_downflank(out_micron, MICRON_KEY_ESCAPE);
 }

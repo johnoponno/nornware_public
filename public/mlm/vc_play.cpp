@@ -522,7 +522,11 @@ namespace mlm
 		}
 
 		//play input key legend
-		vc_canvas_atascii_print(0, out_micron.canvas_height - 8, 0, "ADK", out_micron);
+		vc_canvas_atascii_print(0, out_micron.canvas_height - 8, 9, "ADK/ARROWS", out_micron);
+
+#if 0
+		micron_canvas_visualize_palette(out_micron, 4);
+#endif
 
 		out_micron.music = ASSET_AMBIENCE;
 	}

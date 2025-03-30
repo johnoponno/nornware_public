@@ -113,6 +113,24 @@ namespace mlm
 		}
 	}
 
+	/*
+	static const uint8_t* __src(const fs_tga_header_t* in_header, const uint8_t* in_pixels, const int32_t in_src_x, const int32_t in_src_y)
+	{
+		if (in_header->image_spec_descriptor & (1 << 5))
+			return in_pixels + in_src_x + in_src_y * in_header->image_spec_width;
+		else
+			return in_pixels + in_src_x + (in_header->image_spec_height - 1 - in_src_y) * in_header->image_spec_width;
+	}
+
+	static const uint8_t* __row_advance(const fs_tga_header_t* in_header, const uint8_t* in_scan_src)
+	{
+		if (in_header->image_spec_descriptor & (1 << 5))
+			return in_scan_src + in_header->image_spec_width;
+		else
+			return in_scan_src - in_header->image_spec_width;
+	}
+	*/
+
 	void vc_octamap_blit_key(
 		const int32_t in_dst_x, const int32_t in_dst_y,
 		int32_t in_copy_width, int32_t in_copy_height,
@@ -132,8 +150,12 @@ namespace mlm
 			)
 			in_copy_height = FS_TGA_HEADER(in_src)->image_spec_height;
 
+		/*
 		//we are keying and flipping in y...
-		const uint8_t* BYTE_SRC = FS_TGA_PIXELS_PALETTIZED(in_src) + in_src_x + (FS_TGA_HEADER(in_src)->image_spec_height - 1 - in_src_y) * FS_TGA_HEADER(in_src)->image_spec_width;
+		const uint8_t* BYTE_SRC = fs_tga_pixels_palettized(in_src) + in_src_x + (FS_TGA_HEADER(in_src)->image_spec_height - 1 - in_src_y) * FS_TGA_HEADER(in_src)->image_spec_width;
+		*/
+		const uint8_t* PIXELS = fs_tga_pixels_palettized(in_src);
+		const uint8_t* BYTE_SRC = fs_tga_src(FS_TGA_HEADER(in_src), PIXELS, in_src_x, in_src_y);
 		uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * out_micron.canvas_width;
 		for (
 			int32_t y = 0;
@@ -151,17 +173,15 @@ namespace mlm
 				)
 			{
 				if (*BYTE_SRC != MLM_VC_OCTAMAP_COLOR_KEY_INDEX)
-#if OCTAMAP_DEPTH_COMPLEXITY
-					if (byte_dst[0] < 255)
-						++byte_dst[0];
-#else
-					* byte_dst = *BYTE_SRC;
-#endif
+					*byte_dst = *BYTE_SRC;
 				++BYTE_SRC;
 				++byte_dst;
 			}
 
+			/*
 			BYTE_SRC = BYTE_SCAN_SRC - FS_TGA_HEADER(in_src)->image_spec_width;
+			*/
+			BYTE_SRC = fs_tga_row_advance(FS_TGA_HEADER(in_src), BYTE_SCAN_SRC);
 			byte_dst = byte_scan_dst + out_micron.canvas_width;
 		}
 	}
@@ -226,8 +246,13 @@ namespace mlm
 			//we are flipping in x...
 			__h_mirror_modify_src_x(ORIGINAL_COPYWIDTH, in_copy_width, ORIGINAL_SRCX, in_src_x);
 
+			const uint8_t* PIXELS = fs_tga_pixels_palettized(in_src);
+			/*
 			//we are keying and flipping in y...
-			const uint8_t* BYTE_SRC = FS_TGA_PIXELS_PALETTIZED(in_src) + in_src_x + (FS_TGA_HEADER(in_src)->image_spec_height - 1 - in_src_y) * FS_TGA_HEADER(in_src)->image_spec_width;
+			const uint8_t* BYTE_SRC = PIXELS + in_src_x + (FS_TGA_HEADER(in_src)->image_spec_height - 1 - in_src_y) * FS_TGA_HEADER(in_src)->image_spec_width;
+			*/
+			const uint8_t* BYTE_SRC = fs_tga_src(FS_TGA_HEADER(in_src), PIXELS, in_src_x, in_src_y);
+
 			uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * out_micron.canvas_width;
 
 			for (
@@ -245,19 +270,20 @@ namespace mlm
 					++x
 					)
 				{
-					assert(BYTE_SRC >= FS_TGA_PIXELS_PALETTIZED(in_src) && BYTE_SRC < (FS_TGA_PIXELS_PALETTIZED(in_src) + FS_TGA_HEADER(in_src)->image_spec_width + FS_TGA_HEADER(in_src)->image_spec_height * FS_TGA_HEADER(in_src)->image_spec_width));
+					assert(
+						BYTE_SRC >= PIXELS &&
+						BYTE_SRC < PIXELS + FS_TGA_HEADER(in_src)->image_spec_width + FS_TGA_HEADER(in_src)->image_spec_height * FS_TGA_HEADER(in_src)->image_spec_width
+					);
 					if (*BYTE_SRC != MLM_VC_OCTAMAP_COLOR_KEY_INDEX)
-#if OCTAMAP_DEPTH_COMPLEXITY
-						if (byte_dst[0] < 255)
-							++byte_dst[0];
-#else
-						* byte_dst = *BYTE_SRC;
-#endif
+						*byte_dst = *BYTE_SRC;
 					--BYTE_SRC;
 					++byte_dst;
 				}
 
+				/*
 				BYTE_SRC = BYTE_SCAN_SRC - FS_TGA_HEADER(in_src)->image_spec_width;
+				*/
+				BYTE_SRC = fs_tga_row_advance(FS_TGA_HEADER(in_src), BYTE_SCAN_SRC);
 				byte_dst = byte_scan_dst + out_micron.canvas_width;
 			}
 		}
@@ -282,8 +308,15 @@ namespace mlm
 			)
 			in_copy_height = FS_TGA_HEADER(in_src)->image_spec_height;
 
-		//we are flipping in y...
-		const uint8_t* BYTE_SRC = FS_TGA_PIXELS_PALETTIZED(in_src) + in_src_x + (FS_TGA_HEADER(in_src)->image_spec_height - 1 - in_src_y) * FS_TGA_HEADER(in_src)->image_spec_width;
+		const uint8_t* PIXELS = fs_tga_pixels_palettized(in_src);
+		/*
+		const uint8_t* BYTE_SRC;
+		if (FS_TGA_HEADER(in_src)->image_spec_descriptor & (1 << 5))
+			BYTE_SRC = PIXELS + in_src_x + in_src_y * FS_TGA_HEADER(in_src)->image_spec_width;
+		else
+			BYTE_SRC = PIXELS + in_src_x + (FS_TGA_HEADER(in_src)->image_spec_height - 1 - in_src_y) * FS_TGA_HEADER(in_src)->image_spec_width;
+			*/
+		const uint8_t* BYTE_SRC = fs_tga_src(FS_TGA_HEADER(in_src), PIXELS, in_src_x, in_src_y);
 		uint8_t* byte_dst = out_micron.canvas + in_dst_x + in_dst_y * out_micron.canvas_width;
 
 		for (
@@ -301,19 +334,23 @@ namespace mlm
 				++x
 				)
 			{
-				assert(BYTE_SRC >= FS_TGA_PIXELS_PALETTIZED(in_src) && BYTE_SRC < (FS_TGA_PIXELS_PALETTIZED(in_src) + FS_TGA_HEADER(in_src)->image_spec_width * FS_TGA_HEADER(in_src)->image_spec_height));
+				assert(
+					BYTE_SRC >= PIXELS &&
+					BYTE_SRC < PIXELS + FS_TGA_HEADER(in_src)->image_spec_width * FS_TGA_HEADER(in_src)->image_spec_height
+				);
 				assert(byte_dst >= out_micron.canvas && byte_dst < (out_micron.canvas + out_micron.canvas_width * out_micron.canvas_height));
-#if OCTAMAP_DEPTH_COMPLEXITY
-				if (byte_dst[0] < 255)
-					++byte_dst[0];
-#else
-				* byte_dst = *BYTE_SRC;
-#endif
+				*byte_dst = *BYTE_SRC;
 				++byte_dst;
 				++BYTE_SRC;
 			}
 
-			BYTE_SRC = BYTE_SCAN_SRC - FS_TGA_HEADER(in_src)->image_spec_width;
+			/*
+			if (FS_TGA_HEADER(in_src)->image_spec_descriptor & (1 << 5))
+				BYTE_SRC = BYTE_SCAN_SRC + FS_TGA_HEADER(in_src)->image_spec_width;
+			else
+				BYTE_SRC = BYTE_SCAN_SRC - FS_TGA_HEADER(in_src)->image_spec_width;
+				*/
+			BYTE_SRC = fs_tga_row_advance(FS_TGA_HEADER(in_src), BYTE_SCAN_SRC);
 			byte_dst = byte_scan_dst + out_micron.canvas_width;
 		}
 	}
@@ -394,6 +431,7 @@ namespace mlm
 		uint8_t* dst = out_micron.canvas + in_dst_x + in_dst_y * out_micron.canvas_width;
 
 		//loop
+		const uint8_t* PIXELS = fs_tga_pixels_palettized(in_src);
 		for (
 			int32_t y = 0;
 			y < in_dst_height;
@@ -413,13 +451,7 @@ namespace mlm
 				assert(SRC_PIXEL >= 0 && SRC_PIXEL < FS_TGA_HEADER(in_src)->image_spec_width * FS_TGA_HEADER(in_src)->image_spec_height);
 
 				assert(dst >= out_micron.canvas && dst < out_micron.canvas + out_micron.canvas_width * out_micron.canvas_height);
-
-#if OCTAMAP_DEPTH_COMPLEXITY
-				if (dst[0] < 255)
-					++dst[0];
-#else
-				* dst++ = FS_TGA_PIXELS_PALETTIZED(in_src)[SRC_PIXEL];
-#endif
+				*dst++ = PIXELS[SRC_PIXEL];
 			}
 
 			dst = scan_dst + out_micron.canvas_width;
@@ -430,10 +462,6 @@ namespace mlm
 		const int32_t in_x, const int32_t in_y, const int32_t in_radius, const uint8_t in_color,
 		micron_t& out_micron)
 	{
-#if OCTAMAP_DEPTH_COMPLEXITY
-		color;
-#endif
-
 		//check bounds (totally clipped)
 		if (!__clip(0, 0, out_micron.canvas_width, out_micron.canvas_height, in_radius, in_x, in_y))
 			return;
@@ -468,12 +496,7 @@ namespace mlm
 				++x
 				)
 			{
-#if OCTAMAP_DEPTH_COMPLEXITY
-				if (tptr[x] < 255)
-					++tptr[x];
-#else
 				tptr[x] = in_color;
-#endif
 			}
 
 			start = in_radius - __stretch_table[y].x;
@@ -484,12 +507,7 @@ namespace mlm
 				++x
 				)
 			{
-#if OCTAMAP_DEPTH_COMPLEXITY
-				if (bptr[x] < 255)
-					++bptr[x];
-#else
 				bptr[x] = in_color;
-#endif
 			}
 
 			tptr += out_micron.canvas_width;

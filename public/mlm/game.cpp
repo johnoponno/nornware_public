@@ -297,13 +297,6 @@ namespace mlm
 		const m_immutable_t& in_im, const m_mutable_t& in_mu, const vc_assets_t& in_assets,
 		vc_fatpack_t& out_fatpack, d_dev_t& out_dev, micron_t& out_micron)
 	{
-#if 0
-		//in order to support OCTAMAP_DEPTH_COMPLEXITY
-#ifdef _DEBUG
-		::memset(canvas8.pixels, 0, canvas8.width * canvas8.height);
-#endif
-#endif
-
 		if (!out_dev._paused)
 			vc_tiles_update_animations(in_assets, out_fatpack);
 

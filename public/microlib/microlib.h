@@ -106,6 +106,9 @@ void micron_print_colorize(
 	micron_t& out_micron,
 	const uint8_t in_key, const uint8_t in_key2, const micron_font_t& FONT, const uint8_t aColor, const int32_t aDstX, const int32_t aDstY, const char* message);
 
+//simple test screen
+void micron_test_screen(micron_t& out_micron);
+
 //atascii rom
 extern const uint8_t MICRON_ATASCII_BITS[256 * 8];
 

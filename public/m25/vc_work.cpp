@@ -918,7 +918,7 @@ namespace m25
 		const c_vec2i_t TILE_SRC = vc_tile_src(in_tiles_on_source_x, in_tile_index);
 
 		//we are keying and flipping in y...
-		const uint8_t* BYTE_SRC = FS_TGA_PIXELS_PALETTIZED(in_src) + TILE_SRC.x + (FS_TGA_HEADER(in_src)->image_spec_height - 1 - TILE_SRC.y) * FS_TGA_HEADER(in_src)->image_spec_width;
+		const uint8_t* BYTE_SRC = fs_tga_pixels_palettized(in_src) + TILE_SRC.x + (FS_TGA_HEADER(in_src)->image_spec_height - 1 - TILE_SRC.y) * FS_TGA_HEADER(in_src)->image_spec_width;
 		for (
 			int32_t y = 0;
 			y < M_TILE_ASPECT;

@@ -180,3 +180,27 @@ c_blob_t fs_tga_read_24(const char* in_file)
 
 	return result;
 }
+
+uint8_t* fs_tga_pixels_palettized(const c_blob_t& in_image)
+{
+	const fs_tga_header_t* HEADER = FS_TGA_HEADER(in_image);
+	assert(1 == HEADER->image_type);
+	assert(0 == HEADER->color_map_entry_size % 8);
+	return (uint8_t*)in_image.data + sizeof(fs_tga_header_t) + HEADER->color_map_length * HEADER->color_map_entry_size / 8;
+}
+
+const uint8_t* fs_tga_src(const fs_tga_header_t* in_header, const uint8_t* in_pixels, const int32_t in_src_x, const int32_t in_src_y)
+{
+	if (in_header->image_spec_descriptor & (1 << 5))
+		return in_pixels + in_src_x + in_src_y * in_header->image_spec_width;
+	else
+		return in_pixels + in_src_x + (in_header->image_spec_height - 1 - in_src_y) * in_header->image_spec_width;
+}
+
+const uint8_t* fs_tga_row_advance(const fs_tga_header_t* in_header, const uint8_t* in_scan_src)
+{
+	if (in_header->image_spec_descriptor & (1 << 5))
+		return in_scan_src + in_header->image_spec_width;
+	else
+		return in_scan_src - in_header->image_spec_width;
+}

@@ -836,6 +836,52 @@ bool micron_key_downflank(const micron_t& in_micron, const int32_t in_key)
 	return false;
 }
 
+//simple test screen
+void micron_test_screen(micron_t& out_micron)
+{
+	out_micron.canvas_width = 256;
+	out_micron.canvas_height = 144;
+
+	::memset(&out_micron.palette, 0, sizeof(out_micron.palette));
+	out_micron.palette[0] = { 17, 17, 19 };
+	out_micron.palette[1] = { 172, 50, 50 };
+	out_micron.palette[2] = { 68, 70, 81 };
+	out_micron.palette[3] = { 82, 63, 116 };
+	out_micron.palette[4] = { 62, 45, 92 };
+	out_micron.palette[5] = { 48, 96, 130 };
+	out_micron.palette[6] = { 95, 205, 228 };
+	out_micron.palette[7] = { 34, 32, 52 };
+	out_micron.palette[8] = { 32, 29, 48 };
+	out_micron.palette[9] = { 75, 105, 47 };
+	out_micron.palette[10] = { 85, 189, 147 };
+	out_micron.palette[11] = { 55, 148, 110 };
+	out_micron.palette[12] = { 215, 123, 186 };
+	out_micron.palette[13] = { 251, 242, 54 };
+	out_micron.palette[14] = { 223, 113, 38 };
+	out_micron.palette[15] = { 132, 79, 43 };
+	out_micron.palette[16] = { 0, 0, 0 };
+
+	micron_canvas_clear(out_micron, 3);
+
+	micron_canvas_visualize_palette(out_micron, 4);
+
+	const char* ID = "Micron(tm) Test Screen";
+	micron_canvas_atascii_print(out_micron, ID, 0, 13, out_micron.canvas_width - ::strlen(ID) * 8, 0);
+
+	{
+		char slask[256];
+		for (
+			int32_t i = 0;
+			i < 16;
+			++i
+			)
+		{
+			::sprintf_s(slask, "color %d %u", i, (i + 1) % 16);
+			micron_canvas_atascii_print(out_micron, slask, (uint8_t)i, uint8_t((i + 1) % 16), 80, out_micron.canvas_height - (i + 1) * 8);
+		}
+	}
+}
+
 const uint8_t MICRON_ATASCII_BITS[256 * 8] =
 {
 	0xff,0x93,0x01,0x01,0x83,0xc7,0xef,0xff,
