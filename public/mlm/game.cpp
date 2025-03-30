@@ -25,9 +25,11 @@ namespace mlm
 		const m_immutable_t& in_im, const uint32_t in_paused, const uint32_t in_tick, const m_mutable_t& in_mu, const vc_assets_t& in_assets,
 		vc_fatpack_t& out_fatpack, micron_t& out_micron);
 
+	/*
 	void vc_draw_cursor(
 		const uint32_t in_tick, const vc_assets_t& in_assets,
 		micron_t& out_micron);
+		*/
 
 	bool d_edit_input(
 		const micron_t& in_micron,
@@ -342,8 +344,10 @@ namespace mlm
 		}
 
 		vc_gui_draw_and_clear(out_fatpack, out_micron);
+		/*
 		if (out_dev.show_cursor(in_mu))
 			vc_draw_cursor(out_dev._tick, in_assets, out_micron);
+			*/
 
 		if (m_game_active(in_mu))//port of 16 bit output to 8 bit output
 		{
@@ -449,9 +453,9 @@ namespace mlm
 				)
 			{
 				//tga is bgr...
-				out_micron.palette[i].r = FS_TGA_PALETTE(_assets.cursor)[i * 3 + 0];
-				out_micron.palette[i].g = FS_TGA_PALETTE(_assets.cursor)[i * 3 + 1];
-				out_micron.palette[i].b = FS_TGA_PALETTE(_assets.cursor)[i * 3 + 2];
+				out_micron.palette[i].r = FS_TGA_PALETTE(_assets.tempcave)[i * 3 + 0];
+				out_micron.palette[i].g = FS_TGA_PALETTE(_assets.tempcave)[i * 3 + 1];
+				out_micron.palette[i].b = FS_TGA_PALETTE(_assets.tempcave)[i * 3 + 2];
 			}
 		}
 

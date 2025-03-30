@@ -41,7 +41,7 @@ namespace mlm
 
 	vc_assets_t::~vc_assets_t()
 	{
-		delete[] gui_big_font.data;
+		//delete[] gui_big_font.data;
 
 #if 0
 		for (
@@ -55,7 +55,7 @@ namespace mlm
 #endif
 
 		delete[] tiles.data;
-		delete[] cursor.data;
+		//delete[] cursor.data;
 		delete[] blades.data;
 		delete[] gibs.data;
 		delete[] impalement.data;
@@ -63,7 +63,7 @@ namespace mlm
 		delete[] burning.data;
 		delete[] electrination.data;
 		delete[] special_icons.data;
-		delete[] fish.data;
+		//delete[] fish.data;
 
 		delete[] hero.bitmap.data;
 		delete[] heavy.data;

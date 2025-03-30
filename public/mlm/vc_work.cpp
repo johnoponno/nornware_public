@@ -1069,11 +1069,13 @@ namespace mlm
 	{
 		//gfx
 		{
+			/*
 			if (!__load_blob(ASSET_BIGFONT, out_assets.gui_big_font))
 				return false;
 
 			if (!__load_blob(ASSET_CURSOR, out_assets.cursor))
 				return false;
+				*/
 
 			if (!__load_blob(ASSET_BLADES, out_assets.blades))
 				return false;
@@ -1089,8 +1091,10 @@ namespace mlm
 				return false;
 			if (!__load_blob(ASSET_SPECIALICONS, out_assets.special_icons))
 				return false;
+			/*
 			if (!__load_blob(ASSET_FISH, out_assets.fish))
 				return false;
+				*/
 
 			if (!__sprite_init(true, ASSET_HERO, out_assets.hero))
 				return false;
@@ -2491,6 +2495,7 @@ namespace mlm
 	}
 #endif
 
+#if 0
 	void vc_draw_cursor(
 		const uint32_t in_tick, const vc_assets_t& in_assets,
 		micron_t& out_micron)
@@ -2506,4 +2511,5 @@ namespace mlm
 			out_micron
 		);
 	}
+#endif
 }

@@ -197,11 +197,11 @@ namespace mlm
 			uint32_t wang : 2;
 		} tile_info[MLM_M_MAX_TILE];
 
-		c_blob_t gui_big_font;
+		//c_blob_t gui_big_font;
 
 		//uint16_t sd_palette[256];//FIXME: shouldn't really be here, want this entire lib to only run on 8 bit, currently used to convert arbitrary colors to palette
 
-		c_blob_t cursor;
+		//c_blob_t cursor;
 		c_blob_t blades;
 		c_blob_t gibs;
 		c_blob_t impalement;
@@ -209,7 +209,7 @@ namespace mlm
 		c_blob_t burning;
 		c_blob_t electrination;
 		c_blob_t special_icons;
-		c_blob_t fish;
+		//c_blob_t fish;
 		c_blob_t heavy;
 		vc_sprite_t hero;
 		vc_sprite_t walker;
