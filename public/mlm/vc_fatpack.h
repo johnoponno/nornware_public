@@ -94,6 +94,7 @@ namespace mlm
 		uint32_t bit_play_music : 1;
 
 		std::vector<vc_fx_t> fx;
+		std::vector<vc_fx_t> deferred_fx;
 
 		//instead of calculating on the fly
 		uint32_t cache_total_flowers;

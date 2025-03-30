@@ -121,12 +121,12 @@ namespace mlm
 				int32_t x;
 				int32_t y;
 
-				if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, x = in_micron.canvas_width / 2, y = in_micron.canvas_height / 2 + MLM_VC_SOFT_BUTTON_HEIGHT, MICRON_KEY_ESCAPE, "ESC Resume", out_fatpack))
+				if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, x = in_micron.canvas_width / 8, y = 16, MICRON_KEY_ESCAPE, "Resume", out_fatpack))
 				{
 					out_paused ^= 1;
 				}
 
-				if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, x, y += MLM_VC_SOFT_BUTTON_HEIGHT, MICRON_KEY_RETURN, "ENTER Quit", out_fatpack))
+				if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, x, y += 16, MICRON_KEY_RETURN, "Quit", out_fatpack))
 				{
 					out_paused ^= 1;
 					m_restart(in_tick, m_mode_t::IDLE, in_im, out_mu);

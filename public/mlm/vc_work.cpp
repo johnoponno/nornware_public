@@ -587,7 +587,7 @@ namespace mlm
 #endif
 
 	static bool __fx_draw(
-		const uint32_t in_paused, const uint32_t in_tick, const m_immutable_t& in_im, const c_vec2i_t& in_camera, const vc_assets_t& in_assets, const int32_t in_tiles_on_source_x,
+		const uint32_t in_paused, const uint32_t in_tick, const c_vec2i_t& in_camera, const vc_assets_t& in_assets, const int32_t in_tiles_on_source_x,
 		vc_fx_t& out_instance, vc_fatpack_t& out_fatpack, micron_t& out_micron)
 	{
 		switch (out_instance.type)
@@ -702,8 +702,12 @@ namespace mlm
 				{
 					if (out_instance.animated.ends_with_gibs)
 					{
+#if 0
 						__puff(16, 64.f, in_im, in_tick, in_assets, false, out_instance.position, out_fatpack);
 						__gibs(in_tick, out_instance.position, in_assets, out_fatpack);
+#else
+						out_fatpack.deferred_fx.push_back(out_instance);
+#endif
 					}
 
 					return false;
@@ -1356,14 +1360,26 @@ namespace mlm
 				out_fatpack.fx.release(i);
 		}
 #else
+		assert(0 == out_fatpack.deferred_fx.size());
 		auto itr = out_fatpack.fx.begin();
 		while (out_fatpack.fx.cend() != itr)
 		{
-			if (__fx_draw(in_paused, in_tick, in_im, in_camera, in_assets, TILES_ON_SOURCE_X, *itr, out_fatpack, out_micron))
+			if (__fx_draw(in_paused, in_tick, in_camera, in_assets, TILES_ON_SOURCE_X, *itr, out_fatpack, out_micron))
+			{
 				++itr;
+			}
 			else
+			{
 				itr = out_fatpack.fx.erase(itr);
+			}
 		}
+		for (const vc_fx_t& DFX : out_fatpack.deferred_fx)
+		{
+			assert(DFX.type == VC_FX_ANIMATED);
+			__puff(16, 64.f, in_im, in_tick, in_assets, false, DFX.position, out_fatpack);
+			__gibs(in_tick, DFX.position, in_assets, out_fatpack);
+		}
+		out_fatpack.deferred_fx.clear();
 #endif
 	}
 

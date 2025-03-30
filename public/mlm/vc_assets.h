@@ -12,8 +12,6 @@
 #define MLM_VC_SCREEN_HEIGHT 144
 #endif
 
-#define MLM_VC_SOFT_BUTTON_HEIGHT 16
-
 #define MLM_VC_GUI_INSIDE 1
 #define MLM_VC_GUI_LEFT 2
 #define MLM_VC_GUI_RIGHT 4
