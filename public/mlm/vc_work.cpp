@@ -1688,60 +1688,23 @@ namespace mlm
 		//hero movement when character is alive
 		if (m_character_alive(out_mu))
 		{
-			/*
-			if (
-				vc_key_is_down('S') ||
-				w32_xinput_is_button_down(0, W32_XINPUT_DPAD_DOWN) ||
-				w32_xinput_left_stick(0).y < 0.f
-				)
-				*/
 			if (micron_key_is_down(in_micron, 'S'))
 				input |= MLM_M_FLAGS_DOWN;
 
-			/*
-			if (
-				vc_key_is_down('A') ||
-				w32_xinput_is_button_down(0, W32_XINPUT_DPAD_LEFT) ||
-				w32_xinput_left_stick(0).x < 0.f
-				)
-				*/
 			if (micron_key_is_down(in_micron, 'A'))
 				input |= MLM_M_FLAGS_LEFT;
 
-			/*
-			if (
-				vc_key_is_down('D') ||
-				w32_xinput_is_button_down(0, W32_XINPUT_DPAD_RIGHT) ||
-				w32_xinput_left_stick(0).x > 0.f
-				)
-				*/
 			if (micron_key_is_down(in_micron, 'D'))
 				input |= MLM_M_FLAGS_RIGHT;
 
-			/*
-			if (
-				vc_key_is_down('K') ||
-				w32_xinput_is_button_down(0, W32_XINPUT_A)
-				)
-				*/
 			if (micron_key_is_down(in_micron, 'K'))
 				input |= MLM_M_FLAGS_JUMP;
 
 			/*
-			if (
-				vc_key_is_down('J') ||
-				w32_xinput_is_button_down(0, W32_XINPUT_X)
-				)
-				*/
 			if (micron_key_is_down(in_micron, 'J'))
 				input |= MLM_M_FLAGS_SPRINT;
-
-			/*
-			if (
-				vc_key_is_down('L') ||
-				w32_xinput_is_button_down(0, W32_XINPUT_B)
-				)
 				*/
+
 			if (micron_key_is_down(in_micron, 'L'))
 				input |= MLM_M_FLAGS_MELEE;
 		}

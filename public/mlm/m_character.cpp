@@ -4,12 +4,24 @@
 #include "m_mutable.h"
 #include "m_work.h"
 
+#if 0
+
 #define GROUND_ACC 10000.f
-#define GROUND_FRICTION_X -30.f
-#define SPRINT_GROUND_FRICTION_X -20.f
-#define AIR_ACC 750.f
 #define JUMP_X 125.f
 #define JUMP_Y -350.f
+#define AIR_ACC 750.f
+
+#else
+
+#define GROUND_ACC 5000.f
+#define JUMP_X 100.f
+#define JUMP_Y -250.f
+#define AIR_ACC 500.f
+
+#endif
+
+#define GROUND_FRICTION_X -30.f
+#define SPRINT_GROUND_FRICTION_X -20.f
 #define DEAD_TIME 1.f
 #define ABDUCT_BRAKE 10.f
 #define ABDUCT_SPEED -100.f
