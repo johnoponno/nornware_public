@@ -264,6 +264,7 @@ namespace mlm
 
 		vc_draw_plax(in_tick, in_im, in_mu, in_assets, camera, out_fatpack.prng, out_micron);
 
+#if 0
 		//jumpers
 		for (const m_mob_t& MOB : in_mu.mobs)
 		{
@@ -278,9 +279,11 @@ namespace mlm
 				break;
 			}
 		}
+#endif
 
 		vc_tiles_draw(in_im, in_mu, in_assets, camera, NINJA_VC_TILEFLAGS_REPLACE | NINJA_VC_TILEFLAGS_NON_PASSAGE, out_fatpack, out_micron);
 
+#if 0
 		//mobs after tiles
 		for (const m_mob_t& MOB : in_mu.mobs)
 		{
@@ -341,6 +344,7 @@ namespace mlm
 			break;
 			}
 		}
+#endif
 
 		vc_draw_hero(in_tick, in_im, in_mu, camera, in_assets, out_fatpack, out_micron);
 

@@ -53,16 +53,18 @@ namespace mlm
 
 		delete[] tiles.data;
 		//delete[] cursor.data;
-		delete[] blades.data;
+		//delete[] blades.data;
 		delete[] gibs.data;
 		delete[] impalement.data;
-		delete[] drowning.data;
-		delete[] burning.data;
-		delete[] electrination.data;
+		//delete[] drowning.data;
+		//delete[] burning.data;
+		//delete[] electrination.data;
 		delete[] special_icons.data;
 		//delete[] fish.data;
 
 		delete[] hero.bitmap.data;
+
+		/*
 		delete[] heavy.data;
 		delete[] walker.bitmap.data;
 		delete[] walker2.bitmap.data;
@@ -70,6 +72,7 @@ namespace mlm
 		delete[] jumper2.bitmap.data;
 		delete[] swimmer.bitmap.data;
 		delete[] swimmer2.bitmap.data;
+		*/
 
 #if 0
 		for (

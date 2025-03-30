@@ -402,6 +402,7 @@ namespace mlm
 		}
 	}
 
+#if 0
 	static void __blades(
 		const uint32_t in_tick, const c_vec2f_t& in_position, const vc_assets_t& in_assets,
 		vc_fatpack_t& out_fatpack)
@@ -428,6 +429,7 @@ namespace mlm
 			fx->blade.slowing = true;
 		}
 	}
+#endif
 
 	static void __puff(
 		const uint32_t in_count, const float in_speed, const m_immutable_t& in_im, const uint32_t in_tick, const vc_assets_t& in_assets, const bool in_flowers, const c_vec2f_t& in_position,
@@ -613,6 +615,7 @@ namespace mlm
 
 			return true;
 
+#if 0
 		case VC_FX_BLADE:
 			if (!in_paused)
 			{
@@ -643,6 +646,7 @@ namespace mlm
 			}
 
 			return true;
+#endif
 
 		case VC_FX_GIB:
 			if (!in_paused)
@@ -1053,20 +1057,23 @@ namespace mlm
 
 			if (!__load_blob(ASSET_CURSOR, out_assets.cursor))
 				return false;
-				*/
 
 			if (!__load_blob(ASSET_BLADES, out_assets.blades))
 				return false;
+				*/
+
 			if (!__load_blob(ASSET_GIBS, out_assets.gibs))
 				return false;
 			if (!__load_blob(ASSET_IMPALEMENT, out_assets.impalement))
 				return false;
+			/*
 			if (!__load_blob(ASSET_DROWNING, out_assets.drowning))
 				return false;
 			if (!__load_blob(ASSET_BURNING, out_assets.burning))
 				return false;
 			if (!__load_blob(ASSET_ELECTROCUTION, out_assets.electrination))
 				return false;
+				*/
 			if (!__load_blob(ASSET_SPECIALICONS, out_assets.special_icons))
 				return false;
 			/*
@@ -1077,6 +1084,7 @@ namespace mlm
 			if (!__sprite_init(true, ASSET_HERO, out_assets.hero))
 				return false;
 
+			/*
 			if (!__load_blob(ASSET_HEAVY, out_assets.heavy))
 				return false;
 
@@ -1094,6 +1102,7 @@ namespace mlm
 				return false;
 			if (!__sprite_init(false, ASSET_SWIMMER2, out_assets.swimmer2))
 				return false;
+				*/
 		}
 
 		//sounds
@@ -1390,15 +1399,15 @@ namespace mlm
 					break;
 
 				case M_COD_DROWNED:
-					__new_animated_fx_t(in_tick, false, EVENT->position + c_vec2f_t{ 0.f, DROWNED_FX_OFFSET_Y }, in_assets.drowning, in_mu, out_fatpack);
+					//__new_animated_fx_t(in_tick, false, EVENT->position + c_vec2f_t{ 0.f, DROWNED_FX_OFFSET_Y }, in_assets.drowning, in_mu, out_fatpack);
 					break;
 
 				case M_COD_BURNED:
-					__new_animated_fx_t(in_tick, false, EVENT->position, in_assets.burning, in_mu, out_fatpack);
+					//__new_animated_fx_t(in_tick, false, EVENT->position, in_assets.burning, in_mu, out_fatpack);
 					break;
 
 				case M_COD_ELECTRINATED:
-					__new_animated_fx_t(in_tick, false, EVENT->position, in_assets.electrination, in_mu, out_fatpack);
+					//__new_animated_fx_t(in_tick, false, EVENT->position, in_assets.electrination, in_mu, out_fatpack);
 					break;
 
 				default:
@@ -1441,7 +1450,7 @@ namespace mlm
 			case M_EVT_PICKED_FLOWER:
 			{
 				const c_vec2i_t G = m_world_to_grid(EVENT->position);
-				__blades(in_tick, m_grid_to_world(G.x, G.y), in_assets, out_fatpack);
+				//__blades(in_tick, m_grid_to_world(G.x, G.y), in_assets, out_fatpack);
 				//out_micron.sound_plays.push_back(VC_SND_PICKFLOWER);
 
 				//do this instead of re-calcing from visitation data on the fly...

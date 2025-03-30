@@ -212,22 +212,22 @@ namespace mlm
 		//uint16_t sd_palette[256];//FIXME: shouldn't really be here, want this entire lib to only run on 8 bit, currently used to convert arbitrary colors to palette
 
 		//c_blob_t cursor;
-		c_blob_t blades;
+		//c_blob_t blades;
 		c_blob_t gibs;
 		c_blob_t impalement;
-		c_blob_t drowning;
-		c_blob_t burning;
-		c_blob_t electrination;
+		//c_blob_t drowning;
+		//c_blob_t burning;
+		//c_blob_t electrination;
 		c_blob_t special_icons;
 		//c_blob_t fish;
-		c_blob_t heavy;
+		//c_blob_t heavy;
 		vc_sprite_t hero;
-		vc_sprite_t walker;
-		vc_sprite_t walker2;
-		vc_sprite_t jumper;
-		vc_sprite_t jumper2;
-		vc_sprite_t swimmer;
-		vc_sprite_t swimmer2;
+		//vc_sprite_t walker;
+		//vc_sprite_t walker2;
+		//vc_sprite_t jumper;
+		//vc_sprite_t jumper2;
+		//vc_sprite_t swimmer;
+		//vc_sprite_t swimmer2;
 		vc_screen_t screens[NINJA_VC_SCREENS_IN_WORLD_X * NINJA_VC_SCREENS_IN_WORLD_Y];
 
 #if 0
