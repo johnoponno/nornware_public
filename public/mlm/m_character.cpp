@@ -15,8 +15,8 @@
 
 #define GROUND_ACC 5000.f
 #define JUMP_X 100.f
-#define JUMP_Y -250.f
-#define AIR_ACC 150.f
+#define JUMP_Y -260.f
+#define AIR_ACC 175.f
 
 #endif
 

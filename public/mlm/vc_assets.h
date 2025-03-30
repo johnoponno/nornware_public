@@ -30,7 +30,7 @@
 #define NINJA_VC_TILEFLAGS_NON_PASSAGE 2
 #define NINJA_VC_TILEFLAGS_PASSAGE 4
 
-#define NINJA_VC_SOUNDS_NUM_JUMPS 5
+//#define NINJA_VC_SOUNDS_NUM_JUMPS 5
 
 #define NINJA_VC_SCREENS_IN_WORLD_X 8
 #define NINJA_VC_SCREENS_IN_WORLD_Y 8
@@ -56,6 +56,7 @@ namespace mlm
 
 	enum
 	{
+#if 0
 		VC_SND_LAND,
 		VC_SND_SLIDE,
 
@@ -92,6 +93,15 @@ namespace mlm
 		VC_SND_MEELE_HIT,
 
 		VC_NUM_SOUNDS,
+#else
+		VC_SND_STEP,
+		VC_SND_JUMP,
+		VC_SND_LAND,
+		VC_SND_SLIDE,
+		VC_SND_DIE_IMPALED,
+
+		VC_NUM_SOUNDS,
+#endif
 	};
 
 	enum

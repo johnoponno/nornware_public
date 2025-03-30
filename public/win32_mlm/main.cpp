@@ -42,8 +42,10 @@ struct wmdl_app_t : public w32_d3d9_chunky_app_t
 				nullptr
 			);
 
+			/*
 			if (_game._dev._tick == _game._mu.hero_melee_tick)
 				in_sounds.play(mlm::VC_SND_MELEE, 1.f, 0.f, 1.f, nullptr);
+				*/
 		}
 
 		for (const uint32_t SP : _guts._micron.sound_plays)

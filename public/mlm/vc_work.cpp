@@ -152,40 +152,11 @@ namespace mlm
 
 	static constexpr char* ASSET_SOUND[VC_NUM_SOUNDS] =
 	{
-		"land.wav",
-		"slide.wav",
-
-		"step1.wav",
-		"step2.wav",
-
-		"pickflower.wav",
-		"outwater.wav",
-		"inwater.wav",
-		"switch.wav",
-		"save.wav",
-		"info.wav",
-		"info2.wav",
-
-		"jump1.wav",
-		"jump2.wav",
-		"jump3.wav",
-		"jump4.wav",
-		"jump5.wav",
-
-		"die_impaled.wav",
-		"die_drowned.wav",
-		"die_burned.wav",
-		"die_electrocuted.wav",
-		"dog_laugh1.wav",
-		"die_walker2.wav",
-		"die_jumper.wav",
-		"die_jumper2.wav",
-		"die_outofbounds.wav",
-
-		"botfire.wav",
-		"b4.wav",
-		"10.wav",
-		"kr_knife_impact_person.wav",
+		"snd_step.wav",
+		"snd_jump.wav",
+		"snd_land.wav",
+		"snd_slide.wav",
+		"snd_die_impaled.wav",
 	};
 
 	double vc_tiles_draw_time = 0.;
@@ -747,6 +718,7 @@ namespace mlm
 		}//switch (out_instance.type)
 	}
 
+#if 0
 	//FIXME: probably wrong when scrolling...
 	static bool __on_hero_screen(const c_vec2f_t& in_world, const m_mutable_t& in_mu)
 	{
@@ -757,6 +729,7 @@ namespace mlm
 		};
 		return SCREEN == vc_hero_screen(in_mu);
 	}
+#endif
 
 #if 0
 	static bool __hero_near_ground(const m_immutable_t& in_im, const m_mutable_t& in_mu)
@@ -1124,44 +1097,13 @@ namespace mlm
 		}
 
 		//sounds
+		for (
+			uint8_t i = 0;
+			i < VC_NUM_SOUNDS;
+			++i
+			)
 		{
-			/*
-			if (!out_assets.engine.init(d3d9_state_window_handle()))
-				return false;
-
-			if (!out_assets.sounds.init())
-				return false;
-				*/
-
-			uint8_t channels;
-			for (
-				uint8_t i = 0;
-				i < VC_NUM_SOUNDS;
-				++i
-				)
-			{
-				switch (i)
-				{
-				default:
-					channels = 4;
-					break;
-
-				case VC_SND_SLIDE:
-				case VC_SND_STEP1:
-				case VC_SND_STEP2:
-				case VC_SND_INFO:
-				case VC_SND_INFO2:
-				case VC_SND_MELEE:
-					channels = 1;
-					break;
-				}
-
-				/*
-				if (!out_assets.sounds.add_sound(FS_VIRTUAL, out_assets.engine, ASSET_SOUND[i], i, channels))
-					return false;
-					*/
-				out_micron.sound_loads.push_back({ ASSET_SOUND[i], i });
-			}
+			out_micron.sound_loads.push_back({ ASSET_SOUND[i], i });
 		}
 
 #if 0
@@ -1420,11 +1362,12 @@ namespace mlm
 				break;
 
 			case M_EVT_DO_SWITCHES:
-				out_micron.sound_plays.push_back(VC_SND_SWITCH);
+				//out_micron.sound_plays.push_back(VC_SND_SWITCH);
 				break;
 
 			case M_EVT_HERO_JUMP:
-				out_micron.sound_plays.push_back(VC_SND_JUMP1 + out_fatpack.prng.generate() % NINJA_VC_SOUNDS_NUM_JUMPS);
+				//out_micron.sound_plays.push_back(VC_SND_JUMP1 + out_fatpack.prng.generate() % NINJA_VC_SOUNDS_NUM_JUMPS);
+				out_micron.sound_plays.push_back(VC_SND_JUMP);
 				break;
 
 			case M_EVT_HERO_LANDED:
@@ -1470,25 +1413,25 @@ namespace mlm
 			case M_EVT_VISIT:
 				if (out_fatpack.last_visit_offset != m_world_to_offset(EVENT->position))
 				{
-					const uint16_t TILE = m_tile(EVENT->position, in_im);
-					if (vc_gfx_is(VC_GFX_INFO, TILE, in_assets))
+					/*
 					{
-						out_micron.sound_plays.push_back(VC_SND_INFO);
+						const uint16_t TILE = m_tile(EVENT->position, in_im);
+						if (vc_gfx_is(VC_GFX_INFO, TILE, in_assets))
+							out_micron.sound_plays.push_back(VC_SND_INFO);
+						else if (vc_gfx_is(VC_GFX_INFO2, TILE, in_assets))
+							out_micron.sound_plays.push_back(VC_SND_INFO2);
 					}
-					else if (vc_gfx_is(VC_GFX_INFO2, TILE, in_assets))
-					{
-						out_micron.sound_plays.push_back(VC_SND_INFO2);
-					}
+					*/
 					out_fatpack.last_visit_offset = m_world_to_offset(EVENT->position);
 				}
 				break;
 
 			case M_EVT_CHECKPOINT:
-				out_micron.sound_plays.push_back(VC_SND_SAVE);
+				//out_micron.sound_plays.push_back(VC_SND_SAVE);
 				break;
 
 			case M_EVT_BACK_TO_CHECKPOINT:
-				out_micron.sound_plays.push_back(VC_SND_SAVE);
+				//out_micron.sound_plays.push_back(VC_SND_SAVE);
 				__puff(16, 64.f, in_im, in_tick, in_assets, false, in_mu.hero_position, out_fatpack);
 
 				//recalc this explicitly to sync with checkpoint state
@@ -1499,7 +1442,7 @@ namespace mlm
 			{
 				const c_vec2i_t G = m_world_to_grid(EVENT->position);
 				__blades(in_tick, m_grid_to_world(G.x, G.y), in_assets, out_fatpack);
-				out_micron.sound_plays.push_back(VC_SND_PICKFLOWER);
+				//out_micron.sound_plays.push_back(VC_SND_PICKFLOWER);
 
 				//do this instead of re-calcing from visitation data on the fly...
 				++out_fatpack.cache_picked_flowers;
@@ -1507,13 +1450,17 @@ namespace mlm
 			break;
 
 			case M_EVT_JUMPER_IN:
+				/*
 				if (__on_hero_screen(EVENT->position, in_mu))
 					out_micron.sound_plays.push_back(VC_SND_INWATER);
+					*/
 				break;
 
 			case M_EVT_JUMPER_OUT:
+				/*
 				if (__on_hero_screen(EVENT->position, in_mu))
 					out_micron.sound_plays.push_back(VC_SND_OUTWATER);
+					*/
 				break;
 
 			case M_EVT_EXIT:
@@ -1521,27 +1468,27 @@ namespace mlm
 				break;
 
 			case M_EVT_BULLET_FIRE:
-				out_micron.sound_plays.push_back(VC_SND_BULLET_FIRE);
+				//out_micron.sound_plays.push_back(VC_SND_BULLET_FIRE);
 				break;
 
 			case M_EVT_MOB_PRUNE:
 				switch (EVENT->argument)
 				{
 				case M_LOGIC_BULLET:
-					out_micron.sound_plays.push_back(VC_SND_BULLET_HIT);
+					//out_micron.sound_plays.push_back(VC_SND_BULLET_HIT);
 					__puff(8, 32.f, in_im, in_tick, in_assets, false, EVENT->position, out_fatpack);
 					break;
 
 				case M_LOGIC_WALKER:
 				case M_LOGIC_WALKER2:
-					out_micron.sound_plays.push_back(VC_SND_DIE_WALKER);
+					//out_micron.sound_plays.push_back(VC_SND_DIE_WALKER);
 					__puff(16, 64.f, in_im, in_tick, in_assets, false, EVENT->position, out_fatpack);
 					break;
 				}
 				break;
 
 			case M_EVT_MELEE_HIT:
-				out_micron.sound_plays.push_back(VC_SND_MEELE_HIT);
+				//out_micron.sound_plays.push_back(VC_SND_MELEE_HIT);
 				__puff(4, 16.f, in_im, in_tick, in_assets, false, EVENT->position, out_fatpack);
 				break;
 			}
@@ -1641,7 +1588,7 @@ namespace mlm
 					3 == (uint8_t)out_fatpack.hero_anim ||
 					6 == (uint8_t)out_fatpack.hero_anim;
 				if (
-					THIS_FRAME_STEP &
+					THIS_FRAME_STEP &&
 					!LAST_FRAME_STEP
 					)
 					out_micron.sound_plays.push_back(uint32_t(3 == (uint8_t)out_fatpack.hero_anim ? VC_SND_STEP1 : VC_SND_STEP2));
@@ -1698,9 +1645,19 @@ namespace mlm
 				in_mu.hero_speed.x
 				)
 			{
+				const bool LAST_FRAME_STEP = 2 == (int32_t)out_fatpack.hero_anim;
+
 				out_fatpack.hero_anim += 15.f * M_SECONDS_PER_TICK;
 				if (out_fatpack.hero_anim >= 6)
 					out_fatpack.hero_anim = 1.f;
+
+				const bool THIS_FRAME_STEP = 2 == (int32_t)out_fatpack.hero_anim;
+
+				if (
+					THIS_FRAME_STEP &&
+					!LAST_FRAME_STEP
+					)
+					out_micron.sound_plays.push_back(VC_SND_STEP);
 			}
 			else
 			{
@@ -1713,7 +1670,7 @@ namespace mlm
 			vc_octamap_blit_key_clip_flip_x(
 				SCREEN.x - in_assets.hero.half_width, SCREEN.y - in_assets.hero.half_height * 2,
 				FS_TGA_HEADER(in_assets.hero.bitmap)->image_spec_width, in_assets.hero.width * 2,
-				0, FRAME* in_assets.hero.width * 2,
+				0, FRAME * in_assets.hero.width * 2,
 				in_assets.hero.bitmap, out_micron);
 		}
 		else
@@ -1721,7 +1678,7 @@ namespace mlm
 			vc_octamap_blit_key_clip(
 				SCREEN.x - in_assets.hero.half_width, SCREEN.y - in_assets.hero.half_height * 2,
 				FS_TGA_HEADER(in_assets.hero.bitmap)->image_spec_width, in_assets.hero.width * 2,
-				0, FRAME* in_assets.hero.width * 2,
+				0, FRAME * in_assets.hero.width * 2,
 				in_assets.hero.bitmap, out_micron);
 		}
 
