@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "vc_assets.h"
 
-//#include "../../core/c_vector.h"
-//#include "../../softdraw/sd_bitmap.h"
-
 namespace mlm
 {
 	vc_assets_t::vc_assets_t()

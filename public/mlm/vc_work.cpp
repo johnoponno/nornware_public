@@ -37,8 +37,8 @@
 #define DRAW_NON_PASSAGE(flags) ((flags & NINJA_VC_TILEFLAGS_NON_PASSAGE) && M_TYPE_PASSAGE != TYPE)
 
 #define ASSET_TILES "tiles.tga"
-#define ASSET_BIGFONT "bigfont8.tga"
-#define ASSET_CURSOR "cursor.tga"
+//#define ASSET_BIGFONT "bigfont8.tga"
+//#define ASSET_CURSOR "cursor.tga"
 #define ASSET_BLADES "blades.tga"
 #define ASSET_GIBS "gibs.tga"
 #define ASSET_IMPALEMENT "die_impaled.tga"
@@ -46,8 +46,11 @@
 #define ASSET_BURNING "die_burned.tga"
 #define ASSET_ELECTROCUTION "die_electrocuted.tga"
 #define ASSET_SPECIALICONS "specialicons.tga"
-#define ASSET_FISH "fish.tga"
-#define ASSET_HERO "PlaceholderCharacterTest.tga"
+//#define ASSET_FISH "fish.tga"
+
+//#define ASSET_HERO "PlaceholderCharacterTest.tga"
+#define ASSET_HERO "chad.tga"
+
 #define ASSET_HEAVY "heavy.tga"
 #define ASSET_WALKER "walker.tga"
 #define ASSET_WALKER2 "walker2.tga"
@@ -755,6 +758,7 @@ namespace mlm
 		return SCREEN == vc_hero_screen(in_mu);
 	}
 
+#if 0
 	static bool __hero_near_ground(const m_immutable_t& in_im, const m_mutable_t& in_mu)
 	{
 		switch (m_tile_type_at_position({ in_mu.hero_position.x, in_mu.hero_position.y + MLM_M_CHAR_HALF_HEIGHT + MLM_M_TILE_ASPECT * 2.f }, true, in_im, in_mu))
@@ -767,6 +771,7 @@ namespace mlm
 			return false;
 		}
 	}
+#endif
 
 	static void __new_animated_fx_t(
 		const uint32_t in_tick, const bool in_end_width_gibs, const c_vec2f_t& in_position, const c_blob_t& in_bitmap, const m_mutable_t& in_mu,
@@ -1586,97 +1591,123 @@ namespace mlm
 		const uint32_t in_tick, const m_immutable_t& in_im, const m_mutable_t& in_mu, const c_vec2i_t& in_camera, const vc_assets_t& in_assets,
 		vc_fatpack_t& out_fatpack, micron_t& out_micron)
 	{
-		if (m_character_alive(in_mu))
+		if (!m_character_alive(in_mu))
+			return;
+
+#if 0
+
+		uint8_t frame;
+
+		if (in_mu.hero_air)
 		{
-			uint8_t frame;
-
-			//if (m_mu.hero.input & M_FLAGS_LEFT)
-			//	mu.hero_mirror = false;
-			//else if (m_mu.hero.input & M_FLAGS_RIGHT)
-			//	mu.hero_mirror = true;
-
-			if (in_mu.hero_air)
+			out_fatpack.hero_anim = 0.f;
+			if (in_mu.hero_speed.y < 0.f)
 			{
-				out_fatpack.hero_anim = 0.f;
-				if (in_mu.hero_speed.y < 0.f)
-				{
-					if (__hero_near_ground(in_im, in_mu))
-						frame = 9;//launch_frame
-					else
-						frame = 7;// air_up_frame;
-				}
+				if (__hero_near_ground(in_im, in_mu))
+					frame = 9;//launch_frame
 				else
-				{
-					if (__hero_near_ground(in_im, in_mu))
-						frame = 10;//land_frame
-					else
-						frame = 8;// air_down_frame;
-				}
+					frame = 7;// air_up_frame;
 			}
 			else
 			{
-				if (
-					(in_mu.hero_input & MLM_M_FLAGS_LEFT || in_mu.hero_input & MLM_M_FLAGS_RIGHT) &&
-					in_mu.hero_speed.x
-					)
-				{
-					const bool LAST_FRAME_STEP =
-						3 == (uint8_t)out_fatpack.hero_anim ||
-						6 == (uint8_t)out_fatpack.hero_anim;
-
-					const bool IN_LIQUID = M_TYPE_LIQUID == m_tile_type_at_position(in_mu.hero_position, true, in_im, in_mu);
-					if (IN_LIQUID)
-						out_fatpack.hero_anim += 7.5f * M_SECONDS_PER_TICK;
-					else if (MLM_M_FLAGS_SPRINT & in_mu.hero_input)
-						out_fatpack.hero_anim += 30.f * M_SECONDS_PER_TICK;
-					else
-						out_fatpack.hero_anim += 15.f * M_SECONDS_PER_TICK;
-					if (out_fatpack.hero_anim >= 7)
-						out_fatpack.hero_anim = 1.f;
-
-					const bool THIS_FRAME_STEP =
-						3 == (uint8_t)out_fatpack.hero_anim ||
-						6 == (uint8_t)out_fatpack.hero_anim;
-					if (
-						THIS_FRAME_STEP &
-						!LAST_FRAME_STEP
-						)
-						out_micron.sound_plays.push_back(uint32_t(3 == (uint8_t)out_fatpack.hero_anim ? VC_SND_STEP1 : VC_SND_STEP2));
-				}
+				if (__hero_near_ground(in_im, in_mu))
+					frame = 10;//land_frame
 				else
-				{
-					out_fatpack.hero_anim = 0.f;
-				}
-
-				frame = (uint8_t)out_fatpack.hero_anim;
-			}
-
-			const c_vec2i_t SCREEN = vc_world_to_screen_int(in_mu.hero_position, in_camera);
-
-			vc_sprite_draw(SCREEN, frame, in_mu.hero_mirror, in_assets.hero, out_micron);
-
-			//melee test
-			int32_t melee = in_tick - in_mu.hero_melee_tick;
-			if (melee < 8)
-			{
-				const int32_t RANGE = MLM_M_MELEE_RANGE_X - 16;	//adjust this so it looks right
-				const int32_t STEP = RANGE / 4;
-				int32_t d;
-				if (in_mu.hero_mirror)
-					d = 1;
-				else
-					d = -1;
-				if (melee < 4)
-				{
-					vc_canvas_line(SCREEN.x + (melee * STEP) * d, SCREEN.y - MLM_M_MELEE_RANGE_Y, SCREEN.x + RANGE * d, SCREEN.y - MLM_M_MELEE_RANGE_Y + melee * 8, 0, out_micron);
-				}
-				else
-				{
-					melee -= 4;
-					vc_canvas_line(SCREEN.x + (RANGE - melee * STEP) * d, SCREEN.y + MLM_M_MELEE_RANGE_Y, SCREEN.x + RANGE * d, SCREEN.y - MLM_M_MELEE_RANGE_Y + melee * 8, 0, out_micron);
-				}
+					frame = 8;// air_down_frame;
 			}
 		}
+		else
+		{
+			if (
+				(in_mu.hero_input & MLM_M_FLAGS_LEFT || in_mu.hero_input & MLM_M_FLAGS_RIGHT) &&
+				in_mu.hero_speed.x
+				)
+			{
+				const bool LAST_FRAME_STEP =
+					3 == (uint8_t)out_fatpack.hero_anim ||
+					6 == (uint8_t)out_fatpack.hero_anim;
+
+				const bool IN_LIQUID = M_TYPE_LIQUID == m_tile_type_at_position(in_mu.hero_position, true, in_im, in_mu);
+				if (IN_LIQUID)
+					out_fatpack.hero_anim += 7.5f * M_SECONDS_PER_TICK;
+				else if (MLM_M_FLAGS_SPRINT & in_mu.hero_input)
+					out_fatpack.hero_anim += 30.f * M_SECONDS_PER_TICK;
+				else
+					out_fatpack.hero_anim += 15.f * M_SECONDS_PER_TICK;
+				if (out_fatpack.hero_anim >= 7)
+					out_fatpack.hero_anim = 1.f;
+
+				const bool THIS_FRAME_STEP =
+					3 == (uint8_t)out_fatpack.hero_anim ||
+					6 == (uint8_t)out_fatpack.hero_anim;
+				if (
+					THIS_FRAME_STEP &
+					!LAST_FRAME_STEP
+					)
+					out_micron.sound_plays.push_back(uint32_t(3 == (uint8_t)out_fatpack.hero_anim ? VC_SND_STEP1 : VC_SND_STEP2));
+			}
+			else
+			{
+				out_fatpack.hero_anim = 0.f;
+			}
+
+			frame = (uint8_t)out_fatpack.hero_anim;
+		}
+
+		const c_vec2i_t SCREEN = vc_world_to_screen_int(in_mu.hero_position, in_camera);
+
+		vc_sprite_draw(SCREEN, frame, in_mu.hero_mirror, in_assets.hero, out_micron);
+
+		//melee test
+		int32_t melee = in_tick - in_mu.hero_melee_tick;
+		if (melee < 8)
+		{
+			const int32_t RANGE = MLM_M_MELEE_RANGE_X - 16;	//adjust this so it looks right
+			const int32_t STEP = RANGE / 4;
+			int32_t d;
+			if (in_mu.hero_mirror)
+				d = 1;
+			else
+				d = -1;
+			if (melee < 4)
+			{
+				vc_canvas_line(SCREEN.x + (melee * STEP) * d, SCREEN.y - MLM_M_MELEE_RANGE_Y, SCREEN.x + RANGE * d, SCREEN.y - MLM_M_MELEE_RANGE_Y + melee * 8, 0, out_micron);
+			}
+			else
+			{
+				melee -= 4;
+				vc_canvas_line(SCREEN.x + (RANGE - melee * STEP) * d, SCREEN.y + MLM_M_MELEE_RANGE_Y, SCREEN.x + RANGE * d, SCREEN.y - MLM_M_MELEE_RANGE_Y + melee * 8, 0, out_micron);
+			}
+		}
+
+#else
+
+		in_tick;
+		in_im;
+		out_fatpack;
+
+		const c_vec2i_t SCREEN = vc_world_to_screen_int(in_mu.hero_position, in_camera);
+		//vc_sprite_draw(SCREEN, 0, in_mu.hero_mirror, in_assets.hero, out_micron);
+		int32_t frame = 0;
+		if (in_mu.hero_mirror)
+		{
+			vc_octamap_blit_key_clip_flip_x(
+				SCREEN.x - in_assets.hero.half_width, SCREEN.y - in_assets.hero.half_height * 2,
+				FS_TGA_HEADER(in_assets.hero.bitmap)->image_spec_width, in_assets.hero.width * 2,
+				0, frame * in_assets.hero.width * 2,
+				in_assets.hero.bitmap, out_micron);
+		}
+		else
+		{
+			vc_octamap_blit_key_clip(
+				SCREEN.x - in_assets.hero.half_width, SCREEN.y - in_assets.hero.half_height * 2,
+				FS_TGA_HEADER(in_assets.hero.bitmap)->image_spec_width, in_assets.hero.width * 2,
+				0, frame * in_assets.hero.width * 2,
+				in_assets.hero.bitmap, out_micron);
+		}
+
+#endif
+
 	}
 
 	void vc_do_hero_movement(

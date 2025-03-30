@@ -18,7 +18,9 @@
 
 namespace mlm
 {
-	void vc_sprite_draw(const c_vec2i_t& aPosition, const uint8_t aFrame, const bool aMirror, const vc_sprite_t& sprite, micron_t& out_micron);
+	void vc_sprite_draw(
+		const c_vec2i_t& in_position, const uint8_t in_frame, const bool in_mirror, const vc_sprite_t& in_sprite,
+		micron_t& out_micron);
 	uint32_t vc_world_cambits(const c_vec2i_t& aWorld, const vc_assets_t& in_assets);
 	uint32_t vc_screen_cambits(const c_vec2i_t& screen, const vc_assets_t& in_assets);
 
