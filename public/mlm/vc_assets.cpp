@@ -54,7 +54,7 @@ namespace mlm
 		delete[] tiles.data;
 		//delete[] cursor.data;
 		//delete[] blades.data;
-		delete[] gibs.data;
+		//delete[] gibs.data;
 		delete[] impalement.data;
 		//delete[] drowning.data;
 		//delete[] burning.data;

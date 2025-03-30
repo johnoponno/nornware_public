@@ -36,7 +36,7 @@ namespace mlm
 		vc_fatpack_t& out_fatpack, micron_t& out_micron);
 
 	void vc_visualize_events(
-		const m_immutable_t& in_im, const uint32_t in_tick, const m_events_t& in_events, const m_mutable_t& in_mu, const vc_assets_t& in_assets,
+		const m_immutable_t& in_im, const uint32_t in_tick, const m_events_t& in_events, const m_mutable_t& in_mu,
 		vc_fatpack_t& out_fatpack, micron_t& out_micron);
 
 	void vc_gui_draw_and_clear(vc_fatpack_t& out_fatpack, micron_t& out_micron);

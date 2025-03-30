@@ -432,7 +432,7 @@ namespace mlm
 #endif
 
 	static void __puff(
-		const uint32_t in_count, const float in_speed, const m_immutable_t& in_im, const uint32_t in_tick, const vc_assets_t& in_assets, const bool in_flowers, const c_vec2f_t& in_position,
+		const uint32_t in_count, const float in_speed, const m_immutable_t& in_im, const uint32_t in_tick, const bool in_flowers, const c_vec2f_t& in_position,
 		vc_fatpack_t& out_fatpack)
 	{
 		c_vec2f_t vec;
@@ -473,13 +473,14 @@ namespace mlm
 			fx->smoke.color1 = in_assets.palettize_color((uint8_t)(shade / 4 * 3), (uint8_t)(shade / 4 * 3), (uint8_t)(shade / 4 * 3));
 			fx->smoke.color2 = in_assets.palettize_color(shade, shade, shade);
 #else
-			fx->smoke.color1 = in_assets.dark_gray;
-			fx->smoke.color2 = in_assets.gray;
+			fx->smoke.color1 = 10;
+			fx->smoke.color2 = 9;
 #endif
 			fx->smoke.speed = vec;
 		}
 	}
 
+#if 0
 	static void __gibs(
 		const uint32_t in_tick, const c_vec2f_t& in_position, const vc_assets_t& in_assets,
 		vc_fatpack_t& out_fatpack)
@@ -506,6 +507,7 @@ namespace mlm
 			fx->gib.speed = vec;
 		}
 	}
+#endif
 
 #if 0
 	static void __octafont_print(
@@ -648,6 +650,7 @@ namespace mlm
 			return true;
 #endif
 
+#if 0
 		case VC_FX_GIB:
 			if (!in_paused)
 			{
@@ -669,6 +672,7 @@ namespace mlm
 			}
 
 			return true;
+#endif
 
 		case VC_FX_ANIMATED:
 		{
@@ -750,6 +754,7 @@ namespace mlm
 	}
 #endif
 
+#if 0
 	static void __new_animated_fx_t(
 		const uint32_t in_tick, const bool in_end_width_gibs, const c_vec2f_t& in_position, const c_blob_t& in_bitmap, const m_mutable_t& in_mu,
 		vc_fatpack_t& out_fatpack)
@@ -763,6 +768,7 @@ namespace mlm
 		i->animated.ends_with_gibs = in_end_width_gibs;
 		i->animated.bitmap = &in_bitmap;
 	}
+#endif
 
 #if 0
 	static int32_t __string_width(const char* in_string)
@@ -1075,8 +1081,10 @@ namespace mlm
 				return false;
 				*/
 
+			/*
 			if (!__load_blob(ASSET_GIBS, out_assets.gibs))
 				return false;
+				*/
 			if (!__load_blob(ASSET_IMPALEMENT, out_assets.impalement))
 				return false;
 			/*
@@ -1357,15 +1365,15 @@ namespace mlm
 		for (const vc_fx_t& DFX : out_fatpack.deferred_fx)
 		{
 			assert(DFX.type == VC_FX_ANIMATED);
-			__puff(16, 64.f, in_im, in_tick, in_assets, false, DFX.position, out_fatpack);
-			__gibs(in_tick, DFX.position, in_assets, out_fatpack);
+			__puff(16, 64.f, in_im, in_tick, false, DFX.position, out_fatpack);
+			//__gibs(in_tick, DFX.position, in_assets, out_fatpack);
 		}
 		out_fatpack.deferred_fx.clear();
 #endif
 	}
 
 	void vc_visualize_events(
-		const m_immutable_t& in_im, const uint32_t in_tick, const m_events_t& in_events, const m_mutable_t& in_mu, const vc_assets_t& in_assets,
+		const m_immutable_t& in_im, const uint32_t in_tick, const m_events_t& in_events, const m_mutable_t& in_mu,
 		vc_fatpack_t& out_fatpack, micron_t& out_micron)
 	{
 		//assert(0 == out_fatpack.request_sound_plays.size());
@@ -1400,6 +1408,7 @@ namespace mlm
 				switch (EVENT->argument)
 				{
 				case M_COD_IMPALED:
+#if 0
 					if (SNAP_IMPALEMENT)
 					{
 						const c_vec2i_t GRID = m_world_to_grid(EVENT->position);
@@ -1409,6 +1418,9 @@ namespace mlm
 					{
 						__new_animated_fx_t(in_tick, true, EVENT->position, in_assets.impalement, in_mu, out_fatpack);
 					}
+#else
+					__puff(16, 64.f, in_im, in_tick, false, EVENT->position, out_fatpack);
+#endif
 					break;
 
 				case M_COD_DROWNED:
@@ -1424,8 +1436,8 @@ namespace mlm
 					break;
 
 				default:
-					__puff(16, 64.f, in_im, in_tick, in_assets, false, EVENT->position, out_fatpack);
-					__gibs(in_tick, EVENT->position, in_assets, out_fatpack);
+					__puff(16, 64.f, in_im, in_tick, false, EVENT->position, out_fatpack);
+					//__gibs(in_tick, EVENT->position, in_assets, out_fatpack);
 					break;
 				}
 
@@ -1454,7 +1466,7 @@ namespace mlm
 
 			case M_EVT_BACK_TO_CHECKPOINT:
 				//out_micron.sound_plays.push_back(VC_SND_SAVE);
-				__puff(16, 64.f, in_im, in_tick, in_assets, false, in_mu.hero_position, out_fatpack);
+				__puff(16, 64.f, in_im, in_tick, false, in_mu.hero_position, out_fatpack);
 
 				//recalc this explicitly to sync with checkpoint state
 				vc_calculate_flowers(in_im, in_mu, out_fatpack);
@@ -1498,20 +1510,20 @@ namespace mlm
 				{
 				case M_LOGIC_BULLET:
 					//out_micron.sound_plays.push_back(VC_SND_BULLET_HIT);
-					__puff(8, 32.f, in_im, in_tick, in_assets, false, EVENT->position, out_fatpack);
+					__puff(8, 32.f, in_im, in_tick, false, EVENT->position, out_fatpack);
 					break;
 
 				case M_LOGIC_WALKER:
 				case M_LOGIC_WALKER2:
 					//out_micron.sound_plays.push_back(VC_SND_DIE_WALKER);
-					__puff(16, 64.f, in_im, in_tick, in_assets, false, EVENT->position, out_fatpack);
+					__puff(16, 64.f, in_im, in_tick, false, EVENT->position, out_fatpack);
 					break;
 				}
 				break;
 
 			case M_EVT_MELEE_HIT:
 				//out_micron.sound_plays.push_back(VC_SND_MELEE_HIT);
-				__puff(4, 16.f, in_im, in_tick, in_assets, false, EVENT->position, out_fatpack);
+				__puff(4, 16.f, in_im, in_tick, false, EVENT->position, out_fatpack);
 				break;
 			}
 		}

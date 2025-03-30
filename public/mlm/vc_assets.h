@@ -213,7 +213,7 @@ namespace mlm
 
 		//c_blob_t cursor;
 		//c_blob_t blades;
-		c_blob_t gibs;
+		//c_blob_t gibs;
 		c_blob_t impalement;
 		//c_blob_t drowning;
 		//c_blob_t burning;

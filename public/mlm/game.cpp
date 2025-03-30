@@ -503,7 +503,7 @@ namespace mlm
 		if (!_dev._paused)
 		{
 			const m_events_t EVENTS = m_update(_im, _dev._tick, _mu);
-			vc_visualize_events(_im, _dev._tick, EVENTS, _mu, _assets, _fatpack, out_micron);
+			vc_visualize_events(_im, _dev._tick, EVENTS, _mu, _fatpack, out_micron);
 		}
 
 		__output(_im, _mu, _assets, _fatpack, _dev, out_micron);
