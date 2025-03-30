@@ -1687,14 +1687,33 @@ namespace mlm
 		out_fatpack;
 
 		const c_vec2i_t SCREEN = vc_world_to_screen_int(in_mu.hero_position, in_camera);
-		//vc_sprite_draw(SCREEN, 0, in_mu.hero_mirror, in_assets.hero, out_micron);
-		int32_t frame = 0;
+		if (in_mu.hero_air)
+		{
+			out_fatpack.hero_anim = 0.f;
+		}
+		else
+		{
+			if (
+				(in_mu.hero_input & MLM_M_FLAGS_LEFT || in_mu.hero_input & MLM_M_FLAGS_RIGHT) &&
+				in_mu.hero_speed.x
+				)
+			{
+				out_fatpack.hero_anim += 15.f * M_SECONDS_PER_TICK;
+				if (out_fatpack.hero_anim >= 6)
+					out_fatpack.hero_anim = 1.f;
+			}
+			else
+			{
+				out_fatpack.hero_anim = 0.f;
+			}
+		}
+		const int32_t FRAME = (int32_t)out_fatpack.hero_anim;
 		if (in_mu.hero_mirror)
 		{
 			vc_octamap_blit_key_clip_flip_x(
 				SCREEN.x - in_assets.hero.half_width, SCREEN.y - in_assets.hero.half_height * 2,
 				FS_TGA_HEADER(in_assets.hero.bitmap)->image_spec_width, in_assets.hero.width * 2,
-				0, frame * in_assets.hero.width * 2,
+				0, FRAME* in_assets.hero.width * 2,
 				in_assets.hero.bitmap, out_micron);
 		}
 		else
@@ -1702,7 +1721,7 @@ namespace mlm
 			vc_octamap_blit_key_clip(
 				SCREEN.x - in_assets.hero.half_width, SCREEN.y - in_assets.hero.half_height * 2,
 				FS_TGA_HEADER(in_assets.hero.bitmap)->image_spec_width, in_assets.hero.width * 2,
-				0, frame * in_assets.hero.width * 2,
+				0, FRAME* in_assets.hero.width * 2,
 				in_assets.hero.bitmap, out_micron);
 		}
 
@@ -1719,8 +1738,10 @@ namespace mlm
 		//hero movement when character is alive
 		if (m_character_alive(out_mu))
 		{
+			/*
 			if (micron_key_is_down(in_micron, 'S'))
 				input |= MLM_M_FLAGS_DOWN;
+				*/
 
 			if (micron_key_is_down(in_micron, 'A'))
 				input |= MLM_M_FLAGS_LEFT;
@@ -1734,10 +1755,10 @@ namespace mlm
 			/*
 			if (micron_key_is_down(in_micron, 'J'))
 				input |= MLM_M_FLAGS_SPRINT;
-				*/
 
 			if (micron_key_is_down(in_micron, 'L'))
 				input |= MLM_M_FLAGS_MELEE;
+				*/
 		}
 
 		//always set

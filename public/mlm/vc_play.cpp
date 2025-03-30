@@ -517,13 +517,9 @@ namespace mlm
 				__safe_fat_pixel(MOB.position, camera, INDEX, out_micron);
 		}
 
-		//vc_do_ambience(in_tick, ASSET_TEMP_AMBIENCE, .5f, in_assets, out_fatpack);
-		/*
-		out_fatpack.request_ambience_file = ASSET_TEMP_AMBIENCE;
-		out_fatpack.request_ambience_volume = 1.f;
-		*/
-		out_micron.music = ASSET_AMBIENCE;
+		//play input key legend
+		vc_canvas_atascii_print(0, out_micron.canvas_height - 8, 0, "ADK", out_micron);
 
-		//vc_do_hero_sound(in_tick, in_im, in_mu, in_assets);
+		out_micron.music = ASSET_AMBIENCE;
 	}
 }
