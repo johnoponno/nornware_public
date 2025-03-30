@@ -11,7 +11,7 @@
 #include "vc_work.h"
 #include "d_dev.h"
 
-#define ASSET_TEMP_AMBIENCE "hero_immortal.ogg"
+//#define ASSET_TEMP_AMBIENCE "hero_immortal.ogg"
 
 namespace mlm
 {
@@ -1592,6 +1592,6 @@ namespace mlm
 			break;
 		}
 
-		out_micron.music = ASSET_TEMP_AMBIENCE;
+		out_micron.music = ASSET_AMBIENCE;
 	}
 }

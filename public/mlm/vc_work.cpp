@@ -74,9 +74,9 @@
 
 namespace mlm
 {
-	//void vc_play(const c_vec2f_t& hero_position, const uint32_t anId, const c_vec2f_t& aPosition, const vc_assets_t& in_assets);
 	bool vc_gfx_is(const uint32_t aValue, const uint16_t tile, const vc_assets_t& in_assets);
 
+#if 0
 	static constexpr char* ASSET_TEMP_FARPLANE[] =
 	{
 		"plax/snowymountains00.tga",
@@ -145,6 +145,7 @@ namespace mlm
 		"plax/alien01.tga",
 		"plax/alien02.tga",
 	};
+#endif
 
 	static constexpr char* ASSET_SOUND[VC_NUM_SOUNDS] =
 	{
@@ -1040,6 +1041,7 @@ namespace mlm
 			}
 		}
 
+#if 0
 		//farplanes
 		static_assert(_countof(ASSET_TEMP_FARPLANE) == _countof(out_assets.farplane_assets), "wtf?");
 		for (
@@ -1053,6 +1055,12 @@ namespace mlm
 			if (!__load_blob(ASSET_TEMP_FARPLANE[i], out_assets.farplane_assets[i]))
 				return false;
 		}
+#else
+		delete[] out_assets.tempcave.data;
+		out_assets.tempcave = {};
+		if (!__load_blob("tempcave.tga", out_assets.tempcave))
+			return false;
+#endif
 
 		return true;
 	}
@@ -1742,6 +1750,7 @@ namespace mlm
 		const uint32_t in_tick, const m_immutable_t& in_im, const m_mutable_t& in_mu, const vc_assets_t& in_assets, const c_vec2i_t& in_camera,
 		c_xorshift128_t& out_prng, micron_t& out_micron)
 	{
+#if 0
 		const int32_t SCREEN_X = in_camera.x / (MLM_M_TILE_ASPECT * NINJA_VC_TILES_ON_SCREEN_X);
 		const int32_t SCREEN_Y = in_camera.y / (MLM_M_TILE_ASPECT * NINJA_VC_TILES_ON_SCREEN_Y);
 		const uint32_t SCREEN_OFFSET = SCREEN_X + SCREEN_Y * NINJA_VC_SCREENS_IN_WORLD_X;
@@ -1899,6 +1908,15 @@ namespace mlm
 		//noise particles (snow)
 		if (VC_PLAX_SNOWY_MOUNTAINS == PLAX % VC_PLAX_NUM_STYLES)
 			__noise_particles(in_tick, false, in_im, in_mu, { (float)in_camera.x, (float)in_camera.y }, out_prng, out_micron);
+#else
+		in_tick;
+		in_im;
+		in_mu;
+		in_assets;
+		in_camera;
+		out_prng;
+		vc_octamap_blit_clip(0, 0, 0, 0, 0, 0, in_assets.tempcave, out_micron);
+#endif
 	}
 
 	void vc_reset_animations(vc_fatpack_t& out_fatpack)

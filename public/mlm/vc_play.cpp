@@ -11,7 +11,7 @@
 #include "vc_octamap.h"
 
 #define CAM_LERP_SPEED 8.f
-#define ASSET_TEMP_AMBIENCE "hero_immortal.ogg"
+//#define ASSET_TEMP_AMBIENCE "hero_immortal.ogg"
 
 #define ANOTHER_WORLD_RAIN_INDEX 7
 #define HEAVY_FPS 8.f
@@ -22,6 +22,7 @@ namespace mlm
 	uint32_t vc_world_cambits(const c_vec2i_t& aWorld, const vc_assets_t& in_assets);
 	uint32_t vc_screen_cambits(const c_vec2i_t& screen, const vc_assets_t& in_assets);
 
+#if 0
 	static void __draw_plax_foreground(
 		const vc_assets_t& in_assets, const c_vec2i_t& in_camera,
 		vc_fatpack_t& out_fatpack, micron_t& out_micron)
@@ -55,6 +56,7 @@ namespace mlm
 			break;
 		}
 	}
+#endif
 
 	static void __safe_fat_pixel(
 		const c_vec2f_t& in_world, const c_vec2i_t& in_camera, const uint8_t in_index,
@@ -346,7 +348,9 @@ namespace mlm
 
 		vc_fx_draw_all(in_paused, in_tick, in_im, camera, in_assets, out_fatpack, out_micron);
 
+#if 0
 		__draw_plax_foreground(in_assets, camera, out_fatpack, out_micron);
+#endif
 
 		//cambits
 		if (out_fatpack.bit_display_cambits)
@@ -516,7 +520,7 @@ namespace mlm
 		out_fatpack.request_ambience_file = ASSET_TEMP_AMBIENCE;
 		out_fatpack.request_ambience_volume = 1.f;
 		*/
-		out_micron.music = ASSET_TEMP_AMBIENCE;
+		out_micron.music = ASSET_AMBIENCE;
 
 		//vc_do_hero_sound(in_tick, in_im, in_mu, in_assets);
 	}

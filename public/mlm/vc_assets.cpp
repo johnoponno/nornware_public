@@ -43,12 +43,16 @@ namespace mlm
 	{
 		delete[] gui_big_font.data;
 
+#if 0
 		for (
 			uint32_t i = 0;
 			i < _countof(farplane_assets);
 			++i
 			)
 			delete[] farplane_assets[i].data;
+#else
+		delete[] tempcave.data;
+#endif
 
 		delete[] tiles.data;
 		delete[] cursor.data;

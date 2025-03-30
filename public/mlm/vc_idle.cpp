@@ -7,7 +7,7 @@
 #include "vc_octamap.h"
 #include "vc_work.h"
 
-#define ASSET_IDLE_MUSIC "oga_japanese_hacks.ogg"
+//#define ASSET_IDLE_MUSIC "oga_japanese_hacks.ogg"
 
 namespace mlm
 {
@@ -113,7 +113,7 @@ namespace mlm
 	{
 		vc_draw_plax(in_tick, in_im, in_m_mu, in_assets, {}, out_fatpack.prng, out_micron);
 
-		out_micron.music = ASSET_IDLE_MUSIC;
+		out_micron.music = ASSET_AMBIENCE;
 
 #if 0
 		{//palette vis

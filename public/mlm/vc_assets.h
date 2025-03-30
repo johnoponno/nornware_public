@@ -185,7 +185,11 @@ namespace mlm
 
 		c_blob_t tiles;
 		uint32_t tile_bits[MLM_M_MAX_TILE];
+#if 0
 		c_blob_t farplane_assets[54];
+#else
+		c_blob_t tempcave;
+#endif
 		uint32_t gfx[VC_NUM_GFX];
 		struct
 		{
@@ -261,4 +265,6 @@ namespace mlm
 		{ "INDEX_INFO2", UINT32_MAX },
 		{ "INDEX_INFO2_TOUCHED", UINT32_MAX },
 	};
+
+	constexpr char* ASSET_AMBIENCE = "Cave_atmo_waterdrip.ogg";
 }
