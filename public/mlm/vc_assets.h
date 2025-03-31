@@ -193,6 +193,8 @@ namespace mlm
 		ds_container_t sounds;
 		*/
 
+		c_blob_t title;
+
 		c_blob_t tiles;
 		uint32_t tile_bits[MLM_M_MAX_TILE];
 #if 0

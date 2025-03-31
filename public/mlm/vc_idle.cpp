@@ -15,22 +15,22 @@ namespace mlm
 		const micron_t& in_micron, const m_immutable_t& in_im, const uint32_t in_tick,
 		m_mutable_t& out_m_mu, vc_fatpack_t& out_fatpack)
 	{
-		int32_t x;
-		int32_t y;
+		//int32_t x;
+		//int32_t y;
 
-		vc_gui_big_text(in_micron, x = in_micron.canvas_width / 8, y = 16, -1, "MicroLoMania", out_fatpack);
+		//vc_gui_big_text(in_micron, x = in_micron.canvas_width / 8, y = 16, -1, "MicroLoMania", out_fatpack);
 
-		if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, x, y += 16, 'N', "New Game", out_fatpack))
+		if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, in_micron.canvas_width / 16, in_micron.canvas_height - 24, 'N', "New Game", out_fatpack))
 		{
 			m_restart(in_tick, m_mode_t::PLAY, in_im, out_m_mu);
 			out_fatpack.prng = c_xorshift128_t::make();
 			vc_calculate_flowers(in_im, out_m_mu, out_fatpack);
 		}
 
-		if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, x, y += 8, 'C', "Credits", out_fatpack))
+		if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, in_micron.canvas_width * 9 / 16, in_micron.canvas_height - 24, 'C', "Credits", out_fatpack))
 			out_fatpack.idle_screen = VC_SCREEN_CREDITS;
 
-		if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, x, y += 8, 'X', "Exit", out_fatpack))
+		if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, in_micron.canvas_width * 3 / 8, in_micron.canvas_height - 8, 'X', "Exit", out_fatpack))
 			return false;
 
 		return true;
@@ -47,14 +47,14 @@ namespace mlm
 			"Johannes 'johno' Norneby",
 			nullptr,
 			"WORLD",
-			"Elias",
+			"Elias Svensson",
 			nullptr,
 			"ART",
-			"Mathilde",
-			"Elias",
+			"Mathilde Aas",
+			"Elias Svensson",
 			nullptr,
 			"MUSIC / SOUND",
-			"Isabel",
+			"Isabel Taube",
 			nullptr,
 		};
 
@@ -79,7 +79,7 @@ namespace mlm
 			}
 		}
 
-		if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, in_micron.canvas_width / 2, in_micron.canvas_height - 16, 'B', "Back", out_fatpack))
+		if (MLM_VC_GUI_LEFT & vc_gui_big_text(in_micron, in_micron.canvas_width * 3 / 8, in_micron.canvas_height - 16, 'B', "Back", out_fatpack))
 			out_fatpack.idle_screen = VC_SCREEN_MAIN;
 	}
 
@@ -112,6 +112,8 @@ namespace mlm
 		vc_fatpack_t& out_fatpack, micron_t& out_micron)
 	{
 		vc_draw_plax(in_tick, in_im, in_m_mu, in_assets, {}, out_fatpack.prng, out_micron);
+
+		vc_octamap_blit_key(0, 0, 0, 0, 0, 0, in_assets.title, out_micron);
 
 		out_micron.music = ASSET_AMBIENCE;
 

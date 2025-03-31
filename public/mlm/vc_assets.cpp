@@ -51,6 +51,7 @@ namespace mlm
 		delete[] tempcave.data;
 #endif
 
+		delete[] title.data;
 		delete[] tiles.data;
 		//delete[] cursor.data;
 		//delete[] blades.data;

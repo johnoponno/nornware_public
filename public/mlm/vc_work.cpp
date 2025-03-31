@@ -36,6 +36,7 @@
 #define DRAW_PASSAGE(flags) ((flags & NINJA_VC_TILEFLAGS_PASSAGE) && M_TYPE_PASSAGE == TYPE)
 #define DRAW_NON_PASSAGE(flags) ((flags & NINJA_VC_TILEFLAGS_NON_PASSAGE) && M_TYPE_PASSAGE != TYPE)
 
+#define ASSET_TITLE "Title_sprite_v1.tga"
 #define ASSET_TILES "tiles.tga"
 //#define ASSET_BIGFONT "bigfont8.tga"
 //#define ASSET_CURSOR "cursor.tga"
@@ -1015,6 +1016,12 @@ namespace mlm
 
 	bool vc_reload_graphics(vc_assets_t& out_assets)
 	{
+		//title
+		delete[] out_assets.title.data;
+		out_assets.title = {};
+		if (!__load_blob(ASSET_TITLE, out_assets.title))
+			return false;
+
 		//tiles
 		delete[] out_assets.tiles.data;
 		out_assets.tiles = {};
@@ -1540,7 +1547,7 @@ namespace mlm
 			assert(T->text.buffer && *T->text.buffer);
 
 			//__octafont_print(in_assets.gui_big_font, T->position.x, T->position.y, T->text, out_micron);
-			vc_canvas_atascii_print(T->x, T->y, 9, T->text.buffer, out_micron);
+			vc_canvas_atascii_print(T->x, T->y, 4, T->text.buffer, out_micron);
 		}
 
 		out_fatpack.gui_num_text = 0;
